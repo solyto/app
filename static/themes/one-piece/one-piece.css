@@ -1,0 +1,103 @@
+/* One Piece theme — Grand Line                                                */
+/* Deep ocean navy backgrounds, logo-blue navigation, straw hat gold accents. */
+/* Pirata One heading font, Luffy crimson red for actions.                    */
+
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+	/* Fonts */
+	--t-font-body: 'Lora', serif;
+	--t-font-heading: 'Pirata One', cursive;
+	--font-sans: 'Lora', serif;
+
+	/* Shadows — deep ocean blue with faint gold glow */
+	--shadow-xs: 0 1px 3px rgb(0 10 40 / 0.5);
+	--shadow-sm: 0 2px 6px rgb(0 10 40 / 0.6), 0 0 10px rgb(242 200 56 / 0.05);
+	--shadow-md: 0 4px 14px rgb(0 8 30 / 0.7), 0 0 18px rgb(242 200 56 / 0.08);
+	--shadow-lg: 0 8px 28px rgb(0 5 20 / 0.8), 0 0 28px rgb(242 200 56 / 0.1);
+	--drop-shadow-sm: 0 2px 4px rgb(0 10 40 / 0.5);
+	--drop-shadow-md: 0 4px 10px rgb(0 8 30 / 0.7);
+
+	/* Semantic color tokens */
+	--color-c-primary: #f2c838;
+	--color-c-heading: #f2c838;
+	--color-c-heading-base: #ffd84a;
+	--color-c-btn: #2898d8;
+	--color-c-btn-hover: #1a82c4;
+	--color-c-action: #cc2020;
+	--color-c-action-hover: #e03030;
+	--color-c-danger: #aa1010;
+	--color-c-danger-hover: #c81818;
+	--color-c-success: #1a7a38;
+	--color-c-warning: #c48838;
+
+	/* Dark navy backgrounds */
+	--color-c-bg: transparent;
+	--color-c-bg-surface: transparent;
+	--color-c-bg-elevated: transparent;
+	--color-c-bg-modal: rgba(5, 14, 32, 0.9);
+	--color-c-nav-hover: rgba(255, 255, 255, 0.1);
+	--color-c-nav-active: rgba(255, 255, 255, 0.2);
+	--color-c-nav-active-text: #f2c838;
+
+	/* s-dark palette */
+	--color-s-dark: #050e20;
+	--color-s-dark-2: #0a1e3c;
+	--color-s-dark-3: #0f2a52;
+	--color-s-dark-shadow: rgb(242 200 56 / 0.5);
+
+	--color-white: #f0e8d0;
+
+	/* Neutral scale — dark navy to near-white */
+	--color-c-neutral: #0c1a34;
+	--color-c-neutral-1: #102244;
+	--color-c-neutral-2: #163058;
+	--color-c-neutral-3: #1e4070;
+	--color-c-neutral-4: #2c5888;
+	--color-c-neutral-5: #4478a8;
+	--color-c-neutral-6: #6098c0;
+	--color-c-neutral-7: #88b8d8;
+	--color-c-neutral-8: #c0d8e8;
+	--color-c-neutral-9: #e8f4fc;
+
+	--color-d-lightblue: transparent;
+	--color-d-lighterblue: #0c1a34;
+
+	--color-c-border: rgba(242, 200, 56, 0.25);
+
+	/* Nav gradient — logo signature blue */
+	--t-gradient-colors: #2898d8, #1268b0;
+}
+
+html.dark {
+	--color-c-bg: #050e20;
+	--color-c-bg-surface: #0a1e3c;
+	--color-c-bg-elevated: #0f2a52;
+	--color-c-bg-modal: #0a1e3c;
+}
+
+body {
+	background-color: #050e20;
+}
+
+.page-container {
+	background: none;
+}
+
+.content-container {
+	background-color: rgba(5, 14, 32, 0.85);
+}
+
+/* Nav containers — gold accent border separating nav from content */
+.nav-desktop-container {
+	border-right: 2px solid rgba(242, 200, 56, 0.4);
+}
+
+.nav-mobile-container {
+	border-top: 2px solid rgba(242, 200, 56, 0.4);
+}
+
+/* Logo — shift toward the logo's cyan-blue */
+.logo {
+	filter: hue-rotate(175deg) saturate(1.6) brightness(1.05);
+}

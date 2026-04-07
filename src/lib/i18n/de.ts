@@ -1,0 +1,1071 @@
+import type {
+	LanguageFile,
+	LayoutRecords,
+	NavigationRecords,
+	HomeRecords,
+	TodoRecords,
+	AuthRecords,
+	SettingsRecords,
+	CheckInRecords,
+	WidgetRecords,
+	NoteRecords,
+	LibraryRecords,
+	DevRecords,
+	FinanceRecords,
+	AssistantRecords,
+	FeedRecords,
+	CalendarRecords,
+	NotificationRecords,
+	ClipboardRecords,
+	ContactRecords,
+	ProfileRecords,
+	DavRecords,
+	HelpRecords,
+	WelcomeTourRecords,
+	AdminRecords,
+	CookieConsentRecords,
+	TimeTrackingRecords
+} from '$lib/types/translation';
+
+const layout: LayoutRecords = {
+	modal_explanation: 'Drücke Enter zum Bestätigen oder Escape zum Abbrechen.',
+	modal_confirm: 'Bestätigen',
+	modal_cancel: 'Abbrechen',
+	save: 'Speichern',
+	double_click_to_edit: 'Doppelklicken zum Bearbeiten',
+	browse: 'Durchsuchen',
+	no_file: 'Keine Datei ausgewählt.',
+	select_file: 'Datei auswählen',
+	selected_file: 'Ausgewählte Datei',
+	processing: 'Verarbeitung läuft',
+	toggle: 'Umschalten',
+	apply: 'Anwenden',
+	legal_notice: 'Impressum',
+	privacy_policy: 'Datenschutzerklärung',
+	terms_of_service: 'Nutzungsbedingungen'
+};
+
+const nav: NavigationRecords = {
+	menu: 'Menü',
+	toggle_menu: 'Aus-/einklappen',
+	home: 'Startseite',
+	settings: 'Einstellungen',
+	todos: 'Todos',
+	notes: 'Notizen',
+	logout: 'Abmelden',
+	profile: 'Profil',
+	checkIn: 'Check-in',
+	libraries: 'Bibliotheken',
+	dev_requests: 'Dev Requests',
+	assistants: 'Assistenten',
+	finances: 'Finanzen',
+	feeds: 'Feeds',
+	admin: 'Admin',
+	notifications: 'Benachrichtigungen',
+	calendar: 'Kalender',
+	contacts: 'Kontakte',
+	clipboard: 'Zwischenablage',
+	timeTracking: 'Zeiterfassung'
+};
+
+const auth: AuthRecords = {
+	name: 'Name',
+	name_placeholder: 'Name eingeben',
+	name_error: 'Bitte gib einen Namen ein.',
+	email: 'E-Mail',
+	email_placeholder: 'E-Mail eingeben',
+	email_error: 'Bitte gib eine gültige E-Mail ein.',
+	password: 'Passwort',
+	password_placeholder: '******************',
+	password_error: 'Das Passwort muss mindestens 12 Zeichen lang sein.',
+	password_min_length: 'Mindestens 12 Zeichen',
+	password_confirmation: 'Passwort wiederholen',
+	password_confirmation_placeholder: '******************',
+	password_confirmation_error: 'Bitte bestätige dein Passwort.',
+	password_matches: 'Passwörter stimmen überein',
+	show_password: 'Passwort anzeigen',
+	hide_password: 'Passwort verbergen',
+	register: 'Registrieren',
+	login: 'Anmelden',
+	logout: 'Abmelden',
+	logout_success: 'Du wurdest erfolgreich abgemeldet.',
+	sign_in: 'Anmelden',
+	forgot_password: 'Passwort vergessen?',
+	register_success: 'Du wurdest erfolgreich registriert. Bitte bestätige deine E-Mail Adresse.',
+	register_error: 'Es ist ein Fehler bei der Registrierung aufgetreten.',
+	login_success: 'Du wurdest erfolgreich angemeldet.',
+	login_error: 'Anmeldung fehlgeschlagen.',
+	verify_success: 'Deine Account wurde erfolgreich bestätigt. Du kannst dich jetzt anmelden!',
+	verify_general_error: 'Es ist ein Fehler beim Aktivieren deines Accounts aufgetreten.',
+	already_verified: 'Ihr Konto wurde bereits bestätigt. Sie können sich gerne anmelden!',
+	verify_token_mismatch:
+		'Ihr Konto konnte nicht bestätigt werden. Das Token stimmt nicht überein.',
+	verify_token_expired: 'Ihr Konto konnte nicht bestätigt werden. Das Token ist abgelaufen.'
+};
+
+const home: HomeRecords = {
+	slogan: 'Willkommen auf deiner Startseite.',
+	greeting_morning: 'Guten Morgen',
+	greeting_afternoon: 'Guten Nachmittag',
+	greeting_evening: 'Guten Abend',
+	events: 'Termine',
+	all_day: 'ganztägig',
+	due_today: 'Heute fällig',
+	relevant: 'Relevant',
+	nothing_today: 'Heute steht nichts an.',
+	new_music: 'Neue Musik',
+	new_books: 'Neue Bücher',
+	recent_notes: 'Aktuelle Notizen',
+	newest_links: 'Neueste Links',
+	inspiration_empty_hint: 'Füge Notizen, Musik, Bücher oder Links hinzu, um sie hier zu sehen.'
+};
+
+const settings: SettingsRecords = {
+	english: 'Englisch',
+	german: 'Deutsch',
+	french: 'Französisch',
+	spanish: 'Spanisch',
+	todos: 'Todos',
+	tags: 'Tags',
+	new_tag: 'Neuer Tag',
+	categories: 'Kategorien',
+	new_category: 'Neue Kategorie',
+	workspaces: 'Arbeitsbereiche',
+	new_workspace: 'Neuer Arbeitsbereich',
+	localization: 'Lokalisierung',
+	language: 'Sprache',
+	integrations: 'Verbindungen',
+	notifications: 'Benachrichtigungen',
+	push_notifications: 'Push Benachrichtigungen',
+	enable_push_notifications: 'Push Benachrichtigungen aktivieren',
+	push_notification_error: 'Push-Benachrichtigungen konnten nicht aktualisiert werden.',
+	notification_permission_denied: 'Benachrichtigungsberechtigung verweigert.',
+	email_notifications: 'E-Mail Benachrichtigungen',
+	enable_email_notifications: 'E-Mail Benachrichtigungen aktivieren',
+	nextcloud: 'Nextcloud',
+	widgets: 'Widgets',
+	ai: 'AI',
+	telegram_bot: 'Telegram Bot',
+	telegram_bot_notifications: 'Telegram Bot Benachrichtigungen',
+	enable_telegram_bot_notifications: 'Telegram Bot Benachrichtigungen aktivieren',
+	openai_token: 'OpenAI Token',
+	features: 'Funktionen',
+	timezone: 'Zeitzone',
+	date_format: 'Datumsformat',
+	time_format: 'Uhrzeit-Format',
+	nextcloud_token: 'Token registriert',
+	nextcloud_no_token: 'Kein Token registriert.',
+	telegram_bot_integration_success: 'Integration erfolgreich registriert für Telegram Chat ID %s',
+	telegram_bot_token_created: 'Token erstellt.',
+	telegram_bot_register: 'Registriere es indem du den folgenden Befehl an den %s sendest',
+	telegram_bot_create: 'Neue Verbindung erstellen',
+	telegram_bot_not_connected:
+		'Du hast den Bot noch nicht mit deinem Account verbunden. Geh zu den Verbindungen um das zu tun.',
+	app: 'App'
+};
+
+const todos: TodoRecords = {
+	all_todos: 'Alle Todos',
+	new_todo: 'Neues Todo',
+	enter_todo: 'Todo eingeben',
+	no_todos: 'Keine Todos gefunden.',
+	no_todos_desc: 'Drücke Enter um eins anzulegen.',
+	tags: 'Tags',
+	add_tag: 'Tag hinzufügen',
+	tag_error: 'Tag existiert nicht',
+	categories: 'Kategorien',
+	add_category: 'Kategorie hinzufügen',
+	category_error: 'Kategorie existiert nicht',
+	workspaces: 'Arbeitsbereiche',
+	workspace_hide_it: 'Versteck Das',
+	workspace_hide_it_description: 'Verfügbar in Versteck Das',
+	priority: 'Priorität',
+	priority_high: 'Hoch',
+	priority_medium: 'Mittel',
+	priority_low: 'Niedrig',
+	due_at: 'Fälligkeit',
+	due_today: 'Heute',
+	due_tomorrow: 'Morgen',
+	due_week: 'Diese Woche',
+	due_overdue: 'Überfällig',
+	add_due_at: 'Datum hinzufügen',
+	status: 'Status',
+	status_pending: 'Ausstehend',
+	status_in_progress: 'In Arbeit',
+	status_waiting: 'Warten',
+	status_almost_done: 'Fast fertig',
+	status_backlog: 'Backlog',
+	effort: 'Aufwand',
+	effort_low: 'Gering',
+	effort_medium: 'Mittel',
+	effort_high: 'Hoch',
+	progress: 'Fortschritt',
+	delete: 'Todo löschen',
+	create_success: 'Todo wurde erfolgreich erstellt.',
+	delete_success: 'Todo wurde erfolgreich gelöscht.',
+	switch_view: 'Ansicht wechseln',
+	view_list: 'Liste',
+	view_kanban: 'Kanban',
+	view_overview: 'Übersicht',
+	uncategorized: 'Unkategorisiert',
+	delete_confirm_label: 'Todo löschen',
+	delete_confirm_message: 'Bist du sicher, dass du dieses Todo löschen möchtest?',
+	add_subtask: 'Unteraufgabe hinzufügen',
+	sort_by_score: 'Nach Smart Score sortieren',
+	no_description: 'Keine Beschreibung',
+	recurrence: 'Wiederholung',
+	recurrence_daily: 'Täglich',
+	recurrence_weekly: 'Wöchentlich',
+	recurrence_monthly: 'Monatlich',
+	recurrence_yearly: 'Jährlich',
+	recurrence_ends_at: 'Endet am',
+	add_recurrence: 'Wiederholung hinzufügen',
+	remove_recurrence: 'Wiederholung entfernen',
+	recurrence_requires_due: 'Zuerst ein Fälligkeitsdatum setzen'
+};
+
+const checkIn: CheckInRecords = {
+	overview: 'Übersicht',
+	daily: 'Tag',
+	statistics: 'Statistik',
+	settings: 'Einstellungen',
+	mood: 'Gemüt',
+	sports: 'Sport',
+	food_quality: 'Ernährung',
+	food_amount: 'Essensmenge',
+	sleep: 'Schlaf',
+	water: 'Wasser',
+	dreams: 'Träume',
+	work: 'Arbeit',
+	menstruation: 'Menstruation',
+	alcohol: 'Alkohol',
+	smoking: 'Rauchen',
+	save_success: 'Daten wurden erfolgreich gespeichert.',
+	averages: 'Durchschnitt',
+	total: 'Gesamt',
+	week: 'Woche',
+	sport_gym: 'Fitnessstudio',
+	sport_cycling: 'Radfahren',
+	sport_hiking: 'Wandern',
+	sport_walking: 'Spazieren',
+	sport_swimming: 'Schwimmen',
+	sport_yoga: 'Yoga',
+	sport_replace_with: 'Ersetzen durch...'
+};
+
+const widgets: WidgetRecords = {
+	todos_due_today: 'Heutige Todos',
+	todos_due_overdue: 'Überfällige Todos',
+	todos_high_priority: 'Wichtige Todos',
+	todos_most_relevant: 'Wichtigste Todos',
+	check_in_daily: 'Check-in',
+	calendar: 'Kalender',
+	weather: 'Wetter',
+	your_day: 'Dein Tag',
+	your_day_no_entries: 'Heute scheint nix zu tun zu sein.',
+	check_in_statistics: 'Check-in Statistik',
+	random_album: 'Zufälliges Album',
+	random_quote: 'Zufälliges Zitat',
+	shortcuts: 'Shortcuts',
+	manage_shortcuts: 'Shortcuts bearbeiten',
+	shortcut_title: 'Titel',
+	shortcut_url: 'URL',
+	clock: 'Uhr',
+	select_city: 'Stadt auswählen',
+	search_city: 'Stadt suchen...',
+	search_city_hint: 'Mindestens 3 Zeichen eingeben',
+	no_cities_found: 'Keine Städte gefunden',
+	select_city_prompt: 'Wähle deine Stadt für die Wettervorhersage.',
+	loading: 'Laden',
+	coming_up: 'Demnächst'
+};
+
+const notes: NoteRecords = {
+	notebook: 'Notizbuch',
+	welcome: 'Willkommen in deinem Notizbuch.',
+	instruction: 'Lege eine neue Notiz an oder wähle eine aus.',
+	new_note: 'Neue Notiz',
+	new_folder: 'Neuer Ordner',
+	delete_note: 'Notiz löschen',
+	delete_folder: 'Ordner löschen',
+	edit_folder: 'Ordner bearbeiten',
+	editor: 'Editor',
+	output: 'Output',
+	create_note_success: 'Die Notiz wurde erfolgreich erstellt.',
+	create_folder_success: 'Der Ordner wurde erfolgreich erstellt.',
+	save_success: 'Notiz wurde erfolgreich gespeichert.',
+	import: 'Importieren',
+	export: 'Exportieren',
+	created_days_ago: 'Vor %d Tagen erstellt',
+	updated_days_ago: 'Vor %d Tagen bearbeitet',
+	new_notes: 'Neue Notizen',
+	last_updated: 'Zuletzt bearbeitet',
+	enter_note_title: 'Notiz-Titel eingeben',
+	enter_folder_title: 'Ordner-Name eingeben',
+	favorites: 'Favoriten',
+	add_to_favorites: 'Zu Favoriten hinzufügen',
+	remove_from_favorites: 'Von Favoriten entfernen',
+	no_entries: 'Es scheint noch keine Notizen zu geben.',
+	note_not_found: 'Diese Notiz existiert nicht.',
+	insert_image: 'Bild einfügen',
+	insert_image_url: 'URL',
+	insert_image_clipboard: 'Zwischenablage',
+	insert_image_upload: 'Hochladen',
+	insert_image_no_clipboard: 'Kein Bild in der Zwischenablage gefunden',
+	insert_link: 'Link einfügen',
+	insert_link_url: 'URL',
+	insert_link_name: 'Linkname'
+};
+
+const libraries: LibraryRecords = {
+	music: {
+		title: 'Titel',
+		artist: 'Künstler*in',
+		type: 'Medien-Typ',
+		format: 'Medien-Format',
+		condition: 'Zustand',
+		acquired_where: 'Wo erworben',
+		acquired_at: 'Erworben bei',
+		additional_info: 'Zusätzliche Informationen',
+		cover: 'Cover URL',
+		link: 'Link',
+		type_none: 'Kein Typ definiert',
+		type_vinyl: 'Schallplatte',
+		type_cd: 'CD',
+		type_digital: 'Digital',
+		format_none: 'Kein Format definiert',
+		format_album: 'Album',
+		format_single: 'Single',
+		format_compilation: 'Zusammenstellung',
+		condition_none: 'Kein Zustand definiert',
+		condition_mint: 'Neuwertiger Zustand',
+		condition_verygood: 'Sehr guter Zustand',
+		condition_good: 'Guter Zustand',
+		condition_medium: 'Mittelmäßiger Zustand',
+		condition_poor: 'Schlechter Zustand',
+		condition_verypoor: 'Sehr schlechter Zustand',
+		add_album: 'Album hinzufügen',
+		edit_album: 'Album bearbeiten',
+		import_error: 'Album konnte nicht importiert werden.',
+		deezer_preview: 'Vorschau',
+		deezer_import: 'Von Deezer importieren',
+		deezer_import_validation_error: 'Bitte gib einen gültigen Deezer Link ein.',
+		discogs_import: 'Von Discogs importieren',
+		discogs_import_validation_error: 'Bitte gib einen gültigen Discogs Link ein.',
+		create_error: 'Album konnte nicht erstellt werden.',
+		update_error: 'Album konnte nicht aktualisiert werden.'
+	},
+	books: {
+		title: 'Titel',
+		series: 'Reihe',
+		author: 'Autor*in',
+		pages: 'Seitenzahl',
+		current_page: 'Aktuelle Seite',
+		lent_to: 'Verliehen an',
+		is_where: 'Befindet sich',
+		cover: 'Cover',
+		link: 'Link',
+		summary: 'Zusammenfassung',
+		started_at: 'Begonnen am',
+		finished_at: 'Beendet am',
+		add_book: 'Buch hinzufügen',
+		edit_book: 'Buch bearbeiten',
+		import_error: 'Buch konnte nicht importiert werden.',
+		hardcover_import: 'Von Hardcover importieren',
+		hardcover_import_validation_error: 'Bitte gib einen gültigen Hardcover Link ein.',
+		goodreads_import: 'Von goodreads importieren',
+		goodreads_import_validation_error: 'Bitte gib einen gültigen goodreads Link ein.',
+		create_error: 'Buch konnte nicht erstellt werden.',
+		update_error: 'Buch konnte nicht aktualisiert werden.'
+	},
+	movies: {
+		title: 'Titel',
+		category: 'Kategorie',
+		category_movie: 'Film',
+		category_series: 'Serie',
+		cover: 'Cover',
+		link: 'Link',
+		started_at: 'Begonnen am',
+		finished_at: 'Beendet am',
+		add_movie: 'Film hinzufügen',
+		edit_movie: 'Film bearbeiten',
+		import_error: 'Film konnte nicht importiert werden.',
+		imdb_import: 'Von IMDb importieren',
+		imdb_import_validation_error: 'Bitte gib einen gültigen IMDb Link ein.',
+		create_error: 'Film konnte nicht erstellt werden.',
+		update_error: 'Film konnte nicht aktualisiert werden.'
+	},
+	games: {
+		title: 'Titel',
+		platform: 'Plattform',
+		platform_pc: 'PC',
+		platform_playstation: 'PlayStation',
+		platform_xbox: 'Xbox',
+		platform_nintendo: 'Nintendo',
+		platform_mobile: 'Mobil',
+		platform_boardgame: 'Brettspiel',
+		platform_other: 'Sonstige',
+		creator: 'Ersteller',
+		publisher: 'Publisher',
+		playtime_hours: 'Spielzeit (Stunden)',
+		completed: 'Durchgespielt',
+		cover: 'Cover',
+		link: 'Link',
+		started_at: 'Begonnen am',
+		finished_at: 'Beendet am',
+		add_game: 'Spiel hinzufügen',
+		edit_game: 'Spiel bearbeiten',
+		import_error: 'Spiel konnte nicht importiert werden.',
+		steam_import: 'Von Steam importieren',
+		steam_import_validation_error: 'Bitte gib einen gültigen Steam Store Link an.',
+		bgg_import: 'Von BGG importieren',
+		bgg_import_validation_error: 'Bitte gib einen gültigen BGG Link an.'
+	},
+	links: {
+		title: 'Titel',
+		url: 'URL',
+		is_favorite: 'Favorit',
+		cover: 'Cover',
+		add_link: 'Link hinzufügen',
+		all: 'Alle',
+		favorites: 'Favoriten',
+		uncategorized: 'Unkategorisiert',
+		category_title: 'Titel',
+		category_color: 'Farbe',
+		create_category: 'Kategorie erstellen',
+		create_error: 'Link konnte nicht erstellt werden'
+	},
+	quotes: {
+		summary: 'Zusammenfassung',
+		author: 'Autor*in',
+		quote: 'Zitat',
+		source: 'Quelle',
+		add_quote: 'Zitat hinzufügen',
+		edit_quote: 'Zitat bearbeiten',
+		create_error: 'Zitat konnte nicht erstellt werden.',
+		update_error: 'Zitat konnte nicht aktualisiert werden.'
+	},
+	recipes: {
+		title: 'Titel',
+		ingredients: 'Zutaten',
+		description: 'Beschreibung',
+		cover: 'Bild',
+		link: 'Link',
+		time_to_make: 'Zubereitungszeit',
+		type: 'Typ',
+		type_breakfast: 'Frühstück',
+		type_lunch: 'Mittagessen',
+		type_dinner: 'Abendessen',
+		type_snack: 'Snack',
+		type_dessert: 'Dessert',
+		type_drink: 'Getränk',
+		type_other: 'Sonstiges',
+		minutes: 'Minuten',
+		add_recipe: 'Rezept hinzufügen',
+		edit_recipe: 'Rezept bearbeiten',
+		chefkoch_import: 'Von Chefkoch importieren',
+		chefkoch_import_validation_error: 'Bitte gib einen gültigen Chefkoch-Link an.',
+		import_error: 'Rezept konnte nicht importiert werden.',
+		create_error: 'Rezept konnte nicht erstellt werden.',
+		update_error: 'Rezept konnte nicht aktualisiert werden.'
+	},
+	recommendations: {
+		welcome_slogan: 'Was kann ich empfehlen?',
+		loading_text_local: 'Durchsuche deine Bibliothek..',
+		loading_text_remote: 'Frage das Universum..',
+		satisfied: 'Prima, das nehme ich!',
+		not_satisfied: 'Nochmal!',
+		favorite: 'Ein Favorit',
+		random: 'Einfach etwas Zufälliges',
+		unrated: 'Etwas, das ich noch nicht gesehen habe',
+		new: 'Etwas Neues'
+	},
+	navigation: {
+		music: 'Musik',
+		books: 'Bücher',
+		movies: 'Filme',
+		games: 'Spiele',
+		recipes: 'Rezepte',
+		quotes: 'Zitate',
+		links: 'Links'
+	},
+	create: 'Neu',
+	tags: 'Tags',
+	genres: 'Genres',
+	rating: 'Rating',
+	edit_genres: 'Genres',
+	clear_filter: 'Filter löschen',
+	clear_all_filters: 'Alle Filter löschen',
+	publication_year: 'Veröffentlichungsjahr',
+	recommend: 'Empfehlungen',
+	releases: 'Releases',
+	releases_loading: 'Lade Neu-Veröffentlichungen',
+	release_date: 'Veröffentlichungsdatum',
+	releases_none: 'Konnte keine neuen Veröffentlichungen finden.',
+	wishlist: 'Wunschliste',
+	search_on: 'Auf %s suchen',
+	show_on: 'Auf %s anzeigen'
+};
+
+const dev: DevRecords = {
+	requests: {
+		new: 'Neue Anfrage',
+		status_changed: 'Status-Update am',
+		screenshot: 'Screenshot',
+		bug: 'Bug',
+		feature: 'Neue Funktion',
+		status_backlog: 'Backlog',
+		status_pending: 'Ausstehend',
+		status_in_progress: 'In Bearbeitung',
+		status_completed: 'Fertig',
+		status_cancelled: 'Abgewiesen',
+		validation_error: 'Bitte füge einen Titel und eine Beschreibung hinzu',
+		priority_1: 'Niedrige Priorität',
+		priority_2: 'Mittlere Priorität',
+		priority_3: 'Hohe Priorität',
+		priority_4: 'Sehr hohe Priorität',
+		priority_5: 'Kritische Priorität',
+		title: 'Titel',
+		description: 'Beschreibung',
+		url: 'URL',
+		comments_loading: 'Kommentare werden geladen...',
+		comments_empty: 'Noch keine Kommentare',
+		comments_placeholder: 'Kommentar hinzufügen...',
+		comments_submit: 'Absenden',
+		current_requests: 'Aktuelle Anfragen',
+		resolved_requests: 'Abgeschlossene Anfragen'
+	}
+};
+
+const finances: FinanceRecords = {
+	wealth: 'Vermögen',
+	budget: 'Einkommen',
+	positions: 'Positionen',
+	total: 'Summe',
+	income: 'Einkommen',
+	expenses: 'Ausgaben',
+	show_history: 'Verlauf einblenden',
+	hide_history: 'Verlauf ausblenden',
+	wealth_distribution: 'Vermögensverteilung',
+	income_vs_expenses: 'Einkommen vs Ausgaben',
+	wealth_trend: 'Vermögensverlauf'
+};
+
+const assistants: AssistantRecords = {
+	add: 'Neuen Assistenten hinzufügen',
+	create: 'Erstellen',
+	update: 'Aktualisieren',
+	no_assistants: 'Es scheint noch keine Assistenten zu geben.',
+	deletion_title: 'Assistent löschen',
+	deletion_description: 'Bist du sicher, dass du diesen Assistenten löschen möchtest?',
+	chat_placeholder: 'Schreibe eine Nachricht..',
+	title: 'Titel',
+	description: 'Beschreibung',
+	prompt: 'Prompt'
+};
+
+const feeds: FeedRecords = {
+	feeds: 'Feeds',
+	all_feeds: 'Alle Feeds',
+	add_feed: 'Feed hinzufügen',
+	edit_feed: 'Feed bearbeiten',
+	delete_feed: 'Feed löschen',
+	title: 'Titel',
+	url: 'URL',
+	keywords: 'Whitelist',
+	keywords_description: 'Nur Artikel anzeigen, die eines dieser Schlagwörter enthalten.',
+	keywords_placeholder: 'Schlagwörter eingeben',
+	blacklist: 'Blacklist',
+	blacklist_description: 'Artikel ausblenden, die eines dieser Schlagwörter enthalten.',
+	blacklist_placeholder: 'Schlagwörter eingeben',
+	feed_add_success: 'Feed wurde erfolgreich hinzugefügt.',
+	feed_add_error: 'Feed konnte nicht hinzugefügt werden.',
+	feed_already_subscribed: 'Du hast diesen Feed bereits abonniert.',
+	feed_update_success: 'Feed wurde erfolgreich geändert.',
+	feed_update_error: 'Feed konnte nicht geändert werden.',
+	test_feed: 'Feed testen',
+	test_feed_error: 'Feed hat keine Resultate ergeben.',
+	feed_preview: 'Feed Vorschau',
+	view_compact: 'Kompakt',
+	view_comfortable: 'Komfortabel',
+	view_card: 'Karten',
+	browse_feeds: 'Feeds entdecken',
+	browse_feeds_search: 'Feeds suchen...',
+	browse_feeds_empty: 'Keine Feeds gefunden.',
+	browse_feeds_friends: 'Von Freunden abonniert',
+	browse_feeds_friends_empty: 'Deine Freunde haben noch keine Feeds abonniert.',
+	browse_feeds_subscribers: 'Abonnenten'
+};
+
+const calendar: CalendarRecords = {
+	months: {
+		1: 'Januar',
+		2: 'Februar',
+		3: 'März',
+		4: 'April',
+		5: 'Mai',
+		6: 'Juni',
+		7: 'Juli',
+		8: 'August',
+		9: 'September',
+		10: 'Oktober',
+		11: 'November',
+		12: 'Dezember'
+	},
+	weekdays: {
+		1: 'Montag',
+		2: 'Dienstag',
+		3: 'Mittwoch',
+		4: 'Donnerstag',
+		5: 'Freitag',
+		6: 'Samstag',
+		7: 'Sonntag'
+	},
+	weekdays_short: {
+		1: 'Mo',
+		2: 'Di',
+		3: 'Mi',
+		4: 'Do',
+		5: 'Fr',
+		6: 'Sa',
+		7: 'So'
+	},
+	calendar_week: 'KW',
+	calendar: 'Kalender',
+	month: 'Monat',
+	week: 'Woche',
+	day: 'Tag',
+	list: 'Liste',
+	manage_calendars: 'Kalender verwalten',
+	create_entry: 'Eintrag erstellen',
+	edit_entry: 'Eintrag bearbeiten',
+	delete_entry: 'Löschen',
+	title: 'Titel',
+	start_date: 'Von',
+	end_date: 'Bis',
+	description: 'Beschreibung',
+	location: 'Ort',
+	is_all_day: 'Ganztägig',
+	is_recurring: 'Wiederkehrend',
+	choose_calendar: 'Kalender auswählen',
+	request_sync: 'Synchronisieren',
+	sync_success: 'Synchronisation war erfolgreich.',
+	sync_error: 'Synchronisation ist fehlgeschlagen.',
+	sync_still_running:
+		'Synchronisation ist noch nicht abgeschlossen. Bitte versuche es in einer Minute erneut.',
+	entry_create_error: 'Eintrag konnte nicht erstellt werden. Überprüfe deine Eingaben.',
+	create_success: 'Kalender wurde erfolgreich erstellt.',
+	delete_success: 'Kalender wurde erfolgreich gelöscht.',
+	delete_title: 'Kalender löschen?',
+	delete_description: 'Bist du sicher, dass du den Kalender löschen möchtest?',
+	import_success: 'Kalender wurden erfolgreich importiert.',
+	import_error: 'Es ist ein Fehler beim Import aufgetreten.',
+	import_start: 'Import wird gestartet..',
+	import_create_calendar: 'Erstelle Kalender %s..',
+	import_calendars: 'Kalender importieren',
+	import_calendars_running: 'Importiere Kalender..',
+	import_events: 'Importiere %dTermine für Kalender %s..',
+	recurring_event: 'Wiederkehrender Termin',
+	recurring_edit_question: 'Möchten Sie nur diesen Termin oder alle Termine bearbeiten?',
+	recurring_delete_question: 'Möchten Sie nur diesen Termin oder alle Termine löschen?',
+	this_occurrence: 'Nur diesen Termin',
+	all_occurrences: 'Alle Termine',
+	today: 'Heute',
+	no_events: 'Keine Termine',
+	share_calendar: 'Kalender teilen',
+	share_with_friend: 'Mit Freund teilen',
+	shared_by: 'Geteilt von %s',
+	pending_invites: 'Ausstehende Einladungen',
+	accept_invite: 'Annehmen',
+	decline_invite: 'Ablehnen',
+	unsubscribe: 'Abmelden',
+	no_friends_to_share: 'Keine Freunde zum Teilen',
+	share_success: 'Kalender erfolgreich geteilt',
+	share_error: 'Kalender konnte nicht geteilt werden',
+	invite_accepted: 'Einladung angenommen',
+	invite_declined: 'Einladung abgelehnt',
+	unsubscribed: 'Vom Kalender abgemeldet',
+	synchronize: 'Synchronisieren'
+};
+
+const contacts: ContactRecords = {
+	add_contact: 'Kontakt hinzufügen',
+	address_books: 'Adressbücher',
+	import_success: 'Adressbücher wurden erfolgreich importiert.',
+	import_error: 'Beim Importieren der Adressbücher ist ein Fehler aufgetreten.',
+	import_start: 'Import wird gestartet..',
+	import_create_address_book: 'Erstelle Adressbuch %s..',
+	import_address_books: 'Importiere Adressbücher..',
+	import_contacts: 'Kontakte importieren',
+	import_contacts_running: 'Importiere %dKontakte für das Adressbuch %s..'
+};
+
+const dav: DavRecords = {
+	synchronize: 'Mit Geräten verbinden',
+	synchronize_headline:
+		'Du kannst deine Kalender und Kontakte mit all deinen Geräten via CalDAV und CardDAV synchronisieren.',
+	synchronize_server: 'URL',
+	synchronize_username: 'Benutzername',
+	synchronize_password: 'Passwort',
+	synchronize_password_value: 'dein solyto Passwort'
+};
+
+const notifications: NotificationRecords = {
+	friend_request_title: 'Neue Freundschaftsanfrage',
+	friend_request_message: 'Du hast eine neue Freundschaftsanfrage von %s erhalten.',
+	music_release_title: 'Neues Album erschienen',
+	music_release_message: 'Einer deiner Lieblingskünstler hat ein neues Album veröffentlicht: %s.',
+	book_release_title: 'Neues Buch erschienen',
+	book_release_message: 'Einer deiner Lieblingsautoren hat ein neues Buch veröffentlicht: %s.',
+	calendar_share_title: 'Kalender geteilt',
+	calendar_share_message: '%1 hat den Kalender „%2" mit dir geteilt.',
+	dev_request_comment_title: 'Neuer Kommentar zu einer Dev-Anfrage',
+	dev_request_comment_message: '%1 hat kommentiert: %2.',
+	daily_check_in_reminder_title: 'Tägliche Check-in-Erinnerung',
+	daily_check_in_reminder_message: 'Hast du heute dein tägliches Check-in noch nicht erledigt?',
+	daily_day_reminder_title: 'Dein bevorstehender Tag',
+	daily_day_reminder_message: 'Du hast %1 Aufgaben und %2 Termine für heute.',
+	daily_day_reminder: 'Tägliche Erinnerung an deinen bevorstehenden Tag erhalten?',
+	daily_check_in_reminder: 'Tägliche Erinnerung an dein Check-in erhalten?'
+};
+
+const clipboard: ClipboardRecords = {
+	clipboard: 'Zwischenablage',
+	copy: 'Kopieren',
+	copy_success: 'In die Zwischenablage kopiert',
+	paste: 'Einfügen',
+	save: 'Speichern',
+	save_success: 'Zwischenablage gespeichert',
+	save_error: 'Zwischenablage konnte nicht gespeichert werden',
+	clear: 'Löschen',
+	clear_success: 'Zwischenablage wurde gelöscht',
+	clear_error: 'Zwischenablage konnte nicht gelöscht werden',
+	load_error: 'Zwischenablage konnte nicht geladen werden',
+	add_entry: 'Eintrag hinzufügen',
+	history: 'Verlauf',
+	delete_error: 'Eintrag konnte nicht gelöscht werden',
+	image_save_success: 'Bild gespeichert',
+	image_save_error: 'Bild konnte nicht gespeichert werden',
+	image_copy_success: 'Bild in die Zwischenablage kopiert',
+	image_copy_error: 'Bild konnte nicht kopiert werden'
+};
+
+const profile: ProfileRecords = {
+	friends: 'Freunde',
+	friend_requests: 'Freundschaftsanfragen',
+	request_to: 'Anfrage an %s',
+	request_pending: 'Ausstehend',
+	request_rejected: 'Abgelehnt',
+	request_accepted: 'Akzeptiert',
+	received: 'Erhalten',
+	sent: 'Gesendet'
+};
+
+const help: HelpRecords = {
+	title: 'Hilfe',
+	close: 'Schließen',
+	section_overview: 'Über diesen Bereich',
+	keyboard_shortcuts: 'Tastenkürzel',
+	tips: 'Tipps & Tricks',
+	shortcut_f1: 'Hilfe ein-/ausblenden',
+	shortcut_escape: 'Dialoge schließen',
+	shortcut_enter: 'Aktionen bestätigen',
+	shortcut_enter_todo: 'Neue Aufgabe erstellen',
+	home: {
+		title: 'Dashboard',
+		description:
+			'Dein persönliches Dashboard mit Widgets für schnellen Zugriff auf deine wichtigsten Informationen. Passe es an, um genau das zu sehen, was dir wichtig ist.',
+		widgets_tip:
+			'Linke Spalte: dein Tag auf einen Blick. Mitte: Inspiration und Links. Rechts: Statistiken und Schnellzugriff.',
+		edit_tip:
+			'Einige Bereiche erscheinen erst, wenn du Inhalte hinzugefügt hast – füge Aufgaben, Termine oder Check-ins hinzu.'
+	},
+	todos: {
+		title: 'Aufgaben',
+		description:
+			'Verwalte deine Aufgaben mit Prioritäten, Fälligkeitsdaten, Kategorien und Arbeitsbereichen. Bleibe organisiert und verpasse keine Deadline.',
+		create_tip: 'Drücke Enter nach der Eingabe, um schnell eine neue Aufgabe zu erstellen.',
+		priority_tip:
+			'Setze Prioritäten (Hoch, Mittel, Niedrig), um dich auf das Wichtigste zu konzentrieren.',
+		workspace_tip:
+			'Nutze Arbeitsbereiche, um persönliche und berufliche Aufgaben zu trennen oder nach Projekten zu organisieren.',
+		subtask_tip:
+			'Teile komplexe Aufgaben in Unteraufgaben auf, um den Fortschritt Schritt für Schritt zu verfolgen.',
+		recurring_tip:
+			'Stelle eine Wiederholung für eine Aufgabe ein, damit sie automatisch nach einem Zeitplan neu erstellt wird.'
+	},
+	calendar: {
+		title: 'Kalender',
+		description:
+			'Plane Termine und Veranstaltungen. Synchronisiere mit deinen Geräten über CalDAV für nahtlosen Zugriff überall.',
+		views_tip:
+			'Wechsle zwischen Monats-, Wochen-, Tages- und Listenansicht mit den Buttons oben.',
+		create_tip:
+			'Klicke auf einen Tag oder Zeitraum, um schnell einen neuen Termin zu erstellen.',
+		sync_tip:
+			'Nutze CalDAV-Sync, um von jedem Gerät oder jeder App aus auf deinen Kalender zuzugreifen.'
+	},
+	notes: {
+		title: 'Notizen',
+		description:
+			'Schreibe und organisiere Notizen mit Markdown. Erstelle Ordner, um zusammengehörige Notizen zu gruppieren.',
+		markdown_tip:
+			'Nutze Markdown-Syntax für Formatierungen: **fett**, *kursiv*, # Überschriften, - Listen und mehr.',
+		folders_tip:
+			'Erstelle Ordner, um Notizen nach Thema, Projekt oder beliebigen Kategorien zu organisieren.',
+		export_tip: 'Exportiere deine Notizen, um sie mitzunehmen oder zu sichern.'
+	},
+	libraries: {
+		title: 'Bibliotheken',
+		description:
+			'Verwalte deine Sammlungen von Büchern, Musik, Filmen, Spielen, Rezepten, Zitaten und Links. Bewerte, tagge und organisiere alles, was du liebst.',
+		import_tip:
+			'Importiere Einträge von externen Quellen wie Deezer, Discogs, IMDb, Steam und mehr.',
+		filter_tip: 'Nutze Filter und Tags, um schnell Einträge in deiner Sammlung zu finden.',
+		recommend_tip:
+			'Probiere die Empfehlungsfunktion aus, um Einträge aus deiner Bibliothek neu zu entdecken.'
+	},
+	contacts: {
+		title: 'Kontakte',
+		description:
+			'Verwalte dein Adressbuch mit CardDAV-Sync-Unterstützung. Halte deine Kontakte auf allen Geräten zugänglich.',
+		sync_tip:
+			'Importiere und synchronisiere Kontakte über CardDAV, um alles auf allen Geräten synchron zu halten.',
+		groups_tip: 'Organisiere Kontakte in Gruppen für einfaches Filtern und Verwalten.'
+	},
+	checkIn: {
+		title: 'Check-in',
+		description:
+			'Verfolge deine täglichen Gewohnheiten, Stimmung, Schlaf und mehr. Entwickle ein Bewusstsein für deine Muster im Laufe der Zeit.',
+		daily_tip:
+			'Fülle dein tägliches Check-in aus, um ein Bild deiner Gewohnheiten und deines Wohlbefindens zu erstellen.',
+		stats_tip: 'Sieh dir Statistiken an, um Trends und Muster in deinen Daten zu erkennen.',
+		trackers_tip: 'Passe in den Check-in-Einstellungen an, welche Tracker du täglich erfassen möchtest.',
+		sport_tip: 'Wähle deinen Sporttyp in den Einstellungen, damit das Aktivitäts-Tracking zu deiner Routine passt.'
+	},
+	assistants: {
+		title: 'Assistenten',
+		description:
+			'Erstelle benutzerdefinierte KI-Assistenten mit spezifischen Prompts für verschiedene Aufgaben. Deine Gespräche bleiben privat.',
+		create_tip:
+			'Erstelle Assistenten mit benutzerdefinierten Prompts für spezifische Aufgaben wie Schreiben, Programmieren oder Brainstorming.',
+		prompt_tip:
+			'Schreibe detaillierte Prompts, um bessere, fokussiertere Antworten von deinen Assistenten zu erhalten.'
+	},
+	finances: {
+		title: 'Finanzen',
+		description:
+			'Verfolge dein Vermögen und Budget. Erhalte ein klares Bild deiner finanziellen Situation.',
+		wealth_tip:
+			'Füge Konten und Vermögenswerte hinzu, um dein Gesamtvermögen im Laufe der Zeit zu verfolgen.',
+		budget_tip: 'Richte Einnahmen- und Ausgabenkategorien ein, um deinen Cashflow zu verstehen.'
+	},
+	feeds: {
+		title: 'Feeds',
+		description:
+			'Folge RSS-Feeds deiner Lieblingsquellen. Keine Algorithmen, nur die Inhalte, die du wählst.',
+		add_tip:
+			'Füge Feeds hinzu, indem du die RSS-URL einfügst. Die meisten Blogs und Nachrichtenseiten haben RSS-Feeds.',
+		filter_tip:
+			'Nutze Whitelist- und Blacklist-Schlüsselwörter, um Artikel nach Inhalt zu filtern.'
+	},
+	clipboard: {
+		title: 'Zwischenablage',
+		description:
+			'Eine synchronisierte Zwischenablage, die auf allen deinen Geräten funktioniert. Speichere Textschnipsel für schnellen Zugriff.',
+		sync_tip:
+			'Speichere Zwischenablage-Einträge, um von jedem Gerät darauf zuzugreifen, auf dem du angemeldet bist.'
+	},
+	settings: {
+		title: 'Einstellungen',
+		description:
+			'Passe solyto an, damit es genau so funktioniert, wie du es möchtest. Konfiguriere Funktionen, Erscheinungsbild und Integrationen.',
+		features_tip:
+			'Aktiviere oder deaktiviere Funktionen, um nur das in der Navigation anzuzeigen, was du brauchst.',
+		localization_tip: 'Stelle deine bevorzugte Sprache, Zeitzone und Datums-/Zeitformate ein.'
+	},
+	profile: {
+		title: 'Profil',
+		description: 'Verwalte dein Konto und verbinde dich mit Freunden.',
+		friends_tip:
+			'Sende und akzeptiere Freundschaftsanfragen, um dich mit anderen solyto-Nutzern zu verbinden.'
+	},
+	dev_requests: {
+		title: 'Entwickleranfragen',
+		description:
+			'Sende Fehlerberichte und Funktionsanfragen direkt an das Entwicklerteam. Verfolge den Status deiner Einreichungen.',
+		create_tip:
+			'Füge Screenshots und detaillierte Beschreibungen hinzu, damit Entwickler Probleme schneller verstehen und beheben können.',
+		status_tip:
+			'Schau regelmäßig vorbei, um zu sehen, wann deine Anfrage von Backlog zu In Bearbeitung zu Abgeschlossen wechselt.'
+	},
+	timeTracking: {
+		title: 'Zeiterfassung',
+		description:
+			'Erfasse die Zeit für Projekte und Aufgaben. Nutze den Timer oder füge Einträge manuell hinzu. Sieh dir Statistiken an, um zu verstehen, wohin deine Zeit geht.',
+		timer_tip:
+			'Starte einen Timer, um die Zeit automatisch zu erfassen, oder füge Einträge manuell hinzu.',
+		projects_tip:
+			'Organisiere deine Zeiteinträge in Projekte und Kategorien für bessere Einblicke.',
+		pomodoro_tip:
+			'Nutze den eingebauten Pomodoro-Timer, um in fokussierten Intervallen mit Pausen dazwischen zu arbeiten.'
+	}
+};
+
+const welcome_tour: WelcomeTourRecords = {
+	welcome_title: 'Willkommen bei solyto!',
+	welcome_subtitle: 'Dein persönlicher Produktivitäts-Hub',
+	welcome_description:
+		'solyto vereint alles, was du brauchst, an einem Ort: Aufgaben, Kalender, Notizen, Kontakte und mehr. Kein Tracking, keine Werbung, kein Datenverkauf. Lass uns dich in wenigen Schritten einrichten.',
+	features_title: 'Wähle deine Funktionen',
+	features_subtitle: 'Was möchtest du nutzen?',
+	features_description:
+		'Wähle die Funktionen, die du in deiner Navigation sehen möchtest. Keine Sorge, du kannst das jederzeit in den Einstellungen ändern.',
+	feature_calendar: 'Kalender',
+	feature_calendar_desc: 'Termine planen, mit CalDAV synchronisieren',
+	feature_todos: 'Aufgaben',
+	feature_todos_desc: 'Aufgaben, Projekte und Deadlines',
+	feature_notes: 'Notizen',
+	feature_notes_desc: 'Markdown-Notizen, in Ordnern organisiert',
+	feature_libraries: 'Bibliotheken',
+	feature_libraries_desc: 'Bücher, Musik, Filme, Spiele verfolgen',
+	feature_contacts: 'Kontakte',
+	feature_contacts_desc: 'Adressbuch, mit CardDAV synchronisieren',
+	feature_check_in: 'Check-in',
+	feature_check_in_desc: 'Tägliche Stimmung, Schlaf und Gewohnheiten',
+	feature_assistants: 'Assistenten',
+	feature_assistants_desc: 'KI-Chat mit benutzerdefinierten Prompts',
+	feature_finances: 'Finanzen',
+	feature_finances_desc: 'Vermögen und Budget verfolgen',
+	feature_feeds: 'Feeds',
+	feature_feeds_desc: 'RSS-Feeds deiner Quellen',
+	feature_clipboard: 'Zwischenablage',
+	feature_clipboard_desc: 'Geräteübergreifende Zwischenablage-Sync',
+	feature_time_tracking: 'Zeiterfassung',
+	feature_time_tracking_desc: 'Zeit für Projekte und Aufgaben erfassen',
+	widgets_title: 'Dashboard-Widgets',
+	widgets_subtitle: 'Passe deine Startseite an',
+	widgets_description:
+		'Dein Dashboard zeigt Widgets, die dir einen schnellen Überblick geben. Wähle aus, welche du sehen möchtest. Du kannst sie jederzeit neu anordnen oder ändern, indem du auf den Bearbeiten-Button klickst.',
+	localization_title: 'Lokalisierung',
+	localization_subtitle: 'Mach es zu deinem',
+	localization_description:
+		'Stelle deine bevorzugte Sprache, Zeitzone und Datums-/Zeitformate ein.',
+	ready_title: 'Alles bereit!',
+	ready_subtitle: 'Bereit zum Loslegen',
+	ready_description: 'Dein solyto ist konfiguriert und startklar. Viel Spaß!',
+	ready_description_desktop: 'Drücke jederzeit F1, um Hilfe zur aktuellen Seite zu erhalten.',
+	next: 'Weiter',
+	back: 'Zurück',
+	skip: 'Tour überspringen',
+	finish: "Los geht's",
+	step_of: 'Schritt %d von %d',
+	pwa_title: 'Als App installieren',
+	pwa_description: 'Wenn du möchtest, kannst du solyto zu deinem Startbildschirm hinzufügen.',
+	pwa_install_button: 'Zum Startbildschirm hinzufügen',
+	pwa_installed: 'Bereits auf diesem Gerät installiert.',
+	pwa_ios_instruction: 'Tippe auf den Teilen-Button in deinem Browser und wähle dann „Zum Home-Bildschirm".',
+	pwa_browser_hint: 'Öffne solyto in Chrome oder Safari, um es als App auf deinem Gerät zu installieren.',
+	tour_intro_title: 'Lass uns einen kurzen Rundgang machen',
+	tour_intro_description: 'Ich zeige dir jede Funktion in deiner Navigation. Du kannst jederzeit in den Einstellungen zurückkehren.',
+	tour_outro_title: 'Alles bereit!',
+	tour_outro_description: 'Das ist solyto! Drücke jederzeit F1, um Hilfe zum aktuellen Bereich zu erhalten.',
+	tour_start: 'Tour starten'
+};
+
+const admin: AdminRecords = {
+	role_update_success: 'Benutzerrolle wurde erfolgreich aktualisiert.',
+	role_update_error: 'Benutzerrolle konnte nicht aktualisiert werden.'
+};
+
+const timeTracking: TimeTrackingRecords = {
+	time_tracking: 'Zeiterfassung',
+	projects: 'Projekte',
+	entries: 'Einträge',
+	statistics: 'Statistiken',
+	categories: 'Kategorien',
+	add_project: 'Projekt hinzufügen',
+	edit_project: 'Projekt bearbeiten',
+	add_entry: 'Eintrag hinzufügen',
+	add_category: 'Kategorie hinzufügen',
+	edit_category: 'Kategorie bearbeiten',
+	title: 'Titel',
+	description: 'Beschreibung',
+	color: 'Farbe',
+	started_at: 'Gestartet um',
+	stopped_at: 'Gestoppt um',
+	duration: 'Dauer',
+	duration_minutes: 'Dauer (Minuten)',
+	project: 'Projekt',
+	category: 'Kategorie',
+	start_timer: 'Timer starten',
+	stop_timer: 'Timer stoppen',
+	timer_running: 'Timer läuft',
+	no_projects: 'Noch keine Projekte.',
+	no_entries: 'Noch keine Einträge.',
+	no_description: 'Keine Beschreibung',
+	manual_entry: 'Manueller Eintrag',
+	total_time: 'Gesamtzeit',
+	uncategorized: 'Unkategorisiert',
+	date_range: 'Zeitraum',
+	from: 'Von',
+	to: 'Bis',
+	hours: 'Stunden',
+	minutes: 'Minuten',
+	dashboard: 'Dashboard',
+	recent_entries: 'Letzte Einträge',
+	today: 'Heute',
+	this_week: 'Diese Woche',
+	this_month: 'Dieser Monat',
+	deletion_title: 'Projekt löschen',
+	deletion_description:
+		'Möchtest du dieses Projekt wirklich löschen? Alle zugehörigen Einträge werden entfernt.',
+	pomodoro: 'Pomodoro',
+	work_session: 'Arbeit',
+	short_break: 'Kurze Pause',
+	long_break: 'Lange Pause',
+	sessions_completed: 'Sitzungen',
+	start: 'Start',
+	pause: 'Pause',
+	resume: 'Fortsetzen',
+	skip: 'Überspringen',
+	reset: 'Zurücksetzen',
+	filter_by_category: 'Nach Kategorie filtern',
+	all_categories: 'Alle',
+	edit_entry: 'Eintrag bearbeiten'
+};
+
+const cookie_consent: CookieConsentRecords = {
+	title: 'Hinweis zur Datenspeicherung',
+	body: 'Wir verwenden den lokalen Speicher des Browsers, um Sie sicher angemeldet zu halten. Es werden keine Tracking- oder Analysedaten erfasst.',
+	accept: 'Verstanden',
+	privacy_policy: 'Datenschutzerklärung'
+};
+
+export const de: LanguageFile = {
+	layout,
+	nav,
+	home,
+	auth,
+	settings,
+	todos,
+	checkIn,
+	widgets,
+	notes,
+	libraries,
+	dev,
+	finances,
+	assistants,
+	feeds,
+	calendar,
+	contacts,
+	notifications,
+	clipboard,
+	profile,
+	dav,
+	help,
+	welcome_tour,
+	admin,
+	cookie_consent,
+	timeTracking
+};
