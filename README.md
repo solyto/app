@@ -26,7 +26,7 @@ npm run dev
 
 Runs on [http://localhost:5173](http://localhost:5173) when using the local Docker setup. Running `npm run dev` directly will use the default Vite port instead.
 
-The easiest way to get the full stack running locally is via the [solyto workspace](https://codeberg.org/solyto/solyto).
+The easiest way to get the full stack running locally is via the [solyto workspace](https://github.com/solyto/solyto).
 
 ## Other commands
 
@@ -40,7 +40,7 @@ npm run format      # auto-format
 
 ## Deployment
 
-Handled via Ansible in [solyto/deployment](https://codeberg.org/solyto/deployment).
+Handled via Ansible in [solyto/deployment](https://github.com/solyto/deployment).
 
 ---
 
