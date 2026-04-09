@@ -1,7 +1,9 @@
 import { dev, browser } from '$app/environment';
+import { env } from '$env/dynamic/public';
 
 function getBaseUrl(): string {
 	if (dev) return 'http://localhost:8000';
+	if (env.PUBLIC_API_URL) return env.PUBLIC_API_URL;
 	if (!browser) return 'https://api.solyto.app';
 
 	const domainMap: Record<string, string> = {
