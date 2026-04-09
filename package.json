@@ -59,7 +59,7 @@
 		"@tiptap/extension-table-row": "^3.22.1",
 		"@tiptap/extension-typography": "^3.22.1",
 		"@tiptap/pm": "^3.22.1",
-		"@tiptap/starter-kit": "^3.22.1",
+		"@tiptap/starter-kit": "^3.22.3",
 		"@vvo/tzdb": "^6.198.0",
 		"canvas-confetti": "^1.9.3",
 		"dompurify": "^3.3.1",
