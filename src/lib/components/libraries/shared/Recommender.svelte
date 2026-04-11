@@ -120,8 +120,8 @@
 		onclick={() => select(type)}
 	>
 		<div
-			class="w-1 bg-s-{color} absolute rounded-lg"
-			style="height: calc(100% - 16px); top: 8px; left: 12px;"
+			class="w-1 absolute rounded-lg"
+			style="background-color: var(--color-s-{color}); height: calc(100% - 16px); top: 8px; left: 12px;"
 		></div>
 		<div class="ml-4 w-full px-4 py-2">
 			{ts.get.libraries.recommendations[type]}
