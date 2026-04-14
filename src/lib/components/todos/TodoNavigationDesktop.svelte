@@ -6,13 +6,11 @@
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
 	import IconSub from '$lib/components/ui/icons/IconSub.svelte';
-	import IconFunnel from '@lucide/svelte/icons/funnel';
 
 	const ts = getTranslation();
 	const todos = getTodos();
 	const tags = getTags();
 
-	let navigation = $state<HTMLDivElement | null>(null);
 	let categoriesExpanded = $state<boolean>(true);
 	let tagsExpanded = $state<boolean>(false);
 
@@ -71,38 +69,13 @@
 			]
 		}
 	];
-
-	function toggleMobile(): void {
-		if (navigation) {
-			navigation.style.display = 'block';
-		}
-	}
-
-	function handleNavigation(): void {
-		if (navigation && navigation.style.display === 'block') {
-			navigation.style.display = 'none';
-		}
-	}
 </script>
 
-<button
-	class="absolute top-4 left-4 z-40 cursor-pointer rounded-lg p-4 not-dark:bg-c-neutral-1 hover:bg-c-neutral-2 lg:hidden dark:hover:bg-s-dark-3"
-	onclick={toggleMobile}
->
-	<IconFunnel />
-</button>
 <div
-	class="absolute z-50 hidden h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg p-2 drop-shadow-xl lg:relative lg:flex lg:w-32 2xl:w-60 2xl:p-4 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
+	class="hidden h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg p-2 drop-shadow-xl lg:relative lg:flex lg:w-32 2xl:w-60 2xl:p-4 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 	in:fade
-	bind:this={navigation}
 >
-	<a
-		href="?"
-		onclick={() => {
-			todos.useFilters([]);
-			handleNavigation();
-		}}
-	>
+	<a href="?" onclick={() => todos.useFilters([])}>
 		<div
 			class="cursor-pointer rounded-lg p-2 hover:bg-c-neutral-1 dark:hover:bg-s-dark-3 {todos
 				.activeFilters.length === 0
@@ -117,14 +90,7 @@
 			{ts.get.todos.workspaces}
 		</div>
 		{#each todos.workspaces as workspace (workspace.id)}
-			<a
-				href="?filterType=workspace&filterValue={workspace.id}"
-				onclick={() => {
-					todos.useFilters([{ type: 'workspace', value: workspace }]);
-					handleNavigation();
-				}}
-				in:fade
-			>
+			<a href="?filterType=workspace&filterValue={workspace.id}" onclick={() => todos.useFilters([{ type: 'workspace', value: workspace }])} in:fade>
 				<div
 					class="flex cursor-pointer flex-row items-center rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3 {todos.isFilterActive(
 						{ type: 'workspace', value: workspace }
@@ -152,14 +118,7 @@
 	</a>
 	{#if categoriesExpanded}
 		{#each todos.filteredCategories as category (category.id)}
-			<a
-				href="?filterType=category&filterValue={category.id}"
-				onclick={() => {
-					todos.useFilters([{ type: 'category', value: category.id }]);
-					handleNavigation();
-				}}
-				in:fade
-			>
+			<a href="?filterType=category&filterValue={category.id}" onclick={() => todos.useFilters([{ type: 'category', value: category.id }])} in:fade>
 				<div
 					class="flex cursor-pointer flex-row items-center rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3 {todos.isFilterActive(
 						{ type: 'category', value: category.id }
@@ -181,15 +140,9 @@
 			{section.header}
 		</div>
 		{#each section.items as item (item.filter)}
-			<a
-				href="?filterType={item.filter.type}&filterValue={item.filter.value}"
-				onclick={() => {
-					todos.useFilters([item.filter]);
-					handleNavigation();
-				}}
-			>
+			<a href="?filterType={item.filter?.type}&filterValue={item.filter?.value}" onclick={() => { if (item.filter) todos.useFilters([item.filter]); }}>
 				<div
-					class="cursor-pointer rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3 {todos.isFilterActive(
+					class="cursor-pointer rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3 {item.filter && todos.isFilterActive(
 						item.filter
 					)
 						? 'bg-c-neutral-1 dark:bg-s-dark-3'
@@ -215,17 +168,11 @@
 	</a>
 	{#if tagsExpanded}
 		{#each tags.tags as tag (tag.id)}
-			<a
-				href="?filterType=tag&filterValue={tag.id}"
-				onclick={() => {
-					todos.useFilters([{ type: 'tag', value: tag.id }]);
-					handleNavigation();
-				}}
-				in:fade
-			>
+			<a href="?filterType=tag&filterValue={tag.id}" onclick={() => todos.useFilters([{ type: 'tag', value: tag.id }])} in:fade>
 				<div
-					class="cursor-pointer rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3 {tag.id ===
-					todos.isFilterActive({ type: 'tag', value: tag.id })
+					class="cursor-pointer rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3 {todos.isFilterActive(
+						{ type: 'tag', value: tag.id }
+					)
 						? 'bg-c-neutral-1 dark:bg-s-dark-3'
 						: ''}"
 				>

@@ -128,14 +128,16 @@
 	<IconFunnel />
 </button>
 <div
-	class="absolute z-50 hidden h-full max-h-screen w-full flex-col gap-4 overflow-y-auto bg-c-bg p-4 drop-shadow-xl lg:relative lg:flex lg:w-64 lg:shrink-0 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
+	class="absolute z-50 hidden h-full max-h-screen w-full flex-col gap-4 overflow-y-auto bg-c-bg drop-shadow-xl lg:relative lg:flex lg:w-64 lg:shrink-0 lg:p-4 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 	in:fade
 	bind:this={navigation}
 >
-	<div class="flex justify-end lg:hidden">
+	<div class="flex items-center justify-between border-b border-c-neutral-2 p-4 mb-4 lg:hidden dark:border-s-dark-3">
+		<span class="text-2xl font-bold 2xl:font-normal">{ts.get.timeTracking.time_tracking}</span>
 		<CloseButton onClick={() => handleNavigation()} inModal={false} />
 	</div>
 
+	<div class="p-4 lg:p-0">
 	<div class="flex flex-col gap-0.5">
 		<a
 			href={resolve(urls.timeTracking)}
@@ -299,5 +301,6 @@
 				</button>
 			</div>
 		{/each}
+	</div>
 	</div>
 </div>

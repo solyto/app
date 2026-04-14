@@ -38,17 +38,17 @@
 </button>
 <div
 	bind:this={navigation}
-	class="absolute top-0 left-0 z-20 hidden h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg drop-shadow-xl max-md:p-2 sm:relative sm:flex sm:w-60 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
+	class="absolute top-0 left-0 z-20 hidden h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg drop-shadow-xl sm:relative sm:flex sm:w-60 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 	class:lg:w-60={editMode}
 	class:lg:w-80={editMode}
 	in:fade
 >
 	{#if !editMode}
 		<div class="flex w-full flex-col" in:blur>
-			<div class="absolute top-2 right-2 md:hidden">
+			<div class="absolute top-4 right-4 md:hidden">
 				<CloseButton onClick={() => handleNavigation()} inModal={false} />
 			</div>
-			<div class="mb-4 text-2xl font-bold md:hidden 2xl:font-normal">
+			<div class="border-b border-c-neutral-2 p-4 text-2xl font-bold md:hidden 2xl:font-normal dark:border-s-dark-3 mb-4">
 				{ts.get.contacts.address_books}
 			</div>
 			<div class="flex w-full flex-col justify-center md:mt-4">
@@ -60,6 +60,7 @@
 					class:border-c-btn={contacts.activeAddressBook === null}
 					onclick={() => {
 						contacts.selectAddressBook(null);
+						handleNavigation();
 					}}
 				>
 					All
@@ -80,6 +81,7 @@
 							style="border-color: {addressBook.color ?? 'var(--color-c-neutral-2)'}"
 							onclick={() => {
 								contacts.selectAddressBook(addressBook);
+								handleNavigation();
 							}}
 						>
 							<span>{addressBook.name}</span>
