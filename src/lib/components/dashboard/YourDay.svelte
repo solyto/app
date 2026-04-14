@@ -40,7 +40,7 @@
 	let date = new SvelteDate();
 	let time = new SvelteDate();
 	let forecast = $derived(weather.forecast);
-	let temperatureUnit = $derived(auth?.user.settings.temperature_unit);
+	let temperatureUnit = $derived(auth?.user?.settings?.temperature_unit);
 
 	let greeting = $derived.by(() => {
 		const hour = time.getHours();
