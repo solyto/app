@@ -163,7 +163,9 @@ export class Auth {
 	}
 
 	async updateTimezone(timezone: string): Promise<boolean> {
-		const res = await this.apiService.put(apiRoutes.users.settings.updateTimezone, { timezone });
+		const res = await this.apiService.put(apiRoutes.users.settings.updateTimezone, {
+			timezone
+		});
 		return Promise.resolve(res);
 	}
 
@@ -182,7 +184,9 @@ export class Auth {
 	}
 
 	async updateLanguage(language: string): Promise<boolean> {
-		const res = await this.apiService.put(apiRoutes.users.settings.updateLanguage, { language });
+		const res = await this.apiService.put(apiRoutes.users.settings.updateLanguage, {
+			language
+		});
 		if (res) await this.loadAdditionalData();
 		return Promise.resolve(res);
 	}
@@ -252,6 +256,12 @@ export class Auth {
 
 	getTimeWithSecondsInUserPreferredFormat(input: string | Date): string {
 		return formatTimeWithSeconds(input, this?.user?.settings?.time_format ?? null);
+	}
+
+	getTemperatureInUserPreferredFormat(temperature: number): number {
+		if (this?.user?.settings?.temperature_unit === 'c') return temperature;
+
+		return Math.round((temperature * 9) / 5 + 32);
 	}
 }
 

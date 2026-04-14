@@ -68,12 +68,18 @@
 			return;
 		}
 
-		const tagId = tags.tags.find((t) => t.name.toLowerCase() === tagName.toLowerCase())?.id;
+		let tagId = tags.tags.find((t) => t.name.toLowerCase() === tagName.toLowerCase())?.id;
 
 		if (!tagId) {
-			loadingIndicator.stop();
-			notifications.error(ts.get.todos.tag_error);
-			return;
+			const tag = await tags.create(tagName);
+
+			if (!tag) {
+				loadingIndicator.stop();
+				notifications.error(ts.get.todos.tag_error);
+				return;
+			}
+
+			tagId = tag.id;
 		}
 
 		await todos.addTag(todo, tagId);

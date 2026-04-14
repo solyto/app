@@ -18,6 +18,7 @@ export interface UserSettings {
 	navigation: string;
 	openai_api_key: string | null;
 	first_visit: boolean;
+	temperature_unit: 'c' | 'f';
 }
 
 export interface User {

@@ -40,6 +40,7 @@
 	let date = new SvelteDate();
 	let time = new SvelteDate();
 	let forecast = $derived(weather.forecast);
+	let temperatureUnit = $derived(auth?.user.settings.temperature_unit);
 
 	let greeting = $derived.by(() => {
 		const hour = time.getHours();
@@ -109,6 +110,12 @@
 		clearInterval(clockInterval);
 	});
 
+	async function toggleTemperatureUnit(unit: 'c' | 'f'): Promise<void> {
+		if (unit === temperatureUnit) return;
+		auth.user.settings.temperature_unit = unit;
+		await weather.updateTemperatureUnit(unit);
+	}
+
 	async function handleCheck(event: MouseEvent, todo: Todo): Promise<void> {
 		loadingIndicator.start();
 		const checkbox = event.target as HTMLInputElement;
@@ -151,7 +158,7 @@
 				{auth.getDateWithWeekdayInUserPreferredFormat(date)}
 			</div>
 			{#if weather.loaded && weather.configured && forecast}
-				<div class="mt-4 ml-1 flex w-full items-center gap-3">
+				<div class="mt-4 ml-1 flex items-center gap-3">
 					<div class="flex items-center gap-2">
 						<IconMapPin class="size-3 text-c-neutral-4 dark:text-c-neutral-5" />
 						<span class="text-xs text-c-neutral-5 dark:text-c-neutral-4">{weather.city}</span>
@@ -161,13 +168,17 @@
 						<div class="flex h-8 w-8 items-center justify-center">
 							<WeatherCodeImage code={forecast.today.code} />
 						</div>
-						<span class="text-lg font-semibold text-c-neutral-8 dark:text-white"
-							>{forecast.current.temperature}°</span
-						>
-						<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">
-							{forecast.today.temperature_min}° / {forecast.today.temperature_max}°
+						<span class="text-lg font-semibold text-c-neutral-8 dark:text-white">
+							{auth.getTemperatureInUserPreferredFormat(forecast.current.temperature)}°
+						</span>
+						<span class="whitespace-nowrap text-xs text-c-neutral-4 dark:text-c-neutral-5">
+							{auth.getTemperatureInUserPreferredFormat(forecast.today.temperature_min)}° / {auth.getTemperatureInUserPreferredFormat(forecast.today.temperature_max)}°
 						</span>
 					</div>
+					<button
+						class="ml-auto shrink-0 cursor-pointer rounded-md bg-c-neutral-1 px-2 py-1 text-xs font-medium text-c-neutral-5 transition-colors hover:bg-c-neutral-2 hover:text-c-neutral-7 dark:bg-s-dark-3 dark:text-c-neutral-4 dark:hover:bg-s-dark-2 dark:hover:text-c-neutral-2"
+						onclick={() => toggleTemperatureUnit(temperatureUnit === 'c' ? 'f' : 'c')}
+					>{temperatureUnit.toUpperCase()}°</button>
 				</div>
 			{:else if weather.loaded}
 				<button

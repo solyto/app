@@ -25,8 +25,7 @@
 </script>
 
 <div
-	class="relative flex items-center gap-3 rounded-lg border-1 border-d-lightblue bg-c-bg-surface px-4 py-2 shadow-sm transition-all dark:border-s-dark"
-	class:border-c-btn-hover={todos.recentlyCreated && todos.recentlyCreated === todo.id}
+	class="relative flex items-center gap-3 rounded-lg border-1 bg-c-bg-surface px-4 py-2 shadow-sm transition-all {todos.recentlyCreated === todo.id ? 'border-c-btn-hover' : 'border-d-lightblue dark:border-s-dark'}"
 	class:opacity-50={todo.is_completed}
 	in:fade
 >

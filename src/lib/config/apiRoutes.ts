@@ -39,6 +39,7 @@ export const apiRoutes = {
 			updateLanguage: API_URL + '/users/me/settings/language',
 			completeOnboarding: API_URL + '/users/me/settings/complete-onboarding',
 			updateWeatherCity: API_URL + '/users/me/settings/weather-city',
+			updateWeatherTemperatureUnit: API_URL + '/users/me/settings/weather-temperature-unit',
 			updateCheckInSettings: API_URL + '/users/me/settings/check-in'
 		}
 	},

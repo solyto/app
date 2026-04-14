@@ -43,6 +43,10 @@ export interface UpdateWeatherCityRequest {
 	longitude: number;
 }
 
+export interface UpdateWeatherTemperatureUnitRequest {
+	temperature_unit: 'c' | 'f';
+}
+
 export interface NominatimResult {
 	place_id: number;
 	display_name: string;

@@ -1,4 +1,4 @@
-import type { Forecast, UpdateWeatherCityRequest, WeatherResponse } from '$lib/types/weather';
+import type { Forecast, UpdateWeatherCityRequest, UpdateWeatherTemperatureUnitRequest, WeatherResponse } from '$lib/types/weather';
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
@@ -40,6 +40,21 @@ export class Weather {
 			await this.load();
 		}
 		return success;
+	}
+
+	async updateTemperatureUnit(unit: 'c' | 'f'): Promise<boolean> {
+		const request: UpdateWeatherTemperatureUnitRequest = { temperature_unit: unit };
+		const success = await this.apiService.put(apiRoutes.users.settings.updateWeatherTemperatureUnit, request);
+		if (success) {
+			await this.load();
+		}
+		return success;
+	}
+
+	convertToUserPreferredUnit(temperature: number): number {
+		if (!this.preferredUnit || this.preferredUnit === 'c') return temperature;
+
+		return Math.round((temperature * 9) / 5 + 32);
 	}
 }
 

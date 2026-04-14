@@ -41,8 +41,7 @@
 </script>
 
 <div
-	class="relative flex w-full flex-col space-y-2 rounded-lg border-1 border-d-lightblue bg-c-bg-surface p-4 shadow-sm transition-all hover:bg-d-lighterblue dark:border-s-dark dark:hover:bg-s-dark-3"
-	class:border-c-btn-hover={todos.recentlyCreated && todos.recentlyCreated === todo.id}
+	class="relative flex w-full flex-col space-y-2 rounded-lg border-1 bg-c-bg-surface p-4 shadow-sm transition-all hover:bg-d-lighterblue dark:hover:bg-s-dark-3 {todos.recentlyCreated === todo.id ? 'border-c-btn-hover' : 'border-d-lightblue dark:border-s-dark'}"
 	in:fade
 >
 	<div class="absolute top-0 left-0 h-full w-1 rounded-l-md {getBgColor(todo)}"></div>
