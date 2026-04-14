@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getNotes, setNotes } from '$lib/state/Notes.svelte.js';
-	import NoteNavigation from '$lib/components/notes/NoteNavigation.svelte';
+	import NoteNavigationDesktop from '$lib/components/notes/NoteNavigationDesktop.svelte';
+	import NoteNavigationMobile from '$lib/components/notes/NoteNavigationMobile.svelte';
 	import Modal from '$lib/components/ui/Modal.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import { onMount } from 'svelte';
@@ -89,7 +90,8 @@
 </script>
 
 <div class="flex h-full w-full flex-row">
-	<NoteNavigation />
+	<NoteNavigationMobile />
+	<NoteNavigationDesktop />
 	{@render children?.()}
 </div>
 
