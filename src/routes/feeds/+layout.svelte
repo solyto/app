@@ -17,7 +17,7 @@
 		loadingIndicator.start();
 		await feeds.load();
 		loadingIndicator.stop();
-		await linkLibrary.load();
+		linkLibrary.load();
 	});
 </script>
 
