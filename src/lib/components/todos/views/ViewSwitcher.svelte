@@ -2,7 +2,6 @@
 	import { getTodos } from '$lib/state/Todos.svelte.js';
 	import { getTranslation } from '$lib/state/Translation.svelte.js';
 	import ViewSwitcher from '$lib/components/ui/ViewSwitcher.svelte';
-	import { fade } from 'svelte/transition';
 
 	const todos = getTodos();
 	const ts = getTranslation();
@@ -20,9 +19,7 @@
 	);
 </script>
 
-<div
-	class="absolute top-10 left-8 z-30 hidden 2xl:block"
->
+<div class="absolute top-10 left-8 z-30 hidden 2xl:block">
 	{#if quickCreateOpen && currentView}
 		<div class="transition-opacity duration-150 ease-in-out">
 			<ViewSwitcher

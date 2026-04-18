@@ -10,6 +10,7 @@
 	import CloudButton from '$lib/components/ui/buttons/CloudButton.svelte';
 	import IconFunnel from '@lucide/svelte/icons/funnel';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
+	import FunnelButton from '$lib/components/ui/buttons/FunnelButton.svelte';
 
 	let editMode = $state<boolean>(false);
 	let navigation = $state<HTMLDivElement | null>(null);
@@ -30,12 +31,8 @@
 	}
 </script>
 
-<button
-	class="absolute top-4 left-4 z-20 cursor-pointer rounded-lg p-4 not-dark:bg-c-neutral-1 hover:bg-c-neutral-2 lg:hidden dark:bg-s-dark-2 dark:hover:bg-s-dark-3"
-	onclick={toggleMobile}
->
-	<IconFunnel />
-</button>
+<FunnelButton onclick={toggleMobile} />
+
 <div
 	bind:this={navigation}
 	class="absolute top-0 left-0 z-20 hidden h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg drop-shadow-xl sm:relative sm:flex sm:w-60 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"

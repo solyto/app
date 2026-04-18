@@ -8,8 +8,6 @@
 	import confetti from 'canvas-confetti';
 	import { createConfettiOptions } from '$lib/effects/confetti';
 	import TodoCreate from '$lib/components/todos/actions/TodoCreate.svelte';
-	import TodoNavigationDesktop from '$lib/components/todos/TodoNavigationDesktop.svelte';
-	import TodoNavigationMobile from '$lib/components/todos/TodoNavigationMobile.svelte';
 	import ViewSwitcher from '$lib/components/todos/views/ViewSwitcher.svelte';
 	import KanbanView from '$lib/components/todos/views/KanbanView.svelte';
 	import ListView from '$lib/components/todos/views/ListView.svelte';
@@ -18,6 +16,7 @@
 	import Counter from '$lib/components/todos/Counter.svelte';
 	import SortByScore from '$lib/components/todos/actions/SortByScore.svelte';
 	import HideIt from '$lib/components/todos/actions/HideIt.svelte';
+	import TodoNavigation from '$lib/components/todos/TodoNavigation.svelte';
 
 	const viewPoint = getViewPoint();
 	const todos = getTodos();
@@ -56,8 +55,7 @@
 </script>
 
 <div class="flex h-full w-full flex-row">
-	<TodoNavigationMobile />
-	<TodoNavigationDesktop />
+	<TodoNavigation />
 	<div class="relative max-h-full w-full overflow-y-auto p-4 lg:p-8">
 		<ViewSwitcher />
 		<TodoCreate />

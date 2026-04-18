@@ -2,70 +2,30 @@
 	import { fade, fly } from 'svelte/transition';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { Translation } from '$lib/state/Translation.svelte';
 	import type { TodoFilter, TodoNavigationSection } from '$lib/types/todo';
 	import IconFunnel from '@lucide/svelte/icons/funnel';
 	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
 	import IconArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import IconSub from '$lib/components/ui/icons/IconSub.svelte';
+	import FunnelButton from '$lib/components/ui/buttons/FunnelButton.svelte';
 
-	const ts = getTranslation();
 	const todos = getTodos();
 	const tags = getTags();
 
-	type SectionKey =
-		| 'workspaces'
-		| 'categories'
-		| 'priority'
-		| 'status'
-		| 'effort'
-		| 'due'
-		| 'tags';
+	let { sections, ts } = $props<{
+		sections: TodoNavigationSection[];
+		ts: Translation;
+	}>();
+
+	type SectionKey = 'workspaces' | 'categories' | 'priority' | 'status' | 'effort' | 'due' | 'tags';
 
 	let open = $state(false);
 	let stack = $state<SectionKey[]>([]);
 	let direction = $state<'forward' | 'back'>('forward');
 
 	let current = $derived(stack.length > 0 ? stack[stack.length - 1] : null);
-
-	const sections: TodoNavigationSection[] = [
-		{
-			header: ts.get.todos.priority,
-			items: [
-				{ filter: { type: 'priority', value: 'high' }, label: ts.get.todos.priority_high },
-				{ filter: { type: 'priority', value: 'medium' }, label: ts.get.todos.priority_medium },
-				{ filter: { type: 'priority', value: 'low' }, label: ts.get.todos.priority_low }
-			]
-		},
-		{
-			header: ts.get.todos.status,
-			items: [
-				{ filter: { type: 'status', value: 'backlog' }, label: ts.get.todos.status_backlog },
-				{ filter: { type: 'status', value: 'pending' }, label: ts.get.todos.status_pending },
-				{ filter: { type: 'status', value: 'in-progress' }, label: ts.get.todos.status_in_progress },
-				{ filter: { type: 'status', value: 'waiting' }, label: ts.get.todos.status_waiting },
-				{ filter: { type: 'status', value: 'almost-done' }, label: ts.get.todos.status_almost_done }
-			]
-		},
-		{
-			header: ts.get.todos.effort,
-			items: [
-				{ filter: { type: 'effort', value: 'low' }, label: ts.get.todos.effort_low },
-				{ filter: { type: 'effort', value: 'medium' }, label: ts.get.todos.effort_medium },
-				{ filter: { type: 'effort', value: 'high' }, label: ts.get.todos.effort_high }
-			]
-		},
-		{
-			header: ts.get.todos.due_at,
-			items: [
-				{ filter: { type: 'due', value: 'today' }, label: ts.get.todos.due_today },
-				{ filter: { type: 'due', value: 'tomorrow' }, label: ts.get.todos.due_tomorrow },
-				{ filter: { type: 'due', value: 'week' }, label: ts.get.todos.due_week },
-				{ filter: { type: 'due', value: 'overdue' }, label: ts.get.todos.due_overdue }
-			]
-		}
-	];
 
 	const sectionHeaders: { key: SectionKey; label: string; icon?: any }[] = [
 		{ key: 'workspaces', label: ts.get.todos.workspaces },
@@ -101,16 +61,11 @@
 	}
 </script>
 
-<button
-	class="absolute top-4 left-4 z-20 cursor-pointer rounded-lg p-3 lg:hidden not-dark:bg-c-neutral-1 hover:bg-c-neutral-2 dark:bg-s-dark-2 dark:hover:bg-s-dark-3"
-	onclick={() => (open = true)}
->
-	<IconFunnel />
-</button>
+<FunnelButton onclick={() => (open = true)} top={6} />
 
 {#if open}
 	<div
-		class="fixed inset-0 z-30 flex flex-col bg-c-bg lg:hidden dark:bg-s-dark-1"
+		class="fixed inset-0 z-50 flex flex-col bg-c-bg lg:hidden dark:bg-s-dark-1"
 		transition:fade={{ duration: 150 }}
 	>
 		<div class="relative flex-1 overflow-hidden">

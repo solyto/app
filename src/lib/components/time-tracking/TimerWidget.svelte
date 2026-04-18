@@ -49,6 +49,8 @@
 			<Button title={ts.get.timeTracking.start_timer} onclick={startTimer} />
 		</div>
 	{:else}
-		<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.timeTracking.no_projects}</p>
+		<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">
+			{ts.get.timeTracking.no_projects}
+		</p>
 	{/if}
 </div>

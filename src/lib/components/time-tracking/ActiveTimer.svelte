@@ -41,13 +41,13 @@
 </script>
 
 {#if tt.activeTimer}
-	<div
-		class="flex flex-row items-center justify-between rounded-md border-l-4 border-c-primary bg-c-bg-surface p-4 shadow-sm"
-	>
+	<div class="flex flex-row items-center justify-between rounded-md border-l-4 border-c-primary bg-c-bg-surface p-4 shadow-sm">
 		<div class="flex flex-col gap-1">
 			<div class="flex flex-row items-center gap-2">
 				<div class="h-2 w-2 animate-pulse rounded-full bg-c-primary"></div>
-				<span class="text-sm font-medium text-c-primary">{ts.get.timeTracking.timer_running}</span>
+				<span class="text-sm font-medium text-c-primary">
+					{ts.get.timeTracking.timer_running}
+				</span>
 			</div>
 			<span class="text-2xl font-bold tabular-nums">{elapsed}</span>
 			{#if tt.activeTimer.project}

@@ -17,6 +17,7 @@
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
+	import FunnelButton from '$lib/components/ui/buttons/FunnelButton.svelte';
 
 	const tt = getTimeTracking();
 	const ts = getTranslation();
@@ -121,19 +122,17 @@
 	}
 </script>
 
-<button
-	class="absolute top-4 left-4 z-40 cursor-pointer rounded-lg p-2 not-dark:bg-c-neutral-1 hover:bg-c-neutral-2 lg:hidden dark:hover:bg-s-dark-3"
-	onclick={toggleMobile}
->
-	<IconFunnel />
-</button>
+<FunnelButton onclick={toggleMobile} />
+
 <div
 	class="absolute z-50 hidden h-full max-h-screen w-full flex-col gap-4 overflow-y-auto bg-c-bg drop-shadow-xl lg:relative lg:flex lg:w-64 lg:shrink-0 lg:p-4 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 	in:fade
 	bind:this={navigation}
 >
 	<div class="flex items-center justify-between border-b border-c-neutral-2 p-4 mb-4 lg:hidden dark:border-s-dark-3">
-		<span class="text-2xl font-bold 2xl:font-normal">{ts.get.timeTracking.time_tracking}</span>
+		<span class="text-2xl font-bold 2xl:font-normal">
+			{ts.get.timeTracking.time_tracking}
+		</span>
 		<CloseButton onClick={() => handleNavigation()} inModal={false} />
 	</div>
 
@@ -244,7 +243,6 @@
 			</button>
 		</div>
 		{#if addingCategory}
-			<!-- svelte-ignore a11y_no_static_element_interactions -->
 			<div
 				class="flex flex-row items-center space-x-2"
 				onkeydown={(e) => handleCategoryKeydown(e, 'add')}
@@ -285,12 +283,12 @@
 							autofocus
 						/>
 					{:else}
-						<button4
+						<button
 							class="cursor-pointer text-sm hover:text-c-primary"
 							ondblclick={() => startEditCategory(category.id, category.title)}
 						>
 							{category.title}
-						</button4>
+						</button>
 					{/if}
 				</div>
 				<button

@@ -33,12 +33,18 @@
 	<div class="mr-3 w-1 flex-shrink-0 self-stretch rounded-full bg-c-primary"></div>
 	<div class="flex flex-1 flex-col gap-0.5">
 		{#if showProject && entry.project}
-			<span class="text-sm font-medium">{entry.project.title}</span>
+			<span class="text-sm font-medium">
+				{entry.project.title}
+			</span>
 		{/if}
 		{#if entry.description}
-			<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{entry.description}</span>
+			<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">
+				{entry.description}
+			</span>
 		{:else if showDescriptionFallback}
-			<span class="text-sm italic text-c-neutral-4 dark:text-c-neutral-5">{ts.get.timeTracking.no_description}</span>
+			<span class="text-sm italic text-c-neutral-4 dark:text-c-neutral-5">
+				{ts.get.timeTracking.no_description}
+			</span>
 		{/if}
 		{#if showDate || entry.has_exact_times}
 			<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">

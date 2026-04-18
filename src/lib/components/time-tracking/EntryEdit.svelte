@@ -117,9 +117,7 @@
 			class="flex cursor-pointer flex-row items-center gap-1 text-xs text-c-neutral-4 transition-colors hover:text-c-neutral-6 dark:hover:text-c-neutral-3"
 			onclick={() => (showExactTimes = !showExactTimes)}
 		>
-			<IconChevronDown
-				class="size-3.5 transition-transform {showExactTimes ? 'rotate-180' : ''}"
-			/>
+			<IconChevronDown class="size-3.5 transition-transform {showExactTimes ? 'rotate-180' : ''}" />
 			{ts.get.timeTracking.started_at} / {ts.get.timeTracking.stopped_at}
 		</button>
 		{#if showExactTimes}

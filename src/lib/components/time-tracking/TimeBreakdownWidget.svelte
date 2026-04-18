@@ -45,7 +45,9 @@
 				</div>
 			</div>
 		{:else}
-			<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">{ts.get.timeTracking.no_entries}</span>
+			<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">
+				{ts.get.timeTracking.no_entries}
+			</span>
 		{/each}
 	</div>
 </div>

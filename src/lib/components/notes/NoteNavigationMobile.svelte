@@ -11,6 +11,7 @@
 	import AddNoteButton from '$lib/components/notes/AddNoteButton.svelte';
 	import AddFolderButton from '$lib/components/notes/AddFolderButton.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
+	import FunnelButton from '$lib/components/ui/buttons/FunnelButton.svelte';
 
 	const notes = getNotes();
 	const ts = getTranslation();
@@ -41,16 +42,11 @@
 	}
 </script>
 
-<button
-	class="absolute top-4 left-4 z-20 cursor-pointer rounded-lg p-3 sm:hidden not-dark:bg-c-neutral-1 hover:bg-c-neutral-2 dark:bg-s-dark-2 dark:hover:bg-s-dark-3"
-	onclick={() => (open = true)}
->
-	<IconFunnel />
-</button>
+<FunnelButton onclick={() => (open = true)} />
 
 {#if open}
 	<div
-		class="fixed inset-0 z-30 flex flex-col bg-c-bg sm:hidden dark:bg-s-dark-1"
+		class="fixed inset-0 z-50 flex flex-col bg-c-bg sm:hidden dark:bg-s-dark-1"
 		transition:fade={{ duration: 150 }}
 	>
 		<div class="relative flex-1 overflow-hidden">

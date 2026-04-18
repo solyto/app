@@ -39,11 +39,7 @@
 	let typeValue = $state<string>(activeEntry ? activeEntry.type : '');
 	let formatValue = $state<string>(activeEntry ? activeEntry.format : '');
 	let conditionValue = $state<string>(activeEntry ? activeEntry.condition : '');
-	let selectedGenres = $state(
-		activeEntry
-			? activeEntry.genres.map((genre) => ({ label: genre.title, value: genre.id }))
-			: []
-	);
+	let selectedGenres = $state(activeEntry ? activeEntry.genres.map((genre) => ({ label: genre.title, value: genre.id })) : []);
 	let selectedRating = $state(activeEntry ? activeEntry.rating : 0);
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
 	let linkInput = $state<HTMLInputElement | null>(null);

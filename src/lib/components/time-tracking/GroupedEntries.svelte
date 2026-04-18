@@ -41,7 +41,9 @@
 		{#each groupedEntries as group (group.date)}
 			<div class="flex flex-col gap-2">
 				<div class="flex flex-row items-center gap-3">
-					<span class="text-base font-medium text-c-neutral-5 dark:text-c-neutral-4">{group.date}</span>
+					<span class="text-base font-medium text-c-neutral-5 dark:text-c-neutral-4">
+						{group.date}
+					</span>
 					<div class="h-px flex-1 bg-c-neutral-2 dark:bg-s-dark-3"></div>
 				</div>
 				{#each group.entries as entry (entry.id)}

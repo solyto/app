@@ -1,74 +1,22 @@
 	<script lang="ts">
 	import { fade } from 'svelte/transition';
 	import type { TodoNavigationSection } from '$lib/types/todo';
-	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { Translation } from '$lib/state/Translation.svelte';
 	import ListAndAdd from './ListAndAdd.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
 	import IconSub from '$lib/components/ui/icons/IconSub.svelte';
 
-	const ts = getTranslation();
 	const todos = getTodos();
 	const tags = getTags();
 
+	let { sections, ts } = $props<{
+		sections: TodoNavigationSection[];
+		ts: Translation;
+	}>();
+
 	let categoriesExpanded = $state<boolean>(true);
 	let tagsExpanded = $state<boolean>(false);
-
-	const sections: TodoNavigationSection[] = [
-		{
-			header: ts.get.todos.priority,
-			items: [
-				{ filter: { type: 'priority', value: 'high' }, label: ts.get.todos.priority_high },
-				{
-					filter: { type: 'priority', value: 'medium' },
-					label: ts.get.todos.priority_medium
-				},
-				{ filter: { type: 'priority', value: 'low' }, label: ts.get.todos.priority_low }
-			]
-		},
-		{
-			header: ts.get.todos.status,
-			items: [
-				{
-					filter: { type: 'status', value: 'backlog' },
-					label: ts.get.todos.status_backlog
-				},
-				{
-					filter: { type: 'status', value: 'pending' },
-					label: ts.get.todos.status_pending
-				},
-				{
-					filter: { type: 'status', value: 'in-progress' },
-					label: ts.get.todos.status_in_progress
-				},
-				{
-					filter: { type: 'status', value: 'waiting' },
-					label: ts.get.todos.status_waiting
-				},
-				{
-					filter: { type: 'status', value: 'almost-done' },
-					label: ts.get.todos.status_almost_done
-				}
-			]
-		},
-		{
-			header: ts.get.todos.effort,
-			items: [
-				{ filter: { type: 'effort', value: 'low' }, label: ts.get.todos.effort_low },
-				{ filter: { type: 'effort', value: 'medium' }, label: ts.get.todos.effort_medium },
-				{ filter: { type: 'effort', value: 'high' }, label: ts.get.todos.effort_high }
-			]
-		},
-		{
-			header: ts.get.todos.due_at,
-			items: [
-				{ filter: { type: 'due', value: 'today' }, label: ts.get.todos.due_today },
-				{ filter: { type: 'due', value: 'tomorrow' }, label: ts.get.todos.due_tomorrow },
-				{ filter: { type: 'due', value: 'week' }, label: ts.get.todos.due_week },
-				{ filter: { type: 'due', value: 'overdue' }, label: ts.get.todos.due_overdue }
-			]
-		}
-	];
 </script>
 
 <div

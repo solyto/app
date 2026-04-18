@@ -8,6 +8,7 @@
 	import Divider from '$lib/components/ui/Divider.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
+	import FunnelButton from '$lib/components/ui/buttons/FunnelButton.svelte';
 
 	const ts = getTranslation();
 	const feeds = getFeeds();
@@ -27,12 +28,7 @@
 	}
 </script>
 
-<button
-	class="absolute top-4 left-4 z-40 cursor-pointer rounded-lg p-2 not-dark:bg-c-neutral-1 hover:bg-c-neutral-2 lg:hidden dark:hover:bg-s-dark-3"
-	onclick={toggleMobile}
->
-	<IconFunnel />
-</button>
+<FunnelButton onclick={toggleMobile} top={3} />
 <div
 	class="absolute z-50 hidden h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg max-md:pb-20 drop-shadow-xl lg:relative lg:flex lg:w-32 lg:p-2 2xl:w-60 2xl:p-4 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 	in:fade

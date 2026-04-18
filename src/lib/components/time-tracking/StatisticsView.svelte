@@ -83,9 +83,9 @@
 		<Heading title={ts.get.timeTracking.statistics} my={0} />
 		<div class="flex flex-wrap items-end gap-4">
 			<div class="flex flex-col gap-1">
-				<span class="text-sm font-medium text-c-neutral-5 dark:text-c-neutral-4"
-					>{ts.get.timeTracking.from}</span
-				>
+				<span class="text-sm font-medium text-c-neutral-5 dark:text-c-neutral-4">
+					{ts.get.timeTracking.from}
+				</span>
 				<input
 					type="date"
 					bind:value={fromDate}
@@ -93,9 +93,9 @@
 				/>
 			</div>
 			<div class="flex flex-col gap-1">
-				<span class="text-sm font-medium text-c-neutral-5 dark:text-c-neutral-4"
-					>{ts.get.timeTracking.to}</span
-				>
+				<span class="text-sm font-medium text-c-neutral-5 dark:text-c-neutral-4">
+					{ts.get.timeTracking.to}
+				</span>
 				<input
 					type="date"
 					bind:value={toDate}
@@ -147,9 +147,9 @@
 
 	{#if tt.statistics}
 		<div class="flex flex-row items-center gap-2">
-			<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4"
-				>{ts.get.timeTracking.total_time}:</span
-			>
+			<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">
+				{ts.get.timeTracking.total_time}:
+			</span>
 			<span class="text-lg font-bold text-c-primary">
 				{tt.formatDuration(filteredTotal())}
 			</span>
