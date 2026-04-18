@@ -2,13 +2,16 @@
 	import { onMount } from 'svelte';
 	import { blur } from 'svelte/transition';
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { Translation } from '$lib/state/Translation.svelte.js';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
 	import IconTimer from '@lucide/svelte/icons/timer';
 
 	const tt = getTimeTracking();
-	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
+
+	let { ts } = $props<{
+		ts: Translation;
+	}>();
 
 	let loaded = $state(false);
 
@@ -60,9 +63,7 @@
 	<div in:blur>
 		<div class="mb-3 flex items-center gap-2">
 			<IconTimer size={15} class="text-c-heading dark:text-c-primary" />
-			<span
-				class="text-xs font-semibold tracking-wider text-c-heading uppercase dark:text-c-primary"
-			>
+			<span class="text-xs font-semibold tracking-wider text-c-heading uppercase dark:text-c-primary">
 				{ts.get.nav.timeTracking}
 			</span>
 		</div>
@@ -75,7 +76,7 @@
 					{tt.formatDuration(weekTotal())}
 				</span>
 			</div>
-			{#each weekBreakdown() as category}
+			{#each weekBreakdown() as category (category.title)}
 				<div class="flex flex-col gap-0.5">
 					<div class="flex items-center justify-between">
 						<div class="flex items-center gap-1.5">
