@@ -9,7 +9,7 @@
 </script>
 
 <div class="pointer-events-none fixed top-0 right-0 left-0 z-[200] w-full">
-	<!--{#if active}-->
+	{#if active}
 		<div class="relative h-[3px]">
 			{#if progress === null}
 				<div class="absolute inset-0 overflow-hidden h-full">
@@ -23,7 +23,7 @@
 				></div>
 			{/if}
 		</div>
-	<!--{/if}-->
+	{/if}
 </div>
 
 <style>
