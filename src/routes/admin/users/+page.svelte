@@ -3,6 +3,7 @@
 	import { getUserManagement } from '$lib/state/UserManagement.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import UserList from '$lib/components/admin/UserList.svelte';
+	import UserGrowthChart from '$lib/components/admin/UserGrowthChart.svelte';
 	import IconUsers from '@lucide/svelte/icons/users';
 
 	const userManagement = getUserManagement();
@@ -27,6 +28,10 @@
 			<p class="text-c-neutral-5 dark:text-c-neutral-4">Manage user accounts and roles</p>
 		</div>
 	</div>
+
+	{#if userManagement.loaded}
+		<UserGrowthChart users={userManagement.users} />
+	{/if}
 
 	<UserList />
 </div>

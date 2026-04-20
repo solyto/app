@@ -35,7 +35,7 @@ export class UserManagement {
 	async updateRole(user: User, role: UpdateUserRoleRequest['role']): Promise<boolean> {
 		const res = await this.apiService.update(apiRoutes.admin.users.update, user.id, { role });
 		if (res) await this.load();
-		return Promise.resolve(res !== null);
+		return res;
 	}
 }
 
