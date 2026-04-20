@@ -29,7 +29,7 @@
 	const features = getFeatures();
 	const tour = getWelcomeTour();
 
-	let showOnboardingModal = $state<boolean>(true);
+	let showOnboardingModal = $state<boolean>(false);
 
 	onMount(async () => {
 		loadingIndicator.start();
