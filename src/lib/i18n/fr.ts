@@ -42,7 +42,7 @@ const layout: LayoutRecords = {
 	apply: 'Appliquer',
 	legal_notice: 'Mentions légales',
 	privacy_policy: 'Politique de confidentialité',
-	terms_of_service: "Conditions d'utilisation"
+	terms_of_service: 'Conditions d\'utilisation'
 };
 
 const nav: NavigationRecords = {
@@ -70,54 +70,53 @@ const nav: NavigationRecords = {
 
 const auth: AuthRecords = {
 	name: 'Nom',
-	name_placeholder: 'Entrez votre nom',
-	name_error: 'Veuillez entrer un nom.',
+	name_placeholder: 'Entre ton nom',
+	name_error: 'Entre un nom.',
 	email: 'E-mail',
-	email_placeholder: 'Entrez votre e-mail',
-	email_error: 'Veuillez entrer une adresse e-mail valide.',
+	email_placeholder: 'Entre ton e-mail',
+	email_error: 'Entre une adresse e-mail valide.',
 	password: 'Mot de passe',
 	password_placeholder: '******************',
 	password_error: 'Le mot de passe doit contenir au moins 12 caractères.',
 	password_min_length: 'Au moins 12 caractères',
 	password_confirmation: 'Répéter le mot de passe',
 	password_confirmation_placeholder: '******************',
-	password_confirmation_error: 'Veuillez répéter votre mot de passe.',
+	password_confirmation_error: 'Répète ton mot de passe.',
 	password_matches: 'Les mots de passe correspondent',
 	show_password: 'Afficher le mot de passe',
 	hide_password: 'Masquer le mot de passe',
-	register: 'S’inscrire',
+	register: 'S\'inscrire',
 	login: 'Connexion',
 	logout: 'Déconnexion',
-	logout_success: 'Vous avez été déconnecté avec succès.',
+	logout_success: 'Tu as été déconnecté avec succès.',
 	sign_in: 'Se connecter',
-	forgot_password: 'Mot de passe oublié ?',
-	register_success: 'Inscription réussie. Veuillez confirmer votre adresse e-mail.',
-	register_error: 'Une erreur est survenue lors de l’inscription.',
+	forgot_password: 'Mot de passe oublié?',
+	register_success: 'Inscription réussie. Confirme ton adresse e-mail.',
+	register_error: 'Une erreur est survenue lors de l\'inscription.',
 	login_success: 'Connexion réussie.',
 	login_error: 'Authentification échouée.',
-	verify_success:
-		'Votre compte a été confirmé avec succès. Vous pouvez maintenant vous connecter !',
-	verify_general_error: 'Une erreur est survenue lors de la confirmation de votre compte.',
-	already_verified: 'Votre compte est déjà confirmé. Vous pouvez vous connecter !',
-	verify_token_mismatch: 'Votre compte n’a pas pu être confirmé. Le token ne correspond pas.',
-	verify_token_expired: 'Votre compte n’a pas pu être confirmé. Le token a expiré.'
+	verify_success: 'Ton compte a été confirmé avec succès. Tu peux maintenant te connecter!',
+	verify_general_error: 'Une erreur est survenue lors de la confirmation de ton compte.',
+	already_verified: 'Ton compte est déjà confirmé. Tu peux te connecter!',
+	verify_token_mismatch: 'Ton compte n\'a pas pu être confirmé. Le token ne correspond pas.',
+	verify_token_expired: 'Ton compte n\'a pas pu être confirmé. Le token a expiré.'
 };
 
 const home: HomeRecords = {
-	slogan: 'Bienvenue sur votre page d\u2019accueil.',
+	slogan: 'Bienvenue sur ta page d\'accueil.',
 	greeting_morning: 'Bonjour',
 	greeting_afternoon: 'Bon après-midi',
 	greeting_evening: 'Bonsoir',
 	events: 'Événements',
 	all_day: 'toute la journée',
-	due_today: "Échéance aujourd'hui",
+	due_today: 'Échéance aujourd\'hui',
 	relevant: 'Pertinent',
-	nothing_today: "Rien de prévu pour aujourd'hui.",
+	nothing_today: 'Rien de prévu pour aujourd\'hui.',
 	new_music: 'Nouvelle musique',
 	new_books: 'Nouveaux livres',
 	recent_notes: 'Notes récentes',
 	newest_links: 'Liens récents',
-	inspiration_empty_hint: 'Ajoutez des notes, de la musique, des livres ou des liens pour les voir ici.'
+	inspiration_empty_hint: 'Ajoute des notes, de la musique, des livres ou des liens pour les voir ici.'
 };
 
 const settings: SettingsRecords = {
@@ -152,14 +151,14 @@ const settings: SettingsRecords = {
 	features: 'Fonctionnalités',
 	timezone: 'Fuseau horaire',
 	date_format: 'Format de date',
-	time_format: 'Format de l’heure',
+	time_format: 'Format de l\'heure',
 	nextcloud_token: 'Jeton enregistré',
 	nextcloud_no_token: 'Aucun jeton enregistré.',
-	telegram_bot_integration_success: 'Intégration réussie pour l’ID de chat Telegram %s',
+	telegram_bot_integration_success: 'Intégration réussie pour l\'ID de chat Telegram %s',
 	telegram_bot_token_created: 'Jeton créé.',
 	telegram_bot_register: 'Enregistrez-le en envoyant la commande suivante à %s',
 	telegram_bot_create: 'Créer une connexion',
-	telegram_bot_not_connected: 'Vous n’avez pas encore connecté le bot à votre compte. Faites-le dans Intégrations.',
+	telegram_bot_not_connected: 'Tu n\'as pas encore connecté le bot à ton compte. Fais-le dans Intégrations.',
 	app: 'Application'
 };
 
@@ -168,12 +167,12 @@ const todos: TodoRecords = {
 	new_todo: 'Nouvelle tâche',
 	enter_todo: 'Entrer une tâche',
 	no_todos: 'Aucune tâche trouvée.',
-	no_todos_desc: 'Appuyez sur Entrée pour en ajouter une.',
+	no_todos_desc: 'Appuie sur Entrée pour en ajouter une.',
 	tags: 'Tags',
 	add_tag: 'Ajouter un tag',
-	tag_error: 'Le tag n’existe pas',
+	tag_error: 'Le tag n\'existe pas',
 	categories: 'Catégories',
-	category_error: 'La catégorie n’existe pas',
+	category_error: 'La catégorie n\'existe pas',
 	add_category: 'Ajouter une catégorie',
 	workspaces: 'Espaces de travail',
 	workspace_hide_it: 'Masquer',
@@ -183,7 +182,7 @@ const todos: TodoRecords = {
 	priority_medium: 'Moyenne',
 	priority_low: 'Basse',
 	due_at: 'À faire pour',
-	due_today: 'Aujourd’hui',
+	due_today: 'Aujourd\'hui',
 	due_tomorrow: 'Demain',
 	due_week: 'Cette semaine',
 	due_overdue: 'En retard',
@@ -208,7 +207,7 @@ const todos: TodoRecords = {
 	view_overview: 'Aperçu',
 	uncategorized: 'Sans catégorie',
 	delete_confirm_label: 'Supprimer la tâche',
-	delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette tâche ?',
+	delete_confirm_message: 'Es-tu sûr de vouloir supprimer cette tâche?',
 	add_subtask: 'Ajouter une sous-tâche',
 	sort_by_score: 'Trier par score intelligent',
 	no_description: 'Aucune description',
@@ -230,7 +229,7 @@ const checkIn: CheckInRecords = {
 	settings: 'Paramètres',
 	mood: 'Humeur',
 	sports: 'Sport',
-	food_quality: 'Qualité de l’alimentation',
+	food_quality: 'Qualité de l\'alimentation',
 	food_amount: 'Quantité de nourriture',
 	sleep: 'Sommeil',
 	water: 'Eau',
@@ -253,15 +252,15 @@ const checkIn: CheckInRecords = {
 };
 
 const widgets: WidgetRecords = {
-	todos_due_today: "Tâches : aujourd'hui",
+	todos_due_today: 'Tâches : aujourd\'hui',
 	todos_due_overdue: 'Tâches : en retard',
 	todos_high_priority: 'Tâches prioritaires',
 	todos_most_relevant: 'Tâches les plus pertinentes',
 	check_in_daily: 'Suivi quotidien',
 	calendar: 'Calendrier',
 	weather: 'Météo',
-	your_day: 'Votre journée',
-	your_day_no_entries: "Il semble que vous n'ayez rien à faire aujourd'hui.",
+	your_day: 'Ta journée',
+	your_day_no_entries: 'Il semble que tu n\'aies rien à faire aujourd\'hui.',
 	check_in_statistics: 'Statistiques du suivi',
 	random_album: 'Album aléatoire',
 	random_quote: 'Citation aléatoire',
@@ -274,15 +273,15 @@ const widgets: WidgetRecords = {
 	search_city: 'Rechercher une ville...',
 	search_city_hint: 'Entrez au moins 3 caractères',
 	no_cities_found: 'Aucune ville trouvée',
-	select_city_prompt: 'Sélectionnez votre ville pour voir les prévisions météo.',
+	select_city_prompt: 'Sélectionne ta ville pour voir les prévisions météo.',
 	loading: 'Chargement',
 	coming_up: 'À venir'
 };
 
 const notes: NoteRecords = {
 	notebook: 'Bloc-notes',
-	welcome: 'Bienvenue dans votre bloc-notes.',
-	instruction: 'Commencez par créer une nouvelle note ou en sélectionner une.',
+	welcome: 'Bienvenue dans ton bloc-notes.',
+	instruction: 'Commence par créer une nouvelle note ou en sélectionner une.',
 	new_note: 'Nouvelle note',
 	new_folder: 'Nouveau dossier',
 	delete_note: 'Supprimer la note',
@@ -299,8 +298,8 @@ const notes: NoteRecords = {
 	updated_days_ago: 'Mise à jour il y a %d jours',
 	new_notes: 'Nouvelles notes',
 	last_updated: 'Dernière mise à jour',
-	enter_note_title: 'Entrez le titre de la note',
-	enter_folder_title: 'Entrez le nom du dossier',
+	enter_note_title: 'Entre le titre de la note',
+	enter_folder_title: 'Entre le nom du dossier',
 	favorites: 'Favoris',
 	add_to_favorites: 'Ajouter aux favoris',
 	remove_from_favorites: 'Retirer des favoris',
@@ -323,8 +322,8 @@ const libraries: LibraryRecords = {
 		type: 'Type de média',
 		format: 'Format',
 		condition: 'État',
-		acquired_where: 'Lieu d’acquisition',
-		acquired_at: 'Date d’acquisition',
+		acquired_where: 'Lieu d\'acquisition',
+		acquired_at: 'Date d\'acquisition',
 		additional_info: 'Informations supplémentaires',
 		cover: 'URL de la couverture',
 		link: 'Lien',
@@ -344,15 +343,15 @@ const libraries: LibraryRecords = {
 		condition_poor: 'Mauvais état',
 		condition_verypoor: 'Très mauvais état',
 		add_album: 'Ajouter un album',
-		edit_album: 'Modifier l’album',
-		import_error: 'L’album n’a pas pu être importé.',
+		edit_album: 'Modifier l\'album',
+		import_error: 'L\'album n\'a pas pu être importé.',
 		deezer_preview: 'Aperçu',
 		deezer_import: 'Importer depuis Deezer',
 		deezer_import_validation_error: 'Veuillez fournir un lien Deezer valide.',
 		discogs_import: 'Importer depuis Discogs',
 		discogs_import_validation_error: 'Veuillez fournir un lien Discogs valide.',
-		create_error: "Impossible de créer l'album.",
-		update_error: "Impossible de modifier l'album."
+		create_error: 'Impossible de créer l\'album.',
+		update_error: 'Impossible de modifier l\'album.'
 	},
 	books: {
 		title: 'Titre',
@@ -368,7 +367,7 @@ const libraries: LibraryRecords = {
 		finished_at: 'Terminé le',
 		add_book: 'Ajouter un livre',
 		edit_book: 'Modifier le livre',
-		import_error: 'Le livre n’a pas pu être importé.',
+		import_error: 'Le livre n\'a pas pu être importé.',
 		hardcover_import: 'Importer depuis Hardcover',
 		hardcover_import_validation_error: 'Veuillez fournir un lien Hardcover valide.',
 		goodreads_import: 'Importer depuis Goodreads',
@@ -387,7 +386,7 @@ const libraries: LibraryRecords = {
 		finished_at: 'Terminé le',
 		add_movie: 'Ajouter un film',
 		edit_movie: 'Modifier le film',
-		import_error: 'Le film n’a pas pu être importé.',
+		import_error: 'Le film n\'a pas pu être importé.',
 		imdb_import: 'Importer depuis IMDb',
 		imdb_import_validation_error: 'Veuillez fournir un lien IMDb valide.',
 		create_error: 'Impossible de créer le film.',
@@ -413,7 +412,7 @@ const libraries: LibraryRecords = {
 		finished_at: 'Terminé le',
 		add_game: 'Ajouter un jeu',
 		edit_game: 'Modifier le jeu',
-		import_error: "Le jeu n'a pas pu être importé.",
+		import_error: 'Le jeu n\'a pas pu être importé.',
 		steam_import: 'Importer depuis Steam',
 		steam_import_validation_error: 'Veuillez fournir un lien Steam Store valide.',
 		bgg_import: 'Importer depuis BGG',
@@ -463,19 +462,19 @@ const libraries: LibraryRecords = {
 		edit_recipe: 'Modifier la recette',
 		chefkoch_import: 'Importer de Chefkoch',
 		chefkoch_import_validation_error: 'Veuillez spécifier un lien Chefkoch valide.',
-		import_error: "La recette n'a pas pu être importée.",
+		import_error: 'La recette n\'a pas pu être importée.',
 		create_error: 'Impossible de créer la recette.',
 		update_error: 'Impossible de modifier la recette.'
 	},
 	recommendations: {
-		welcome_slogan: 'Que puis-je vous recommander aujourd’hui ?',
+		welcome_slogan: 'Que puis-je vous recommander aujourd\'hui?',
 		loading_text_local: 'Recherche dans votre bibliothèque…',
-		loading_text_remote: 'Interrogation de l’univers…',
-		satisfied: 'Parfait, je prends !',
-		not_satisfied: 'Réessayer !',
+		loading_text_remote: 'Interrogation de l\'univers…',
+		satisfied: 'Parfait, je prends!',
+		not_satisfied: 'Réessayer!',
 		favorite: 'Un favori',
 		random: 'Quelque chose au hasard',
-		unrated: 'Quelque chose que je n’ai jamais vu',
+		unrated: 'Quelque chose que je n\'ai jamais vu',
 		new: 'Quelque chose de nouveau'
 	},
 	navigation: {
@@ -509,7 +508,7 @@ const dev: DevRecords = {
 	requests: {
 		new: 'Nouvelle demande',
 		status_changed: 'Statut modifié le',
-		screenshot: 'Capture d’écran',
+		screenshot: 'Capture d\'écran',
 		bug: 'Bug',
 		feature: 'Fonctionnalité',
 		status_backlog: 'Backlog',
@@ -542,8 +541,8 @@ const finances: FinanceRecords = {
 	total: 'Total',
 	income: 'Revenus',
 	expenses: 'Dépenses',
-	show_history: 'Afficher l’historique',
-	hide_history: 'Masquer l’historique',
+	show_history: 'Afficher l\'historique',
+	hide_history: 'Masquer l\'historique',
 	wealth_distribution: 'Répartition du patrimoine',
 	income_vs_expenses: 'Revenus vs Dépenses',
 	wealth_trend: 'Tendance du patrimoine'
@@ -554,8 +553,8 @@ const assistants: AssistantRecords = {
 	create: 'Créer',
 	update: 'Mettre à jour',
 	no_assistants: 'Aucun assistant pour le moment.',
-	deletion_title: 'Supprimer l’assistant',
-	deletion_description: 'Êtes-vous sûr de vouloir supprimer cet assistant?',
+	deletion_title: 'Supprimer l\'assistant',
+	deletion_description: 'Es-tu sûr de vouloir supprimer cet assistant?',
 	chat_placeholder: 'Tapez votre message…',
 	title: 'Titre',
 	description: 'Description',
@@ -571,18 +570,18 @@ const feeds: FeedRecords = {
 	title: 'Titre',
 	url: 'URL',
 	keywords: 'Liste blanche',
-	keywords_description: "Afficher uniquement les articles contenant l'un de ces mots-clés.",
+	keywords_description: 'Afficher uniquement les articles contenant l\'un de ces mots-clés.',
 	keywords_placeholder: 'Entrer des mots-clés',
 	blacklist: 'Liste noire',
-	blacklist_description: "Masquer les articles contenant l'un de ces mots-clés.",
+	blacklist_description: 'Masquer les articles contenant l\'un de ces mots-clés.',
 	blacklist_placeholder: 'Entrer des mots-clés',
 	feed_add_success: 'Le flux a été ajouté avec succès.',
-	feed_add_error: "Impossible d'ajouter le flux.",
-	feed_already_subscribed: 'Vous êtes déjà abonné à ce flux.',
+	feed_add_error: 'Impossible d\'ajouter le flux.',
+	feed_already_subscribed: 'Tu es déjà abonné à ce flux.',
 	feed_update_success: 'Le flux a été mis à jour avec succès.',
 	feed_update_error: 'Impossible de mettre à jour le flux.',
 	test_feed: 'Tester le flux',
-	test_feed_error: "Aucun élément n'a été trouvé dans ce flux.",
+	test_feed_error: 'Aucun élément n\'a été trouvé dans ce flux.',
 	feed_preview: 'Aperçu du flux',
 	view_compact: 'Compact',
 	view_comfortable: 'Confortable',
@@ -590,8 +589,8 @@ const feeds: FeedRecords = {
 	browse_feeds: 'Parcourir les flux',
 	browse_feeds_search: 'Rechercher des flux...',
 	browse_feeds_empty: 'Aucun flux trouvé.',
-	browse_feeds_friends: 'Abonnements de vos amis',
-	browse_feeds_friends_empty: 'Vos amis ne se sont pas encore abonnés à des flux.',
+	browse_feeds_friends: 'Abonnements de tes amis',
+	browse_feeds_friends_empty: 'Tes amis ne se sont pas encore abonnés à des flux.',
 	browse_feeds_subscribers: 'abonnés'
 };
 
@@ -636,7 +635,7 @@ const calendar: CalendarRecords = {
 	list: 'Liste',
 	manage_calendars: 'Gérer les calendriers',
 	create_entry: 'Créer un événement',
-	edit_entry: 'Modifier l’événement',
+	edit_entry: 'Modifier l\'événement',
 	delete_entry: 'Supprimer',
 	title: 'Titre',
 	start_date: 'Du',
@@ -650,26 +649,26 @@ const calendar: CalendarRecords = {
 	sync_success: 'Synchronisation réussie.',
 	sync_error: 'La synchronisation a échoué.',
 	sync_still_running: 'La synchronisation est encore en cours. Réessayez dans une minute.',
-	entry_create_error: 'Impossible de créer l’événement. Vérifiez votre saisie.',
+	entry_create_error: 'Impossible de créer l\'événement. Vérifiez votre saisie.',
 	create_success: 'Le calendrier a été créé avec succès.',
 	delete_success: 'Le calendrier a été supprimé avec succès.',
-	delete_title: 'Supprimer le calendrier ?',
-	delete_description: 'Êtes-vous sûr de vouloir supprimer ce calendrier ?',
+	delete_title: 'Supprimer le calendrier?',
+	delete_description: 'Es-tu sûr de vouloir supprimer ce calendrier?',
 	import_success: 'Les calendriers ont été importés avec succès.',
-	import_error: 'Une erreur est survenue lors de l’importation.',
-	import_start: 'Démarrage de l’importation…',
+	import_error: 'Une erreur est survenue lors de l\'importation.',
+	import_start: 'Démarrage de l\'importation…',
 	import_create_calendar: 'Création du calendrier %s…',
 	import_calendars_running: 'Importation des calendriers…',
 	import_calendars: 'Importer les calendriers',
 	import_events: 'Importation de %d événements pour %s…',
 	recurring_event: 'Événement récurrent',
 	recurring_edit_question:
-		'Voulez-vous modifier uniquement cet événement ou tous les événements ?',
+		'Voulez-vous modifier uniquement cet événement ou tous les événements?',
 	recurring_delete_question:
-		'Voulez-vous supprimer uniquement cet événement ou tous les événements ?',
+		'Voulez-vous supprimer uniquement cet événement ou tous les événements?',
 	this_occurrence: 'Cet événement uniquement',
 	all_occurrences: 'Tous les événements',
-	today: "Aujourd'hui",
+	today: 'Aujourd\'hui',
 	no_events: 'Aucun événement',
 	share_calendar: 'Partager le calendrier',
 	share_with_friend: 'Partager avec un ami',
@@ -689,19 +688,19 @@ const calendar: CalendarRecords = {
 
 const contacts: ContactRecords = {
 	add_contact: 'Ajouter un contact',
-	address_books: "Carnets d'adresses",
-	import_success: "Les carnets d'adresses ont été importés avec succès.",
-	import_error: "Une erreur est survenue lors de l'importation des carnets d'adresses.",
-	import_start: "Démarrage de l'importation..",
-	import_create_address_book: "Création du carnet d'adresses %s..",
-	import_address_books: "Importation des carnets d'adresses en cours..",
-	import_contacts_running: "Importation de %d contacts pour le carnet d’adresses %s…",
+	address_books: 'Carnets d\'adresses',
+	import_success: 'Les carnets d\'adresses ont été importés avec succès.',
+	import_error: 'Une erreur est survenue lors de l\'importation des carnets d\'adresses.',
+	import_start: 'Démarrage de l\'importation..',
+	import_create_address_book: 'Création du carnet d\'adresses %s..',
+	import_address_books: 'Importation des carnets d\'adresses en cours..',
+	import_contacts_running: 'Importation de %d contacts pour le carnet d\'adresses %s…',
 	import_contacts: 'Importer les contacts'
 };
 
 const notifications: NotificationRecords = {
-	friend_request_title: 'Nouvelle demande d’ami',
-	friend_request_message: 'Vous avez reçu une demande d’ami de %s.',
+	friend_request_title: 'Nouvelle demande d\'ami',
+	friend_request_message: 'Vous avez reçu une demande d\'ami de %s.',
 	music_release_title: 'Nouvelle sortie musicale',
 	music_release_message: 'Un de vos artistes favoris a sorti un nouvel album : %s.',
 	book_release_title: 'Nouvelle sortie de livre',
@@ -711,11 +710,11 @@ const notifications: NotificationRecords = {
 	dev_request_comment_title: 'Nouveau commentaire sur une demande dev',
 	dev_request_comment_message: '%1 a commenté : %2.',
 	daily_check_in_reminder_title: 'Rappel de suivi quotidien',
-	daily_check_in_reminder_message: 'Avez-vous effectué votre suivi quotidien aujourd’hui ?',
-	daily_day_reminder_title: 'Votre journée à venir',
-	daily_day_reminder_message: 'Vous avez %1 tâches et %2 événements prévus pour aujourd’hui.',
-	daily_day_reminder: 'Recevoir un rappel quotidien de votre journée à venir ?',
-	daily_check_in_reminder: 'Recevoir un rappel quotidien pour le suivi journalier ?'
+	daily_check_in_reminder_message: 'As-tu effectué ton suivi quotidien aujourd\'hui?',
+	daily_day_reminder_title: 'Ta journée à venir',
+	daily_day_reminder_message: 'Tu as %1 tâches et %2 événements prévus pour aujourd\'hui.',
+	daily_day_reminder: 'Recevoir un rappel quotidien de ta journée à venir?',
+	daily_check_in_reminder: 'Recevoir un rappel quotidien pour le suivi journalier?'
 };
 
 const clipboard: ClipboardRecords = {
@@ -725,32 +724,32 @@ const clipboard: ClipboardRecords = {
 	paste: 'Coller',
 	save: 'Enregistrer',
 	save_success: 'Presse-papiers enregistré',
-	save_error: 'Échec de l’enregistrement',
+	save_error: 'Échec de l\'enregistrement',
 	clear: 'Effacer',
 	clear_success: 'Le presse-papiers a été vidé',
 	clear_error: 'Échec de la suppression',
 	load_error: 'Échec du chargement',
 	add_entry: 'Ajouter une entrée',
 	history: 'Historique',
-	delete_error: "Échec de la suppression de l'entrée",
+	delete_error: 'Échec de la suppression de l\'entrée',
 	image_save_success: 'Image enregistrée',
-	image_save_error: "Échec de l'enregistrement de l'image",
+	image_save_error: 'Échec de l\'enregistrement de l\'image',
 	image_copy_success: 'Image copiée dans le presse-papiers',
-	image_copy_error: "Échec de la copie de l'image"
+	image_copy_error: 'Échec de la copie de l\'image'
 };
 
 const dav: DavRecords = {
 	synchronize: 'Synchroniser',
 	synchronize_headline: 'Synchronisation CalDAV / CardDAV',
 	synchronize_server: 'Serveur',
-	synchronize_username: "Nom d'utilisateur",
+	synchronize_username: 'Nom d\'utilisateur',
 	synchronize_password: 'Mot de passe',
 	synchronize_password_value: 'Mot de passe enregistré'
 };
 
 const profile: ProfileRecords = {
 	friends: 'Amis',
-	friend_requests: "Demandes d'amis",
+	friend_requests: 'Demandes d\'amis',
 	request_to: 'Demande à %s',
 	request_pending: 'En attente',
 	request_rejected: 'Refusée',
@@ -765,164 +764,164 @@ const help: HelpRecords = {
 	section_overview: 'À propos de cette section',
 	keyboard_shortcuts: 'Raccourcis clavier',
 	tips: 'Conseils & Astuces',
-	shortcut_f1: "Afficher/masquer l'aide",
+	shortcut_f1: 'Afficher/masquer l\'aide',
 	shortcut_escape: 'Fermer les dialogues',
 	shortcut_enter: 'Confirmer les actions',
 	shortcut_enter_todo: 'Créer une nouvelle tâche',
 	home: {
 		title: 'Tableau de bord',
 		description:
-			'Votre tableau de bord personnel avec des widgets pour un accès rapide à vos informations les plus importantes. Personnalisez-le pour voir exactement ce qui compte pour vous.',
+			'Ton tableau de bord personnel avec des widgets pour un accès rapide à tes informations les plus importantes. Personnalise-le pour voir exactement ce qui compte pour toi.',
 		widgets_tip:
-			'Colonne gauche : votre journée en un coup d\'œil. Milieu : inspiration et liens. Droite : stats et accès rapide.',
+			'Colonne gauche : ta journée en un coup d\'œil. Milieu : inspiration et liens. Droite : stats et accès rapide.',
 		edit_tip:
-			'Certaines sections n\'apparaissent qu\'une fois que vous avez ajouté du contenu — ajoutez des tâches, événements ou check-ins.'
+			'Certaines sections n\'apparaissent qu\'une fois que tu as ajouté du contenu — ajoute des tâches, événements ou check-ins.'
 	},
 	todos: {
 		title: 'Tâches',
 		description:
-			"Gérez vos tâches avec des priorités, des dates d'échéance, des catégories et des espaces de travail. Restez organisé et ne manquez jamais une deadline.",
-		create_tip: 'Appuyez sur Entrée après avoir tapé pour créer rapidement une nouvelle tâche.',
+			'Gère tes tâches avec des priorités, des dates d\'échéance, des catégories et des espaces de travail. Reste organisé et ne manque jamais une deadline.',
+		create_tip: 'Appuie sur Entrée après avoir tapé pour créer rapidement une nouvelle tâche.',
 		priority_tip:
-			'Définissez des priorités (Haute, Moyenne, Basse) pour vous concentrer sur ce qui compte le plus.',
+			'Définis des priorités (Haute, Moyenne, Basse) pour te concentrer sur ce qui compte le plus.',
 		workspace_tip:
-			'Utilisez les espaces de travail pour séparer les tâches personnelles et professionnelles, ou organiser par projet.',
+			'Utilise les espaces de travail pour séparer les tâches personnelles et professionnelles, ou organiser par projet.',
 		subtask_tip:
-			'Décomposez les tâches complexes en sous-tâches pour suivre la progression étape par étape.',
+			'Décompose les tâches complexes en sous-tâches pour suivre la progression étape par étape.',
 		recurring_tip:
-			'Définissez une récurrence sur n\'importe quelle tâche pour qu\'elle soit automatiquement recréée selon un calendrier.'
+			'Définis une récurrence sur n\'importe quelle tâche pour qu\'elle soit automatiquement recréée selon un calendrier.'
 	},
 	calendar: {
 		title: 'Calendrier',
 		description:
-			'Planifiez des événements et des rendez-vous. Synchronisez avec vos appareils via CalDAV pour un accès transparent partout.',
-		views_tip: 'Basculez entre les vues Mois, Semaine, Jour et Liste avec les boutons en haut.',
+			'Planifie des événements et des rendez-vous. Synchronise avec tes appareils via CalDAV pour un accès transparent partout.',
+		views_tip: 'Bascule entre les vues Mois, Semaine, Jour et Liste avec les boutons en haut.',
 		create_tip:
-			'Cliquez sur un jour ou un créneau horaire pour créer rapidement un nouvel événement.',
+			'Clique sur un jour ou un créneau horaire pour créer rapidement un nouvel événement.',
 		sync_tip:
-			"Utilisez la synchronisation CalDAV pour accéder à votre calendrier depuis n'importe quel appareil ou application compatible."
+			'Utilise la synchronisation CalDAV pour accéder à ton calendrier depuis n\'importe quel appareil ou application compatible.'
 	},
 	notes: {
 		title: 'Notes',
 		description:
-			'Écrivez et organisez des notes en Markdown. Créez des dossiers pour regrouper les notes connexes.',
+			'Écris et organise des notes en Markdown. Crée des dossiers pour regrouper les notes connexes.',
 		markdown_tip:
-			'Utilisez la syntaxe Markdown pour le formatage : **gras**, *italique*, # titres, - listes, et plus.',
+			'Utilise la syntaxe Markdown pour le formatage : **gras**, *italique*, # titres, - listes, et plus.',
 		folders_tip:
-			'Créez des dossiers pour organiser les notes par sujet, projet ou toute catégorie de votre choix.',
-		export_tip: 'Exportez vos notes pour les emporter ou les sauvegarder.'
+			'Crée des dossiers pour organiser les notes par sujet, projet ou toute catégorie de ton choix.',
+		export_tip: 'Exporte tes notes pour les emporter ou les sauvegarder.'
 	},
 	libraries: {
 		title: 'Bibliothèques',
 		description:
-			'Gérez vos collections de livres, musique, films, jeux, recettes, citations et liens. Notez, étiquetez et organisez tout ce que vous aimez.',
+			'Gère tes collections de livres, musique, films, jeux, recettes, citations et liens. Note, étiquette et organise tout ce que tu aimes.',
 		import_tip:
-			'Importez des éléments depuis des sources externes comme Deezer, Discogs, IMDb, Steam et plus.',
+			'Importe des éléments depuis des sources externes comme Deezer, Discogs, IMDb, Steam et plus.',
 		filter_tip:
-			'Utilisez les filtres et les étiquettes pour trouver rapidement des éléments dans votre collection.',
+			'Utilise les filtres et les étiquettes pour trouver rapidement des éléments dans ta collection.',
 		recommend_tip:
-			'Essayez la fonction de recommandation pour redécouvrir des éléments de votre bibliothèque.'
+			'Essaie la fonction de recommandation pour redécouvrir des éléments de ta bibliothèque.'
 	},
 	contacts: {
 		title: 'Contacts',
 		description:
-			"Gérez votre carnet d'adresses avec la synchronisation CardDAV. Gardez vos contacts accessibles sur tous vos appareils.",
+			'Gère ton carnet d\'adresses avec la synchronisation CardDAV. Garde tes contacts accessibles sur tous tes appareils.',
 		sync_tip:
-			'Importez et synchronisez les contacts via CardDAV pour tout garder synchronisé sur tous les appareils.',
-		groups_tip: 'Organisez les contacts en groupes pour un filtrage et une gestion faciles.'
+			'Importe et synchronise les contacts via CardDAV pour tout garder synchronisé sur tous les appareils.',
+		groups_tip: 'Organise les contacts en groupes pour un filtrage et une gestion faciles.'
 	},
 	checkIn: {
 		title: 'Check-in',
 		description:
-			'Suivez vos habitudes quotidiennes, votre humeur, votre sommeil et plus encore. Développez une conscience de vos habitudes au fil du temps.',
+			'Suis tes habitudes quotidiennes, ton humeur, ton sommeil et plus encore. Développe une conscience de tes habitudes au fil du temps.',
 		daily_tip:
-			'Remplissez votre check-in quotidien pour créer une image de vos habitudes et de votre bien-être.',
+			'Remplis ton check-in quotidien pour créer une image de tes habitudes et de ton bien-être.',
 		stats_tip:
-			'Consultez les statistiques pour voir les tendances et les modèles dans vos données.',
+			'Consulte les statistiques pour voir les tendances et les modèles dans tes données.',
 		trackers_tip:
-			'Personnalisez les trackers que vous souhaitez enregistrer chaque jour dans les paramètres du check-in.',
+			'Personnalise les trackers que tu souhaites enregistrer chaque jour dans les paramètres du check-in.',
 		sport_tip:
-			'Choisissez votre type de sport dans les paramètres pour que le suivi d\'activité corresponde à votre routine.'
+			'Choisis ton type de sport dans les paramètres pour que le suivi d\'activité corresponde à ta routine.'
 	},
 	assistants: {
 		title: 'Assistants',
 		description:
-			'Créez des assistants IA personnalisés avec des prompts spécifiques pour différentes tâches. Vos conversations restent privées.',
+			'Crée des assistants IA personnalisés avec des prompts spécifiques pour différentes tâches. Tes conversations restent privées.',
 		create_tip:
-			"Créez des assistants avec des prompts personnalisés pour des tâches spécifiques comme l'écriture, le codage ou le brainstorming.",
+			'Crée des assistants avec des prompts personnalisés pour des tâches spécifiques comme l\'écriture, le codage ou le brainstorming.',
 		prompt_tip:
-			'Écrivez des prompts détaillés pour obtenir des réponses meilleures et plus ciblées de vos assistants.'
+			'Écris des prompts détaillés pour obtenir des réponses meilleures et plus ciblées de tes assistants.'
 	},
 	finances: {
 		title: 'Finances',
 		description:
-			'Suivez votre patrimoine et votre budget. Obtenez une image claire de votre situation financière.',
+			'Suis ton patrimoine et ton budget. Obtiens une image claire de ta situation financière.',
 		wealth_tip:
-			'Ajoutez des comptes et des actifs pour suivre votre patrimoine total au fil du temps.',
+			'Ajoute des comptes et des actifs pour suivre ton patrimoine total au fil du temps.',
 		budget_tip:
-			'Configurez des catégories de revenus et de dépenses pour comprendre votre flux de trésorerie.'
+			'Configure des catégories de revenus et de dépenses pour comprendre ton flux de trésorerie.'
 	},
 	feeds: {
 		title: 'Flux',
 		description:
-			"Suivez les flux RSS de vos sources préférées. Pas d'algorithmes, juste le contenu que vous choisissez.",
+			'Suis les flux RSS de tes sources préférées. Pas d\'algorithmes, juste le contenu que tu choisis.',
 		add_tip:
-			"Ajoutez des flux en collant l'URL RSS. La plupart des blogs et sites d'actualités ont des flux RSS.",
+			'Ajoute des flux en collant l\'URL RSS. La plupart des blogs et sites d\'actualités ont des flux RSS.',
 		filter_tip:
-			'Utilisez des mots-clés en liste blanche et noire pour filtrer les articles par contenu.'
+			'Utilise des mots-clés en liste blanche et noire pour filtrer les articles par contenu.'
 	},
 	clipboard: {
 		title: 'Presse-papiers',
 		description:
-			'Un presse-papiers synchronisé qui fonctionne sur tous vos appareils. Enregistrez des extraits de texte pour un accès rapide.',
+			'Un presse-papiers synchronisé qui fonctionne sur tous tes appareils. Enregistre des extraits de texte pour un accès rapide.',
 		sync_tip:
-			"Enregistrez les entrées du presse-papiers pour y accéder depuis n'importe quel appareil où vous êtes connecté."
+			'Enregistre les entrées du presse-papiers pour y accéder depuis n\'importe quel appareil où tu es connecté.'
 	},
 	settings: {
 		title: 'Paramètres',
 		description:
-			"Personnalisez solyto pour qu'il fonctionne exactement comme vous le souhaitez. Configurez les fonctionnalités, l'apparence et les intégrations.",
+			'Personnalise solyto pour qu\'il fonctionne exactement comme tu le souhaites. Configure les fonctionnalités, l\'apparence et les intégrations.',
 		features_tip:
-			"Activez ou désactivez des fonctionnalités pour n'afficher que ce dont vous avez besoin dans la navigation.",
+			'Active ou désactive des fonctionnalités pour n\'afficher que ce dont tu as besoin dans la navigation.',
 		localization_tip:
-			'Définissez votre langue préférée, fuseau horaire et formats de date/heure.'
+			'Définis ta langue préférée, fuseau horaire et formats de date/heure.'
 	},
 	profile: {
 		title: 'Profil',
-		description: 'Gérez votre compte et connectez-vous avec des amis.',
+		description: 'Gère ton compte et connecte-toi avec des amis.',
 		friends_tip:
-			"Envoyez et acceptez des demandes d'amis pour vous connecter avec d'autres utilisateurs de solyto."
+			'Envoie et accepte des demandes d\'amis pour te connecter avec d\'autres utilisateurs de solyto.'
 	},
 	dev_requests: {
 		title: 'Demandes dev',
 		description:
-			"Soumettez des rapports de bugs et des demandes de fonctionnalités directement à l'équipe de développement. Suivez le statut de vos soumissions.",
+			'Soumets des rapports de bugs et des demandes de fonctionnalités directement à l\'équipe de développement. Suis le statut de tes soumissions.',
 		create_tip:
-			"Incluez des captures d'écran et des descriptions détaillées pour aider les développeurs à comprendre et corriger les problèmes plus rapidement.",
-		status_tip: 'Revenez voir quand votre demande passe de backlog à en cours puis à terminé.'
+			'Inclus des captures d\'écran et des descriptions détaillées pour aider les développeurs à comprendre et corriger les problèmes plus rapidement.',
+		status_tip: 'Reviens voir quand ta demande passe de backlog à en cours puis à terminé.'
 	},
 	timeTracking: {
 		title: 'Suivi du temps',
 		description:
-			'Suivez le temps passé sur vos projets et tâches. Utilisez le chrono ou ajoutez des entrées manuellement. Consultez les statistiques pour comprendre où va votre temps.',
+			'Suis le temps passé sur tes projets et tâches. Utilise le chrono ou ajoute des entrées manuellement. Consulte les statistiques pour comprendre où va ton temps.',
 		timer_tip:
-			'Démarrez un chrono pour suivre le temps automatiquement, ou ajoutez des entrées manuellement.',
+			'Démarre un chrono pour suivre le temps automatiquement, ou ajoute des entrées manuellement.',
 		projects_tip:
-			'Organisez vos entrées de temps en projets et catégories pour de meilleurs aperçus.',
+			'Organise tes entrées de temps en projets et catégories pour de meilleurs aperçus.',
 		pomodoro_tip:
-			'Utilisez le minuteur Pomodoro intégré pour travailler par intervalles concentrés avec des pauses entre les deux.'
+			'Utilise le minuteur Pomodoro intégré pour travailler par intervalles concentrés avec des pauses entre les deux.'
 	}
 };
 
 const welcome_tour: WelcomeTourRecords = {
-	welcome_title: 'Bienvenue sur solyto !',
-	welcome_subtitle: 'Votre hub de productivité personnel',
+	welcome_title: 'Bienvenue sur solyto!',
+	welcome_subtitle: 'Ton hub de productivité personnel',
 	welcome_description:
-		'solyto réunit tout ce dont vous avez besoin en un seul endroit : tâches, calendriers, notes, contacts et plus. Pas de suivi, pas de publicités, pas de vente de données. Configurons-vous en quelques étapes.',
-	features_title: 'Choisissez vos fonctionnalités',
-	features_subtitle: "Qu'aimeriez-vous utiliser ?",
+		'solyto réunit tout ce dont tu as besoin en un seul endroit : tâches, calendriers, notes, contacts et plus. Pas de suivi, pas de publicités, pas de vente de données. Configurons-le en quelques étapes.',
+	features_title: 'Choisis tes fonctionnalités',
+	features_subtitle: 'Qu\'aimerais-tu utiliser?',
 	features_description:
-		'Sélectionnez les fonctionnalités que vous souhaitez voir dans votre navigation. Ne vous inquiétez pas, vous pouvez toujours changer cela plus tard dans les Paramètres.',
+		'Sélectionne les fonctionnalités que tu souhaites voir dans ta navigation. Ne t\'inquiète pas, tu peux toujours changer cela plus tard dans les Paramètres.',
 	feature_calendar: 'Calendrier',
 	feature_calendar_desc: 'Planifier des événements, synchroniser avec CalDAV',
 	feature_todos: 'Tâches',
@@ -932,7 +931,7 @@ const welcome_tour: WelcomeTourRecords = {
 	feature_libraries: 'Bibliothèques',
 	feature_libraries_desc: 'Suivre livres, musique, films, jeux',
 	feature_contacts: 'Contacts',
-	feature_contacts_desc: "Carnet d'adresses, synchroniser avec CardDAV",
+	feature_contacts_desc: 'Carnet d\'adresses, synchroniser avec CardDAV',
 	feature_check_in: 'Suivi',
 	feature_check_in_desc: 'Humeur quotidienne, sommeil et habitudes',
 	feature_assistants: 'Assistants',
@@ -946,38 +945,38 @@ const welcome_tour: WelcomeTourRecords = {
 	feature_time_tracking: 'Suivi du temps',
 	feature_time_tracking_desc: 'Suivre le temps sur les projets et les tâches',
 	widgets_title: 'Widgets du tableau de bord',
-	widgets_subtitle: 'Personnalisez votre accueil',
+	widgets_subtitle: 'Personnalise ton accueil',
 	widgets_description:
-		'Votre tableau de bord affiche des widgets qui vous donnent un aperçu rapide. Sélectionnez ceux que vous souhaitez voir. Vous pouvez les réorganiser ou les modifier à tout moment en cliquant sur le bouton modifier.',
+		'Ton tableau de bord affiche des widgets qui te donnent un aperçu rapide. Sélectionne ceux que tu souhaites voir. Tu peux les réorganiser ou les modifier à tout moment en cliquant sur le bouton modifier.',
 	localization_title: 'Localisation',
-	localization_subtitle: 'Faites-le vôtre',
+	localization_subtitle: 'Fais-le tien',
 	localization_description:
-		'Définissez votre langue préférée, fuseau horaire et formats de date/heure.',
-	ready_title: 'Tout est prêt !',
+		'Définis ta langue préférée, fuseau horaire et formats de date/heure.',
+	ready_title: 'Tout est prêt!',
 	ready_subtitle: 'Prêt à commencer',
-	ready_description: "Votre solyto est configuré et prêt à l'emploi. Profitez-en !",
-	ready_description_desktop: "Appuyez sur F1 à tout moment pour obtenir de l'aide sur la page actuelle.",
+	ready_description: 'Ton solyto est configuré et prêt à l\'emploi. Profites-en!',
+	ready_description_desktop: 'Appuie sur F1 à tout moment pour obtenir de l\'aide sur la page actuelle.',
 	next: 'Suivant',
 	back: 'Retour',
 	skip: 'Passer la visite',
 	finish: 'Commencer',
 	step_of: 'Étape %d sur %d',
-	pwa_title: "Installer comme application",
-	pwa_description: "Si vous le souhaitez, vous pouvez ajouter solyto à votre écran d'accueil.",
-	pwa_install_button: "Ajouter à l'écran d'accueil",
+	pwa_title: 'Installer comme application',
+	pwa_description: 'Si tu le souhaites, tu peux ajouter solyto à ton écran d\'accueil.',
+	pwa_install_button: 'Ajouter à l\'écran d\'accueil',
 	pwa_installed: 'Déjà installé sur cet appareil.',
-	pwa_ios_instruction: "Appuyez sur le bouton Partager dans votre navigateur, puis sélectionnez « Sur l'écran d’accueil ».",
-	pwa_browser_hint: "Ouvrez solyto dans Chrome ou Safari pour l'installer comme application sur votre appareil.",
-	tour_intro_title: "Faisons un tour rapide",
-	tour_intro_description: "Je vais vous guider à travers chaque fonctionnalité de votre navigation. Vous pouvez y revenir à tout moment depuis les paramètres.",
-	tour_outro_title: "Tout est prêt !",
-	tour_outro_description: "C’est solyto ! Appuyez sur F1 à tout moment pour obtenir de l’aide sur la section actuelle.",
-	tour_start: "Faire la visite"
+	pwa_ios_instruction: 'Appuie sur le bouton Partager dans ton navigateur, puis sélectionne « Sur l\'écran d\'accueil ».',
+	pwa_browser_hint: 'Ouvre solyto dans Chrome ou Safari pour l\'installer comme application sur ton appareil.',
+	tour_intro_title: 'Faisons un tour rapide',
+	tour_intro_description: 'Je vais te guider à travers chaque fonctionnalité de ta navigation. Tu peux y revenir à tout moment depuis les paramètres.',
+	tour_outro_title: 'Tout est prêt!',
+	tour_outro_description: 'C\'est solyto! Appuie sur F1 à tout moment pour obtenir de l\'aide sur la section actuelle.',
+	tour_start: 'Faire la visite'
 };
 
 const admin: AdminRecords = {
-	role_update_success: "Le rôle de l'utilisateur a été mis à jour avec succès.",
-	role_update_error: "Impossible de mettre à jour le rôle de l'utilisateur."
+	role_update_success: 'Le rôle de l\'utilisateur a été mis à jour avec succès.',
+	role_update_error: 'Impossible de mettre à jour le rôle de l\'utilisateur.'
 };
 
 const timeTracking: TimeTrackingRecords = {
@@ -1016,12 +1015,12 @@ const timeTracking: TimeTrackingRecords = {
 	minutes: 'minutes',
 	dashboard: 'Tableau de bord',
 	recent_entries: 'Entrées récentes',
-	today: "Aujourd'hui",
+	today: 'Aujourd\'hui',
 	this_week: 'Cette semaine',
 	this_month: 'Ce mois',
 	deletion_title: 'Supprimer le projet',
 	deletion_description:
-		'Êtes-vous sûr de vouloir supprimer ce projet ? Toutes les entrées associées seront supprimées.',
+		'Es-tu sûr de vouloir supprimer ce projet? Toutes les entrées associées seront supprimées.',
 	pomodoro: 'Pomodoro',
 	work_session: 'Travail',
 	short_break: 'Pause courte',
@@ -1034,12 +1033,12 @@ const timeTracking: TimeTrackingRecords = {
 	reset: 'Réinitialiser',
 	filter_by_category: 'Filtrer par catégorie',
 	all_categories: 'Toutes',
-	edit_entry: "Modifier l'entrée"
+	edit_entry: 'Modifier l\'entrée'
 };
 
 const cookie_consent: CookieConsentRecords = {
 	title: 'Avis sur le stockage',
-	body: "Nous utilisons le stockage local pour maintenir votre session sécurisée. Aucune donnée de suivi ou d'analyse n'est collectée.",
+	body: 'Nous utilisons le stockage local pour maintenir votre session sécurisée. Aucune donnée de suivi ou d\'analyse n\'est collectée.',
 	accept: 'Compris',
 	privacy_policy: 'Politique de confidentialité'
 };

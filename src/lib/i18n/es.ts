@@ -924,7 +924,7 @@ const welcome_tour: WelcomeTourRecords = {
 	feature_libraries_desc: 'Seguimiento de libros, música, películas, juegos',
 	feature_contacts: 'Contactos',
 	feature_contacts_desc: 'Libreta de direcciones, sincronizar con CardDAV',
-	feature_checkIn: 'Check-in',
+	feature_check_in: 'Check-in',
 	feature_check_in_desc: 'Estado de ánimo diario, sueño y hábitos',
 	feature_assistants: 'Asistentes',
 	feature_assistants_desc: 'Chat de IA con prompts personalizados',

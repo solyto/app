@@ -95,12 +95,12 @@ const auth: AuthRecords = {
 	register_error: 'Es ist ein Fehler bei der Registrierung aufgetreten.',
 	login_success: 'Du wurdest erfolgreich angemeldet.',
 	login_error: 'Anmeldung fehlgeschlagen.',
-	verify_success: 'Deine Account wurde erfolgreich bestätigt. Du kannst dich jetzt anmelden!',
+	verify_success: 'Dein Account wurde erfolgreich bestätigt. Du kannst dich jetzt anmelden!',
 	verify_general_error: 'Es ist ein Fehler beim Aktivieren deines Accounts aufgetreten.',
-	already_verified: 'Ihr Konto wurde bereits bestätigt. Sie können sich gerne anmelden!',
+	already_verified: 'Dein Konto wurde bereits bestätigt. Du kannst dich gerne anmelden!',
 	verify_token_mismatch:
-		'Ihr Konto konnte nicht bestätigt werden. Das Token stimmt nicht überein.',
-	verify_token_expired: 'Ihr Konto konnte nicht bestätigt werden. Das Token ist abgelaufen.'
+		'Dein Konto konnte nicht bestätigt werden. Das Token stimmt nicht überein.',
+	verify_token_expired: 'Dein Konto konnte nicht bestätigt werden. Das Token ist abgelaufen.'
 };
 
 const home: HomeRecords = {
