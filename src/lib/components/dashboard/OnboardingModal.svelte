@@ -91,7 +91,8 @@
 		transition:fade={{ duration: 200 }}
 	>
 		<div
-			class="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-c-bg-modal shadow-2xl"
+			class="relative flex w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-c-bg-modal shadow-2xl sm:rounded-3xl max-md:mt-[-30px]"
+			style="max-height: calc(80vh)"
 			transition:scale={{ start: 0.9, duration: 300 }}
 		>
 			<div class="absolute top-0 right-0 left-0 h-1 bg-c-neutral-2 dark:bg-s-dark-3">
@@ -101,7 +102,7 @@
 				></div>
 			</div>
 
-			<div class="p-8">
+			<div class="flex-1 overflow-y-auto p-6 pt-7 sm:p-8">
 				{#if currentStep === 0}
 					<OnboardingModalStepWelcome />
 				{:else if currentStep === 1}
@@ -117,7 +118,7 @@
 				{/if}
 			</div>
 
-			<div class="flex items-center justify-between px-8 pb-8">
+			<div class="flex items-center justify-between px-6 pb-6 sm:px-8 sm:pb-8">
 				<div class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{stepIndicator}</div>
 				<div class="flex items-center gap-3">
 					{#if currentStep === 0}

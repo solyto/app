@@ -54,7 +54,7 @@
 		{ts.get.welcome_tour.features_description}
 	</p>
 
-	<div class="grid max-h-80 grid-cols-2 gap-3 overflow-y-auto pr-2">
+	<div class="grid grid-cols-2 gap-3">
 		{#each featureConfig as feature}
 			<button
 				class="flex cursor-pointer items-start gap-3 rounded-xl border-2 p-3 text-left transition-all
