@@ -160,7 +160,22 @@ const settings: SettingsRecords = {
 	telegram_bot_create: 'Create a connection',
 	telegram_bot_not_connected:
 		"You haven't connected the Bot to your account yet. Do so under Integrations.",
-	app: 'App'
+	app: 'App',
+	export_data: 'Export Data',
+	export_select_features: 'Select features to export',
+	export_select_all: 'Select All',
+	export_deselect_all: 'Deselect All',
+	export_start: 'Start Export',
+	export_status_pending: 'Export is being prepared...',
+	export_status_in_progress: 'Export is in progress...',
+	export_status_completed: 'Export is ready!',
+	export_status_failed: 'Export failed.',
+	export_download: 'Download',
+	export_rate_limited: 'You can only export once every 24 hours.',
+	export_next_available: 'Next export available in',
+	export_expired: 'Export has expired.',
+	export_expires_at: 'Expires at',
+	export_no_exports: 'No exports yet.'
 };
 
 const todos: TodoRecords = {
@@ -724,7 +739,9 @@ const notifications: NotificationRecords = {
 	daily_day_reminder_title: 'Your Day Ahead',
 	daily_day_reminder_message: 'You have %1 todos and %2 events scheduled for today.',
 	daily_day_reminder: 'Get daily reminder about your upcoming day?',
-	daily_check_in_reminder: 'Get daily reminder about your daily Check-in?'
+	daily_check_in_reminder: 'Get daily reminder about your daily Check-in?',
+	export_ready_title: 'Export Ready',
+	export_ready_message: 'Your data export is ready to download.'
 };
 
 const clipboard: ClipboardRecords = {

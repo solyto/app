@@ -30,7 +30,8 @@
 		{ key: 'daily_check_in_reminder', label: 'Reminder for daily check-in' },
 		{ key: 'daily_day_reminder', label: 'Reminder for the upcoming day' },
 		{ key: 'calendar_share', label: 'Calendar Shares' },
-		{ key: 'dev_request_comment', label: 'Dev Request Comments' }
+		{ key: 'dev_request_comment', label: 'Dev Request Comments' },
+		{ key: 'export_ready', label: 'Export Ready' }
 	];
 
 	const channels: { key: NotificationChannel; label: string }[] = [

@@ -97,6 +97,21 @@ export interface SettingsRecords {
 	telegram_bot_create: string;
 	telegram_bot_not_connected: string;
 	app: string;
+	export_data: string;
+	export_select_features: string;
+	export_select_all: string;
+	export_deselect_all: string;
+	export_start: string;
+	export_status_pending: string;
+	export_status_in_progress: string;
+	export_status_completed: string;
+	export_status_failed: string;
+	export_download: string;
+	export_rate_limited: string;
+	export_next_available: string;
+	export_expired: string;
+	export_expires_at: string;
+	export_no_exports: string;
 }
 
 export interface AuthRecords {
@@ -681,6 +696,8 @@ export interface NotificationRecords {
 	daily_day_reminder_message: string;
 	daily_day_reminder: string;
 	daily_check_in_reminder: string;
+	export_ready_title: string;
+	export_ready_message: string;
 }
 
 export interface ClipboardRecords {

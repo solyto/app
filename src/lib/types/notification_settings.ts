@@ -26,15 +26,20 @@ export interface NotificationSettings {
 	dev_request_comment_ui: boolean;
 	dev_request_comment_email: boolean;
 	dev_request_comment_push: boolean;
-	dev_request_comment_telegram: boolean;
+    dev_request_comment_telegram: boolean;
+    export_ready_ui: boolean;
+    export_ready_email: boolean;
+    export_ready_push: boolean;
+    export_ready_telegram: boolean;
 }
 
 export type NotificationType =
-	| 'music_release'
-	| 'book_release'
-	| 'friend_request'
-	| 'daily_day_reminder'
-	| 'daily_check_in_reminder'
-	| 'calendar_share'
-	| 'dev_request_comment';
+    | 'music_release'
+    | 'book_release'
+    | 'friend_request'
+    | 'daily_day_reminder'
+    | 'daily_check_in_reminder'
+    | 'calendar_share'
+    | 'dev_request_comment'
+    | 'export_ready';
 export type NotificationChannel = 'ui' | 'email' | 'push' | 'telegram';

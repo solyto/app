@@ -160,7 +160,22 @@ const settings: SettingsRecords = {
 	telegram_bot_register: 'Regístrelo enviando el siguiente comando a %s',
 	telegram_bot_create: 'Crear conexión',
 	telegram_bot_not_connected: 'Aún no ha conectado el bot a su cuenta. Hágalo en Integraciones.',
-	app: 'App'
+	app: 'App',
+	export_data: 'Exportar datos',
+	export_select_features: 'Seleccionar funciones para exportar',
+	export_select_all: 'Seleccionar todo',
+	export_deselect_all: 'Deseleccionar todo',
+	export_start: 'Iniciar exportación',
+	export_status_pending: 'Preparando exportación...',
+	export_status_in_progress: 'Exportación en progreso...',
+	export_status_completed: '¡Exportación lista!',
+	export_status_failed: 'Exportación fallida.',
+	export_download: 'Descargar',
+	export_rate_limited: 'Solo puede exportar una vez cada 24 horas.',
+	export_next_available: 'Próxima exportación disponible en',
+	export_expired: 'La exportación ha expirado.',
+	export_expires_at: 'Expira el',
+	export_no_exports: 'Aún no hay exportaciones.'
 };
 
 const todos: TodoRecords = {
@@ -713,7 +728,9 @@ const notifications: NotificationRecords = {
 	daily_day_reminder_title: 'Tu día por delante',
 	daily_day_reminder_message: 'Tienes %1 tareas y %2 eventos programados para hoy.',
 	daily_day_reminder: '¿Recibir un recordatorio diario sobre su día?',
-	daily_check_in_reminder: '¿Recibir un recordatorio diario del seguimiento?'
+	daily_check_in_reminder: '¿Recibir un recordatorio diario del seguimiento?',
+	export_ready_title: 'Exportación lista',
+	export_ready_message: 'Su exportación de datos está lista para descargar.'
 };
 
 const clipboard: ClipboardRecords = {

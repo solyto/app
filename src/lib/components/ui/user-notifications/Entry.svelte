@@ -18,46 +18,54 @@
 		select(slug);
 	}
 
+	let notificationType = $derived(
+		notification.type === 'App\\Shared\\Notifications\\ExportReadyNotification'
+			? 'export_ready'
+			: notification.type
+	);
+
 	function getTitle(): string {
 		const n = ts.get.notifications;
-		if (notification.type === 'friend_request') return n.friend_request_title;
-		if (notification.type === 'music_release') return n.music_release_title;
-		if (notification.type === 'book_release') return n.book_release_title;
-		if (notification.type === 'calendar_share') return n.calendar_share_title;
-		if (notification.type === 'dev_request_comment') return n.dev_request_comment_title;
-		if (notification.type === 'daily_check_in_reminder') return n.daily_check_in_reminder_title;
-		if (notification.type === 'daily_day_reminder') return n.daily_day_reminder_title;
+		if (notificationType === 'friend_request') return n.friend_request_title;
+		if (notificationType === 'music_release') return n.music_release_title;
+		if (notificationType === 'book_release') return n.book_release_title;
+		if (notificationType === 'calendar_share') return n.calendar_share_title;
+		if (notificationType === 'dev_request_comment') return n.dev_request_comment_title;
+		if (notificationType === 'daily_check_in_reminder') return n.daily_check_in_reminder_title;
+		if (notificationType === 'daily_day_reminder') return n.daily_day_reminder_title;
+		if (notificationType === 'export_ready') return n.export_ready_title;
 		return '';
 	}
 
 	function getMessage(): string {
 		const n = ts.get.notifications;
-		if (notification.type === 'friend_request')
+		if (notificationType === 'friend_request')
 			return n.friend_request_message.replace('%s', notification.data.name);
-		if (notification.type === 'music_release')
+		if (notificationType === 'music_release')
 			return n.music_release_message.replace(
 				'%s',
 				notification.data.artist + ' - ' + notification.data.title
 			);
-		if (notification.type === 'book_release')
+		if (notificationType === 'book_release')
 			return n.book_release_message.replace(
 				'%s',
 				notification.data.author + ' - ' + notification.data.title
 			);
-		if (notification.type === 'calendar_share')
+		if (notificationType === 'calendar_share')
 			return n.calendar_share_message
 				.replace('%1', notification.data.sender_name)
 				.replace('%2', notification.data.calendar_name);
-		if (notification.type === 'dev_request_comment')
+		if (notificationType === 'dev_request_comment')
 			return n.dev_request_comment_message
 				.replace('%1', notification.data.commenter_name)
 				.replace('%2', notification.data.dev_request_title);
-		if (notification.type === 'daily_check_in_reminder')
+		if (notificationType === 'daily_check_in_reminder')
 			return n.daily_check_in_reminder_message;
-		if (notification.type === 'daily_day_reminder')
+		if (notificationType === 'daily_day_reminder')
 			return n.daily_day_reminder_message
 				.replace('%1', notification.data.todo_count)
 				.replace('%2', notification.data.event_count);
+		if (notificationType === 'export_ready') return n.export_ready_message;
 		return '';
 	}
 </script>

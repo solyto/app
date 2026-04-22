@@ -289,6 +289,11 @@ export const apiRoutes = {
 			statistics: API_URL + '/time-tracking/entries/statistics'
 		}
 	},
+	export: {
+		start: API_URL + '/export',
+		status: API_URL + '/export/status',
+		download: API_URL + '/export/%s/download'
+	},
 	calendars: {
 		listCalendars: API_URL + '/calendars',
 		createCalendar: API_URL + '/calendars',

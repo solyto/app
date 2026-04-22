@@ -33,6 +33,7 @@ export class UserNotifications {
 		if (type === 'daily_check_in_reminder')
 			return urls.checkInDate.replace('[date]', notification.data.date);
 		if (type === 'daily_day_reminder') return urls.calendar;
+		if (type === 'export_ready') return urls.settings;
 
 		return '';
 	}

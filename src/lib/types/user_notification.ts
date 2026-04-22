@@ -6,6 +6,7 @@ export type UserNotificationType =
 	| 'calendar_share'
 	| 'daily_check_in_reminder'
 	| 'daily_day_reminder'
+	| 'export_ready'
 	| 'other';
 
 export interface UserNotification {

@@ -11,6 +11,7 @@
 	import LocalizationSettings from '$lib/components/settings/LocalizationSettings.svelte';
 	import FeatureSettings from '$lib/components/settings/FeatureSettings.svelte';
 	import AppSettings from '$lib/components/settings/AppSettings.svelte';
+	import ExportSettings from '$lib/components/settings/ExportSettings.svelte';
 
 	const ts = getTranslation();
 	const tags = getTags();
@@ -32,7 +33,8 @@
 			{ id: 3, title: ts.get.settings.localization, component: LocalizationSettings },
 			{ id: 4, title: ts.get.settings.features, component: FeatureSettings },
 			{ id: 5, title: ts.get.settings.notifications, component: NotificationSettings },
-		{ id: 6, title: ts.get.settings.app, component: AppSettings }
+		{ id: 6, title: ts.get.settings.app, component: AppSettings },
+		{ id: 7, title: ts.get.settings.export_data, component: ExportSettings }
 		]}
 	/>
 </div>

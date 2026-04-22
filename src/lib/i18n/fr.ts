@@ -159,7 +159,22 @@ const settings: SettingsRecords = {
 	telegram_bot_register: 'Enregistrez-le en envoyant la commande suivante à %s',
 	telegram_bot_create: 'Créer une connexion',
 	telegram_bot_not_connected: 'Tu n\'as pas encore connecté le bot à ton compte. Fais-le dans Intégrations.',
-	app: 'Application'
+	app: 'Application',
+	export_data: 'Exporter les données',
+	export_select_features: 'Sélectionner les fonctionnalités à exporter',
+	export_select_all: 'Tout sélectionner',
+	export_deselect_all: 'Tout désélectionner',
+	export_start: 'Lancer l\'export',
+	export_status_pending: 'Préparation de l\'export...',
+	export_status_in_progress: 'Export en cours...',
+	export_status_completed: 'L\'export est prêt !',
+	export_status_failed: 'L\'export a échoué.',
+	export_download: 'Télécharger',
+	export_rate_limited: 'Vous ne pouvez exporter qu\'une fois toutes les 24 heures.',
+	export_next_available: 'Prochain export disponible dans',
+	export_expired: 'L\'export a expiré.',
+	export_expires_at: 'Expire le',
+	export_no_exports: 'Aucun export pour l\'instant.'
 };
 
 const todos: TodoRecords = {
@@ -714,7 +729,9 @@ const notifications: NotificationRecords = {
 	daily_day_reminder_title: 'Ta journée à venir',
 	daily_day_reminder_message: 'Tu as %1 tâches et %2 événements prévus pour aujourd\'hui.',
 	daily_day_reminder: 'Recevoir un rappel quotidien de ta journée à venir?',
-	daily_check_in_reminder: 'Recevoir un rappel quotidien pour le suivi journalier?'
+	daily_check_in_reminder: 'Recevoir un rappel quotidien pour le suivi journalier?',
+	export_ready_title: 'Export prêt',
+	export_ready_message: 'Votre export de données est prêt à être téléchargé.'
 };
 
 const clipboard: ClipboardRecords = {
