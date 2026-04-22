@@ -5,6 +5,7 @@ export interface LayoutRecords {
 	modal_confirm: string;
 	modal_cancel: string;
 	save: string;
+	saved: string;
 	double_click_to_edit: string;
 	browse: string;
 	no_file: string;

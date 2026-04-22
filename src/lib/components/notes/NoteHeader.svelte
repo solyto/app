@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getNotes } from '$lib/state/Notes.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import NoteTags from '$lib/components/notes/NoteTags.svelte';
@@ -11,6 +12,7 @@
 	import type { Note } from '$lib/types/note';
 
 	const ts = getTranslation();
+	const auth = getAuth();
 	const notes = getNotes();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
@@ -83,7 +85,7 @@
 	}
 
 	function formatSavedTime(date: Date): string {
-		return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+		return auth.getTimeInUserPreferredFormat(date);
 	}
 
 	onMount(
@@ -114,7 +116,7 @@
 				{/if}
 				{#if lastSaved}
 					<span class="text-xs text-c-neutral-5 dark:text-c-neutral-4">
-						{ts.get.layout.save} · {formatSavedTime(lastSaved)}
+						{ts.get.layout.saved} · {formatSavedTime(lastSaved)}
 					</span>
 				{/if}
 			</div>

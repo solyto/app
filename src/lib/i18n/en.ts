@@ -32,6 +32,7 @@ const layout: LayoutRecords = {
 	modal_confirm: 'Confirm',
 	modal_cancel: 'Cancel',
 	save: 'Save',
+	saved: 'Saved',
 	double_click_to_edit: 'Double-click to edit',
 	browse: 'Browse',
 	no_file: 'No file selected.',
