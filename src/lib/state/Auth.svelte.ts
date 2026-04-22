@@ -141,9 +141,9 @@ export class Auth {
 		return this.user?.role === 'admin' || this.user?.role === 'super_admin';
 	}
 
-	async register(request: RegisterRequest): Promise<boolean> {
-		const res = await this.apiService.post(apiRoutes.auth.register, request);
-		return Promise.resolve(res !== null);
+	async register(request: RegisterRequest): Promise<{ success: boolean; errors?: Record<string, string[]> }> {
+		const res: any = await this.apiService.postRaw(apiRoutes.auth.register, request);
+		return { success: res?.success === true, errors: res?.errors };
 	}
 
 	async verify(request: VerifyRequest): Promise<object> {

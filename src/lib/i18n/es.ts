@@ -78,6 +78,7 @@ const auth: AuthRecords = {
 	password: 'Contraseña',
 	password_placeholder: '******************',
 	password_error: 'La contraseña debe tener al menos 12 caracteres.',
+	password_compromised: 'Esta contraseña ha aparecido en una filtración de datos. Por favor, elige una contraseña diferente.',
 	password_min_length: 'Al menos 12 caracteres',
 	password_confirmation: 'Repetir contraseña',
 	password_confirmation_placeholder: '******************',

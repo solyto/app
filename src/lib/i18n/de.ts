@@ -78,6 +78,7 @@ const auth: AuthRecords = {
 	password: 'Passwort',
 	password_placeholder: '******************',
 	password_error: 'Das Passwort muss mindestens 12 Zeichen lang sein.',
+	password_compromised: 'Dieses Passwort ist in einem Datenleck aufgetaucht. Bitte wähle ein anderes Passwort.',
 	password_min_length: 'Mindestens 12 Zeichen',
 	password_confirmation: 'Passwort wiederholen',
 	password_confirmation_placeholder: '******************',

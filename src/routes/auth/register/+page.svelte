@@ -33,6 +33,7 @@
 	let nameError = $state<boolean>(false);
 	let password = $state<string>('');
 	let passwordError = $state<boolean>(false);
+	let passwordCompromisedError = $state<boolean>(false);
 	let passwordConfirmation = $state<string>('');
 	let passwordConfirmationError = $state<boolean>(false);
 	let error = $state<boolean>(false);
@@ -43,7 +44,7 @@
 		if (!validateInput()) return;
 
 		loadingIndicator.start();
-		let success = await auth.register({
+		const result = await auth.register({
 			name,
 			email,
 			password,
@@ -52,11 +53,15 @@
 		});
 		loadingIndicator.stop();
 
-		if (success) {
+		if (result.success) {
 			notifications.success(ts.get.auth.register_success);
 			await goto(resolve(urls.login));
 		} else {
-			notifications.error(ts.get.auth.register_error);
+			if (result.errors?.password) {
+				passwordCompromisedError = true;
+			} else {
+				notifications.error(ts.get.auth.register_error);
+			}
 			error = true;
 		}
 	}
@@ -65,6 +70,7 @@
 		nameError = false;
 		emailError = false;
 		passwordError = false;
+		passwordCompromisedError = false;
 		passwordConfirmationError = false;
 		nameError = name === '';
 		emailError = email === '';
@@ -107,6 +113,9 @@
 			<PasswordStrengthIndicator {password} />
 			{#if passwordError}
 				<p class="mt-2 pl-2 text-xs text-red-500" in:fade>{ts.get.auth.password_error}</p>
+			{/if}
+			{#if passwordCompromisedError}
+				<p class="mt-2 pl-2 text-xs text-red-500" in:fade>{ts.get.auth.password_compromised}</p>
 			{/if}
 		</label>
 		<label class="label">

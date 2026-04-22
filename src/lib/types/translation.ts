@@ -124,6 +124,7 @@ export interface AuthRecords {
 	password: string;
 	password_placeholder: string;
 	password_error: string;
+	password_compromised: string;
 	password_min_length: string;
 	password_confirmation: string;
 	password_confirmation_placeholder: string;
