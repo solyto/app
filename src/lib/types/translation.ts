@@ -301,6 +301,9 @@ export interface NoteRecords {
 	insert_link: string;
 	insert_link_url: string;
 	insert_link_name: string;
+	delete_confirm_label: string;
+	delete_confirm_message: string;
+	delete_success: string;
 }
 
 export interface LibraryRecords {

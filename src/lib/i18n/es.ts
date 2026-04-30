@@ -330,7 +330,10 @@ const notes: NoteRecords = {
 	insert_image_no_clipboard: 'No se encontró imagen en el portapapeles',
 	insert_link: 'Insertar enlace',
 	insert_link_url: 'URL',
-	insert_link_name: 'Nombre del enlace'
+	insert_link_name: 'Nombre del enlace',
+	delete_confirm_label: 'Eliminar nota',
+	delete_confirm_message: '¿Estás seguro de que quieres eliminar esta nota?',
+	delete_success: 'La nota se eliminó correctamente.'
 };
 
 const libraries: LibraryRecords = {

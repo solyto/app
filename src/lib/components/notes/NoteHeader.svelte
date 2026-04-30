@@ -9,6 +9,8 @@
 	import { onDestroy, onMount, tick } from 'svelte';
 	import IconStar from '@lucide/svelte/icons/star';
 	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import Modal from '$lib/components/ui/Modal.svelte';
+	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import type { Note } from '$lib/types/note';
 
 	const ts = getTranslation();
@@ -88,6 +90,16 @@
 		return auth.getTimeInUserPreferredFormat(date);
 	}
 
+	let deleteModalOpen = $state<boolean>(false);
+
+	async function onDeleteConfirm(): Promise<void> {
+		loadingIndicator.start();
+		const ok = await notes.deleteActiveNote();
+		if (ok) notifications.success(ts.get.notes.delete_success);
+		loadingIndicator.stop();
+		deleteModalOpen = false;
+	}
+
 	onMount(
 		() =>
 			(keyHandlers.CtrlS = keyManager.registerKeyDown('s', saveNote, {
@@ -137,9 +149,20 @@
 						fill={notes.activeNote.is_favorite ? 'currentColor' : 'none'}
 					/>
 				</button>
+				<DeleteButton onClick={() => (deleteModalOpen = true)} inModal={false} buttonStyle="plain" />
 				<Button title={ts.get.layout.save} onclick={saveNote} />
 			</div>
 		</div>
 		<NoteTags />
 	</div>
+{/if}
+
+{#if deleteModalOpen}
+	<Modal
+		title={ts.get.notes.delete_confirm_label}
+		description={ts.get.notes.delete_confirm_message}
+		type="confirm-delete"
+		onConfirm={onDeleteConfirm}
+		onCancel={() => (deleteModalOpen = false)}
+	/>
 {/if}

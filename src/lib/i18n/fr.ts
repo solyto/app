@@ -329,7 +329,10 @@ const notes: NoteRecords = {
 	insert_image_no_clipboard: 'Aucune image trouvée dans le presse-papiers',
 	insert_link: 'Insérer un lien',
 	insert_link_url: 'URL',
-	insert_link_name: 'Nom du lien'
+	insert_link_name: 'Nom du lien',
+	delete_confirm_label: 'Supprimer la note',
+	delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette note ?',
+	delete_success: 'La note a été supprimée avec succès.'
 };
 
 const libraries: LibraryRecords = {

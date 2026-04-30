@@ -330,7 +330,10 @@ const notes: NoteRecords = {
 	insert_image_no_clipboard: 'No image found in clipboard',
 	insert_link: 'Insert Link',
 	insert_link_url: 'URL',
-	insert_link_name: 'Link name'
+	insert_link_name: 'Link name',
+	delete_confirm_label: 'Delete Note',
+	delete_confirm_message: 'Are you sure you want to delete this note?',
+	delete_success: 'Note was successfully deleted.'
 };
 
 const libraries: LibraryRecords = {

@@ -334,6 +334,17 @@ export class NotesSvelte {
 		return ok;
 	}
 
+	async deleteActiveNote(): Promise<boolean> {
+		if (!this.activeNote) return false;
+
+		const ok = await this.apiService.delete(apiRoutes.notes.delete, this.activeNote.id);
+		if (ok) {
+			await goto(resolve(urls.notes));
+			await this.load();
+		}
+		return ok;
+	}
+
 	async deleteCategory(): Promise<boolean> {
 		if (this.rightClickType === 'note' || typeof this.rightClickId !== 'number') {
 			return false;

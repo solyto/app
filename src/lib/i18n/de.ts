@@ -331,7 +331,10 @@ const notes: NoteRecords = {
 	insert_image_no_clipboard: 'Kein Bild in der Zwischenablage gefunden',
 	insert_link: 'Link einfügen',
 	insert_link_url: 'URL',
-	insert_link_name: 'Linkname'
+	insert_link_name: 'Linkname',
+	delete_confirm_label: 'Notiz löschen',
+	delete_confirm_message: 'Bist du sicher, dass du diese Notiz löschen möchtest?',
+	delete_success: 'Notiz wurde erfolgreich gelöscht.'
 };
 
 const libraries: LibraryRecords = {
