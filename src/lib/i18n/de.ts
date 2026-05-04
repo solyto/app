@@ -489,6 +489,30 @@ const libraries: LibraryRecords = {
 		create_error: 'Rezept konnte nicht erstellt werden.',
 		update_error: 'Rezept konnte nicht aktualisiert werden.'
 	},
+	plants: {
+		name: 'Name',
+		latin_name: 'Lateinischer Name',
+		location: 'Standort',
+		location_indoor: 'Drinnen',
+		location_outdoor: 'Draußen',
+		location_both: 'Beides',
+		sunlight: 'Sonnenlicht',
+		sunlight_full_sun: 'Volle Sonne',
+		sunlight_partial_sun: 'Halbschatten',
+		sunlight_indirect: 'Indirektes Licht',
+		sunlight_shade: 'Schatten',
+		current_size: 'Aktuelle Größe',
+		max_size: 'Maximale Größe',
+		acquired_at: 'Erworben am',
+		winter_hardy: 'Winterhart',
+		winter_hardy_yes: 'Winterhart',
+		winter_hardy_no: 'Nicht winterhart',
+		instructions: 'Pflegehinweise',
+		cover: 'Bild',
+		link: 'Link',
+		add_plant: 'Pflanze hinzufügen',
+		edit_plant: 'Pflanze bearbeiten'
+	},
 	recommendations: {
 		welcome_slogan: 'Was kann ich empfehlen?',
 		loading_text_local: 'Durchsuche deine Bibliothek..',
@@ -507,7 +531,8 @@ const libraries: LibraryRecords = {
 		games: 'Spiele',
 		recipes: 'Rezepte',
 		quotes: 'Zitate',
-		links: 'Links'
+		links: 'Links',
+		plants: 'Pflanzen'
 	},
 	create: 'Neu',
 	tags: 'Tags',

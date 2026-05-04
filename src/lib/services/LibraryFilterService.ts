@@ -5,9 +5,10 @@ import type { Link } from '$lib/types/library_link';
 import type { Recipe, RecipeType } from '$lib/types/library_recipe';
 import type { Movie, MovieGenre } from '$lib/types/library_movie';
 import type { Game } from '$lib/types/library_game';
+import type { Plant } from '$lib/types/library_plant';
 
 export default class LibraryFilterService {
-	search<T extends Music | Book | Quote | Link | Recipe | Movie | Game>(
+	search<T extends Music | Book | Quote | Link | Recipe | Movie | Game | Plant>(
 		entries: T[],
 		searchTerm: string,
 		fields: string[]
@@ -36,12 +37,12 @@ export default class LibraryFilterService {
 		return entries.filter((entry) => entry.genres.some((g) => g.id === genre.id));
 	}
 
-	byGenreAndRating<T extends Music | Book | Movie | Game>(
+	byGenreAndRating<T extends Music | Book | Movie | Game | Plant>(
 		entries: T[],
 		genre: MusicGenre | BookGenre | null,
 		rating: number | null
 	): T[] {
-		return this.byGenre(this.byRating(entries, rating), genre);
+		return this.byGenre(this.byRating(entries as any, rating), genre as any) as T[];
 	}
 
 	byType<T extends Recipe>(entries: T[], type: RecipeType | null): T[] {
@@ -50,7 +51,7 @@ export default class LibraryFilterService {
 		return entries.filter((entry) => entry.type === type);
 	}
 
-	byWishlist<T extends Music | Book | Movie | Game>(entries: T[]): T[] {
+	byWishlist<T extends Music | Book | Movie | Game | Plant>(entries: T[]): T[] {
 		return entries.filter((entry) => entry.wishlist);
 	}
 }

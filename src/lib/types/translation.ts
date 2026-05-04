@@ -445,6 +445,31 @@ export interface LibraryRecords {
 		add_recipe: string;
 		edit_recipe: string;
 	};
+	plants: {
+		name: string;
+		latin_name: string;
+		location: string;
+		location_indoor: string;
+		location_outdoor: string;
+		location_both: string;
+		sunlight: string;
+		sunlight_full_sun: string;
+		sunlight_partial_sun: string;
+		sunlight_indirect: string;
+		sunlight_shade: string;
+		current_size: string;
+		max_size: string;
+		acquired_at: string;
+		winter_hardy: string;
+		winter_hardy_yes: string;
+		winter_hardy_no: string;
+		instructions: string;
+		cover: string;
+		link: string;
+		add_plant: string;
+		edit_plant: string;
+		[key: string]: string;
+	};
 	recommendations: {
 		welcome_slogan: string;
 		loading_text_local: string;
@@ -464,6 +489,7 @@ export interface LibraryRecords {
 		recipes: string;
 		quotes: string;
 		links: string;
+		plants: string;
 	};
 	genres: string;
 	rating: string;

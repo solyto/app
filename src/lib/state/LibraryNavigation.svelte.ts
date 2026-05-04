@@ -9,6 +9,7 @@ import IconGamepad2 from '@lucide/svelte/icons/gamepad-2';
 import IconLink from '@lucide/svelte/icons/link';
 import IconQuote from '@lucide/svelte/icons/quote';
 import IconCookingPot from '@lucide/svelte/icons/cooking-pot';
+import IconLeaf from '@lucide/svelte/icons/leaf';
 
 export const navigationItems: { type: LibraryType; url: string; icon: any }[] = [
 	{ type: 'music', url: urls.musicLibrary, icon: IconMusic },
@@ -17,7 +18,8 @@ export const navigationItems: { type: LibraryType; url: string; icon: any }[] = 
 	{ type: 'games', url: urls.gameLibrary, icon: IconGamepad2 },
 	{ type: 'links', url: urls.linkLibrary, icon: IconLink },
 	{ type: 'quotes', url: urls.quoteLibrary, icon: IconQuote },
-	{ type: 'recipes', url: urls.recipeLibrary, icon: IconCookingPot }
+	{ type: 'recipes', url: urls.recipeLibrary, icon: IconCookingPot },
+	{ type: 'plants', url: urls.plantLibrary, icon: IconLeaf }
 ];
 
 export class LibraryNavigation {
@@ -35,6 +37,7 @@ export class LibraryNavigation {
 		if (page.url.pathname.includes('recipes')) return 'recipes';
 		if (page.url.pathname.includes('movies')) return 'movies';
 		if (page.url.pathname.includes('games')) return 'games';
+		if (page.url.pathname.includes('plants')) return 'plants';
 		return null;
 	}
 }

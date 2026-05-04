@@ -488,6 +488,30 @@ const libraries: LibraryRecords = {
 		create_error: 'Failed to create recipe.',
 		update_error: 'Failed to update recipe.'
 	},
+	plants: {
+		name: 'Name',
+		latin_name: 'Latin Name',
+		location: 'Location',
+		location_indoor: 'Indoor',
+		location_outdoor: 'Outdoor',
+		location_both: 'Both',
+		sunlight: 'Sunlight',
+		sunlight_full_sun: 'Full Sun',
+		sunlight_partial_sun: 'Partial Sun',
+		sunlight_indirect: 'Indirect',
+		sunlight_shade: 'Shade',
+		current_size: 'Current Size',
+		max_size: 'Maximum Size',
+		acquired_at: 'Acquired At',
+		winter_hardy: 'Winter Hardy',
+		winter_hardy_yes: 'Winter hardy',
+		winter_hardy_no: 'Not winter hardy',
+		instructions: 'Care Tips',
+		cover: 'Image',
+		link: 'Link',
+		add_plant: 'Add a Plant',
+		edit_plant: 'Update Plant'
+	},
 	recommendations: {
 		welcome_slogan: 'What can I recommend today?',
 		loading_text_local: 'Looking up your library..',
@@ -506,7 +530,8 @@ const libraries: LibraryRecords = {
 		games: 'Games',
 		recipes: 'Recipes',
 		quotes: 'Quotes',
-		links: 'Links'
+		links: 'Links',
+		plants: 'Plants'
 	},
 	genres: 'Genres',
 	rating: 'Rating',

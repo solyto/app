@@ -21,6 +21,7 @@ export const urls = {
 	recipeLibrary: '/libraries/recipes',
 	movieLibrary: '/libraries/movies',
 	gameLibrary: '/libraries/games',
+	plantLibrary: '/libraries/plants',
 	devRequests: '/dev-requests',
 	assistants: '/assistants',
 	assistant: '/assistants/[id]',

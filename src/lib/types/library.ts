@@ -5,8 +5,9 @@ import type { QuoteLibrary } from '$lib/state/QuoteLibrary.svelte';
 import type { RecipeLibrary } from '$lib/state/RecipeLibrary.svelte';
 import type { MovieLibrary } from '$lib/state/MovieLibrary.svelte';
 import type { GameLibrary } from '$lib/state/GameLibrary.svelte';
+import type { PlantLibrary } from '$lib/state/PlantLibrary.svelte';
 
-export type LibraryType = 'books' | 'music' | 'links' | 'quotes' | 'recipes' | 'movies' | 'games';
+export type LibraryType = 'books' | 'music' | 'links' | 'quotes' | 'recipes' | 'movies' | 'games' | 'plants';
 export type Library =
 	| MusicLibrary
 	| BookLibrary
@@ -14,7 +15,8 @@ export type Library =
 	| QuoteLibrary
 	| RecipeLibrary
 	| MovieLibrary
-	| GameLibrary;
+	| GameLibrary
+	| PlantLibrary;
 export type LibraryRecommendationType = 'favorite' | 'unrated' | 'random' | 'new';
 
 export interface LibraryRecommendation {

@@ -9,6 +9,7 @@
 	import RecipeEntry from '$lib/components/libraries/recipes/RecipeEntry.svelte';
 	import MovieEntry from '$lib/components/libraries/movies/MovieEntry.svelte';
 	import GameEntry from '$lib/components/libraries/games/GameEntry.svelte';
+	import PlantEntry from '$lib/components/libraries/plants/PlantEntry.svelte';
 	import MissingCover from '$lib/components/libraries/shared/MissingCover.svelte';
 	import type { Library } from '$lib/types/library';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
@@ -62,7 +63,8 @@
 						(library.config.type === 'books' ||
 							library.config.type === 'movies' ||
 							library.config.type === 'music' ||
-							library.config.type === 'games')}
+							library.config.type === 'games' ||
+							library.config.type === 'plants')}
 					class:max-w-24={view === 'list' && library.config.type === 'recipes'}
 					class:md:aspect-square={library.config.type === 'music'}
 					class:hidden={!library.config.hasCovers}
@@ -121,6 +123,8 @@
 						<MovieEntry {entry} {library} />
 					{:else if library.config.type === 'games'}
 						<GameEntry {entry} {library} />
+					{:else if library.config.type === 'plants'}
+						<PlantEntry {entry} {library} />
 					{/if}
 				</div>
 			</div>

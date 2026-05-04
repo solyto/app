@@ -170,6 +170,13 @@ export const apiRoutes = {
 			delete: API_URL + '/libraries/recipes/%s',
 			importFromChefkoch: API_URL + '/libraries/recipes/import/chefkoch'
 		},
+		plants: {
+			list: API_URL + '/libraries/plants',
+			get: API_URL + '/libraries/plants/%s',
+			create: API_URL + '/libraries/plants',
+			update: API_URL + '/libraries/plants/%s',
+			delete: API_URL + '/libraries/plants/%s'
+		},
 		getCover: API_URL + '/libraries/covers/'
 	},
 	dev: {

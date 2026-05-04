@@ -486,6 +486,30 @@ const libraries: LibraryRecords = {
 		create_error: 'Impossible de créer la recette.',
 		update_error: 'Impossible de modifier la recette.'
 	},
+	plants: {
+		name: 'Nom',
+		latin_name: 'Nom latin',
+		location: 'Emplacement',
+		location_indoor: 'Intérieur',
+		location_outdoor: 'Extérieur',
+		location_both: 'Les deux',
+		sunlight: 'Lumière',
+		sunlight_full_sun: 'Plein soleil',
+		sunlight_partial_sun: 'Mi-ombre',
+		sunlight_indirect: 'Lumière indirecte',
+		sunlight_shade: 'Ombre',
+		current_size: 'Taille actuelle',
+		max_size: 'Taille maximale',
+		acquired_at: 'Acquise le',
+		winter_hardy: 'Résistante au gel',
+		winter_hardy_yes: 'Résistante au gel',
+		winter_hardy_no: 'Non résistante au gel',
+		instructions: 'Conseils d\'entretien',
+		cover: 'Image',
+		link: 'Lien',
+		add_plant: 'Ajouter une plante',
+		edit_plant: 'Modifier la plante'
+	},
 	recommendations: {
 		welcome_slogan: 'Que puis-je vous recommander aujourd\'hui?',
 		loading_text_local: 'Recherche dans votre bibliothèque…',
@@ -504,7 +528,8 @@ const libraries: LibraryRecords = {
 		games: 'Jeux',
 		recipes: 'Recettes',
 		quotes: 'Citations',
-		links: 'Liens'
+		links: 'Liens',
+		plants: 'Plantes'
 	},
 	genres: 'Genres',
 	rating: 'Note',

@@ -26,7 +26,8 @@
 		class:w-48={library.config.type === 'books' ||
 			library.config.type === 'movies' ||
 			library.config.type === 'recipes' ||
-			library.config.type === 'games'}
+			library.config.type === 'games' ||
+			library.config.type === 'plants'}
 	>
 		<img
 			src={`${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${entry.cover}`}
