@@ -31,7 +31,6 @@
 	let instructionsValue = $state<string>(activeEntry?.instructions ?? '');
 	let coverValue = $state<string>('');
 	let linkValue = $state<string>(activeEntry?.link ?? '');
-	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
 
 	const locationOptions: { label: string; value: string }[] = [
 		{ label: ts.get.libraries.plants.location_indoor, value: 'indoor' },
@@ -67,7 +66,6 @@
 			acquired_at: acquiredAtValue !== '' ? acquiredAtValue : null,
 			winter_hardy: locationValue === 'outdoor' || locationValue === 'both' ? winterHardyValue : null,
 			instructions: instructionsValue !== '' ? instructionsValue : null,
-			wishlist: isWishlist,
 			cover_path: coverValue !== '' ? coverValue : null,
 			link: linkValue !== '' ? linkValue : null
 		};
@@ -91,7 +89,6 @@
 			acquired_at: acquiredAtValue !== '' ? acquiredAtValue : null,
 			winter_hardy: locationValue === 'outdoor' || locationValue === 'both' ? winterHardyValue : null,
 			instructions: instructionsValue !== '' ? instructionsValue : null,
-			wishlist: isWishlist,
 			...(coverValue !== '' ? { cover_path: coverValue } : {}),
 			link: linkValue !== '' ? linkValue : null
 		};
@@ -112,7 +109,6 @@
 		? `${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${activeEntry.cover}`
 		: null}
 	newCover={coverValue}
-	bind:isWishlist
 >
 	<ModalFormRow label={ts.get.libraries.plants.name}>
 		<TextInput bind:value={nameValue} />

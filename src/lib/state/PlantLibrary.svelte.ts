@@ -15,7 +15,7 @@ export class PlantLibrary {
 		hasFilters: true,
 		hasGenres: false,
 		hasRecommender: false,
-		hasWishlist: true,
+		hasWishlist: false,
 		hasExternalLinks: true,
 		hasReleases: false,
 		hasShelf: false,
@@ -28,7 +28,6 @@ export class PlantLibrary {
 	detailModalVisible = $state<boolean>(false);
 	searchVisible = $state<boolean>(false);
 	activeEntry = $state<Plant | null>(null);
-	wishlistFilter = $state<boolean>(false);
 	locationFilter = $state<PlantLocation | null>(null);
 	searchTerm = $state<string>('');
 	view = $state<'list' | 'cards'>('cards');
@@ -58,18 +57,10 @@ export class PlantLibrary {
 
 	addLocationFilter(location: PlantLocation | null): void {
 		this.locationFilter = location;
-		this.wishlistFilter = false;
 		this.filteredEntries = this.filterService.byLocation(this.entries, location);
 	}
 
-	filterByWishlist(): void {
-		this.wishlistFilter = true;
-		this.locationFilter = null;
-		this.filteredEntries = this.filterService.byWishlist(this.entries);
-	}
-
 	clearFilters(): void {
-		this.wishlistFilter = false;
 		this.locationFilter = null;
 		this.filteredEntries = this.entries;
 	}

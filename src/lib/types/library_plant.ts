@@ -14,7 +14,6 @@ export interface Plant {
 	instructions: string | null;
 	cover: string | null;
 	link: string | null;
-	wishlist: boolean;
 	created_at: string;
 	updated_at: string;
 }
@@ -31,7 +30,6 @@ export interface CreatePlantRequest {
 	instructions?: string | null;
 	cover_path?: string | null;
 	link?: string | null;
-	wishlist?: boolean;
 }
 
 export interface UpdatePlantRequest {
@@ -46,5 +44,4 @@ export interface UpdatePlantRequest {
 	instructions?: string | null;
 	cover_path?: string | null;
 	link?: string | null;
-	wishlist?: boolean;
 }
