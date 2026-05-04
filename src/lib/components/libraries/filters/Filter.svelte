@@ -6,6 +6,7 @@
 	import RecipeFilter from '$lib/components/libraries/filters/RecipeFilter.svelte';
 	import RatingFilter from '$lib/components/libraries/filters/RatingFilter.svelte';
 	import GenreFilter from '$lib/components/libraries/filters/GenreFilter.svelte';
+	import PlantLocationFilter from '$lib/components/libraries/filters/PlantLocationFilter.svelte';
 
 	const ts = getTranslation();
 
@@ -52,7 +53,7 @@
 <div class="relative">
 	<button
 		class="flex cursor-pointer items-center justify-center rounded-lg p-2"
-		class:bg-c-neutral={library.genreFilter || library.ratingFilter || library.wishlistFilter}
+		class:bg-c-neutral={library.genreFilter || library.ratingFilter || library.wishlistFilter || library.locationFilter}
 		onclick={toggleMenu}
 	>
 		<IconFunnel />
@@ -93,6 +94,9 @@
 			{/if}
 			{#if library.config.type === 'recipes'}
 				<RecipeFilter {toggleMenu} />
+			{/if}
+			{#if library.config.type === 'plants'}
+				<PlantLocationFilter {toggleMenu} />
 			{/if}
 			<button
 				class="flex cursor-pointer p-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"

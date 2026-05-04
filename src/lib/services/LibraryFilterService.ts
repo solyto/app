@@ -5,7 +5,7 @@ import type { Link } from '$lib/types/library_link';
 import type { Recipe, RecipeType } from '$lib/types/library_recipe';
 import type { Movie, MovieGenre } from '$lib/types/library_movie';
 import type { Game } from '$lib/types/library_game';
-import type { Plant } from '$lib/types/library_plant';
+import type { Plant, PlantLocation } from '$lib/types/library_plant';
 
 export default class LibraryFilterService {
 	search<T extends Music | Book | Quote | Link | Recipe | Movie | Game | Plant>(
@@ -49,6 +49,11 @@ export default class LibraryFilterService {
 		if (type === null) return entries;
 
 		return entries.filter((entry) => entry.type === type);
+	}
+
+	byLocation(entries: Plant[], location: PlantLocation | null): Plant[] {
+		if (location === null) return entries;
+		return entries.filter((entry) => entry.location === location);
 	}
 
 	byWishlist<T extends Music | Book | Movie | Game | Plant>(entries: T[]): T[] {

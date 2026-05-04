@@ -1,4 +1,4 @@
-import type { Plant, CreatePlantRequest, UpdatePlantRequest } from '$lib/types/library_plant';
+import type { Plant, CreatePlantRequest, UpdatePlantRequest, PlantLocation } from '$lib/types/library_plant';
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
@@ -12,7 +12,7 @@ export class PlantLibrary {
 		hasCovers: true,
 		hasRatings: false,
 		hasViewSwitcher: true,
-		hasFilters: false,
+		hasFilters: true,
 		hasGenres: false,
 		hasRecommender: false,
 		hasWishlist: true,
@@ -29,6 +29,7 @@ export class PlantLibrary {
 	searchVisible = $state<boolean>(false);
 	activeEntry = $state<Plant | null>(null);
 	wishlistFilter = $state<boolean>(false);
+	locationFilter = $state<PlantLocation | null>(null);
 	searchTerm = $state<string>('');
 	view = $state<'list' | 'cards'>('cards');
 	auth = getAuth();
@@ -55,13 +56,21 @@ export class PlantLibrary {
 		]);
 	}
 
+	addLocationFilter(location: PlantLocation | null): void {
+		this.locationFilter = location;
+		this.wishlistFilter = false;
+		this.filteredEntries = this.filterService.byLocation(this.entries, location);
+	}
+
 	filterByWishlist(): void {
 		this.wishlistFilter = true;
+		this.locationFilter = null;
 		this.filteredEntries = this.filterService.byWishlist(this.entries);
 	}
 
 	clearFilters(): void {
 		this.wishlistFilter = false;
+		this.locationFilter = null;
 		this.filteredEntries = this.entries;
 	}
 
