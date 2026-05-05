@@ -30,15 +30,15 @@
 		switch (status) {
 			case 'pending':
 			default:
-				return 'bg-c-neutral-2';
+				return 'border-2 border-c-neutral-2 dark:border-s-dark-3';
 			case 'backlog':
-				return 'border-1 border-c-neutral-2 dark:border-s-dark-3';
+				return 'border-2 border-c-neutral-2 dark:border-s-dark-3';
 			case 'in-progress':
-				return 'bg-c-action';
+				return 'border-2 border-c-action';
 			case 'waiting':
-				return 'bg-c-primary';
+				return 'border-2 border-c-primary';
 			case 'almost-done':
-				return 'bg-c-success';
+				return 'border-2 border-c-success';
 		}
 	}
 
