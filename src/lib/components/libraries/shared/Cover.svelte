@@ -21,7 +21,7 @@
 
 {#if entry.cover}
 	<div
-		class="flex items-center justify-center rounded-lg bg-c-neutral-2 dark:bg-s-dark-3"
+		class="flex items-center justify-center rounded-lg bg-c-neutral-1 dark:bg-s-dark-3"
 		class:size-48={library.config.type === 'music'}
 		class:w-48={library.config.type === 'books' ||
 			library.config.type === 'movies' ||
@@ -37,7 +37,7 @@
 	</div>
 {:else}
 	<div
-		class="relative flex size-48 items-center justify-center rounded-lg bg-c-neutral-2 text-xs text-c-neutral-5 dark:bg-s-dark-3"
+		class="relative flex size-48 items-center justify-center rounded-lg bg-c-neutral-1 text-xs text-c-neutral-5 dark:bg-s-dark-3"
 	>
 		<MissingCover {library} />
 	</div>

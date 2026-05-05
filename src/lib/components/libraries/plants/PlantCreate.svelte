@@ -29,8 +29,13 @@
 	let acquiredAtValue = $state<string>(activeEntry?.acquired_at?.substring(0, 10) ?? '');
 	let winterHardyValue = $state<boolean>(activeEntry?.winter_hardy ?? false);
 	let instructionsValue = $state<string>(activeEntry?.instructions ?? '');
-	let coverValue = $state<string>('');
+	let coverValue = $state<string>(activeEntry?.cover?.startsWith('http') ? activeEntry.cover : '');
+	let coverFile = $state<File | null>(null);
+	let coverPreviewUrl = $state<string | null>(null);
+	let coverRemoved = $state<boolean>(false);
 	let linkValue = $state<string>(activeEntry?.link ?? '');
+
+	let fileInput = $state<HTMLInputElement | null>(null);
 
 	const locationOptions: { label: string; value: string }[] = [
 		{ label: ts.get.libraries.plants.location_indoor, value: 'indoor' },
@@ -44,6 +49,73 @@
 		{ label: ts.get.libraries.plants.sunlight_indirect, value: 'indirect' },
 		{ label: ts.get.libraries.plants.sunlight_shade, value: 'shade' }
 	];
+
+	function onCoverUrlInput(): void {
+		if (coverValue !== '') {
+			coverFile = null;
+			coverRemoved = false;
+			if (coverPreviewUrl) {
+				URL.revokeObjectURL(coverPreviewUrl);
+				coverPreviewUrl = null;
+			}
+			if (fileInput) fileInput.value = '';
+		}
+	}
+
+	function onCoverRemove(): void {
+		coverValue = '';
+		coverFile = null;
+		coverRemoved = true;
+		if (coverPreviewUrl) {
+			URL.revokeObjectURL(coverPreviewUrl);
+			coverPreviewUrl = null;
+		}
+		if (fileInput) fileInput.value = '';
+	}
+
+	async function onFileSelected(event: Event): Promise<void> {
+		const input = event.target as HTMLInputElement;
+		const file = input.files?.[0];
+		if (!file) return;
+
+		coverValue = '';
+
+		const resized = await resizeImage(file);
+		coverFile = resized;
+
+		if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
+		coverPreviewUrl = URL.createObjectURL(resized);
+	}
+
+	async function resizeImage(file: File, maxDimension = 800): Promise<File> {
+		return new Promise((resolve) => {
+			const img = new Image();
+			const url = URL.createObjectURL(file);
+			img.onload = () => {
+				URL.revokeObjectURL(url);
+				const canvas = document.createElement('canvas');
+				let { width, height } = img;
+				if (width > maxDimension || height > maxDimension) {
+					if (width > height) {
+						height = Math.round((height * maxDimension) / width);
+						width = maxDimension;
+					} else {
+						width = Math.round((width * maxDimension) / height);
+						height = maxDimension;
+					}
+				}
+				canvas.width = width;
+				canvas.height = height;
+				canvas.getContext('2d')!.drawImage(img, 0, 0, width, height);
+				canvas.toBlob(
+					(blob) => resolve(new File([blob!], file.name, { type: file.type })),
+					file.type,
+					0.85
+				);
+			};
+			img.src = url;
+		});
+	}
 
 	async function onsubmit(): Promise<void> {
 		if (activeEntry) {
@@ -66,14 +138,20 @@
 			acquired_at: acquiredAtValue !== '' ? acquiredAtValue : null,
 			winter_hardy: locationValue === 'outdoor' || locationValue === 'both' ? winterHardyValue : null,
 			instructions: instructionsValue !== '' ? instructionsValue : null,
-			cover_path: coverValue !== '' ? coverValue : null,
+			cover_path: coverFile === null && coverValue !== '' ? coverValue : null,
 			link: linkValue !== '' ? linkValue : null
 		};
 
-		const ok = await library.create(request);
+		const ok = await library.create(request, coverFile ?? undefined);
 		if (ok) library.closeCreateModal();
 
 		loadingIndicator.stop();
+	}
+
+	function getCoverUpdate(): { cover_path: string | null } | {} {
+		if (coverRemoved) return { cover_path: null };
+		if (coverFile === null && coverValue !== '') return { cover_path: coverValue };
+		return {};
 	}
 
 	async function update(): Promise<void> {
@@ -89,26 +167,41 @@
 			acquired_at: acquiredAtValue !== '' ? acquiredAtValue : null,
 			winter_hardy: locationValue === 'outdoor' || locationValue === 'both' ? winterHardyValue : null,
 			instructions: instructionsValue !== '' ? instructionsValue : null,
-			...(coverValue !== '' ? { cover_path: coverValue } : {}),
+			...getCoverUpdate(),
 			link: linkValue !== '' ? linkValue : null
 		};
 
 		const ok = await library.update(activeEntry!, request);
+
+		if (ok && coverFile) {
+			await library.uploadCover(activeEntry!.id, coverFile);
+		}
+
 		if (ok) library.closeCreateModal();
 
 		loadingIndicator.stop();
 	}
 </script>
 
+<input
+	bind:this={fileInput}
+	type="file"
+	accept="image/jpeg,image/png,image/gif,image/webp"
+	class="hidden"
+	onchange={onFileSelected}
+/>
+
 <CreateModal
 	title={activeEntry !== null
 		? ts.get.libraries.plants.edit_plant
 		: ts.get.libraries.plants.add_plant}
 	{library}
-	existingCover={activeEntry
+	existingCover={activeEntry && activeEntry.cover && !coverFile && !coverValue && !coverRemoved
 		? `${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${activeEntry.cover}`
 		: null}
-	newCover={coverValue}
+	newCover={coverPreviewUrl ?? (coverValue || undefined)}
+	onCoverClick={() => fileInput?.click()}
+	onCoverRemove={onCoverRemove}
 >
 	<ModalFormRow label={ts.get.libraries.plants.name}>
 		<TextInput bind:value={nameValue} />
@@ -133,17 +226,19 @@
 	</ModalFormRow>
 	{#if locationValue === 'outdoor' || locationValue === 'both'}
 		<ModalFormRow label={ts.get.libraries.plants.winter_hardy}>
-			<Checkbox bind:checked={winterHardyValue} />
+			<Checkbox isChecked={winterHardyValue} onchange={() => (winterHardyValue = !winterHardyValue)} class="pt-[9px]" />
 		</ModalFormRow>
 	{/if}
 	<ModalFormRow label={ts.get.libraries.plants.instructions}>
 		<TextInput bind:value={instructionsValue} multiLine={true} height={120} />
 	</ModalFormRow>
-	<ModalFormRow label={ts.get.libraries.plants.cover}>
-		<TextInput bind:value={coverValue} />
-	</ModalFormRow>
+	{#if !coverFile}
+		<ModalFormRow label={ts.get.libraries.plants.cover}>
+			<TextInput bind:value={coverValue} oninput={onCoverUrlInput} placeholder="https://" />
+		</ModalFormRow>
+	{/if}
 	<ModalFormRow label={ts.get.libraries.plants.link}>
-		<TextInput bind:value={linkValue} />
+		<TextInput bind:value={linkValue} placeholder="https://" />
 	</ModalFormRow>
 	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
 		<Button title={ts.get.layout.save} onclick={onsubmit} />

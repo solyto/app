@@ -290,7 +290,7 @@
 		<NumberInput bind:value={playtimeHoursValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.games.completed}>
-		<Checkbox bind:checked={completedValue} />
+		<Checkbox bind:checked={completedValue} class="pt-[9px]" />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.games.started_at}>
 		<DateInput bind:value={startedAtValue} />
@@ -299,10 +299,10 @@
 		<DateInput bind:value={finishedAtValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.games.cover}>
-		<TextInput bind:value={coverValue} />
+		<TextInput bind:value={coverValue} placeholder="https://" />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.games.link}>
-		<TextInput bind:value={linkValue} bind:input={linkInput} />
+		<TextInput bind:value={linkValue} bind:input={linkInput} placeholder="https://" />
 	</ModalFormRow>
 	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
 		<BggImportButton loading={importLoading} onClick={importFromBgg} />

@@ -279,10 +279,10 @@
 		<TextInput bind:value={additionalInfoValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.music.cover}>
-		<TextInput bind:value={coverValue} />
+		<TextInput bind:value={coverValue} placeholder="https://" />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.music.link}>
-		<TextInput bind:value={linkValue} bind:input={linkInput} />
+		<TextInput bind:value={linkValue} bind:input={linkInput} placeholder="https://" />
 	</ModalFormRow>
 	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
 		<DiscogsImportButton loading={importLoading} onClick={importFromDiscogs} />

@@ -109,6 +109,15 @@ export default class ApiService {
 		return res.ok ? await res.json() : false;
 	}
 
+	async uploadFile(endpoint: string, id: string, body: FormData): Promise<CreateResponse | null> {
+		const res = await fetch(endpoint.replace('%s', id), {
+			method: 'POST',
+			headers: this.getAuthHeaderOnly(),
+			body
+		});
+		return res.ok ? await res.json() : null;
+	}
+
 	async image(endpoint: string): Promise<Blob | null> {
 		const res = await fetch(endpoint, { headers: this.getApiHeader() });
 		return res.ok ? await res.blob() : null;

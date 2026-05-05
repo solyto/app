@@ -217,11 +217,11 @@
 	<ModalFormRow label={ts.get.libraries.books.finished_at}>
 		<DateInput bind:value={finishedAtValue} />
 	</ModalFormRow>
-	<ModalFormRow label={ts.get.libraries.books.cover}>
-		<TextInput bind:value={coverValue} />
+	<ModalFormRow label={ts.get.libraries.movies.cover}>
+		<TextInput bind:value={coverValue} placeholder="https://" />
 	</ModalFormRow>
-	<ModalFormRow label={ts.get.libraries.books.link}>
-		<TextInput bind:value={linkValue} bind:input={linkInput} />
+	<ModalFormRow label={ts.get.libraries.movies.link}>
+		<TextInput bind:value={linkValue} bind:input={linkInput} placeholder="https://" />
 	</ModalFormRow>
 	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
 		<ImdbImportButton loading={importLoading} onClick={importFromImdb} />

@@ -3,6 +3,7 @@
 	import IconBook from '@lucide/svelte/icons/book';
 	import IconCookingPot from '@lucide/svelte/icons/cooking-pot';
 	import IconClapperboard from '@lucide/svelte/icons/clapperboard';
+	import IconLeaf from '@lucide/svelte/icons/leaf';
 	import type { Library } from '$lib/types/library';
 
 	let { library } = $props<{ library: Library }>();
@@ -17,5 +18,7 @@
 		<IconMusic class="size-20 text-c-neutral-3" />
 	{:else if library.config.type === 'movies'}
 		<IconClapperboard class="size-20 text-c-neutral-3" />
+	{:else if library.config.type === 'plants'}
+		<IconLeaf class="size-20 text-c-neutral-3" />
 	{/if}
 </div>

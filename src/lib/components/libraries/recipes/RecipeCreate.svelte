@@ -170,10 +170,10 @@
 		<NumberInput bind:value={timeToMakeValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.recipes.cover}>
-		<TextInput bind:value={coverValue} />
+		<TextInput bind:value={coverValue} placeholder="https://" />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.recipes.link}>
-		<TextInput bind:value={linkValue} bind:input={linkInput} />
+		<TextInput bind:value={linkValue} bind:input={linkInput} placeholder="https://" />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.recipes.description}>
 		<TextInput bind:value={descriptionValue} multiLine={true} height={150} />

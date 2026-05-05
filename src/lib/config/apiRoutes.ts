@@ -175,7 +175,8 @@ export const apiRoutes = {
 			get: API_URL + '/libraries/plants/%s',
 			create: API_URL + '/libraries/plants',
 			update: API_URL + '/libraries/plants/%s',
-			delete: API_URL + '/libraries/plants/%s'
+			delete: API_URL + '/libraries/plants/%s',
+			uploadCover: API_URL + '/libraries/plants/%s/cover'
 		},
 		getCover: API_URL + '/libraries/covers/'
 	},

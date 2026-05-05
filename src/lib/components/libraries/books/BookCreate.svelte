@@ -276,10 +276,10 @@
 		<DateInput bind:value={finishedAtValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.books.cover}>
-		<TextInput bind:value={coverValue} />
+		<TextInput bind:value={coverValue} placeholder="https://" />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.books.link}>
-		<TextInput bind:value={linkValue} bind:input={linkInput} />
+		<TextInput bind:value={linkValue} bind:input={linkInput} placeholder="https://" />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.books.summary}>
 		<TextInput multiLine={true} height={80} bind:value={summaryValue} />

@@ -91,10 +91,27 @@ export class PlantLibrary {
 		this.view = this.view === 'list' ? 'cards' : 'list';
 	}
 
-	async create(request: CreatePlantRequest): Promise<boolean> {
+	async create(request: CreatePlantRequest, coverFile?: File): Promise<boolean> {
 		const res = await this.apiService.create(apiRoutes.libraries.plants.create, request);
+		if (!res) return false;
+		if (coverFile) {
+			const plant = res.data as Plant;
+			await this.uploadCover(plant.id, coverFile);
+		}
+		await this.load();
+		return true;
+	}
+
+	async uploadCover(plantId: string, file: File): Promise<boolean> {
+		const formData = new FormData();
+		formData.append('file', file);
+		const res = await this.apiService.uploadFile(
+			apiRoutes.libraries.plants.uploadCover,
+			plantId,
+			formData
+		);
 		if (res) await this.load();
-		return Promise.resolve(res !== null);
+		return res !== null;
 	}
 
 	async update(entry: Plant, request: UpdatePlantRequest): Promise<boolean> {
