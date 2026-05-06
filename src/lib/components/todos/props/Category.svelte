@@ -101,7 +101,7 @@
 		{#if todo.category}
 			<div class="group relative">
 				<div
-					class="cursor-pointer bg-c-neutral-2 px-2 py-1 text-xs font-semibold dark:bg-c-neutral-7 dark:text-white"
+					class="cursor-pointer bg-c-neutral-1 px-2 py-1 text-xs font-semibold dark:bg-c-neutral-7 dark:text-white"
 					onclick={toggleAddCategories}
 				>
 					/{todo.category.title}
