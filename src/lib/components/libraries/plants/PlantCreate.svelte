@@ -87,7 +87,7 @@
 		coverPreviewUrl = URL.createObjectURL(resized);
 	}
 
-	async function resizeImage(file: File, maxDimension = 300): Promise<File> {
+	async function resizeImage(file: File, maxDimension = 800): Promise<File> {
 		return new Promise((resolve) => {
 			const img = new Image();
 			const url = URL.createObjectURL(file);
