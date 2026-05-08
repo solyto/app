@@ -87,6 +87,13 @@
 		coverPreviewUrl = URL.createObjectURL(resized);
 	}
 
+	const canSubmit = $derived(
+		nameValue.trim() !== '' ||
+		coverFile !== null ||
+		coverValue !== '' ||
+		(activeEntry?.cover != null && !coverRemoved)
+	);
+
 	async function resizeImage(file: File, maxDimension = 800): Promise<File> {
 		return new Promise((resolve) => {
 			const img = new Image();
@@ -129,7 +136,7 @@
 		loadingIndicator.start();
 
 		const request: CreatePlantRequest = {
-			name: nameValue,
+			name: nameValue.trim() !== '' ? nameValue : null,
 			latin_name: latinNameValue !== '' ? latinNameValue : null,
 			location: locationValue !== '' ? (locationValue as any) : null,
 			sunlight: sunlightValue !== '' ? (sunlightValue as any) : null,
@@ -158,7 +165,7 @@
 		loadingIndicator.start();
 
 		const request: UpdatePlantRequest = {
-			name: nameValue,
+			name: nameValue.trim() !== '' ? nameValue : null,
 			latin_name: latinNameValue !== '' ? latinNameValue : null,
 			location: locationValue !== '' ? (locationValue as any) : null,
 			sunlight: sunlightValue !== '' ? (sunlightValue as any) : null,
@@ -241,6 +248,6 @@
 		<TextInput bind:value={linkValue} placeholder="https://" />
 	</ModalFormRow>
 	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
-		<Button title={ts.get.layout.save} onclick={onsubmit} />
+		<Button title={ts.get.layout.save} onclick={onsubmit} disabled={!canSubmit} />
 	</div>
 </CreateModal>

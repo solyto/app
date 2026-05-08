@@ -3,7 +3,7 @@ export type PlantSunlight = 'full_sun' | 'partial_sun' | 'indirect' | 'shade';
 
 export interface Plant {
 	id: string;
-	name: string;
+	name: string | null;
 	latin_name: string | null;
 	location: PlantLocation | null;
 	sunlight: PlantSunlight | null;
@@ -19,7 +19,7 @@ export interface Plant {
 }
 
 export interface CreatePlantRequest {
-	name: string;
+	name: string | null;
 	latin_name?: string | null;
 	location?: PlantLocation | null;
 	sunlight?: PlantSunlight | null;

@@ -12,7 +12,9 @@
 </script>
 
 <DetailModal {entry} {library}>
-	<h2 class="text-xl font-bold">{entry.name}</h2>
+	{#if entry.name}
+		<h2 class="text-xl font-bold">{entry.name}</h2>
+	{/if}
 	<div class:hidden={!entry.latin_name} class="text-sm italic text-c-neutral-6">
 		{entry.latin_name}
 	</div>
