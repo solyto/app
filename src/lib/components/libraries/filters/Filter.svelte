@@ -6,7 +6,6 @@
 	import RecipeFilter from '$lib/components/libraries/filters/RecipeFilter.svelte';
 	import RatingFilter from '$lib/components/libraries/filters/RatingFilter.svelte';
 	import GenreFilter from '$lib/components/libraries/filters/GenreFilter.svelte';
-	import PlantLocationFilter from '$lib/components/libraries/filters/PlantLocationFilter.svelte';
 
 	const ts = getTranslation();
 
@@ -53,7 +52,7 @@
 <div class="relative">
 	<button
 		class="flex cursor-pointer items-center justify-center rounded-lg p-2"
-		class:bg-c-neutral={library.genreFilter || library.ratingFilter || library.wishlistFilter || library.locationFilter}
+		class:bg-c-neutral={library.genreFilter || library.ratingFilter || library.wishlistFilter || library.locationFilter || library.unidentifiedFilter}
 		onclick={toggleMenu}
 	>
 		<IconFunnel />
@@ -96,7 +95,27 @@
 				<RecipeFilter {toggleMenu} />
 			{/if}
 			{#if library.config.type === 'plants'}
-				<PlantLocationFilter {toggleMenu} />
+				<button
+					class="flex cursor-pointer p-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
+					class:bg-c-neutral-1={library.locationFilter === 'indoor'}
+					onclick={() => { toggleMenu(); library.addLocationFilter('indoor'); }}
+				>
+					{ts.get.libraries.plants.location_indoor}
+				</button>
+				<button
+					class="flex cursor-pointer p-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
+					class:bg-c-neutral-1={library.locationFilter === 'outdoor'}
+					onclick={() => { toggleMenu(); library.addLocationFilter('outdoor'); }}
+				>
+					{ts.get.libraries.plants.location_outdoor}
+				</button>
+				<button
+					class="flex cursor-pointer p-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
+					class:bg-c-neutral-1={library.unidentifiedFilter}
+					onclick={() => { toggleMenu(); library.filterByUnidentified(); }}
+				>
+					{ts.get.libraries.plants.unidentified}
+				</button>
 			{/if}
 			<button
 				class="flex cursor-pointer p-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"

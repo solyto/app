@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fade, scale } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import ShelfView from '$lib/components/libraries/shared/ShelfView.svelte';
 	import SpineView from '$lib/components/libraries/shared/SpineView.svelte';
 	import BookEntry from '$lib/components/libraries/books/BookEntry.svelte';
@@ -11,6 +11,7 @@
 	import GameEntry from '$lib/components/libraries/games/GameEntry.svelte';
 	import PlantEntry from '$lib/components/libraries/plants/PlantEntry.svelte';
 	import MissingCover from '$lib/components/libraries/shared/MissingCover.svelte';
+	import CoverImage from '$lib/components/libraries/shared/CoverImage.svelte';
 	import type { Library } from '$lib/types/library';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { getAuth } from '$lib/state/Auth.svelte';
@@ -81,20 +82,15 @@
 						>
 							<MissingCover {library} />
 							{#if entry.cover}
-								<img
+								<CoverImage
 									src={`${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${entry.cover}`}
 									alt=""
-									aria-hidden="true"
 									class="pointer-events-none absolute inset-0 top-0 left-0 h-full w-full object-cover opacity-10 blur-xs"
-									loading="lazy"
-									in:scale
 								/>
-								<img
+								<CoverImage
 									src={`${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${entry.cover}`}
 									alt="Cover"
 									class="z-30 max-h-full max-w-full rounded-sm object-contain"
-									loading="lazy"
-									in:scale
 								/>
 							{/if}
 						</div>

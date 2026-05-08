@@ -56,6 +56,10 @@ export default class LibraryFilterService {
 		return entries.filter((entry) => entry.location === location);
 	}
 
+	byUnidentified(entries: Plant[]): Plant[] {
+		return entries.filter((entry) => entry.name === null && entry.latin_name === null);
+	}
+
 	byWishlist<T extends Music | Book | Movie | Game | Plant>(entries: T[]): T[] {
 		return entries.filter((entry) => entry.wishlist);
 	}

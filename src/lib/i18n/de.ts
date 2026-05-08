@@ -511,7 +511,8 @@ const libraries: LibraryRecords = {
 		cover: 'Bild URL',
 		link: 'Link',
 		add_plant: 'Pflanze hinzufügen',
-		edit_plant: 'Pflanze bearbeiten'
+		edit_plant: 'Pflanze bearbeiten',
+		unidentified: 'Unidentifiziert'
 	},
 	recommendations: {
 		welcome_slogan: 'Was kann ich empfehlen?',

@@ -29,6 +29,7 @@ export class PlantLibrary {
 	searchVisible = $state<boolean>(false);
 	activeEntry = $state<Plant | null>(null);
 	locationFilter = $state<PlantLocation | null>(null);
+	unidentifiedFilter = $state<boolean>(false);
 	searchTerm = $state<string>('');
 	view = $state<'list' | 'cards'>('cards');
 	auth = getAuth();
@@ -60,8 +61,15 @@ export class PlantLibrary {
 		this.filteredEntries = this.filterService.byLocation(this.entries, location);
 	}
 
+	filterByUnidentified(): void {
+		this.unidentifiedFilter = true;
+		this.locationFilter = null;
+		this.filteredEntries = this.filterService.byUnidentified(this.entries);
+	}
+
 	clearFilters(): void {
 		this.locationFilter = null;
+		this.unidentifiedFilter = false;
 		this.filteredEntries = this.entries;
 	}
 

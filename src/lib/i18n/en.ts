@@ -510,7 +510,8 @@ const libraries: LibraryRecords = {
 		cover: 'Image URL',
 		link: 'Link',
 		add_plant: 'Add a Plant',
-		edit_plant: 'Update Plant'
+		edit_plant: 'Update Plant',
+		unidentified: 'Unidentified'
 	},
 	recommendations: {
 		welcome_slogan: 'What can I recommend today?',

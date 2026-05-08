@@ -468,6 +468,7 @@ export interface LibraryRecords {
 		link: string;
 		add_plant: string;
 		edit_plant: string;
+		unidentified: string;
 		[key: string]: string;
 	};
 	recommendations: {
