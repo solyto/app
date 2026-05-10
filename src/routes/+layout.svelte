@@ -26,6 +26,9 @@
 	import { setWelcomeTour } from '$lib/state/WelcomeTour.svelte.js';
 	import WelcomeTour from '$lib/components/tour/WelcomeTour.svelte';
 	import { setThemeState } from '$lib/state/Theme.svelte.js';
+	import { setQuickAdd } from '$lib/state/QuickAdd.svelte';
+	import QuickAddFab from '$lib/components/quick-add/QuickAddFab.svelte';
+	import QuickAddModal from '$lib/components/quick-add/QuickAddModal.svelte';
 
 	let { children } = $props();
 
@@ -41,6 +44,7 @@
 	setCookieConsent();
 	setPwaInstall();
 	setWelcomeTour();
+	setQuickAdd();
 	const theme = setThemeState();
 
 	const viewPoint = getViewPoint();
@@ -117,6 +121,10 @@
 	<WelcomeTour />
 	{#if !isAuthRoute()}
 		<CookieBanner />
+	{/if}
+	{#if showNavbar()}
+		<QuickAddFab />
+		<QuickAddModal />
 	{/if}
 </div>
 

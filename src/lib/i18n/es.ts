@@ -25,7 +25,8 @@ import type {
 	WelcomeTourRecords,
 	AdminRecords,
 	CookieConsentRecords,
-	TimeTrackingRecords
+	TimeTrackingRecords,
+	QuickAddRecords
 } from '$lib/types/translation';
 
 const layout: LayoutRecords = {
@@ -1104,6 +1105,16 @@ const cookie_consent: CookieConsentRecords = {
 	privacy_policy: 'Política de privacidad'
 };
 
+const quick_add: QuickAddRecords = {
+	title: 'Añadir rápido',
+	placeholder: 'Pega un enlace...',
+	detect: 'Detectar',
+	detected_as: 'Esto parece un %s (%d% de confianza). ¿Es correcto?',
+	confirm: 'Sí, añadir',
+	choose_different: 'No, elegir tipo',
+	select_type: '¿Qué tipo de contenido es?'
+};
+
 export const es: LanguageFile = {
 	layout,
 	nav,
@@ -1130,5 +1141,6 @@ export const es: LanguageFile = {
 	welcome_tour,
 	admin,
 	cookie_consent,
-	timeTracking
+	timeTracking,
+	quick_add
 };

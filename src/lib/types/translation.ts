@@ -1030,6 +1030,16 @@ export interface CookieConsentRecords {
 	privacy_policy: string;
 }
 
+export interface QuickAddRecords {
+	title: string;
+	placeholder: string;
+	detect: string;
+	detected_as: string;
+	confirm: string;
+	choose_different: string;
+	select_type: string;
+}
+
 export interface LanguageFile {
 	layout: LayoutRecords;
 	nav: NavigationRecords;
@@ -1057,4 +1067,5 @@ export interface LanguageFile {
 	admin: AdminRecords;
 	cookie_consent: CookieConsentRecords;
 	timeTracking: TimeTrackingRecords;
+	quick_add: QuickAddRecords;
 }
