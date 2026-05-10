@@ -7,6 +7,7 @@ import type {
 	AuthRecords,
 	SettingsRecords,
 	CheckInRecords,
+	CheckInSummaryRecords,
 	WidgetRecords,
 	NoteRecords,
 	LibraryRecords,
@@ -268,6 +269,27 @@ const checkIn: CheckInRecords = {
 	sport_swimming: 'Schwimmen',
 	sport_yoga: 'Yoga',
 	sport_replace_with: 'Ersetzen durch...'
+};
+
+const checkInSummary: CheckInSummaryRecords = {
+	mood_1: 'schlechte Laune', mood_2: 'unterdurchschnittliche Laune', mood_3: 'okay Laune', mood_4: 'gute Laune', mood_5: 'tolle Laune',
+	sleep_1: 'kaum geschlafen', sleep_2: 'schlecht geschlafen', sleep_3: 'okay geschlafen', sleep_4: 'gut geschlafen', sleep_5: 'sehr gut geschlafen',
+	dreams_1: 'schreckliche Albträume gehabt', dreams_2: 'schlechte Träume gehabt', dreams_3: 'durchschnittliche Träume gehabt', dreams_4: 'gute Träume gehabt', dreams_5: 'tolle Träume gehabt',
+	water_1: 'kaum etwas getrunken', water_2: 'wenig getrunken', water_3: 'genug getrunken', water_4: 'viel getrunken', water_5: 'gut hydriert geblieben',
+	food_quality_1: 'sehr schlecht gegessen', food_quality_2: 'schlecht gegessen', food_quality_3: 'okay gegessen', food_quality_4: 'gut gegessen', food_quality_5: 'hervorragend gegessen',
+	food_amount_1: 'kaum etwas gegessen', food_amount_2: 'zu wenig gegessen', food_amount_3: 'eine normale Menge gegessen', food_amount_4: 'eine gute Menge gegessen', food_amount_5: 'reichlich gegessen',
+	work_1: 'schrecklichen Arbeitstag gehabt', work_2: 'anstrengenden Arbeitstag gehabt', work_3: 'normalen Arbeitstag gehabt', work_4: 'guten Arbeitstag gehabt', work_5: 'tollen Arbeitstag gehabt',
+	alcohol_1: 'viel Alkohol getrunken', alcohol_2: 'ziemlich viel getrunken', alcohol_3: 'ein paar Drinks gehabt', alcohol_4: 'ein oder zwei Drinks gehabt', alcohol_5: 'keinen Alkohol getrunken',
+	smoking_1: 'viel geraucht', smoking_2: 'ziemlich viel geraucht', smoking_3: 'mäßig geraucht', smoking_4: 'wenig geraucht', smoking_5: 'nicht geraucht',
+	menstruation_1: 'keine Periode', menstruation_2: 'leichte Blutung', menstruation_3: 'mittlere Blutung', menstruation_4: 'starke Blutung', menstruation_5: 'sehr starke Blutung',
+	sports_dumbbell: 'ins Fitnessstudio gegangen', sports_bike: 'Fahrrad gefahren', sports_mountain: 'gewandert', sports_footprints: 'spazieren gegangen', sports_waves_ladder: 'geschwommen', sports_yoga: 'Yoga gemacht',
+	day_today: 'Heute', day_yesterday: 'Gestern',
+	day_0: 'Sonntag', day_1: 'Montag', day_2: 'Dienstag', day_3: 'Mittwoch', day_4: 'Donnerstag', day_5: 'Freitag', day_6: 'Samstag',
+	connector_and: 'und', connector_but: 'aber',
+	period_qualifier_consistently: 'durchgehend', period_qualifier_generally: 'generell', period_qualifier_often: 'oft',
+	period_sports_singular: 'einmal Sport gemacht', period_sports_plural: '{n} Mal Sport gemacht',
+	period_this_week: 'Diese Woche', period_last_week: 'Letzte Woche', period_this_month: 'Diesen Monat', period_last_month: 'Letzten Monat',
+	section_days: 'Tage', section_weeks: 'Wochen', section_months: 'Monate'
 };
 
 const widgets: WidgetRecords = {
@@ -1098,6 +1120,7 @@ export const de: LanguageFile = {
 	settings,
 	todos,
 	checkIn,
+	checkInSummary,
 	widgets,
 	notes,
 	libraries,

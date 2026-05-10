@@ -4,6 +4,7 @@
 	import { getCheckInData } from '$lib/state/CheckInData.svelte.js';
 	import OverviewDesktop from '$lib/components/check-in/overview/OverviewDesktop.svelte';
 	import OverviewMobile from '$lib/components/check-in/overview/OverviewMobile.svelte';
+	import CheckInSummaries from '$lib/components/check-in/overview/CheckInSummaries.svelte';
 
 	const viewPoint = getViewPoint();
 	const checkInData = getCheckInData();
@@ -12,11 +13,17 @@
 </script>
 
 {#if viewPoint.isDesktop}
-	<div class="hidden 2xl:block">
-		<OverviewDesktop {dates} trackers={checkInData.activeTrackers} />
+	<div class="hidden 2xl:flex 2xl:flex-row 2xl:gap-6 2xl:items-start">
+		<div class="w-3/4">
+			<OverviewDesktop {dates} trackers={checkInData.activeTrackers} />
+		</div>
+		<div class="w-1/4">
+			<CheckInSummaries {dates} trackers={checkInData.activeTrackers} />
+		</div>
 	</div>
 {:else}
-	<div class="block 2xl:hidden">
+	<div class="flex flex-col gap-6 2xl:hidden">
+		<CheckInSummaries {dates} trackers={checkInData.activeTrackers} />
 		<OverviewMobile {dates} trackers={checkInData.activeTrackers} />
 	</div>
 {/if}

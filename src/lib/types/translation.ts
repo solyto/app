@@ -239,6 +239,36 @@ export interface CheckInRecords {
 	sport_replace_with: string;
 }
 
+export interface CheckInSummaryRecords {
+	mood_1: string; mood_2: string; mood_3: string; mood_4: string; mood_5: string;
+	sleep_1: string; sleep_2: string; sleep_3: string; sleep_4: string; sleep_5: string;
+	dreams_1: string; dreams_2: string; dreams_3: string; dreams_4: string; dreams_5: string;
+	water_1: string; water_2: string; water_3: string; water_4: string; water_5: string;
+	food_quality_1: string; food_quality_2: string; food_quality_3: string; food_quality_4: string; food_quality_5: string;
+	food_amount_1: string; food_amount_2: string; food_amount_3: string; food_amount_4: string; food_amount_5: string;
+	work_1: string; work_2: string; work_3: string; work_4: string; work_5: string;
+	alcohol_1: string; alcohol_2: string; alcohol_3: string; alcohol_4: string; alcohol_5: string;
+	smoking_1: string; smoking_2: string; smoking_3: string; smoking_4: string; smoking_5: string;
+	menstruation_1: string; menstruation_2: string; menstruation_3: string; menstruation_4: string; menstruation_5: string;
+	sports_dumbbell: string; sports_bike: string; sports_mountain: string; sports_footprints: string; sports_waves_ladder: string; sports_yoga: string;
+	day_today: string; day_yesterday: string;
+	day_0: string; day_1: string; day_2: string; day_3: string; day_4: string; day_5: string; day_6: string;
+	connector_and: string;
+	connector_but: string;
+	period_qualifier_consistently: string;
+	period_qualifier_generally: string;
+	period_qualifier_often: string;
+	period_sports_singular: string;
+	period_sports_plural: string;
+	period_this_week: string;
+	period_last_week: string;
+	period_this_month: string;
+	period_last_month: string;
+	section_days: string;
+	section_weeks: string;
+	section_months: string;
+}
+
 export interface WidgetRecords {
 	todos_due_today: string;
 	todos_due_overdue: string;
@@ -1008,6 +1038,7 @@ export interface LanguageFile {
 	settings: SettingsRecords;
 	todos: TodoRecords;
 	checkIn: CheckInRecords;
+	checkInSummary: CheckInSummaryRecords;
 	widgets: WidgetRecords;
 	notes: NoteRecords;
 	libraries: LibraryRecords;

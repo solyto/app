@@ -7,6 +7,7 @@ import type {
 	AuthRecords,
 	SettingsRecords,
 	CheckInRecords,
+	CheckInSummaryRecords,
 	WidgetRecords,
 	NoteRecords,
 	LibraryRecords,
@@ -267,6 +268,27 @@ const checkIn: CheckInRecords = {
 	sport_swimming: 'Swimming',
 	sport_yoga: 'Yoga',
 	sport_replace_with: 'Replace with...'
+};
+
+const checkInSummary: CheckInSummaryRecords = {
+	mood_1: 'bad mood', mood_2: 'below average mood', mood_3: 'okay mood', mood_4: 'good mood', mood_5: 'great mood',
+	sleep_1: 'barely slept', sleep_2: 'slept poorly', sleep_3: 'slept okay', sleep_4: 'slept well', sleep_5: 'slept great',
+	dreams_1: 'had terrible nightmares', dreams_2: 'had bad dreams', dreams_3: 'had average dreams', dreams_4: 'had good dreams', dreams_5: 'had great dreams',
+	water_1: 'barely drank', water_2: 'drank a little', water_3: 'drank enough', water_4: 'drank well', water_5: 'stayed well hydrated',
+	food_quality_1: 'ate very poorly', food_quality_2: 'ate poorly', food_quality_3: 'ate okay', food_quality_4: 'ate well', food_quality_5: 'ate great',
+	food_amount_1: 'ate very little', food_amount_2: 'ate too little', food_amount_3: 'ate a moderate amount', food_amount_4: 'ate a good amount', food_amount_5: 'ate plenty',
+	work_1: 'had a terrible workday', work_2: 'had a rough workday', work_3: 'had an average workday', work_4: 'had a good workday', work_5: 'had a great workday',
+	alcohol_1: 'drank heavily', alcohol_2: 'drank quite a bit', alcohol_3: 'had a few drinks', alcohol_4: 'had a drink or two', alcohol_5: 'no alcohol',
+	smoking_1: 'smoked heavily', smoking_2: 'smoked quite a bit', smoking_3: 'smoked moderately', smoking_4: 'smoked a little', smoking_5: "didn't smoke",
+	menstruation_1: 'no period', menstruation_2: 'light flow', menstruation_3: 'moderate flow', menstruation_4: 'heavy flow', menstruation_5: 'very heavy flow',
+	sports_dumbbell: 'went to the gym', sports_bike: 'went cycling', sports_mountain: 'went hiking', sports_footprints: 'went for a walk', sports_waves_ladder: 'went swimming', sports_yoga: 'did yoga',
+	day_today: 'Today', day_yesterday: 'Yesterday',
+	day_0: 'Sunday', day_1: 'Monday', day_2: 'Tuesday', day_3: 'Wednesday', day_4: 'Thursday', day_5: 'Friday', day_6: 'Saturday',
+	connector_and: 'and', connector_but: 'but',
+	period_qualifier_consistently: 'consistently', period_qualifier_generally: 'generally', period_qualifier_often: 'often',
+	period_sports_singular: 'did sports once', period_sports_plural: 'did sports {n} times',
+	period_this_week: 'This week', period_last_week: 'Last week', period_this_month: 'This month', period_last_month: 'Last month',
+	section_days: 'Days', section_weeks: 'Weeks', section_months: 'Months'
 };
 
 const widgets: WidgetRecords = {
@@ -1075,6 +1097,7 @@ export const en: LanguageFile = {
 	settings,
 	todos,
 	checkIn,
+	checkInSummary,
 	widgets,
 	notes,
 	libraries,

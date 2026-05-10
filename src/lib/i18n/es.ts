@@ -7,6 +7,7 @@ import type {
 	AuthRecords,
 	SettingsRecords,
 	CheckInRecords,
+	CheckInSummaryRecords,
 	WidgetRecords,
 	NoteRecords,
 	LibraryRecords,
@@ -267,6 +268,27 @@ const checkIn: CheckInRecords = {
 	sport_swimming: 'Natación',
 	sport_yoga: 'Yoga',
 	sport_replace_with: 'Reemplazar con...'
+};
+
+const checkInSummary: CheckInSummaryRecords = {
+	mood_1: 'mal humor', mood_2: 'humor por debajo de la media', mood_3: 'humor aceptable', mood_4: 'buen humor', mood_5: 'excelente humor',
+	sleep_1: 'apenas dormido', sleep_2: 'dormido mal', sleep_3: 'dormido aceptablemente', sleep_4: 'dormido bien', sleep_5: 'dormido muy bien',
+	dreams_1: 'tenido pesadillas terribles', dreams_2: 'tenido malos sueños', dreams_3: 'tenido sueños normales', dreams_4: 'tenido buenos sueños', dreams_5: 'tenido sueños excelentes',
+	water_1: 'apenas bebido', water_2: 'bebido poco', water_3: 'bebido suficiente', water_4: 'bebido bien', water_5: 'bien hidratado',
+	food_quality_1: 'comido muy mal', food_quality_2: 'comido mal', food_quality_3: 'comido aceptablemente', food_quality_4: 'comido bien', food_quality_5: 'comido excelente',
+	food_amount_1: 'comido muy poco', food_amount_2: 'comido demasiado poco', food_amount_3: 'comido una cantidad moderada', food_amount_4: 'comido una buena cantidad', food_amount_5: 'comido bastante',
+	work_1: 'tenido un día de trabajo terrible', work_2: 'tenido un día de trabajo duro', work_3: 'tenido un día de trabajo normal', work_4: 'tenido un buen día de trabajo', work_5: 'tenido un excelente día de trabajo',
+	alcohol_1: 'bebido mucho', alcohol_2: 'bebido bastante', alcohol_3: 'tomado unas copas', alcohol_4: 'tomado una o dos copas', alcohol_5: 'nada de alcohol',
+	smoking_1: 'fumado mucho', smoking_2: 'fumado bastante', smoking_3: 'fumado moderadamente', smoking_4: 'fumado poco', smoking_5: 'no fumado',
+	menstruation_1: 'sin período', menstruation_2: 'flujo ligero', menstruation_3: 'flujo moderado', menstruation_4: 'flujo abundante', menstruation_5: 'flujo muy abundante',
+	sports_dumbbell: 'ido al gimnasio', sports_bike: 'ido en bicicleta', sports_mountain: 'ido de senderismo', sports_footprints: 'dado un paseo', sports_waves_ladder: 'nadado', sports_yoga: 'hecho yoga',
+	day_today: 'Hoy', day_yesterday: 'Ayer',
+	day_0: 'Domingo', day_1: 'Lunes', day_2: 'Martes', day_3: 'Miércoles', day_4: 'Jueves', day_5: 'Viernes', day_6: 'Sábado',
+	connector_and: 'y', connector_but: 'pero',
+	period_qualifier_consistently: 'de forma consistente', period_qualifier_generally: 'generalmente', period_qualifier_often: 'a menudo',
+	period_sports_singular: 'hecho deporte una vez', period_sports_plural: 'hecho deporte {n} veces',
+	period_this_week: 'Esta semana', period_last_week: 'La semana pasada', period_this_month: 'Este mes', period_last_month: 'El mes pasado',
+	section_days: 'Días', section_weeks: 'Semanas', section_months: 'Meses'
 };
 
 const widgets: WidgetRecords = {
@@ -1090,6 +1112,7 @@ export const es: LanguageFile = {
 	settings,
 	todos,
 	checkIn,
+	checkInSummary,
 	widgets,
 	notes,
 	libraries,
