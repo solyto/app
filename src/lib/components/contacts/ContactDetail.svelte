@@ -115,32 +115,38 @@
 		</div>
 	</div>
 	<div class="mt-8 flex flex-col justify-between gap-8 md:flex-row">
-		<div class="flex flex-col gap-2 text-sm">
+		<div class="flex flex-col gap-1">
 			{#each contact.phone as phone (phone.value)}
-				<div class="flex items-center gap-2">
+				<a
+					href="tel:{phone.value}"
+					class="flex min-h-[44px] items-center gap-3 rounded-lg px-1 py-1 transition-colors hover:bg-c-neutral active:bg-c-neutral-2"
+				>
 					{#if phone.type === 'cell'}
-						<IconCardSim class="size-4 text-c-btn" />
+						<IconCardSim class="size-5 flex-shrink-0 text-c-btn" />
 					{:else if phone.type === 'home'}
-						<IconHouse class="size-4 text-c-btn" />
+						<IconHouse class="size-5 flex-shrink-0 text-c-btn" />
 					{:else if phone.type === 'work'}
-						<IconBriefcaseBusiness class="size-4 text-c-btn" />
+						<IconBriefcaseBusiness class="size-5 flex-shrink-0 text-c-btn" />
 					{:else}
-						<IconPhone class="size-4 text-c-btn" />
+						<IconPhone class="size-5 flex-shrink-0 text-c-btn" />
 					{/if}
-					<div>{phone.value}</div>
-				</div>
+					<span class="text-base font-medium">{phone.value}</span>
+				</a>
 			{/each}
 			{#each contact.email as email (email.value)}
-				<div class="flex items-center gap-2">
+				<a
+					href="mailto:{email.value}"
+					class="flex min-h-[44px] items-center gap-3 rounded-lg px-1 py-1 transition-colors hover:bg-c-neutral active:bg-c-neutral-2"
+				>
 					{#if email.type === 'home'}
-						<IconHouse class="size-4 text-c-btn" />
+						<IconHouse class="size-5 flex-shrink-0 text-c-btn" />
 					{:else if email.type === 'work'}
-						<IconBriefcaseBusiness class="size-4 text-c-btn" />
+						<IconBriefcaseBusiness class="size-5 flex-shrink-0 text-c-btn" />
 					{:else}
-						<IconMail class="size-4 text-c-btn" />
+						<IconMail class="size-5 flex-shrink-0 text-c-btn" />
 					{/if}
-					<div>{email.value}</div>
-				</div>
+					<span class="text-base font-medium">{email.value}</span>
+				</a>
 			{/each}
 		</div>
 		<div class="mr-4 flex flex-col gap-2 text-sm">
