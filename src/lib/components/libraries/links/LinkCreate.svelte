@@ -30,7 +30,7 @@
 		loadingIndicator.start();
 
 		const request: CreateLinkRequest = {
-			title: titleValue,
+			title: titleValue || null,
 			url: urlValue,
 			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null
 		};
@@ -49,11 +49,11 @@
 </script>
 
 <CreateModal title={ts.get.libraries.links.add_link} {library}>
-	<ModalFormRow label={ts.get.libraries.links.title}>
-		<TextInput bind:value={titleValue} />
-	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.links.url}>
 		<TextInput bind:value={urlValue} />
+	</ModalFormRow>
+	<ModalFormRow label={ts.get.libraries.links.title}>
+		<TextInput bind:value={titleValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.tags}>
 		<MultiSelect bind:value={selectedTags} options={tagOptions} />

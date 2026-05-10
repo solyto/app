@@ -19,7 +19,7 @@ export interface Link {
 }
 
 export interface CreateLinkRequest {
-	title: string;
+	title?: string | null;
 	url: string;
 	cover_path?: string | null;
 	is_favorite?: boolean;
