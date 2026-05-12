@@ -1121,6 +1121,7 @@ const quick_add: QuickAddRecords = {
 	detected_label: 'Detectado',
 	commit_success: 'Añadido a %s.',
 	commit_error: 'No se pudo añadir. Inténtalo de nuevo.',
+	url_required: 'Este tipo requiere una URL válida.',
 	content_types: {
 		music: 'Música',
 		books: 'Libro',

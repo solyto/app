@@ -1046,6 +1046,7 @@ export interface QuickAddRecords {
 	detected_label: string;
 	commit_success: string;
 	commit_error: string;
+	url_required: string;
 	content_types: {
 		music: string;
 		books: string;

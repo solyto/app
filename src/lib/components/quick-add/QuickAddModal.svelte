@@ -6,6 +6,8 @@
 	import IconLink from '@lucide/svelte/icons/link';
 	import IconArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
+	import BottomSheetModal from '$lib/components/ui/BottomSheetModal.svelte';
+	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import Button from '$lib/components/ui/buttons/Button.svelte';
@@ -24,9 +26,11 @@
 	const quickAdd = getQuickAdd();
 	const ts = getTranslation();
 	const keyManager = getKeyManager();
+	const viewPoint = getViewPoint();
 
 	let keyHandlers = $state<{ [key: string]: string | null }>({ Escape: null, Enter: null });
 	let urlInput: HTMLInputElement | null = $state(null);
+	let isMobile = $state<boolean | null>(null);
 
 	const TYPE_ICONS = {
 		links: IconLink,
@@ -56,7 +60,14 @@
 		'note'
 	];
 
+	const TEXT_TYPES: QuickAddContentType[] = ['quotes', 'todo', 'note'];
+
+	function availableTypes(): QuickAddContentType[] {
+		return quickAdd.isUrl ? ALL_TYPES : TEXT_TYPES;
+	}
+
 	onMount(async () => {
+		isMobile = viewPoint.isMobile;
 		keyHandlers.Escape = keyManager.registerKeyDown('Escape', () => quickAdd.closeModal(), { priority: 0 });
 		keyHandlers.Enter = keyManager.registerKeyDown('Enter', handleEnter, { priority: 0 });
 		setTimeout(async () => {
@@ -94,13 +105,7 @@
 	}
 </script>
 
-<ContentModal
-	title={ts.get.quick_add.title}
-	onClose={() => quickAdd.closeModal()}
-	rounded="2xl"
-	width="96"
-	p="6"
->
+{#snippet inner()}
 	{#if quickAdd.showTypeSelector}
 		<div class="flex flex-col gap-5">
 			<button
@@ -112,7 +117,7 @@
 			</button>
 			<p class="text-lg font-bold">{ts.get.quick_add.select_type}</p>
 			<div class="grid grid-cols-3 gap-2 max-md:grid-cols-2">
-				{#each ALL_TYPES as type}
+				{#each availableTypes() as type}
 					{@const Icon = TYPE_ICONS[type]}
 					<button
 						class="group flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border-1 border-c-neutral-2 bg-c-bg-elevated px-3 py-3.5 text-c-heading transition-colors hover:border-c-btn hover:shadow-sm dark:border-s-dark-3 dark:text-c-primary"
@@ -126,7 +131,7 @@
 		</div>
 	{:else if quickAdd.needsConfirmation && quickAdd.detectedType}
 		{@const DetectedIcon = TYPE_ICONS[quickAdd.detectedType]}
-		<div class="flex flex-col gap-5 max-md:pt-16">
+		<div class="flex flex-col gap-5">
 			<div class="flex w-full items-center gap-4 rounded-xl border-1 border-c-neutral-2 p-4 dark:border-s-dark-3">
 				<DetectedIcon class="h-8 w-8 shrink-0 text-c-neutral-5" />
 				<div class="flex flex-1 flex-col gap-1.5">
@@ -166,7 +171,7 @@
 			</div>
 		</div>
 	{:else}
-		<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="flex items-center gap-3 max-md:pt-12">
+		<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="flex items-center gap-3">
 			<div class="flex-1">
 				<TextInput
 					bind:input={urlInput}
@@ -184,4 +189,20 @@
 			<p class="mt-3 rounded-lg bg-c-danger/10 px-3 py-2 text-sm text-c-danger">{quickAdd.error}</p>
 		{/if}
 	{/if}
-</ContentModal>
+{/snippet}
+
+{#if isMobile === true}
+	<BottomSheetModal title={ts.get.quick_add.title} onClose={() => quickAdd.closeModal()}>
+		{@render inner()}
+	</BottomSheetModal>
+{:else if isMobile === false}
+	<ContentModal
+		title={ts.get.quick_add.title}
+		onClose={() => quickAdd.closeModal()}
+		rounded="2xl"
+		width={quickAdd.showTypeSelector ? '[52rem]' : '[42rem]'}
+		p="6"
+	>
+		{@render inner()}
+	</ContentModal>
+{/if}

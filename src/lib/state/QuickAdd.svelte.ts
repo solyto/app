@@ -122,10 +122,17 @@ export class QuickAdd {
 	async selectType(type: QuickAddContentType): Promise<void> {
 		this.showTypeSelector = false;
 		this.detectedType = type;
-		// Metadata was extracted for the originally detected type. Clear it
-		// so commit() doesn't ship fields that don't apply to the override.
 		this.metadata = null;
 		await this.confirm(type);
+	}
+
+	get isUrl(): boolean {
+		try {
+			new URL(this.url);
+			return true;
+		} catch {
+			return false;
+		}
 	}
 }
 
