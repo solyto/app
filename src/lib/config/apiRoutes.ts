@@ -340,7 +340,8 @@ export const apiRoutes = {
 		selectImportAddressBooks: API_URL + '/address-books/import/select',
 		getImportState: API_URL + '/address-books/import/state'
 	},
-	quickAdd: {
-		detect: API_URL + '/quick-add/detect'
+	dashboard: {
+		quickAddDetect: API_URL + '/dashboard/quick-add/detect',
+		quickAddCommit: API_URL + '/dashboard/quick-add/commit'
 	}
 } as const;

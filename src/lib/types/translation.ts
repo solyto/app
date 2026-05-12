@@ -1033,11 +1033,32 @@ export interface CookieConsentRecords {
 export interface QuickAddRecords {
 	title: string;
 	placeholder: string;
-	detect: string;
-	detected_as: string;
+	add: string;
+	adding: string;
+	detect_error: string;
+	detected_prompt: string;
+	confidence: string;
 	confirm: string;
 	choose_different: string;
 	select_type: string;
+	back: string;
+	url_label: string;
+	detected_label: string;
+	commit_success: string;
+	commit_error: string;
+	destinations: {
+		music: string;
+		books: string;
+		movies: string;
+		games: string;
+		links: string;
+		recipes: string;
+		plants: string;
+		quotes: string;
+		todo: string;
+		note: string;
+		feed: string;
+	};
 }
 
 export interface LanguageFile {

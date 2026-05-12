@@ -1115,12 +1115,33 @@ const cookie_consent: CookieConsentRecords = {
 
 const quick_add: QuickAddRecords = {
 	title: 'Ajout rapide',
-	placeholder: 'Collez un lien...',
-	detect: 'Détecter',
-	detected_as: 'Cela ressemble à un %s (%d% de confiance). Est-ce correct ?',
+	placeholder: 'Collez un lien ou du texte',
+	add: 'Ajouter',
+	adding: 'Ajout…',
+	detect_error: 'Impossible de détecter le type de contenu.',
+	detected_prompt: 'Est-ce correct ?',
+	confidence: 'de confiance',
 	confirm: 'Oui, ajouter',
 	choose_different: 'Non, choisir le type',
-	select_type: 'Quel type de contenu est-ce ?'
+	select_type: 'Quel type de contenu est-ce ?',
+	back: 'Retour',
+	url_label: 'URL',
+	detected_label: 'Détecté',
+	commit_success: 'Ajouté à %s.',
+	commit_error: 'Impossible d\'ajouter. Réessayez.',
+	destinations: {
+		music: 'votre bibliothèque musicale',
+		books: 'votre bibliothèque de livres',
+		movies: 'votre bibliothèque de films',
+		games: 'votre bibliothèque de jeux',
+		links: 'vos liens',
+		recipes: 'votre bibliothèque de recettes',
+		plants: 'votre bibliothèque de plantes',
+		quotes: 'votre bibliothèque de citations',
+		todo: 'vos tâches',
+		note: 'vos notes',
+		feed: 'vos flux'
+	}
 };
 
 export const fr: LanguageFile = {

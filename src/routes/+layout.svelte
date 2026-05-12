@@ -26,7 +26,7 @@
 	import { setWelcomeTour } from '$lib/state/WelcomeTour.svelte.js';
 	import WelcomeTour from '$lib/components/tour/WelcomeTour.svelte';
 	import { setThemeState } from '$lib/state/Theme.svelte.js';
-	import { setQuickAdd } from '$lib/state/QuickAdd.svelte';
+	import { getQuickAdd, setQuickAdd } from '$lib/state/QuickAdd.svelte';
 	import QuickAddFab from '$lib/components/quick-add/QuickAddFab.svelte';
 	import QuickAddModal from '$lib/components/quick-add/QuickAddModal.svelte';
 
@@ -45,14 +45,14 @@
 	setPwaInstall();
 	setWelcomeTour();
 	setQuickAdd();
-	const theme = setThemeState();
 
+	const theme = setThemeState();
 	const viewPoint = getViewPoint();
 	const auth = getAuth();
 	const keyManager = getKeyManager();
 	const ts = getTranslation();
 	const help = getHelp();
-	const pwa = getPwaInstall();
+	const quickAdd = getQuickAdd();
 
 	let innerHeight = $state<number>(0);
 
@@ -78,6 +78,10 @@
 
 	function showNavbar(): boolean {
 		return !isAuthRoute() && !isAdminRoute();
+	}
+
+	function isDashboard(): boolean {
+		return page.url.pathname === urls.home;
 	}
 
 	function isAdminRoute(): boolean {
@@ -122,9 +126,11 @@
 	{#if !isAuthRoute()}
 		<CookieBanner />
 	{/if}
-	{#if showNavbar()}
+	{#if showNavbar() && isDashboard()}
 		<QuickAddFab />
-		<QuickAddModal />
+		{#if quickAdd.open}
+			<QuickAddModal />
+		{/if}
 	{/if}
 </div>
 

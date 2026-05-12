@@ -1092,12 +1092,33 @@ const cookie_consent: CookieConsentRecords = {
 
 const quick_add: QuickAddRecords = {
 	title: 'Quick Add',
-	placeholder: 'Paste a link...',
-	detect: 'Detect',
-	detected_as: 'This looks like a %s (%d% confidence). Is that correct?',
+	placeholder: 'Paste a link or text',
+	add: 'Add',
+	adding: 'Adding…',
+	detect_error: 'Failed to detect content type.',
+	detected_prompt: 'Does that look right?',
+	confidence: 'confidence',
 	confirm: 'Yes, add it',
 	choose_different: 'No, choose type',
-	select_type: 'What type of content is this?'
+	select_type: 'What type of content is this?',
+	back: 'Back',
+	url_label: 'URL',
+	detected_label: 'Detected',
+	commit_success: 'Added to %s.',
+	commit_error: 'Couldn\'t add this. Try again.',
+	destinations: {
+		music: 'your music library',
+		books: 'your book library',
+		movies: 'your movie library',
+		games: 'your game library',
+		links: 'your links',
+		recipes: 'your recipe library',
+		plants: 'your plant library',
+		quotes: 'your quote library',
+		todo: 'your todos',
+		note: 'your notes',
+		feed: 'your feeds'
+	}
 };
 
 export const en: LanguageFile = {

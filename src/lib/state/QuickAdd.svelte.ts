@@ -1,6 +1,8 @@
 import type { QuickAddContentType } from '$lib/types/quick_add';
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
+import { getTranslation } from '$lib/state/Translation.svelte';
+import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 
@@ -10,10 +12,13 @@ export class QuickAdd {
 	url = $state<string>('');
 	detectedType = $state<QuickAddContentType | null>(null);
 	confidence = $state<number>(0);
+	metadata = $state<Record<string, unknown> | null>(null);
 	needsConfirmation = $state<boolean>(false);
 	showTypeSelector = $state<boolean>(false);
 	error = $state<string | null>(null);
 	auth = getAuth();
+	ts = getTranslation();
+	notifications = getUiNotifications();
 	apiService: ApiService;
 
 	constructor() {
@@ -35,6 +40,7 @@ export class QuickAdd {
 		this.loading = false;
 		this.detectedType = null;
 		this.confidence = 0;
+		this.metadata = null;
 		this.needsConfirmation = false;
 		this.showTypeSelector = false;
 		this.error = null;
@@ -49,12 +55,13 @@ export class QuickAdd {
 		this.needsConfirmation = false;
 		this.showTypeSelector = false;
 
-		const res = await this.apiService.create(apiRoutes.quickAdd.detect, { url: this.url });
+		const res = await this.apiService.create(apiRoutes.dashboard.quickAddDetect, { url: this.url });
 
 		this.loading = false;
 
 		if (!res) {
-			this.error = 'Failed to detect content type.';
+			this.error = this.ts.get.quick_add.detect_error;
+			this.notifications.error(this.ts.get.quick_add.detect_error);
 			return;
 		}
 
@@ -67,6 +74,7 @@ export class QuickAdd {
 
 		this.detectedType = data.content_type;
 		this.confidence = data.confidence;
+		this.metadata = data.metadata ?? null;
 
 		if (data.confidence < 0.6) {
 			this.needsConfirmation = true;
@@ -80,22 +88,44 @@ export class QuickAdd {
 		this.showTypeSelector = true;
 	}
 
+	backToConfirmation(): void {
+		if (!this.detectedType) return;
+		this.showTypeSelector = false;
+		this.needsConfirmation = true;
+	}
+
 	async confirm(type: QuickAddContentType): Promise<void> {
 		this.loading = true;
 		this.error = null;
 
-		// TODO: Wire up the actual create endpoint for the detected type.
-		// This is where you'd call the appropriate library/feature create endpoint
-		// based on the content_type. For now, we just close the modal on success.
+		const res = await this.apiService.create(apiRoutes.dashboard.quickAddCommit, {
+			url: this.url,
+			content_type: type,
+			metadata: this.metadata
+		});
 
 		this.loading = false;
+
+		if (!res) {
+			this.error = this.ts.get.quick_add.commit_error;
+			this.notifications.error(this.ts.get.quick_add.commit_error);
+			return;
+		}
+
+		const destination = this.ts.get.quick_add.destinations[type];
+		this.notifications.success(
+			this.ts.get.quick_add.commit_success.replace('%s', destination)
+		);
 		this.closeModal();
 	}
 
-	selectType(type: QuickAddContentType): void {
+	async selectType(type: QuickAddContentType): Promise<void> {
 		this.showTypeSelector = false;
 		this.detectedType = type;
-		this.confirm(type);
+		// Metadata was extracted for the originally detected type. Clear it
+		// so commit() doesn't ship fields that don't apply to the override.
+		this.metadata = null;
+		await this.confirm(type);
 	}
 }
 

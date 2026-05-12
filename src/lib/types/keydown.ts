@@ -1,4 +1,4 @@
-export type KeyDownPriority = 1 | 2 | 3;
+export type KeyDownPriority = 0 | 1 | 2 | 3;
 export type HelperKey = 'Control' | 'Alt' | 'Shift';
 export type CharacterKey = 'e' | 'f' | 's' | 'n';
 export type PrimaryKey = 'Enter' | 'Escape';
