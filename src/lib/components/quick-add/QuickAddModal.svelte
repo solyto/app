@@ -19,18 +19,14 @@
 	import IconListTodo from '@lucide/svelte/icons/list-todo';
 	import IconNotebookPen from '@lucide/svelte/icons/notebook-pen';
 	import IconRss from '@lucide/svelte/icons/rss';
-	import { CONTENT_TYPE_LABELS, type QuickAddContentType } from '$lib/types/quick_add';
+	import { type QuickAddContentType } from '$lib/types/quick_add';
 
 	const quickAdd = getQuickAdd();
 	const ts = getTranslation();
 	const keyManager = getKeyManager();
 
-	let keyHandlers = $state<{ [key: string]: string | null }>({
-		Escape: null, Enter: null, ArrowRight: null, ArrowLeft: null, ArrowDown: null, ArrowUp: null
-	});
-
+	let keyHandlers = $state<{ [key: string]: string | null }>({ Escape: null, Enter: null });
 	let urlInput: HTMLInputElement | null = $state(null);
-	let focusedTypeIndex = $state(0);
 
 	const TYPE_ICONS = {
 		links: IconLink,
@@ -63,10 +59,6 @@
 	onMount(async () => {
 		keyHandlers.Escape = keyManager.registerKeyDown('Escape', () => quickAdd.closeModal(), { priority: 0 });
 		keyHandlers.Enter = keyManager.registerKeyDown('Enter', handleEnter, { priority: 0 });
-		keyHandlers.ArrowRight = keyManager.registerKeyDown('ArrowRight', () => navigateTypes(1), { priority: 0 });
-		keyHandlers.ArrowLeft = keyManager.registerKeyDown('ArrowLeft', handleArrowLeft, { priority: 0 });
-		keyHandlers.ArrowDown = keyManager.registerKeyDown('ArrowDown', () => navigateTypes(3), { priority: 0 });
-		keyHandlers.ArrowUp = keyManager.registerKeyDown('ArrowUp', () => navigateTypes(-3), { priority: 0 });
 		setTimeout(async () => {
 			await tick();
 			urlInput?.focus();
@@ -82,33 +74,11 @@
 
 	function handleEnter(): void {
 		if (quickAdd.loading) return;
-		if (quickAdd.showTypeSelector) {
-			quickAdd.selectType(ALL_TYPES[focusedTypeIndex]);
-			return;
-		}
 		if (quickAdd.needsConfirmation && quickAdd.detectedType) {
 			quickAdd.confirm(quickAdd.detectedType);
-		} else if (!quickAdd.needsConfirmation) {
+		} else if (!quickAdd.showTypeSelector && !quickAdd.needsConfirmation) {
 			handleSubmit();
 		}
-	}
-
-	function handleArrowLeft(): void {
-		if (quickAdd.needsConfirmation) {
-			enterTypeSelector();
-		} else {
-			navigateTypes(-1);
-		}
-	}
-
-	function navigateTypes(delta: number): void {
-		if (!quickAdd.showTypeSelector) return;
-		focusedTypeIndex = Math.max(0, Math.min(ALL_TYPES.length - 1, focusedTypeIndex + delta));
-	}
-
-	function enterTypeSelector(): void {
-		focusedTypeIndex = 0;
-		quickAdd.rejectDetection();
 	}
 
 	function confidencePercent(): number {
@@ -128,11 +98,11 @@
 	title={ts.get.quick_add.title}
 	onClose={() => quickAdd.closeModal()}
 	rounded="2xl"
-	width="[34rem]"
-	p="8"
+	width="96"
+	p="6"
 >
 	{#if quickAdd.showTypeSelector}
-		<div class="flex flex-col gap-6">
+		<div class="flex flex-col gap-5">
 			<button
 				class="flex w-fit cursor-pointer items-center gap-1 rounded-md p-1 text-xs text-c-neutral-5 transition-colors hover:text-c-heading dark:hover:text-c-primary"
 				onclick={() => quickAdd.backToConfirmation()}
@@ -142,46 +112,42 @@
 			</button>
 			<p class="text-lg font-bold">{ts.get.quick_add.select_type}</p>
 			<div class="grid grid-cols-3 gap-2 max-md:grid-cols-2">
-				{#each ALL_TYPES as type, i}
+				{#each ALL_TYPES as type}
 					{@const Icon = TYPE_ICONS[type]}
-					{@const isFocused = i === focusedTypeIndex}
 					<button
-						class="group flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border-1 bg-c-bg-elevated px-3 py-3.5 text-c-heading transition-colors hover:border-c-btn hover:shadow-sm dark:text-c-primary {isFocused ? 'border-c-btn' : 'border-c-neutral-2 dark:border-s-dark-3'}"
+						class="group flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border-1 border-c-neutral-2 bg-c-bg-elevated px-3 py-3.5 text-c-heading transition-colors hover:border-c-btn hover:shadow-sm dark:border-s-dark-3 dark:text-c-primary"
 						onclick={() => quickAdd.selectType(type)}
-						onmouseenter={() => (focusedTypeIndex = i)}
 					>
-						<Icon class="h-5 w-5 transition-colors {isFocused ? 'text-c-btn' : 'text-c-neutral-5 group-hover:text-c-btn'}" />
-						<span class="text-xs font-medium {isFocused ? 'text-c-btn' : ''}">{CONTENT_TYPE_LABELS[type]}</span>
+						<Icon class="size-6 text-c-neutral-5 transition-colors group-hover:text-c-btn" />
+						<span class="text-sm font-bold">{ts.get.quick_add.content_types[type]}</span>
 					</button>
 				{/each}
 			</div>
 		</div>
 	{:else if quickAdd.needsConfirmation && quickAdd.detectedType}
 		{@const DetectedIcon = TYPE_ICONS[quickAdd.detectedType]}
-		<div class="flex flex-col gap-6">
-			<div class="flex flex-col gap-4">
-				<div class="flex w-full items-center gap-4 rounded-xl border-1 border-c-neutral-2 p-4 dark:border-s-dark-3">
-					<DetectedIcon class="h-8 w-8 shrink-0 text-c-neutral-5" />
-					<div class="flex flex-1 flex-col gap-1.5">
-						<span class="text-lg font-bold">{CONTENT_TYPE_LABELS[quickAdd.detectedType]}</span>
-						<div class="flex items-center gap-2">
-							<div class="h-1.5 flex-1 overflow-hidden rounded-full bg-c-neutral-2 dark:bg-s-dark-3">
-								<div class="h-full rounded-full bg-c-btn transition-all" style="width: {confidencePercent()}%"></div>
-							</div>
-							<span class="text-xs text-c-neutral-5">{confidencePercent()}%</span>
+		<div class="flex flex-col gap-5 max-md:pt-16">
+			<div class="flex w-full items-center gap-4 rounded-xl border-1 border-c-neutral-2 p-4 dark:border-s-dark-3">
+				<DetectedIcon class="h-8 w-8 shrink-0 text-c-neutral-5" />
+				<div class="flex flex-1 flex-col gap-1.5">
+					<span class="text-lg font-bold">{ts.get.quick_add.content_types[quickAdd.detectedType]}</span>
+					<div class="flex items-center gap-2">
+						<div class="h-1.5 flex-1 overflow-hidden rounded-full bg-c-neutral-2 dark:bg-s-dark-3">
+							<div class="h-full rounded-full bg-c-btn transition-all" style="width: {confidencePercent()}%"></div>
 						</div>
+						<span class="text-xs text-c-neutral-5">{confidencePercent()}%</span>
 					</div>
 				</div>
-				{#if metadataEntries().length > 0}
-					<div class="flex flex-col gap-2">
-						{#each metadataEntries() as [key, value]}
-							<ModalFormRow label={key.replace(/_/g, ' ')}>
-								<span class="text-sm">{value}</span>
-							</ModalFormRow>
-						{/each}
-					</div>
-				{/if}
 			</div>
+			{#if metadataEntries().length > 0}
+				<div class="flex flex-col gap-2">
+					{#each metadataEntries() as [key, value]}
+						<ModalFormRow label={key.replace(/_/g, ' ')}>
+							<span class="text-sm">{value}</span>
+						</ModalFormRow>
+					{/each}
+				</div>
+			{/if}
 			{#if quickAdd.error}
 				<p class="rounded-lg bg-c-danger/10 px-3 py-2 text-sm text-c-danger">{quickAdd.error}</p>
 			{/if}
@@ -189,7 +155,7 @@
 				<Button
 					title={ts.get.quick_add.choose_different}
 					type="slight"
-					onclick={enterTypeSelector}
+					onclick={() => quickAdd.rejectDetection()}
 					disabled={quickAdd.loading}
 				/>
 				<Button
@@ -200,22 +166,22 @@
 			</div>
 		</div>
 	{:else}
-		<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="flex flex-col gap-6">
-			<TextInput
-				bind:input={urlInput}
-				bind:value={quickAdd.url}
-				placeholder={ts.get.quick_add.placeholder}
-			/>
-			{#if quickAdd.error}
-				<p class="rounded-lg bg-c-danger/10 px-3 py-2 text-sm text-c-danger">{quickAdd.error}</p>
-			{/if}
-			<div class="flex justify-end">
-				<Button
-					title={quickAdd.loading ? ts.get.quick_add.adding : ts.get.quick_add.add}
-					disabled={quickAdd.loading || !quickAdd.url.trim()}
-					onclick={handleSubmit}
+		<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="flex items-center gap-3 max-md:pt-12">
+			<div class="flex-1">
+				<TextInput
+					bind:input={urlInput}
+					bind:value={quickAdd.url}
+					placeholder={ts.get.quick_add.placeholder}
 				/>
 			</div>
+			<Button
+				title={quickAdd.loading ? ts.get.quick_add.adding : ts.get.quick_add.add}
+				disabled={quickAdd.loading || !quickAdd.url.trim()}
+				onclick={handleSubmit}
+			/>
 		</form>
+		{#if quickAdd.error}
+			<p class="mt-3 rounded-lg bg-c-danger/10 px-3 py-2 text-sm text-c-danger">{quickAdd.error}</p>
+		{/if}
 	{/if}
 </ContentModal>

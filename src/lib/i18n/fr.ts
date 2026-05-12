@@ -1129,6 +1129,19 @@ const quick_add: QuickAddRecords = {
 	detected_label: 'Détecté',
 	commit_success: 'Ajouté à %s.',
 	commit_error: 'Impossible d\'ajouter. Réessayez.',
+	content_types: {
+		music: 'Musique',
+		books: 'Livre',
+		movies: 'Film',
+		games: 'Jeu',
+		links: 'Lien',
+		recipes: 'Recette',
+		plants: 'Plante',
+		quotes: 'Citation',
+		todo: 'Tâche',
+		note: 'Note',
+		feed: 'Flux'
+	},
 	destinations: {
 		music: 'votre bibliothèque musicale',
 		books: 'votre bibliothèque de livres',

@@ -1046,6 +1046,19 @@ export interface QuickAddRecords {
 	detected_label: string;
 	commit_success: string;
 	commit_error: string;
+	content_types: {
+		music: string;
+		books: string;
+		movies: string;
+		games: string;
+		links: string;
+		recipes: string;
+		plants: string;
+		quotes: string;
+		todo: string;
+		note: string;
+		feed: string;
+	};
 	destinations: {
 		music: string;
 		books: string;
