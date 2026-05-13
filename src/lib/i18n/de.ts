@@ -50,7 +50,7 @@ const layout: LayoutRecords = {
 
 const nav: NavigationRecords = {
 	menu: 'Menü',
-	toggle_menu: 'Aus-/einklappen',
+	toggle_menu: 'Ein-/ausklappen',
 	home: 'Startseite',
 	settings: 'Einstellungen',
 	todos: 'Todos',
@@ -161,10 +161,10 @@ const settings: SettingsRecords = {
 	nextcloud_no_token: 'Kein Token registriert.',
 	telegram_bot_integration_success: 'Integration erfolgreich registriert für Telegram Chat ID %s',
 	telegram_bot_token_created: 'Token erstellt.',
-	telegram_bot_register: 'Registriere es indem du den folgenden Befehl an den %s sendest',
+	telegram_bot_register: 'Registriere es, indem du den folgenden Befehl an den %s sendest',
 	telegram_bot_create: 'Neue Verbindung erstellen',
 	telegram_bot_not_connected:
-		'Du hast den Bot noch nicht mit deinem Account verbunden. Geh zu den Verbindungen um das zu tun.',
+		'Du hast den Bot noch nicht mit deinem Account verbunden. Geh zu den Verbindungen, um das zu tun.',
 	app: 'App',
 	export_data: 'Daten exportieren',
 	export_select_features: 'Funktionen für den Export auswählen',
@@ -248,7 +248,7 @@ const checkIn: CheckInRecords = {
 	daily: 'Tag',
 	statistics: 'Statistik',
 	settings: 'Einstellungen',
-	mood: 'Gemüt',
+	mood: 'Stimmung',
 	sports: 'Sport',
 	food_quality: 'Ernährung',
 	food_amount: 'Essensmenge',
@@ -273,7 +273,7 @@ const checkIn: CheckInRecords = {
 };
 
 const checkInSummary: CheckInSummaryRecords = {
-	mood_1: 'schlechte Laune', mood_2: 'unterdurchschnittliche Laune', mood_3: 'okay Laune', mood_4: 'gute Laune', mood_5: 'tolle Laune',
+	mood_1: 'schlechte Laune', mood_2: 'unterdurchschnittliche Laune', mood_3: 'mittelmäßige Laune', mood_4: 'gute Laune', mood_5: 'tolle Laune',
 	sleep_1: 'kaum geschlafen', sleep_2: 'schlecht geschlafen', sleep_3: 'okay geschlafen', sleep_4: 'gut geschlafen', sleep_5: 'sehr gut geschlafen',
 	dreams_1: 'schreckliche Albträume gehabt', dreams_2: 'schlechte Träume gehabt', dreams_3: 'durchschnittliche Träume gehabt', dreams_4: 'gute Träume gehabt', dreams_5: 'tolle Träume gehabt',
 	water_1: 'kaum etwas getrunken', water_2: 'wenig getrunken', water_3: 'genug getrunken', water_4: 'viel getrunken', water_5: 'gut hydriert geblieben',
@@ -302,7 +302,7 @@ const widgets: WidgetRecords = {
 	calendar: 'Kalender',
 	weather: 'Wetter',
 	your_day: 'Dein Tag',
-	your_day_no_entries: 'Heute scheint nix zu tun zu sein.',
+	your_day_no_entries: 'Heute scheint nichts zu tun zu sein.',
 	check_in_statistics: 'Check-in Statistik',
 	random_album: 'Zufälliges Album',
 	random_quote: 'Zufälliges Zitat',
@@ -561,14 +561,14 @@ const libraries: LibraryRecords = {
 	create: 'Neu',
 	tags: 'Tags',
 	genres: 'Genres',
-	rating: 'Rating',
+	rating: 'Bewertung',
 	edit_genres: 'Genres',
 	clear_filter: 'Filter löschen',
 	clear_all_filters: 'Alle Filter löschen',
 	publication_year: 'Veröffentlichungsjahr',
 	recommend: 'Empfehlungen',
 	releases: 'Releases',
-	releases_loading: 'Lade Neu-Veröffentlichungen',
+	releases_loading: 'Lade Neuveröffentlichungen',
 	release_date: 'Veröffentlichungsdatum',
 	releases_none: 'Konnte keine neuen Veröffentlichungen finden.',
 	wishlist: 'Wunschliste',
@@ -608,7 +608,7 @@ const dev: DevRecords = {
 
 const finances: FinanceRecords = {
 	wealth: 'Vermögen',
-	budget: 'Einkommen',
+	budget: 'Budget',
 	positions: 'Positionen',
 	total: 'Summe',
 	income: 'Einkommen',
@@ -656,7 +656,7 @@ const feeds: FeedRecords = {
 	test_feed_error: 'Feed hat keine Resultate ergeben.',
 	feed_preview: 'Feed Vorschau',
 	view_compact: 'Kompakt',
-	view_comfortable: 'Komfortabel',
+	view_comfortable: 'Ausführlich',
 	view_card: 'Karten',
 	browse_feeds: 'Feeds entdecken',
 	browse_feeds_search: 'Feeds suchen...',
@@ -733,10 +733,10 @@ const calendar: CalendarRecords = {
 	import_create_calendar: 'Erstelle Kalender %s..',
 	import_calendars: 'Kalender importieren',
 	import_calendars_running: 'Importiere Kalender..',
-	import_events: 'Importiere %dTermine für Kalender %s..',
+	import_events: 'Importiere %d Termine für Kalender %s..',
 	recurring_event: 'Wiederkehrender Termin',
-	recurring_edit_question: 'Möchten Sie nur diesen Termin oder alle Termine bearbeiten?',
-	recurring_delete_question: 'Möchten Sie nur diesen Termin oder alle Termine löschen?',
+	recurring_edit_question: 'Möchtest du nur diesen Termin oder alle Termine bearbeiten?',
+	recurring_delete_question: 'Möchtest du nur diesen Termin oder alle Termine löschen?',
 	this_occurrence: 'Nur diesen Termin',
 	all_occurrences: 'Alle Termine',
 	today: 'Heute',
@@ -766,7 +766,7 @@ const contacts: ContactRecords = {
 	import_create_address_book: 'Erstelle Adressbuch %s..',
 	import_address_books: 'Importiere Adressbücher..',
 	import_contacts: 'Kontakte importieren',
-	import_contacts_running: 'Importiere %dKontakte für das Adressbuch %s..'
+	import_contacts_running: 'Importiere %d Kontakte für das Adressbuch %s..'
 };
 
 const dav: DavRecords = {
@@ -791,7 +791,7 @@ const notifications: NotificationRecords = {
 	dev_request_comment_title: 'Neuer Kommentar zu einer Dev-Anfrage',
 	dev_request_comment_message: '%1 hat kommentiert: %2.',
 	daily_check_in_reminder_title: 'Tägliche Check-in-Erinnerung',
-	daily_check_in_reminder_message: 'Hast du heute dein tägliches Check-in noch nicht erledigt?',
+	daily_check_in_reminder_message: 'Vergiss dein tägliches Check-in nicht!',
 	daily_day_reminder_title: 'Dein bevorstehender Tag',
 	daily_day_reminder_message: 'Du hast %1 Aufgaben und %2 Termine für heute.',
 	daily_day_reminder: 'Tägliche Erinnerung an deinen bevorstehenden Tag erhalten?',
@@ -1019,7 +1019,7 @@ const welcome_tour: WelcomeTourRecords = {
 	widgets_description:
 		'Dein Dashboard zeigt Widgets, die dir einen schnellen Überblick geben. Wähle aus, welche du sehen möchtest. Du kannst sie jederzeit neu anordnen oder ändern, indem du auf den Bearbeiten-Button klickst.',
 	localization_title: 'Lokalisierung',
-	localization_subtitle: 'Mach es zu deinem',
+	localization_subtitle: 'Mach es zu deins',
 	localization_description:
 		'Stelle deine bevorzugte Sprache, Zeitzone und Datums-/Zeitformate ein.',
 	ready_title: 'Alles bereit!',
@@ -1108,7 +1108,7 @@ const timeTracking: TimeTrackingRecords = {
 
 const cookie_consent: CookieConsentRecords = {
 	title: 'Hinweis zur Datenspeicherung',
-	body: 'Wir verwenden den lokalen Speicher des Browsers, um Sie sicher angemeldet zu halten. Es werden keine Tracking- oder Analysedaten erfasst.',
+	body: 'Wir verwenden den lokalen Speicher des Browsers, um dich sicher angemeldet zu halten. Es werden keine Tracking- oder Analysedaten erfasst.',
 	accept: 'Verstanden',
 	privacy_policy: 'Datenschutzerklärung'
 };
