@@ -1,4 +1,4 @@
-	<script lang="ts">
+<script lang="ts">
 	import { fade } from 'svelte/transition';
 	import type { TodoNavigationSection } from '$lib/types/todo';
 	import { Translation } from '$lib/state/Translation.svelte';
@@ -25,10 +25,10 @@
 >
 	<a href="?" onclick={() => todos.useFilters([])}>
 		<div
-			class="cursor-pointer rounded-lg p-2 hover:bg-c-neutral-1 dark:hover:bg-s-dark-3 {todos
-				.activeFilters.length === 0
-				? 'bg-c-neutral-1 dark:bg-s-dark-3'
-				: ''}"
+			class="
+			    cursor-pointer rounded-lg p-2 hover:bg-c-neutral-1 dark:hover:bg-s-dark-3
+				{todos.activeFilters.length === 0 ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}
+			"
 		>
 			{ts.get.todos.all_todos}
 		</div>
@@ -38,13 +38,16 @@
 			{ts.get.todos.workspaces}
 		</div>
 		{#each todos.workspaces as workspace (workspace.id)}
-			<a href="?filterType=workspace&filterValue={workspace.id}" onclick={() => todos.useFilters([{ type: 'workspace', value: workspace }])} in:fade>
+			<a
+				href="?filterType=workspace&filterValue={workspace.id}"
+				onclick={() => todos.useFilters([{ type: 'workspace', value: workspace }])}
+				in:fade
+			>
 				<div
-					class="flex cursor-pointer flex-row items-center rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3 {todos.isFilterActive(
-						{ type: 'workspace', value: workspace }
-					)
-						? 'bg-c-neutral-1 dark:bg-s-dark-3'
-						: ''}"
+					class="
+					    flex cursor-pointer flex-row items-center rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3
+						{todos.isFilterActive({ type: 'workspace', value: workspace }) ? 'bg-c-neutral-1 dark:bg-s-dark-3': ''}
+					"
 				>
 					{workspace.title}
 				</div>
@@ -66,13 +69,17 @@
 	</a>
 	{#if categoriesExpanded}
 		{#each todos.filteredCategories as category (category.id)}
-			<a href="?filterType=category&filterValue={category.id}" onclick={() => todos.useFilters([{ type: 'category', value: category.id }])} in:fade>
+			<a
+				href="?filterType=category&filterValue={category.id}"
+				onclick={() => todos.useFilters([{ type: 'category', value: category.id }])}
+				in:fade
+			>
 				<div
-					class="flex cursor-pointer flex-row items-center rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3 {todos.isFilterActive(
-						{ type: 'category', value: category.id }
-					)
-						? 'bg-c-neutral-1 dark:bg-s-dark-3'
-						: ''}"
+					class="
+					    flex cursor-pointer flex-row items-center rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3
+						{todos.isFilterActive({ type: 'category', value: category.id }) ? 'bg-c-neutral-1 dark:bg-s-dark-3': ''}
+					"
+					class:pl-4={category.title.includes('/')}
 				>
 					{#if category.title.includes('/')}
 						<IconSub /> /{category.title.split('/').pop()}
@@ -88,13 +95,17 @@
 			{section.header}
 		</div>
 		{#each section.items as item (item.filter)}
-			<a href="?filterType={item.filter?.type}&filterValue={item.filter?.value}" onclick={() => { if (item.filter) todos.useFilters([item.filter]); }}>
+			<a
+				href="?filterType={item.filter?.type}&filterValue={item.filter?.value}"
+				onclick={() => {
+					if (item.filter) todos.useFilters([item.filter]);
+				}}
+			>
 				<div
-					class="cursor-pointer rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3 {item.filter && todos.isFilterActive(
-						item.filter
-					)
-						? 'bg-c-neutral-1 dark:bg-s-dark-3'
-						: ''}"
+					class="
+					    cursor-pointer rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3
+						{item.filter && todos.isFilterActive(item.filter) ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}
+					"
 				>
 					{item.label}
 				</div>
@@ -116,13 +127,16 @@
 	</a>
 	{#if tagsExpanded}
 		{#each tags.tags as tag (tag.id)}
-			<a href="?filterType=tag&filterValue={tag.id}" onclick={() => todos.useFilters([{ type: 'tag', value: tag.id }])} in:fade>
+			<a
+				href="?filterType=tag&filterValue={tag.id}"
+				onclick={() => todos.useFilters([{ type: 'tag', value: tag.id }])}
+				in:fade
+			>
 				<div
-					class="cursor-pointer rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3 {todos.isFilterActive(
-						{ type: 'tag', value: tag.id }
-					)
-						? 'bg-c-neutral-1 dark:bg-s-dark-3'
-						: ''}"
+					class="
+					    cursor-pointer rounded-lg px-2 py-1 text-sm hover:bg-c-neutral 2xl:text-base dark:hover:bg-s-dark-3
+						{todos.isFilterActive({ type: 'tag', value: tag.id }) ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}
+					"
 				>
 					#{tag.name}
 				</div>

@@ -144,7 +144,9 @@
 								>
 									<span class="text-base">
 										{#if category.title.includes('/')}
-											<IconSub /> /{category.title.split('/').pop()}
+											<div class="w-full flex items-center pl-2">
+											    <IconSub /> /{category.title.split('/').pop()}
+											</div>
 										{:else}
 											/{category.title}
 										{/if}
