@@ -12,11 +12,14 @@
 	import type { CreatePlantRequest, Plant, UpdatePlantRequest } from '$lib/types/library_plant';
 	import CreateModal from '$lib/components/libraries/shared/CreateModal.svelte';
 	import { getPlantLibrary } from '$lib/state/PlantLibrary.svelte';
+	import { resizeImage } from '$lib/services/ImageService';
 
 	const ts = getTranslation();
 	const library = getPlantLibrary();
 	const auth = getAuth();
 	const loadingIndicator = getLoadingIndicator();
+
+	const canSubmit = $derived(submittable());
 
 	let activeEntry = $state<Plant | null>(library.activeEntry);
 
@@ -54,10 +57,12 @@
 		if (coverValue !== '') {
 			coverFile = null;
 			coverRemoved = false;
+
 			if (coverPreviewUrl) {
 				URL.revokeObjectURL(coverPreviewUrl);
 				coverPreviewUrl = null;
 			}
+
 			if (fileInput) fileInput.value = '';
 		}
 	}
@@ -66,10 +71,12 @@
 		coverValue = '';
 		coverFile = null;
 		coverRemoved = true;
+
 		if (coverPreviewUrl) {
 			URL.revokeObjectURL(coverPreviewUrl);
 			coverPreviewUrl = null;
 		}
+
 		if (fileInput) fileInput.value = '';
 	}
 
@@ -87,41 +94,8 @@
 		coverPreviewUrl = URL.createObjectURL(resized);
 	}
 
-	const canSubmit = $derived(
-		nameValue.trim() !== '' ||
-		coverFile !== null ||
-		coverValue !== '' ||
-		(activeEntry?.cover != null && !coverRemoved)
-	);
-
-	async function resizeImage(file: File, maxDimension = 800): Promise<File> {
-		return new Promise((resolve) => {
-			const img = new Image();
-			const url = URL.createObjectURL(file);
-			img.onload = () => {
-				URL.revokeObjectURL(url);
-				const canvas = document.createElement('canvas');
-				let { width, height } = img;
-				if (width > maxDimension || height > maxDimension) {
-					if (width > height) {
-						height = Math.round((height * maxDimension) / width);
-						width = maxDimension;
-					} else {
-						width = Math.round((width * maxDimension) / height);
-						height = maxDimension;
-					}
-				}
-				canvas.width = width;
-				canvas.height = height;
-				canvas.getContext('2d')!.drawImage(img, 0, 0, width, height);
-				canvas.toBlob(
-					(blob) => resolve(new File([blob!], file.name, { type: file.type })),
-					file.type,
-					0.85
-				);
-			};
-			img.src = url;
-		});
+	function submittable(): boolean {
+		return (nameValue.trim() !== '' || coverFile !== null || coverValue !== '' || (activeEntry?.cover != null && !coverRemoved));
 	}
 
 	async function onsubmit(): Promise<void> {
