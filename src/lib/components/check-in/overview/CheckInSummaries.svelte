@@ -1,20 +1,16 @@
 <script lang="ts">
 	import type { CheckIn, CheckInType } from '$lib/types/check_in';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte.js';
-	import { getUrlFormat, getISODateInfo, formatDateWithoutYear } from '$lib/helpers/DateHelper';
+	import { getUrlFormat, getISODateInfo } from '$lib/helpers/DateHelper';
 	import { buildDaySummary, buildPeriodSummary, getDayLabel } from '$lib/helpers/CheckInSummaryHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import Card from '$lib/components/ui/Card.svelte';
+	import { SvelteDate } from 'svelte/reactivity';
 
 	let { dates, trackers } = $props<{
 		dates: Date[];
 		trackers: CheckInType[];
 	}>();
-
-	const checkInData = getCheckInData();
-	const ts = getTranslation();
-	const auth = getAuth();
 
 	interface SummaryRow {
 		key: string;
@@ -23,36 +19,44 @@
 		text: string;
 	}
 
+	const checkInData = getCheckInData();
+	const ts = getTranslation();
+	const auth = getAuth();
+
+	const daySummaries = $derived(buildDaySummaryRows());
+	const periodSummaries = $derived(buildWeekAndMonthPeriodSummaryRows());
+	const hasAnything = $derived(daySummaries.length > 0 || periodSummaries.length > 0);
+
 	function getCheckInsForDates(ds: Date[]): CheckIn[] {
 		return ds
-			.map((d) => checkInData.getDayData(getUrlFormat(new Date(d))))
+			.map((d) => checkInData.getDayData(getUrlFormat(new SvelteDate(d))))
 			.filter((c): c is CheckIn => c !== null);
 	}
 
-	const daySummaries = $derived((() => {
+	function buildDaySummaryRows(): SummaryRow[] {
 		const p = ts.get.checkInSummary;
 		return dates
-			.map((date) => {
-				const key = getUrlFormat(new Date(date));
+			.map((date: Date) => {
+				const key = getUrlFormat(new SvelteDate(date));
 				const checkIn = checkInData.getDayData(key);
 				if (!checkIn) return null;
 				const text = buildDaySummary(checkIn, trackers, p);
 				if (!text) return null;
 				const dayLabel = getDayLabel(date, p);
-				const shortDate = formatDateWithoutYear(date, auth.user?.profile?.date_format ?? null);
+				const shortDate = auth.getDateWithoutYearInUserPreferredFormat(date);
 				return { key, label: dayLabel, date: shortDate, text };
 			})
-			.filter((s): s is SummaryRow => s !== null)
+			.filter((s: SummaryRow | null): s is SummaryRow => s !== null)
 			.slice(0, 7);
-	})());
+	}
 
-	const periodSummaries = $derived((() => {
+	function buildWeekAndMonthPeriodSummaryRows(): SummaryRow[] {
 		const p = ts.get.checkInSummary;
-		const today = new Date();
+		const today = new SvelteDate();
 		const rows: SummaryRow[] = [];
 
 		const thisWeek = getISODateInfo(today);
-		const lastWeekDate = new Date(today);
+		const lastWeekDate = new SvelteDate(today);
 		lastWeekDate.setDate(today.getDate() - 7);
 		const lastWeek = getISODateInfo(lastWeekDate);
 
@@ -60,7 +64,7 @@
 			{ info: thisWeek, label: p.period_this_week },
 			{ info: lastWeek, label: p.period_last_week }
 		]) {
-			const weekDates = dates.filter((d) => {
+			const weekDates = dates.filter((d: Date) => {
 				const i = getISODateInfo(d);
 				return i.week === info.week && i.year === info.year;
 			});
@@ -72,14 +76,14 @@
 
 		const thisMonth = today.getMonth();
 		const thisYear = today.getFullYear();
-		const lastMonthDate = new Date(thisYear, thisMonth - 1, 1);
+		const lastMonthDate = new SvelteDate(thisYear, thisMonth - 1, 1);
 
 		for (const { month, year, label } of [
 			{ month: thisMonth, year: thisYear, label: p.period_this_month },
 			{ month: lastMonthDate.getMonth(), year: lastMonthDate.getFullYear(), label: p.period_last_month }
 		]) {
 			const monthDates = dates.filter(
-				(d) => d.getMonth() === month && d.getFullYear() === year
+				(d: Date) => d.getMonth() === month && d.getFullYear() === year
 			);
 			const checkIns = getCheckInsForDates(monthDates);
 			if (checkIns.length < 2) continue;
@@ -88,13 +92,11 @@
 		}
 
 		return rows;
-	})());
-
-	const hasAnything = $derived(daySummaries.length > 0 || periodSummaries.length > 0);
+	}
 </script>
 
 {#if hasAnything}
-	<div class="max-md:px-4">
+	<div class="max-2xl:px-4 2xl:pl-6 2xl:border-l-2 max-2xl:border-b-2 max-2xl:pb-6 border-c-neutral-1 dark:border-s-dark">
 		<div class="flex flex-col">
 			{#if daySummaries.length > 0}
 				<div class="flex flex-col">

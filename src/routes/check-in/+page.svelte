@@ -13,11 +13,11 @@
 </script>
 
 {#if viewPoint.isDesktop}
-	<div class="hidden 2xl:flex 2xl:flex-row 2xl:gap-6 2xl:items-start">
-		<div class="w-3/4">
+	<div class="hidden 2xl:flex 2xl:flex-row 2xl:items-start gap-0">
+		<div class="w-3/4 2xl:w-[70%]">
 			<OverviewDesktop {dates} trackers={checkInData.activeTrackers} />
 		</div>
-		<div class="w-1/4">
+		<div class="w-1/4 2xl:w-[30%]">
 			<CheckInSummaries {dates} trackers={checkInData.activeTrackers} />
 		</div>
 	</div>
