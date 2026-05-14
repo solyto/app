@@ -3,7 +3,7 @@
 	import logo from '$lib/assets/logo_cut.png';
 
 	import { page } from '$app/state';
-	import { urls } from '$lib/config/urls';
+	import { urls, legalUrls, hasLegalUrls } from '$lib/config/urls';
 	import { slide } from 'svelte/transition';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -249,49 +249,51 @@
 					</NavEntry>
 				</div>
 			{/if}
-			<div class="relative w-full">
-				<button
-					class="flex h-14 w-full cursor-pointer items-center justify-center rounded-sm transition-all hover:bg-c-nav-hover md:max-h-[5vh]"
-					title={ts.get.layout.legal_notice}
-					onclick={(e) => {
-						if (legalClosedByOutside) {
-							legalClosedByOutside = false;
-							return;
-						}
-						legalX = e.clientX + 20;
-						legalY = window.innerHeight - e.clientY;
-						legalOpen = !legalOpen;
-					}}
-				>
-					<IconScale />
-				</button>
-				{#if legalOpen}
-					<div
-						class="fixed z-[9999] flex min-w-48 flex-col gap-2 rounded-lg bg-c-bg-elevated px-4 py-3 shadow-sm"
-						style="bottom: {legalY}px; left: {legalX}px;"
-						use:clickOutside={() => {
-							legalOpen = false;
-							legalClosedByOutside = true;
+			{#if hasLegalUrls}
+				<div class="relative w-full">
+					<button
+						class="flex h-14 w-full cursor-pointer items-center justify-center rounded-sm transition-all hover:bg-c-nav-hover md:max-h-[5vh]"
+						title={ts.get.layout.legal_notice}
+						onclick={(e) => {
+							if (legalClosedByOutside) {
+								legalClosedByOutside = false;
+								return;
+							}
+							legalX = e.clientX + 20;
+							legalY = window.innerHeight - e.clientY;
+							legalOpen = !legalOpen;
 						}}
 					>
-						<a
-							href="{urls.landingPage}/#legal-notice"
-							target="_blank"
-							class="text-sm hover:text-c-primary">{ts.get.layout.legal_notice}</a
+						<IconScale />
+					</button>
+					{#if legalOpen}
+						<div
+							class="fixed z-[9999] flex min-w-48 flex-col gap-2 rounded-lg bg-c-bg-elevated px-4 py-3 shadow-sm"
+							style="bottom: {legalY}px; left: {legalX}px;"
+							use:clickOutside={() => {
+								legalOpen = false;
+								legalClosedByOutside = true;
+							}}
 						>
-						<a
-							href="{urls.landingPage}/#privacy"
-							target="_blank"
-							class="text-sm hover:text-c-primary">{ts.get.layout.privacy_policy}</a
-						>
-						<a
-							href="{urls.landingPage}/#terms"
-							target="_blank"
-							class="text-sm hover:text-c-primary">{ts.get.layout.terms_of_service}</a
-						>
-					</div>
-				{/if}
-			</div>
+							{#if legalUrls.legalNotice}
+								<a href={legalUrls.legalNotice} target="_blank" class="text-sm hover:text-c-primary"
+									>{ts.get.layout.legal_notice}</a
+								>
+							{/if}
+							{#if legalUrls.privacy}
+								<a href={legalUrls.privacy} target="_blank" class="text-sm hover:text-c-primary"
+									>{ts.get.layout.privacy_policy}</a
+								>
+							{/if}
+							{#if legalUrls.terms}
+								<a href={legalUrls.terms} target="_blank" class="text-sm hover:text-c-primary"
+									>{ts.get.layout.terms_of_service}</a
+								>
+							{/if}
+						</div>
+					{/if}
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>

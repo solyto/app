@@ -1,3 +1,13 @@
+import { env } from '$env/dynamic/public';
+
+export const legalUrls = {
+	legalNotice: env.PUBLIC_LEGAL_NOTICE_URL || null,
+	privacy: env.PUBLIC_PRIVACY_URL || null,
+	terms: env.PUBLIC_TERMS_URL || null
+};
+
+export const hasLegalUrls = !!(legalUrls.legalNotice || legalUrls.privacy || legalUrls.terms);
+
 export const urls = {
 	home: '/',
 	settings: '/settings',

@@ -3,7 +3,7 @@
 	import IconEllipsisVertical from '@lucide/svelte/icons/ellipsis-vertical';
 	import NavEntry from '$lib/components/ui/NavEntry.svelte';
 	import { page } from '$app/state';
-	import { urls } from '$lib/config/urls';
+	import { urls, legalUrls, hasLegalUrls } from '$lib/config/urls';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onMount } from 'svelte';
 	import NavEntryIcon from '$lib/components/ui/NavEntryIcon.svelte';
@@ -251,52 +251,60 @@
 							{/if}
 						</div>
 					</NavEntry>
-					<div class="relative w-full">
-						<button
-							class="flex h-12 w-full cursor-pointer items-center justify-center rounded-sm transition-all"
-							title={ts.get.layout.legal_notice}
-							onclick={(e) => {
-								if (legalClosedByOutside) {
-									legalClosedByOutside = false;
-									return;
-								}
-								legalX = window.innerWidth - e.clientX;
-								legalY = window.innerHeight - e.clientY + 20;
-								legalOpen = !legalOpen;
-							}}
-						>
-							<IconScale />
-						</button>
-						{#if legalOpen}
-							<div
-								class="fixed z-[9999] flex min-w-48 flex-col gap-2 rounded-lg bg-c-bg-elevated px-4 py-3 shadow-lg"
-								style="bottom: {legalY}px; right: {legalX}px;"
-								use:clickOutside={() => {
-									legalOpen = false;
-									legalClosedByOutside = true;
+					{#if hasLegalUrls}
+						<div class="relative w-full">
+							<button
+								class="flex h-12 w-full cursor-pointer items-center justify-center rounded-sm transition-all"
+								title={ts.get.layout.legal_notice}
+								onclick={(e) => {
+									if (legalClosedByOutside) {
+										legalClosedByOutside = false;
+										return;
+									}
+									legalX = window.innerWidth - e.clientX;
+									legalY = window.innerHeight - e.clientY + 20;
+									legalOpen = !legalOpen;
 								}}
 							>
-								<a
-									href="{urls.landingPage}/#legal-notice"
-									target="_blank"
-									class="text-sm hover:text-c-primary"
-									>{ts.get.layout.legal_notice}</a
+								<IconScale />
+							</button>
+							{#if legalOpen}
+								<div
+									class="fixed z-[9999] flex min-w-48 flex-col gap-2 rounded-lg bg-c-bg-elevated px-4 py-3 shadow-lg"
+									style="bottom: {legalY}px; right: {legalX}px;"
+									use:clickOutside={() => {
+										legalOpen = false;
+										legalClosedByOutside = true;
+									}}
 								>
-								<a
-									href="{urls.landingPage}/#privacy"
-									target="_blank"
-									class="text-sm hover:text-c-primary"
-									>{ts.get.layout.privacy_policy}</a
-								>
-								<a
-									href="{urls.landingPage}/#terms"
-									target="_blank"
-									class="text-sm hover:text-c-primary"
-									>{ts.get.layout.terms_of_service}</a
-								>
-							</div>
-						{/if}
-					</div>
+									{#if legalUrls.legalNotice}
+										<a
+											href={legalUrls.legalNotice}
+											target="_blank"
+											class="text-sm hover:text-c-primary"
+											>{ts.get.layout.legal_notice}</a
+										>
+									{/if}
+									{#if legalUrls.privacy}
+										<a
+											href={legalUrls.privacy}
+											target="_blank"
+											class="text-sm hover:text-c-primary"
+											>{ts.get.layout.privacy_policy}</a
+										>
+									{/if}
+									{#if legalUrls.terms}
+										<a
+											href={legalUrls.terms}
+											target="_blank"
+											class="text-sm hover:text-c-primary"
+											>{ts.get.layout.terms_of_service}</a
+										>
+									{/if}
+								</div>
+							{/if}
+						</div>
+					{/if}
 				</div>
 			{/if}
 		</div>
