@@ -9,7 +9,6 @@
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte.js';
 
 	import { fade } from 'svelte/transition';
-	import AuthNavbar from '$lib/components/auth/AuthNavbar.svelte';
 	import Button from '$lib/components/ui/buttons/Button.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
@@ -60,7 +59,6 @@
 	}
 </script>
 
-<!--<AuthNavbar />-->
 <div class="flex w-full max-w-xs flex-col items-center gap-12" class:animate-shake={error}>
 	<div style="width: 56px; height: 71px;">
 		<StaggeredLogo path="../" />

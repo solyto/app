@@ -1,11 +1,6 @@
 <script lang="ts">
 	import { getTranslation } from '$lib/state/Translation.svelte.js';
 	import { getNotes } from '$lib/state/Notes.svelte.js';
-	import File from '$lib/components/ui/File.svelte';
-	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
-	import { daysSince } from '$lib/helpers/DateHelper';
-	import IconFolder from '@lucide/svelte/icons/folder';
 	import OverviewEntries from '$lib/components/notes/OverviewEntries.svelte';
 	import Typewriter from 'svelte-typewriter';
 	import { onMount } from 'svelte';
