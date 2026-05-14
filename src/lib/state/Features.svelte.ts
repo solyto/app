@@ -2,6 +2,7 @@ import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import type { FeatureType } from '$lib/types/feature';
+import { env } from '$env/dynamic/public';
 
 export class Features {
 	loaded = $state<boolean>(false);
@@ -44,6 +45,10 @@ export class Features {
 			}
 
 			this.features = loadedFeatures;
+		}
+
+		if (env.PUBLIC_DISABLE_DEV_REQUESTS === 'true') {
+			this.features.dev_requests = false;
 		}
 	}
 
