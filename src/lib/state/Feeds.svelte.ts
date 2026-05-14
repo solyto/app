@@ -110,8 +110,8 @@ export class Feeds {
 	}
 
 	loadInLibrary(): void {
-		const inLibrary = this.localStorage.get(Feeds.LS_IN_LIBRARY_KEY)?.split(',');
-		if (inLibrary) this.inLibrary = inLibrary;
+		const stored = this.localStorage.get(Feeds.LS_IN_LIBRARY_KEY);
+		this.inLibrary = stored ? stored.split(',') : [];
 	}
 
 	isInLibrary(feedId: string): boolean {

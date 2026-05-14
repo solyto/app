@@ -64,10 +64,7 @@ export class NotesSvelte {
 
 	loadCollapsedCategories(): void {
 		const stored = this.localStorage.getJson(NotesSvelte.LS_COLLAPSED_CATEGORIES_KEY);
-
-		if (stored) {
-			this.collapsedCategories = stored as number[];
-		}
+		this.collapsedCategories = (stored as number[] | null) ?? [];
 	}
 
 	saveCollapsedCategories(): void {

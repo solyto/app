@@ -213,10 +213,7 @@ export class Contacts {
 
 	loadHidden(): void {
 		const stored = this.localStorage.getJson(Contacts.LS_HIDDEN_KEY);
-
-		if (stored) {
-			this.hiddenAddressBooks = stored as number[];
-		}
+		this.hiddenAddressBooks = (stored as number[] | null) ?? [];
 	}
 
 	saveHidden(): void {

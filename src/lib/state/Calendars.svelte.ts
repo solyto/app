@@ -181,10 +181,7 @@ export class Calendars {
 
 	loadView(): void {
 		const stored = this.localStorage.get(Calendars.LS_VIEW_KEY);
-
-		if (stored) {
-			this.view = stored as 'month' | 'week' | 'day' | 'list';
-		}
+		this.view = (stored as 'month' | 'week' | 'day' | 'list' | null) ?? 'month';
 	}
 
 	saveView(): void {

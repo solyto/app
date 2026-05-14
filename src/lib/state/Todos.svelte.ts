@@ -218,14 +218,10 @@ export class Todos {
 	}
 
 	loadHideIt(): void {
-		const hideIt = this.localStorage.getBool(Todos.LS_HIDE_IT_KEY);
-
-		if (hideIt) {
-			this.hideItActive = true;
+		this.hideItActive = this.localStorage.getBool(Todos.LS_HIDE_IT_KEY) ?? false;
+		if (this.hideItActive) {
 			this.filterCategories();
 			this.useFilters(this.activeFilters);
-		} else {
-			this.hideItActive = false;
 		}
 	}
 

@@ -8,8 +8,7 @@ export class CookieConsent {
 	localStorage = new LocalStorageService();
 
 	constructor() {
-		const stored = this.localStorage.getBool(CookieConsent.LS_ACKNOWLEDGED_KEY);
-		if (stored) this.acknowledged = stored;
+		this.acknowledged = this.localStorage.getBool(CookieConsent.LS_ACKNOWLEDGED_KEY) ?? true;
 	}
 
 	acknowledge(): void {

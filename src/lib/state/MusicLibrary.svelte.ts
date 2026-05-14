@@ -63,10 +63,7 @@ export class MusicLibrary {
 		this.apiService = new ApiService(this.auth.getToken());
 
 		const saved = this.localStorage.get(MusicLibrary.LS_VIEW_KEY);
-
-		if (saved) {
-			this.view = saved as 'list' | 'cards' | 'shelf' | 'spine';
-		}
+		this.view = (saved as 'list' | 'cards' | 'shelf' | 'spine' | null) ?? 'cards';
 	}
 
 	async load(): Promise<void> {
