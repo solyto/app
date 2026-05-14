@@ -121,7 +121,7 @@ export class NotesSvelte {
 	}
 
 	getLastUpdatedNotes(): Note[] {
-		return this.notes
+		return [...this.notes]
 			.sort(
 				(a, b) =>
 					new SvelteDate(b.updated_at).getTime() - new SvelteDate(a.updated_at).getTime()
@@ -130,7 +130,7 @@ export class NotesSvelte {
 	}
 
 	getNewestNotes(): Note[] {
-		return this.notes
+		return [...this.notes]
 			.sort(
 				(a, b) =>
 					new SvelteDate(b.created_at).getTime() - new SvelteDate(a.created_at).getTime()
@@ -139,7 +139,7 @@ export class NotesSvelte {
 	}
 
 	getFavorites(): Note[] {
-		return this.notes.filter((n) => n.is_favorite);
+		return [...this.notes].filter((n) => n.is_favorite);
 	}
 
 	selectNote(noteId: string): void {

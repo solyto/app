@@ -19,9 +19,6 @@ import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
 import { browser } from '$app/environment';
-import { page } from '$app/state';
-import type { TodoFilterType } from '$lib/types/todo';
-import type { Book } from '$lib/types/library_book';
 
 export class MusicLibrary {
 	config: LibraryConfig = {
@@ -61,7 +58,7 @@ export class MusicLibrary {
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
 		if (browser) {
-			const saved = localStorage.getItem('solyto_music_view') as 'list' | 'cards' | 'shelf' | 'spine' | null;
+			const saved = localStorage.getItem('music_view') as 'list' | 'cards' | 'shelf' | 'spine' | null;
 			if (saved) this.view = saved;
 		}
 	}

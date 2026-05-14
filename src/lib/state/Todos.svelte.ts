@@ -227,7 +227,7 @@ export class Todos {
 		}
 	}
 
-	async quickCreate(input: string, tags: Tags): Promise<boolean> {
+	async quickCreate(input: string, tags: Tags): Promise<{ ok: boolean; recurrenceIgnored: boolean }> {
 		const tagIds: number[] = [];
 		let category: number | null = null;
 		let dueDate = '';

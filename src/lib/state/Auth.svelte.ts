@@ -7,9 +7,7 @@ import type {
 	VerifyRequest
 } from '$lib/types/auth';
 import { setContext, getContext } from 'svelte';
-import { page } from '$app/state';
 import { browser } from '$app/environment';
-import { urls } from '$lib/config/urls';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import ApiService from '$lib/services/ApiService';
 import { SvelteDate } from 'svelte/reactivity';

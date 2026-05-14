@@ -23,7 +23,7 @@
 		currentlySelected={library.view}
 		onChange={(type) => {
 			library.view = type as typeof library.view;
-			localStorage.setItem(`solyto_${library.config.type}_view`, type);
+			localStorage.setItem(`${library.config.type}_view`, type);
 		}}
 	/>
 </div>

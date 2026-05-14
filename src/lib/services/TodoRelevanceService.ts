@@ -11,7 +11,9 @@ const maxScore = priorityBaseScore.high + effortModifier.low + overdueModifier +
 
 export default class TodoRelevanceService {
 	getScoredTodos(todos: Todo[]): Todo[] {
-		for (const [i, todo] of todos.entries()) {
+		const scored_todos: Todo[] = [...todos];
+
+		for (const [i, todo] of scored_todos.entries()) {
 			let score = priorityBaseScore[todo.priority];
 
 			if (todo.effort !== null) {
@@ -36,9 +38,9 @@ export default class TodoRelevanceService {
 				score = score + oldModifier;
 			}
 
-			todos[i].relevance = score / maxScore;
+			scored_todos[i].relevance = score / maxScore;
 		}
 
-		return todos;
+		return scored_todos;
 	}
 }

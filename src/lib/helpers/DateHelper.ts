@@ -141,14 +141,26 @@ export function getUrlFormat(date: Date): string {
 	return `${year}-${month}-${day}`;
 }
 
+export function getDateMinusDays(date: Date, days: number): Date {
+	const dateMinusDays = new Date(date);
+	dateMinusDays.setDate(dateMinusDays.getDate() - days);
+
+	return dateMinusDays;
+}
+
+export function getDatePlusDays(date: Date, days: number): Date {
+	const datePlusDays = new Date(date);
+	datePlusDays.setDate(datePlusDays.getDate() + days);
+
+	return datePlusDays;
+}
+
 export function getNextDay(date: Date): Date {
-	date.setDate(date.getDate() + 1);
-	return date;
+	return getDatePlusDays(date, 1);
 }
 
 export function getPrevDay(date: Date): Date {
-	date.setDate(date.getDate() - 1);
-	return date;
+	return getDateMinusDays(date, 1);
 }
 
 export function getLast30Days(): Date[] {
@@ -213,12 +225,13 @@ export function isDateYesterday(date: Date): boolean {
 export function isDateThisWeek(date: Date): boolean {
 	const today = new Date();
 	const dayOfWeek = today.getDay();
-	const dayOfWeekDate = new Date(today.setDate(today.getDate() - dayOfWeek));
-	return (
-		date.getDate() === dayOfWeekDate.getDate() &&
-		date.getMonth() === dayOfWeekDate.getMonth() &&
-		date.getFullYear() === dayOfWeekDate.getFullYear()
-	);
+	const startOfWeek = new Date(today);
+	startOfWeek.setDate(today.getDate() - dayOfWeek);
+	startOfWeek.setHours(0, 0, 0, 0);
+	const endOfWeek = new Date(startOfWeek);
+	endOfWeek.setDate(startOfWeek.getDate() + 6);
+	endOfWeek.setHours(23, 59, 59, 999);
+	return date >= startOfWeek && date <= endOfWeek;
 }
 
 export function isDateLast7Days(date: Date): boolean {
@@ -240,16 +253,6 @@ export function isDateInTheFuture(date: Date): boolean {
 
 export function isDateAfter(date: Date, compareDate: Date): boolean {
 	return date > compareDate;
-}
-
-export function getDateMinusDays(date: Date, days: number): Date {
-	date.setDate(date.getDate() - days);
-	return date;
-}
-
-export function getDatePlusDays(date: Date, days: number): Date {
-	date.setDate(date.getDate() + days);
-	return date;
 }
 
 export function daysSince(date: string | Date): number {

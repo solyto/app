@@ -50,12 +50,6 @@ export class Weather {
 		}
 		return success;
 	}
-
-	convertToUserPreferredUnit(temperature: number): number {
-		if (!this.preferredUnit || this.preferredUnit === 'c') return temperature;
-
-		return Math.round((temperature * 9) / 5 + 32);
-	}
 }
 
 const WEATHER_KEY = Symbol('SOLYTO_WEATHER');

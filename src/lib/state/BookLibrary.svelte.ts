@@ -59,7 +59,7 @@ export class BookLibrary {
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
 		if (browser) {
-			const saved = localStorage.getItem('solyto_books_view') as 'list' | 'cards' | 'shelf' | 'spine' | null;
+			const saved = localStorage.getItem('books_view') as 'list' | 'cards' | 'shelf' | 'spine' | null;
 			if (saved) this.view = saved;
 		}
 	}
