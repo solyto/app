@@ -3,6 +3,7 @@
 	import type { Quote } from '$lib/types/library_quote';
 	import type { MusicRelease } from '$lib/types/library_music';
 	import type { BookRelease } from '$lib/types/library_book';
+	import type { MovieRelease } from '$lib/types/library_movie';
 	import type { Note } from '$lib/types/note';
 	import { onMount } from 'svelte';
 	import { blur } from 'svelte/transition';
@@ -12,6 +13,7 @@
 	import { apiRoutes } from '$lib/config/apiRoutes';
 	import MusicReleasesWidget from '$lib/components/dashboard/widgets/MusicReleasesWidget.svelte';
 	import BookReleasesWidget from '$lib/components/dashboard/widgets/BookReleasesWidget.svelte';
+	import MovieReleasesWidget from '$lib/components/dashboard/widgets/MovieReleasesWidget.svelte';
 	import NewestNotesWidget from '$lib/components/dashboard/widgets/NewestNotesWidget.svelte';
 	import NewestLinksWidget from '$lib/components/dashboard/widgets/NewestLinksWidget.svelte';
 	import QuoteWidget from '$lib/components/dashboard/widgets/QuoteWidget.svelte';
@@ -23,14 +25,16 @@
 	let quote = $state<Quote | null>(null);
 	let musicReleases = $state<MusicRelease[]>([]);
 	let bookReleases = $state<BookRelease[]>([]);
+	let movieReleases = $state<MovieRelease[]>([]);
 	let newestNotes = $state<Note[]>([]);
 	let newestLinks = $state<Link[]>([]);
 	let loadedCount = $state(0);
 
 	let isEmpty = $derived(
-		loadedCount >= 5 &&
+		loadedCount >= 6 &&
 			musicReleases.length === 0 &&
 			bookReleases.length === 0 &&
+			movieReleases.length === 0 &&
 			newestNotes.length === 0 &&
 			newestLinks.length === 0 &&
 			!quote
@@ -61,6 +65,10 @@
 			}
 			loadedCount++;
 		});
+		apiService.list(apiRoutes.libraries.movies.releases).then((res) => {
+			if (res) movieReleases = (res.data as MovieRelease[]).slice(0, 5);
+			loadedCount++;
+		});
 		apiService.list(apiRoutes.libraries.links.newest).then((res) => {
 			if (res) newestLinks = res.data as Link[];
 			loadedCount++;
@@ -75,6 +83,10 @@
 
 	{#if bookReleases.length > 0}
 		<BookReleasesWidget {bookReleases} {ts} />
+	{/if}
+
+	{#if movieReleases.length > 0}
+		<MovieReleasesWidget {movieReleases} {ts} />
 	{/if}
 
 	{#if newestNotes.length > 0}

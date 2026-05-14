@@ -88,12 +88,11 @@ export function formatTime(input: string | Date, timeFormat: string | null = nul
 
 export function formatDateWithWeekday(
 	input: string | Date,
-	dateFormat: string | null = null
+	dateFormat: string | null = null,
+	locale: string | undefined = undefined
 ): string {
 	const date = new Date(input),
-		weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][
-			date.getDay()
-		];
+		weekday = date.toLocaleDateString(locale, { weekday: 'long' });
 
 	return `${weekday}, ${formatDate(input, dateFormat)}`;
 }

@@ -1,6 +1,8 @@
 import type {
 	Movie,
 	MovieGenre,
+	MovieRelease,
+	MovieTrailer,
 	CreateMovieRequest,
 	UpdateMovieRequest,
 	CreateMovieGenreRequest,
@@ -26,7 +28,7 @@ export class MovieLibrary {
 		hasRecommender: false,
 		hasWishlist: true,
 		hasExternalLinks: true,
-		hasReleases: false,
+		hasReleases: true,
 		hasShelf: false,
 		entriesAreLinks: false
 	};
@@ -43,6 +45,8 @@ export class MovieLibrary {
 	genreFilter = $state<MovieGenre | null>(null);
 	wishlistFilter = $state<boolean>(false);
 	searchTerm = $state<string>('');
+	releases = $state<MovieRelease[]>([]);
+	releasesLoaded = $state<boolean>(false);
 	view = $state<'list' | 'cards'>('cards');
 	auth = getAuth();
 	filterService = new LibraryFilterService();
@@ -185,6 +189,21 @@ export class MovieLibrary {
 		const res = await this.apiService.delete(apiRoutes.libraries.movies.deleteGenre, genre.id);
 		if (res) await this.loadGenres();
 		return Promise.resolve(res !== null);
+	}
+
+	async loadReleases(): Promise<void> {
+		const res = await this.apiService.list(apiRoutes.libraries.movies.releases);
+		if (res) {
+			this.releases = res.data as MovieRelease[];
+		}
+		this.releasesLoaded = true;
+	}
+
+	async loadTrailers(movie: Movie): Promise<MovieTrailer[]> {
+		const url = apiRoutes.libraries.movies.trailers.replace('%s', movie.id);
+		const res = await this.apiService.get(url, null);
+		if (res) return res.data as MovieTrailer[];
+		return [];
 	}
 
 	async importFromImdb(url: string): Promise<ImdbImport | null> {

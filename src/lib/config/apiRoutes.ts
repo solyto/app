@@ -131,7 +131,9 @@ export const apiRoutes = {
 			listGenres: API_URL + '/libraries/movies/genres',
 			createGenre: API_URL + '/libraries/movies/genres',
 			deleteGenre: API_URL + '/libraries/movies/genres/%d',
-			importFromImdb: API_URL + '/libraries/movies/import/imdb'
+			importFromImdb: API_URL + '/libraries/movies/import/imdb',
+			releases: API_URL + '/libraries/movies/releases',
+			trailers: API_URL + '/libraries/movies/%s/trailers'
 		},
 		games: {
 			list: API_URL + '/libraries/games',

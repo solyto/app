@@ -62,7 +62,7 @@
 <div class="relative">
 	{#if changeStatus}
 		<div
-			class="cursor-pointer rounded-lg px-2 py-1 text-xs font-bold text-c-neutral-7 {getColor(todo.status)}"
+			class="cursor-pointer rounded-lg px-2 py-1 text-xs font-bold text-c-neutral-7 dark:text-white {getColor(todo.status)}"
 			onclick={toggleStatusMenu}
 		>
 			{getLabel(todo.status)}
@@ -72,7 +72,7 @@
 				use:clickOutside={() => {
 					statusMenuVisible = false;
 				}}
-				class="absolute top-0 z-30 flex w-48 flex-col gap-2 rounded-lg bg-white p-4 font-bold text-c-neutral-7 drop-shadow-lg dark:bg-s-dark-2"
+				class="absolute top-0 z-30 flex w-48 flex-col gap-2 rounded-lg bg-white p-4 font-bold text-c-neutral-7 dark:text-white drop-shadow-lg dark:bg-s-dark-2"
 			>
 				<div
 					class="cursor-pointer rounded-lg px-2 py-1 text-xs dark:text-white {getColor('backlog')}"

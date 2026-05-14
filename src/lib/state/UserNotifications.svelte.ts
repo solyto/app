@@ -28,6 +28,7 @@ export class UserNotifications {
 		if (type === 'friend_request') return urls.profile;
 		if (type === 'music_release') return urls.musicLibrary + '?releases';
 		if (type === 'book_release') return urls.bookLibrary + '?releases';
+		if (type === 'movie_release') return urls.movieLibrary + '?releases';
 		if (type === 'dev_request_comment') return urls.devRequests;
 		if (type === 'calendar_share') return urls.calendar;
 		if (type === 'daily_check_in_reminder')

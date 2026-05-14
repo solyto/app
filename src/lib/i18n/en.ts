@@ -795,7 +795,9 @@ const notifications: NotificationRecords = {
 	daily_day_reminder: 'Get daily reminder about your upcoming day?',
 	daily_check_in_reminder: 'Get daily reminder about your daily Check-in?',
 	export_ready_title: 'Export Ready',
-	export_ready_message: 'Your data export is ready to download.'
+	export_ready_message: 'Your data export is ready to download.',
+	movie_release_title: 'New Screen Release',
+	movie_release_message: '%s is releasing soon.'
 };
 
 const clipboard: ClipboardRecords = {

@@ -26,6 +26,7 @@
 	const notificationTypes: { key: NotificationType; label: string }[] = [
 		{ key: 'book_release', label: 'New Book Releases' },
 		{ key: 'music_release', label: 'New Music Releases' },
+		{ key: 'movie_release', label: 'New Screen Release' },
 		{ key: 'friend_request', label: 'New Friend Request' },
 		{ key: 'daily_check_in_reminder', label: 'Reminder for daily check-in' },
 		{ key: 'daily_day_reminder', label: 'Reminder for the upcoming day' },

@@ -797,7 +797,9 @@ const notifications: NotificationRecords = {
 	daily_day_reminder: 'Tägliche Erinnerung an deinen bevorstehenden Tag erhalten?',
 	daily_check_in_reminder: 'Tägliche Erinnerung an dein Check-in erhalten?',
 	export_ready_title: 'Export fertig',
-	export_ready_message: 'Dein Datenexport ist zum Download bereit.'
+	export_ready_message: 'Dein Datenexport ist zum Download bereit.',
+	movie_release_title: 'Neuer Screen-Release',
+	movie_release_message: '%s erscheint bald.'
 };
 
 const clipboard: ClipboardRecords = {

@@ -231,7 +231,7 @@ export class Auth {
 	}
 
 	getDateWithWeekdayInUserPreferredFormat(input: string | Date): string {
-		return formatDateWithWeekday(input, this?.user?.settings?.date_format ?? null);
+		return formatDateWithWeekday(input, this?.user?.settings?.date_format ?? null, this?.user?.settings?.language ?? undefined);
 	}
 
 	getDateTimeInUserPreferredFormat(input: string | Date): string {

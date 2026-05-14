@@ -60,6 +60,21 @@ export interface UpdateMovieGenreRequest {
 	title: string;
 }
 
+export interface MovieRelease {
+	id: number;
+	title: string;
+	overview: string | null;
+	poster: string | null;
+	release_date: string;
+	type: 'movie' | 'tv';
+	url: string;
+}
+
+export interface MovieTrailer {
+	key: string;
+	name: string;
+}
+
 export interface ImdbImport {
 	id: number;
 	type: string;

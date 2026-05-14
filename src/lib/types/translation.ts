@@ -760,6 +760,8 @@ export interface NotificationRecords {
 	daily_check_in_reminder: string;
 	export_ready_title: string;
 	export_ready_message: string;
+	movie_release_title: string;
+	movie_release_message: string;
 }
 
 export interface ClipboardRecords {

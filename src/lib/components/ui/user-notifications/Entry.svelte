@@ -34,6 +34,7 @@
 		if (notificationType === 'daily_check_in_reminder') return n.daily_check_in_reminder_title;
 		if (notificationType === 'daily_day_reminder') return n.daily_day_reminder_title;
 		if (notificationType === 'export_ready') return n.export_ready_title;
+		if (notificationType === 'movie_release') return n.movie_release_title;
 		return '';
 	}
 
@@ -66,6 +67,8 @@
 				.replace('%1', notification.data.todo_count)
 				.replace('%2', notification.data.event_count);
 		if (notificationType === 'export_ready') return n.export_ready_message;
+		if (notificationType === 'movie_release')
+			return n.movie_release_message.replace('%s', notification.data.title);
 		return '';
 	}
 </script>

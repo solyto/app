@@ -7,6 +7,7 @@ export type UserNotificationType =
 	| 'daily_check_in_reminder'
 	| 'daily_day_reminder'
 	| 'export_ready'
+	| 'movie_release'
 	| 'other';
 
 export interface UserNotification {

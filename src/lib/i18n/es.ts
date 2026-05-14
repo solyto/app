@@ -783,7 +783,9 @@ const notifications: NotificationRecords = {
 	daily_day_reminder: '¿Recibir un recordatorio diario sobre su día?',
 	daily_check_in_reminder: '¿Recibir un recordatorio diario del seguimiento?',
 	export_ready_title: 'Exportación lista',
-	export_ready_message: 'Su exportación de datos está lista para descargar.'
+	export_ready_message: 'Su exportación de datos está lista para descargar.',
+	movie_release_title: 'Nuevo estreno en pantalla',
+	movie_release_message: '%s se estrena pronto.'
 };
 
 const clipboard: ClipboardRecords = {
