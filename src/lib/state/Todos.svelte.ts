@@ -29,8 +29,11 @@ import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { Tags } from '$lib/state/Tags.svelte';
 import TodoRelevanceService from '$lib/services/TodoRelevanceService';
+import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class Todos {
+	static readonly LS_HIDE_IT_KEY: string = 'todos_hideit';
+
 	loaded = $state<boolean>(false);
 	todos = $state<Todo[]>([]);
 	filteredTodos = $state<Todo[]>([]);
@@ -48,6 +51,7 @@ export class Todos {
 	quickCreateOpen = $state<boolean>(false);
 	auth = getAuth();
 	apiService: ApiService;
+	localStorage = new LocalStorageService();
 	filterService = new TodoFilterService();
 	sortingService = new TodoSortingService();
 	groupingService = new TodoGroupingService();
@@ -142,9 +146,7 @@ export class Todos {
 		visibilityThreshold.setDate(visibilityThreshold.getDate() + 3);
 		this.filteredTodos = this.filteredTodos.filter(
 			(t) =>
-				!t.auto_generated ||
-				t.due_at === null ||
-				new Date(t.due_at) <= visibilityThreshold
+				!t.auto_generated || t.due_at === null || new Date(t.due_at) <= visibilityThreshold
 		);
 
 		if (!filters.some((f) => f.type === 'status' && f.value === 'backlog')) {
@@ -212,13 +214,13 @@ export class Todos {
 		this.useFilters(this.activeFilters);
 		this.filterCategories();
 
-		localStorage.setItem('todos_hideit', this.hideItActive.toString());
+		this.localStorage.setBool(Todos.LS_HIDE_IT_KEY, this.hideItActive);
 	}
 
 	loadHideIt(): void {
-		const hideId = localStorage.getItem('todos_hideit');
+		const hideIt = this.localStorage.getBool(Todos.LS_HIDE_IT_KEY);
 
-		if (hideId && hideId === 'true') {
+		if (hideIt) {
 			this.hideItActive = true;
 			this.filterCategories();
 			this.useFilters(this.activeFilters);
@@ -227,7 +229,10 @@ export class Todos {
 		}
 	}
 
-	async quickCreate(input: string, tags: Tags): Promise<{ ok: boolean; recurrenceIgnored: boolean }> {
+	async quickCreate(
+		input: string,
+		tags: Tags
+	): Promise<{ ok: boolean; recurrenceIgnored: boolean }> {
 		const tagIds: number[] = [];
 		let category: number | null = null;
 		let dueDate = '';

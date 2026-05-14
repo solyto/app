@@ -19,8 +19,11 @@ import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
 import { browser } from '$app/environment';
+import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class MusicLibrary {
+	static readonly LS_VIEW_KEY: string = 'music_view';
+
 	config: LibraryConfig = {
 		type: 'music',
 		hasCovers: true,
@@ -53,13 +56,16 @@ export class MusicLibrary {
 	view = $state<'list' | 'cards' | 'shelf' | 'spine'>('cards');
 	auth = getAuth();
 	apiService: ApiService;
+	localStorage = new LocalStorageService();
 	filterService = new LibraryFilterService();
 
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
-		if (browser) {
-			const saved = localStorage.getItem('music_view') as 'list' | 'cards' | 'shelf' | 'spine' | null;
-			if (saved) this.view = saved;
+
+		const saved = this.localStorage.get(MusicLibrary.LS_VIEW_KEY);
+
+		if (saved) {
+			this.view = saved as 'list' | 'cards' | 'shelf' | 'spine';
 		}
 	}
 

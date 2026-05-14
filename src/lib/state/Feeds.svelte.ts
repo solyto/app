@@ -11,11 +11,14 @@ import type {
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
+import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { SvelteDate } from 'svelte/reactivity';
-import { browser } from '$app/environment';
 
 export class Feeds {
+	static readonly LS_VIEW_KEY: string = 'feeds_entry_size';
+	static readonly LS_IN_LIBRARY_KEY: string = 'feeds_in_library';
+
 	loaded = $state<boolean>(false);
 	feeds = $state<FeedSubscription[]>([]);
 	activeFeed = $state<FeedSubscription | null>(null);
@@ -27,6 +30,7 @@ export class Feeds {
 	inLibrary = $state<string[]>([]);
 	auth = getAuth();
 	apiService: ApiService;
+	localStorage = new LocalStorageService();
 
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
@@ -34,8 +38,8 @@ export class Feeds {
 	}
 
 	loadView(): void {
-		if (!browser) return;
-		const stored = localStorage.getItem('feeds_entry_size');
+		const stored = this.localStorage.get(Feeds.LS_VIEW_KEY);
+
 		if (stored && ['compact', 'comfortable', 'card'].includes(stored)) {
 			this.view = stored as FeedEntrySize;
 		}
@@ -43,7 +47,7 @@ export class Feeds {
 
 	changeView(size: FeedEntrySize): void {
 		this.view = size;
-		if (browser) localStorage.setItem('feeds_entry_size', size);
+		this.localStorage.set(Feeds.LS_VIEW_KEY, size);
 	}
 
 	async load(): Promise<void> {
@@ -106,9 +110,7 @@ export class Feeds {
 	}
 
 	loadInLibrary(): void {
-		if (!browser) return;
-
-		const inLibrary = localStorage.getItem('feeds_in_library')?.split(',');
+		const inLibrary = this.localStorage.get(Feeds.LS_IN_LIBRARY_KEY)?.split(',');
 		if (inLibrary) this.inLibrary = inLibrary;
 	}
 
@@ -117,7 +119,7 @@ export class Feeds {
 	}
 
 	storeInLibrary(): void {
-		if (browser) localStorage.setItem('feeds_in_library', this.inLibrary.join(','));
+		this.localStorage.set(Feeds.LS_IN_LIBRARY_KEY, this.inLibrary.join(','));
 	}
 
 	async create(request: CreateFeedSubscriptionRequest): Promise<boolean> {
@@ -126,7 +128,9 @@ export class Feeds {
 		return Promise.resolve(res !== null);
 	}
 
-	async subscribe(request: CreateFeedSubscriptionRequest): Promise<{ ok: boolean; duplicate: boolean }> {
+	async subscribe(
+		request: CreateFeedSubscriptionRequest
+	): Promise<{ ok: boolean; duplicate: boolean }> {
 		const res = await this.apiService.createWithStatus(apiRoutes.feeds.create, request);
 		if (res.ok) await this.load();
 		return { ok: res.ok, duplicate: res.status === 409 };

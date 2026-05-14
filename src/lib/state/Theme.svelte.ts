@@ -1,19 +1,23 @@
 import { getContext, setContext } from 'svelte';
 import { themes, type Theme } from '$lib/config/themes';
+import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class ThemeState {
+	static readonly LS_THEME_KEY: string = 'theme';
+
 	theme = $state<Theme>(themes[0]);
 	link: HTMLLinkElement | null = null;
 	mediaQuery: MediaQueryList | null = null;
 	darkListener: ((e: MediaQueryListEvent) => void) | null = null;
+	localStorage = new LocalStorageService();
 
 	load(): void {
-		const saved = localStorage.getItem('theme') ?? 'default';
+		const saved = this.localStorage.get(ThemeState.LS_THEME_KEY) ?? 'default';
 		this.apply(themes.find((t) => t.id === saved) ?? themes[0]);
 	}
 
 	setTheme(theme: Theme): void {
-		localStorage.setItem('theme', theme.id);
+		this.localStorage.set(ThemeState.LS_THEME_KEY, theme.id);
 		this.apply(theme);
 	}
 

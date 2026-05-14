@@ -7,9 +7,9 @@ import type {
 	VerifyRequest
 } from '$lib/types/auth';
 import { setContext, getContext } from 'svelte';
-import { browser } from '$app/environment';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import ApiService from '$lib/services/ApiService';
+import LocalStorageService from '$lib/services/LocalStorageService';
 import { SvelteDate } from 'svelte/reactivity';
 import {
 	formatDate,
@@ -21,10 +21,13 @@ import {
 } from '$lib/helpers/DateHelper';
 
 export class Auth {
+	static readonly LS_AUTH_KEY: string = 'auth';
+
 	loggedIn = $state<boolean>(false);
 	authToken = $state<AuthToken | null>(null);
 	user = $state<User | null>(null);
 	apiService: ApiService;
+	localStorage = new LocalStorageService();
 	profileCache = new Map<string, User>();
 
 	constructor() {
@@ -33,13 +36,11 @@ export class Auth {
 	}
 
 	private async load(): Promise<void> {
-		if (!browser) return;
-
-		const savedAuth = localStorage.getItem('auth');
+		const savedAuth = this.localStorage.getJson(Auth.LS_AUTH_KEY);
 
 		if (!savedAuth) return;
 
-		const { user, authToken } = JSON.parse(savedAuth);
+		const { user, authToken } = savedAuth as { user: User; authToken: AuthToken }
 
 		if (!authToken || !user) return;
 
@@ -59,7 +60,7 @@ export class Auth {
 
 			this.save();
 		} else {
-			localStorage.removeItem('auth');
+			this.localStorage.destroy(Auth.LS_AUTH_KEY);
 		}
 	}
 
@@ -71,21 +72,14 @@ export class Auth {
 	}
 
 	public save(): void {
-		if (!browser) return;
-
-		localStorage.setItem(
-			'auth',
-			JSON.stringify({
-				user: this.user,
-				authToken: this.authToken
-			})
-		);
+		this.localStorage.setJson(Auth.LS_AUTH_KEY, {
+			user: this.user,
+			authToken: this.authToken
+		});
 	}
 
 	private clear(): void {
-		if (!browser) return;
-
-		localStorage.removeItem('auth');
+		this.localStorage.destroy(Auth.LS_AUTH_KEY);
 		this.user = null;
 		this.authToken = null;
 		this.loggedIn = false;

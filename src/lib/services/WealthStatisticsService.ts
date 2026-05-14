@@ -1,6 +1,6 @@
 import type { WealthField } from '$lib/types/finance';
 import { SvelteDate } from 'svelte/reactivity';
-import { getDateMinusDays, getUrlFormat, isDateAfter } from '$lib/helpers/DateHelper';
+import { getUrlFormat } from '$lib/helpers/DateHelper';
 
 export default class WealthStatisticsService {
 	data: WealthField[] = [];
@@ -11,7 +11,6 @@ export default class WealthStatisticsService {
 
 	getGraphValues(): { date: string; values: { field: string; value: number }[] }[] {
 		const currentDate = new SvelteDate();
-		const values: { date: string; values: { field: string; value: number }[] } = [];
 		const lastValues: Record<number, number> = {};
 
 		for (const field of this.data) {
@@ -56,7 +55,6 @@ export default class WealthStatisticsService {
 				);
 
 				if (valuesInThisMonth.length > 0) {
-					// Determine the latest value in this month
 					valuesInThisMonth.sort(
 						(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 					);
@@ -69,29 +67,5 @@ export default class WealthStatisticsService {
 		}
 
 		return refinedResult;
-	}
-
-	getUniqueDates(): string[] {
-		const dates: string[] = [];
-		const lastAcceptablePoint = getDateMinusDays(new SvelteDate(), 365);
-
-		for (const entry of this.data) {
-			if (entry.values.length > 0) {
-				for (const value of entry.values) {
-					const urlFormat = getUrlFormat(new SvelteDate(value.date));
-
-					if (
-						!dates.includes(urlFormat) &&
-						isDateAfter(new SvelteDate(value.date), lastAcceptablePoint)
-					) {
-						dates.push(urlFormat);
-					}
-				}
-			}
-		}
-
-		dates.sort((a, b) => a.localeCompare(b));
-
-		return dates;
 	}
 }

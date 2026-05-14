@@ -18,10 +18,11 @@ import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
-import { browser } from '$app/environment';
-import type { DeezerImport } from '$lib/types/library_music';
+import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class BookLibrary {
+	static readonly LS_VIEW_KEY: string = 'books_view';
+
 	config: LibraryConfig = {
 		type: 'books',
 		hasCovers: true,
@@ -55,12 +56,14 @@ export class BookLibrary {
 	auth = getAuth();
 	filterService = new LibraryFilterService();
 	apiService: ApiService;
+	localStorage = new LocalStorageService();
 
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
-		if (browser) {
-			const saved = localStorage.getItem('books_view') as 'list' | 'cards' | 'shelf' | 'spine' | null;
-			if (saved) this.view = saved;
+		const saved = this.localStorage.get(BookLibrary.LS_VIEW_KEY);
+
+		if (saved) {
+			this.view = saved as 'list' | 'cards' | 'shelf' | 'spine';
 		}
 	}
 

@@ -13,18 +13,20 @@ import { goto } from '$app/navigation';
 import { urls } from '$lib/config/urls';
 import { resolve } from '$app/paths';
 import ApiService from '$lib/services/ApiService';
+import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { browser } from '$app/environment';
 import { SvelteDate } from 'svelte/reactivity';
 
 export class NotesSvelte {
+	static readonly LS_COLLAPSED_CATEGORIES_KEY: string = 'notes.collapsedCategories';
+
 	loaded = $state<boolean>(false);
 	notes = $state<Note[]>([]);
 	newestNotes = $state<Note[]>([]);
 	lastUpdatedNotes = $state<Note[]>([]);
 	favoriteNotes = $state<Note[]>([]);
 	categories = $state<NoteCategory[]>([]);
-	activeCategory = $state<NoteCategory | null>(null);
 	collapsedCategories = $state<number[]>([]);
 	activeNote = $state<Note | null>(null);
 	modalOpen = $state<boolean>(false);
@@ -41,10 +43,10 @@ export class NotesSvelte {
 	inputValue = $state<string>('');
 	auth = getAuth();
 	apiService: ApiService;
+	localStorage = new LocalStorageService();
 
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
-
 		this.loadCollapsedCategories();
 	}
 
@@ -61,20 +63,17 @@ export class NotesSvelte {
 	}
 
 	loadCollapsedCategories(): void {
-		if (!browser) return;
+		const stored = this.localStorage.getJson(NotesSvelte.LS_COLLAPSED_CATEGORIES_KEY);
 
-		const stored = localStorage.getItem('notes_collapsed_categories');
 		if (stored) {
-			this.collapsedCategories = JSON.parse(stored);
+			this.collapsedCategories = stored as number[];
 		}
 	}
 
 	saveCollapsedCategories(): void {
-		if (!browser) return;
-
-		localStorage.setItem(
-			'notes_collapsed_categories',
-			JSON.stringify(this.collapsedCategories)
+		this.localStorage.setJson(
+			NotesSvelte.LS_COLLAPSED_CATEGORIES_KEY,
+			this.collapsedCategories
 		);
 	}
 
@@ -201,9 +200,10 @@ export class NotesSvelte {
 			return null;
 		}
 
-		const request: CreateNoteRequest = this.createParent !== null ?
-			{ title: this.inputValue, category_id: this.createParent } :
-			{ title: this.inputValue };
+		const request: CreateNoteRequest =
+			this.createParent !== null
+				? { title: this.inputValue, category_id: this.createParent }
+				: { title: this.inputValue };
 		const res = await this.apiService.create(apiRoutes.notes.create, request);
 
 		if (res) await this.load();
@@ -218,9 +218,11 @@ export class NotesSvelte {
 
 		if (!res) return null;
 
-		this.selectNote(res.data.id);
+		const note = res.data as Note;
 
-		return res.data as Note;
+		this.selectNote(note.id);
+
+		return note;
 	}
 
 	async createCategory(edit: boolean = false): Promise<NoteCategory | null> {
@@ -360,8 +362,13 @@ export class NotesSvelte {
 		const formData = new FormData();
 		formData.append('file', file);
 		const ok = await this.apiService.post(apiRoutes.notes.import, formData);
-		if (ok) await this.load();
-		return ok;
+
+		if (ok) {
+			await this.load();
+			return true;
+		}
+
+		return false;
 	}
 }
 

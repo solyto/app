@@ -14,7 +14,6 @@ import type {
 } from '$lib/types/calendar';
 import { getContext, setContext, tick } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
-import { browser } from '$app/environment';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { SvelteDate } from 'svelte/reactivity';
@@ -26,8 +25,11 @@ import {
 	getWeekNumber
 } from '$lib/helpers/DateHelper';
 import type { Todo, UpdateTodoRequest } from '$lib/types/todo';
+import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class Calendars {
+	static readonly LS_VIEW_KEY: string = 'calendars_view';
+
 	calendars = $state<Calendar[]>([]);
 	events = $state<Event[]>([]);
 	sortedEvents = $state<Record<string, Event[]>>({});
@@ -55,6 +57,7 @@ export class Calendars {
 	shareModal = $state<boolean>(false);
 	shareCalendarTarget = $state<Calendar | null>(null);
 	apiService: ApiService;
+	localStorage = new LocalStorageService();
 
 	pendingInvites = $derived(this.calendars.filter((c) => c.invite_status === 'pending'));
 	ownedCalendars = $derived(this.calendars.filter((c) => c.invite_status === null));
@@ -177,18 +180,15 @@ export class Calendars {
 	}
 
 	loadView(): void {
-		if (!browser) return;
+		const stored = this.localStorage.get(Calendars.LS_VIEW_KEY);
 
-		const stored = localStorage.getItem('calendars_view');
 		if (stored) {
-			this.view = JSON.parse(stored);
+			this.view = stored as 'month' | 'week' | 'day' | 'list';
 		}
 	}
 
 	saveView(): void {
-		if (!browser) return;
-
-		localStorage.setItem('calendars_view', JSON.stringify(this.view));
+		this.localStorage.set(Calendars.LS_VIEW_KEY, this.view);
 	}
 
 	async nextMonth(): Promise<void> {

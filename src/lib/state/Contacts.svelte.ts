@@ -13,6 +13,7 @@ import type {
 	ImportState,
 	SelectImportAddressBooksRequest
 } from '$lib/types/contact';
+import LocalStorageService from '$lib/services/LocalStorageService';
 
 const letters = [
 	'A',
@@ -44,6 +45,8 @@ const letters = [
 ];
 
 export class Contacts {
+	static readonly LS_HIDDEN_KEY = 'address_books_hidden';
+
 	addressBooks = $state<AddressBook[]>([]);
 	contacts = $state<Contact[]>([]);
 	activeAddressBook = $state<AddressBook | null>(null);
@@ -57,7 +60,10 @@ export class Contacts {
 					.filter((c) => {
 						if (c.first_name[0]?.toLowerCase() !== letter.toLowerCase()) return false;
 						if (this.isAddressBookHidden(c.address_book_id)) return false;
-						if (this.activeAddressBook && this.activeAddressBook.id !== c.address_book_id)
+						if (
+							this.activeAddressBook &&
+							this.activeAddressBook.id !== c.address_book_id
+						)
 							return false;
 						return true;
 					})
@@ -92,6 +98,7 @@ export class Contacts {
 		)
 	);
 	apiService: ApiService;
+	localStorage = new LocalStorageService();
 
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
@@ -205,18 +212,15 @@ export class Contacts {
 	}
 
 	loadHidden(): void {
-		if (!browser) return;
+		const stored = this.localStorage.getJson(Contacts.LS_HIDDEN_KEY);
 
-		const stored = localStorage.getItem('address_books_hidden');
 		if (stored) {
-			this.hiddenAddressBooks = JSON.parse(stored);
+			this.hiddenAddressBooks = stored as number[];
 		}
 	}
 
 	saveHidden(): void {
-		if (!browser) return;
-
-		localStorage.setItem('address_books_hidden', JSON.stringify(this.hiddenAddressBooks));
+		this.localStorage.setJson(Contacts.LS_HIDDEN_KEY, this.hiddenAddressBooks);
 	}
 
 	getAddressBookColor(addressBookId: number): string {

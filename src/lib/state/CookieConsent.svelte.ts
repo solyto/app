@@ -1,22 +1,20 @@
 import { setContext, getContext } from 'svelte';
-import { browser } from '$app/environment';
-
-const STORAGE_KEY = 'cookie_consent_acknowledged';
+import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class CookieConsent {
+	static readonly LS_ACKNOWLEDGED_KEY: string = 'cookie_consent_acknowledged';
+
 	acknowledged = $state<boolean>(true);
+	localStorage = new LocalStorageService();
 
 	constructor() {
-		if (browser) {
-			this.acknowledged = localStorage.getItem(STORAGE_KEY) === 'true';
-		}
+		const stored = this.localStorage.getBool(CookieConsent.LS_ACKNOWLEDGED_KEY);
+		if (stored) this.acknowledged = stored;
 	}
 
 	acknowledge(): void {
 		this.acknowledged = true;
-		if (browser) {
-			localStorage.setItem(STORAGE_KEY, 'true');
-		}
+		this.localStorage.setBool(CookieConsent.LS_ACKNOWLEDGED_KEY, this.acknowledged);
 	}
 }
 
