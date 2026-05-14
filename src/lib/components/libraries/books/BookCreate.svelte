@@ -68,143 +68,95 @@
 		value: tag.id.toString()
 	}));
 
+	function buildRequestFields() {
+		return {
+			title: titleValue,
+			author: authorValue,
+			series: seriesValue !== '' ? seriesValue : null,
+			volume: volumeValue !== '' ? parseInt(volumeValue) : null,
+			pages: pagesValue !== '' ? parseInt(pagesValue) : null,
+			current_page: currentPageValue !== '' ? parseInt(currentPageValue) : null,
+			publication_year: publicationYearValue !== '' ? parseInt(publicationYearValue) : null,
+			lent_to: lentToValue !== '' ? lentToValue : null,
+			is_where: isWhereValue !== '' ? isWhereValue : null,
+			started_at: startedAtValue !== '' ? startedAtValue : null,
+			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
+			wishlist: isWishlist || false,
+			summary: summaryValue !== '' ? summaryValue : null,
+			genres: selectedGenres.length > 0 ? selectedGenres.map((genre) => genre.value) : null,
+			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null,
+			rating: selectedRating > 0 ? selectedRating : null,
+			link: linkValue !== '' ? linkValue : null
+		};
+	}
+
 	async function onsubmit(): Promise<void> {
+		loadingIndicator.start();
+
 		if (activeEntry) {
-			return await update();
+			const request: UpdateBookRequest = {
+				...buildRequestFields(),
+				...(coverValue !== '' ? { cover_path: coverValue } : {})
+			};
+			const ok = await library.update(activeEntry, request);
+			if (ok) {
+				library.closeCreateModal();
+				await library.load();
+			} else {
+				notifications.error(ts.get.libraries.books.update_error);
+			}
 		} else {
-			return await create();
-		}
-	}
-
-	async function create(): Promise<void> {
-		loadingIndicator.start();
-
-		const request: CreateBookRequest = {
-			title: titleValue,
-			author: authorValue,
-			series: seriesValue !== '' ? seriesValue : null,
-			volume: volumeValue !== '' ? parseInt(volumeValue) : null,
-			pages: pagesValue !== '' ? parseInt(pagesValue) : null,
-			current_page: currentPageValue !== '' ? parseInt(currentPageValue) : null,
-			publication_year: publicationYearValue !== '' ? parseInt(publicationYearValue) : null,
-			lent_to: lentToValue !== '' ? lentToValue : null,
-			is_where: isWhereValue !== '' ? isWhereValue : null,
-			started_at: startedAtValue !== '' ? startedAtValue : null,
-			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
-			wishlist: isWishlist ? isWishlist : false,
-			summary: summaryValue !== '' ? summaryValue : null,
-			genres: selectedGenres.length > 0 ? selectedGenres.map((genre) => genre.value) : null,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null,
-			rating: selectedRating > 0 ? selectedRating : null,
-			cover_path: coverValue != '' ? coverValue : null,
-			link: linkValue != '' ? linkValue : null
-		};
-		const ok = await library.create(request);
-		if (ok) {
-			titleValue = '';
-			authorValue = '';
-			seriesValue = '';
-			volumeValue = '';
-			pagesValue = '';
-			currentPageValue = '';
-			lentToValue = '';
-			isWhereValue = '';
-			startedAtValue = '';
-			finishedAtValue = '';
-			coverValue = '';
-			linkValue = '';
-			selectedGenres = [];
-			isWishlist = false;
-			summaryValue = '';
-			library.closeCreateModal();
-			await library.load();
-		} else {
-			notifications.error(ts.get.libraries.books.create_error);
+			const request: CreateBookRequest = {
+				...buildRequestFields(),
+				cover_path: coverValue !== '' ? coverValue : null
+			};
+			const ok = await library.create(request);
+			if (ok) {
+				titleValue = '';
+				authorValue = '';
+				seriesValue = '';
+				volumeValue = '';
+				pagesValue = '';
+				currentPageValue = '';
+				lentToValue = '';
+				isWhereValue = '';
+				startedAtValue = '';
+				finishedAtValue = '';
+				coverValue = '';
+				linkValue = '';
+				selectedGenres = [];
+				isWishlist = false;
+				summaryValue = '';
+				library.closeCreateModal();
+				await library.load();
+			} else {
+				notifications.error(ts.get.libraries.books.create_error);
+			}
 		}
 
 		loadingIndicator.stop();
 	}
 
-	async function update(): Promise<void> {
-		loadingIndicator.start();
-
-		const request: UpdateBookRequest = {
-			title: titleValue,
-			author: authorValue,
-			series: seriesValue !== '' ? seriesValue : null,
-			volume: volumeValue !== '' ? parseInt(volumeValue) : null,
-			pages: pagesValue !== '' ? parseInt(pagesValue) : null,
-			current_page: currentPageValue !== '' ? parseInt(currentPageValue) : null,
-			publication_year: publicationYearValue !== '' ? parseInt(publicationYearValue) : null,
-			lent_to: lentToValue !== '' ? lentToValue : null,
-			is_where: isWhereValue !== '' ? isWhereValue : null,
-			started_at: startedAtValue !== '' ? startedAtValue : null,
-			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
-			wishlist: isWishlist ? isWishlist : false,
-			summary: summaryValue !== '' ? summaryValue : null,
-			genres: selectedGenres.length > 0 ? selectedGenres.map((genre) => genre.value) : null,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null,
-			rating: selectedRating > 0 ? selectedRating : null,
-			...(coverValue !== '' ? { cover_path: coverValue } : {}),
-			link: linkValue != '' ? linkValue : null
-		};
-		const ok = await library.update(activeEntry, request);
-		if (ok) {
-			library.closeCreateModal();
-			await library.load();
-		} else {
-			notifications.error(ts.get.libraries.books.update_error);
-		}
-
-		loadingIndicator.stop();
-	}
-
-	async function importFromHardcover(): Promise<void> {
+	async function importFrom(from: 'hardcover' | 'goodreads'): Promise<void> {
 		if (linkValue === '') {
 			linkInput?.focus();
 			return;
 		}
 
-		if (!linkValue.includes('hardcover.app')) {
+		if (from === 'hardcover' && !linkValue.includes('hardcover.app')) {
 			notifications.error(ts.get.libraries.books.hardcover_import_validation_error);
 			return;
-		}
-
-		importLoading = true;
-		loadingIndicator.start();
-		const book = await library.importFromHardcover(linkValue);
-
-		if (!book) {
-			notifications.error(ts.get.libraries.books.import_error);
-			loadingIndicator.stop();
-			importLoading = false;
-			return;
-		}
-
-		authorValue = book.author;
-		titleValue = book.title;
-		coverValue = book.cover;
-		publicationYearValue = book.release_date.slice(0, 4);
-		pagesValue = book.page_count;
-
-		importLoading = false;
-		loadingIndicator.stop();
-	}
-
-	async function importFromGoodreads(): Promise<void> {
-		if (linkValue === '') {
-			linkInput?.focus();
-			return;
-		}
-
-		if (!linkValue.includes('goodreads.com')) {
+		} else if (from === 'goodreads' && !linkValue.includes('goodreads.com')) {
 			notifications.error(ts.get.libraries.books.goodreads_import_validation_error);
 			return;
 		}
 
 		importLoading = true;
 		loadingIndicator.start();
-		const book = await library.importFromGoodreads(linkValue);
+
+		const book = from === 'hardcover' ?
+			await library.importFromHardcover(linkValue) :
+			await library.importFromGoodreads(linkValue);
 
 		if (!book) {
 			notifications.error(ts.get.libraries.books.import_error);
@@ -285,8 +237,8 @@
 		<TextInput multiLine={true} height={80} bind:value={summaryValue} />
 	</ModalFormRow>
 	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
-		<HardcoverImportButton loading={importLoading} onClick={importFromHardcover} />
-		<GoodreadsImportButton loading={importLoading} onClick={importFromGoodreads} />
+		<HardcoverImportButton loading={importLoading} onClick={() => importFrom('hardcover')} />
+		<GoodreadsImportButton loading={importLoading} onClick={() => importFrom('goodreads')} />
 		<Button title={ts.get.layout.save} onclick={onsubmit} />
 	</div>
 </CreateModal>
