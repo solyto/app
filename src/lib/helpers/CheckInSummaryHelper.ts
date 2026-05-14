@@ -80,7 +80,7 @@ export function buildDaySummary(
 			const value = checkIn[tracker] as number | null;
 			if (value === null) continue;
 			const phrase = getPhraseForTracker(tracker, value, p);
-			if (phrase) items.push({ tracker, value, phrase });
+			if (phrase) items.push({ tracker, value: tracker === 'sports' ? 3 : value, phrase });
 		}
 		if (items.length === 0) continue;
 		clauses.push(combineGroupPhrases(items, p));
