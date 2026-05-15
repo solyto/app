@@ -22,7 +22,7 @@
 				<img src={release.poster} loading="lazy" alt="Poster" class="rounded-lg md:size-48 object-cover" />
 			{/if}
 		</div>
-		<div class="flex flex-col items-start justify-between gap-2 md:min-w-60">
+		<div class="flex flex-col items-start justify-between gap-2 md:max-w-96 md:min-w-60">
 			<div class="flex flex-col items-start gap-1">
 				<h2 class="text-left text-lg font-bold">{release.title}</h2>
 				<span
@@ -35,7 +35,7 @@
 					{release.type === 'tv' ? 'Series' : 'Movie'}
 				</span>
 				{#if release.overview}
-					<p class="mt-1 line-clamp-3 text-sm text-c-neutral-6 dark:text-c-neutral-4">
+					<p class="mt-1 text-left line-clamp-3 text-sm text-c-neutral-6 dark:text-c-neutral-4">
 						{release.overview}
 					</p>
 				{/if}
