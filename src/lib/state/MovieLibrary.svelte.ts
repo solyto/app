@@ -28,7 +28,7 @@ export class MovieLibrary {
 		hasRecommender: false,
 		hasWishlist: true,
 		hasExternalLinks: true,
-		hasReleases: true,
+		hasReleases: false,
 		hasShelf: false,
 		entriesAreLinks: false
 	};

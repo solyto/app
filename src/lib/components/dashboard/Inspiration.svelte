@@ -85,10 +85,6 @@
 		<BookReleasesWidget {bookReleases} {ts} />
 	{/if}
 
-	{#if movieReleases.length > 0}
-		<MovieReleasesWidget {movieReleases} {ts} />
-	{/if}
-
 	{#if newestNotes.length > 0}
 		<NewestNotesWidget {newestNotes} {ts} />
 	{/if}
