@@ -1135,7 +1135,8 @@ const quick_add: QuickAddRecords = {
 		quotes: 'Cita',
 		todo: 'Tarea',
 		note: 'Nota',
-		feed: 'Feed'
+		feed: 'Feed',
+		clipboard: 'Portapapeles'
 	},
 	destinations: {
 		music: 'tu biblioteca de música',
@@ -1148,7 +1149,8 @@ const quick_add: QuickAddRecords = {
 		quotes: 'tu biblioteca de citas',
 		todo: 'tus tareas',
 		note: 'tus notas',
-		feed: 'tus feeds'
+		feed: 'tus feeds',
+		clipboard: 'tu portapapeles'
 	}
 };
 

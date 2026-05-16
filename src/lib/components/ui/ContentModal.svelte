@@ -58,9 +58,12 @@
 			{/if}
 		{/if}
 		<div
-			class="relative z-30 max-h-dvh w-full max-w-screen overflow-y-auto p-4 not-dark:border-c-neutral-2 max-md:w-screen max-md:max-h-[calc(100dvh-4rem)] {rounded
-				? 'md:rounded-' + rounded
-				: ''} {p ? 'md:p-' + p : 'md:p-4'} {width ? 'md:w-' + width : ''}"
+			class="
+				relative z-30 max-h-dvh w-full max-w-screen overflow-y-auto p-4 not-dark:border-c-neutral-2 max-md:w-screen max-md:max-h-[calc(100dvh-4rem)]
+				{rounded ? 'md:rounded-' + rounded : ''}
+				{p ? 'md:p-' + p : 'md:p-4'}
+				{width ? 'md:w-' + width : ''}
+			"
 			class:md:min-w-120={!small && !width}
 			class:bg-c-bg-modal={!transparent}
 			class:not-dark:border-1={!transparent}

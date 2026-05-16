@@ -1143,7 +1143,8 @@ const quick_add: QuickAddRecords = {
 		quotes: 'Citation',
 		todo: 'Tâche',
 		note: 'Note',
-		feed: 'Flux'
+		feed: 'Flux',
+		clipboard: 'Presse-papiers'
 	},
 	destinations: {
 		music: 'votre bibliothèque musicale',
@@ -1156,7 +1157,8 @@ const quick_add: QuickAddRecords = {
 		quotes: 'votre bibliothèque de citations',
 		todo: 'vos tâches',
 		note: 'vos notes',
-		feed: 'vos flux'
+		feed: 'vos flux',
+		clipboard: 'votre presse-papiers'
 	}
 };
 

@@ -1,4 +1,4 @@
-import type { QuickAddContentType } from '$lib/types/quick_add';
+import type { DetectionResult, QuickAddContentType } from '$lib/types/quick_add';
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import { getTranslation } from '$lib/state/Translation.svelte';
@@ -65,18 +65,13 @@ export class QuickAdd {
 			return;
 		}
 
-		const data = res.data as {
-			url: string;
-			content_type: QuickAddContentType;
-			confidence: number;
-			metadata: Record<string, unknown> | null;
-		};
+		const data = res.data as DetectionResult;
 
 		this.detectedType = data.content_type;
 		this.confidence = data.confidence;
 		this.metadata = data.metadata ?? null;
 
-		if (data.confidence < 0.6) {
+		if (data.needs_confirmation) {
 			this.needsConfirmation = true;
 		} else {
 			await this.confirm(this.detectedType!);

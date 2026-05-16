@@ -9,12 +9,14 @@ export type QuickAddContentType =
 	| 'quotes'
 	| 'todo'
 	| 'note'
-	| 'feed';
+	| 'feed'
+	| 'clipboard';
 
 export interface DetectionResult {
 	url: string;
 	content_type: QuickAddContentType;
 	confidence: number;
+	needs_confirmation: boolean;
 	metadata: Record<string, unknown> | null;
 }
 
@@ -33,5 +35,6 @@ export const CONTENT_TYPE_LABELS: Record<QuickAddContentType, string> = {
 	quotes: 'Quote',
 	todo: 'Todo',
 	note: 'Note',
-	feed: 'Feed'
+	feed: 'Feed',
+	clipboard: 'Clipboard'
 };

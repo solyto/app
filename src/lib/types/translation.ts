@@ -1061,6 +1061,7 @@ export interface QuickAddRecords {
 		todo: string;
 		note: string;
 		feed: string;
+		clipboard: string;
 	};
 	destinations: {
 		music: string;
@@ -1074,6 +1075,7 @@ export interface QuickAddRecords {
 		todo: string;
 		note: string;
 		feed: string;
+		clipboard: string;
 	};
 }
 

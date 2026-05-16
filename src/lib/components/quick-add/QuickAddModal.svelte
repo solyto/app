@@ -21,6 +21,7 @@
 	import IconListTodo from '@lucide/svelte/icons/list-todo';
 	import IconNotebookPen from '@lucide/svelte/icons/notebook-pen';
 	import IconRss from '@lucide/svelte/icons/rss';
+	import IconClipboard from '@lucide/svelte/icons/clipboard';
 	import { type QuickAddContentType } from '$lib/types/quick_add';
 
 	const quickAdd = getQuickAdd();
@@ -43,7 +44,8 @@
 		quotes: IconQuote,
 		todo: IconListTodo,
 		note: IconNotebookPen,
-		feed: IconRss
+		feed: IconRss,
+		clipboard: IconClipboard
 	} as const;
 
 	const ALL_TYPES: QuickAddContentType[] = [
@@ -57,10 +59,11 @@
 		'quotes',
 		'feed',
 		'todo',
-		'note'
+		'note',
+		'clipboard'
 	];
 
-	const TEXT_TYPES: QuickAddContentType[] = ['quotes', 'todo', 'note'];
+	const TEXT_TYPES: QuickAddContentType[] = ['quotes', 'todo', 'note', 'clipboard'];
 
 	function availableTypes(): QuickAddContentType[] {
 		return quickAdd.isUrl ? ALL_TYPES : TEXT_TYPES;
@@ -200,9 +203,11 @@
 		title={ts.get.quick_add.title}
 		onClose={() => quickAdd.closeModal()}
 		rounded="2xl"
-		width={quickAdd.showTypeSelector ? '[52rem]' : '[42rem]'}
+		width="[24rem]"
 		p="6"
 	>
 		{@render inner()}
 	</ContentModal>
 {/if}
+
+<!-- md:w-[24rem] -->
