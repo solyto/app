@@ -40,6 +40,11 @@ export class Shortcuts {
 		if (res) await this.load();
 		return Promise.resolve();
 	}
+
+	async reorder(ids: (string | number)[]): Promise<void> {
+		await this.apiService.put(apiRoutes.shortcuts.reorder, { shortcuts: ids });
+		await this.load();
+	}
 }
 
 const WIDGETS_KEY = Symbol('SOLYTO_WIDGETS');

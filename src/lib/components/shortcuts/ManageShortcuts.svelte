@@ -4,12 +4,16 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
 	import { getShortcuts } from '$lib/state/Shortcuts.svelte.js';
 	import type { CreateShortcutRequest } from '$lib/types/shortcut.js';
+	import type { Shortcut } from '$lib/types/shortcut.js';
 	import ShotcutEdit from '$lib/components/shortcuts/ShortcutEdit.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
 	import { getKeyManager } from '$lib/KeyManager.svelte.js';
 	import { onDestroy, tick } from 'svelte';
+	import { dndzone } from 'svelte-dnd-action';
+	import { flip } from 'svelte/animate';
+	import IconGripVertical from '@lucide/svelte/icons/grip-vertical';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
@@ -17,6 +21,22 @@
 	const keyManager = getKeyManager();
 
 	let { onClose } = $props<{ onClose: () => void }>();
+
+	const flipDurationMs = 200;
+	let items = $state<Shortcut[]>([]);
+
+	$effect(() => {
+		items = shortcuts.shortcuts;
+	});
+
+	function handleConsider(e: CustomEvent) {
+		items = e.detail.items;
+	}
+
+	async function handleFinalize(e: CustomEvent) {
+		items = e.detail.items;
+		await shortcuts.reorder(items.map((s) => s.id));
+	}
 
 	let create = $state<boolean>(false);
 	let titleValue = $state<string>('');
@@ -38,7 +58,7 @@
 		};
 		await shortcuts.create(request);
 		loadingIndicator.stop();
-		toggleCreate();
+		await toggleCreate();
 	}
 
 	async function toggleCreate() {
@@ -57,9 +77,19 @@
 
 <ContentModal title={ts.get.widgets.manage_shortcuts} rounded="2xl" p="4" {onClose}>
 	<div class="flex w-full flex-col gap-0">
-		{#each shortcuts.shortcuts as shortcut (shortcut.id)}
-			<ShotcutEdit {shortcut} />
-		{/each}
+		<div
+			use:dndzone={{ items, flipDurationMs, dropTargetClasses: ['shadow-lg', 'ring-2', 'ring-d-lightblue'] }}
+			onconsider={handleConsider}
+			onfinalize={handleFinalize}
+			class="flex flex-col !outline-0"
+		>
+			{#each items as shortcut (shortcut.id)}
+				<div class="flex items-center gap-1" animate:flip={{ duration: flipDurationMs }}>
+					<IconGripVertical size={16} class="shrink-0 cursor-grab text-c-neutral-3" />
+					<ShotcutEdit {shortcut} />
+				</div>
+			{/each}
+		</div>
 		<div class="mt-4 flex w-full justify-center">
 			{#if create}
 				<div class="flex w-full items-center gap-2">

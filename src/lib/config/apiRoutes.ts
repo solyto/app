@@ -237,7 +237,8 @@ export const apiRoutes = {
 		list: API_URL + '/shortcuts',
 		create: API_URL + '/shortcuts',
 		update: API_URL + '/shortcuts/%s',
-		delete: API_URL + '/shortcuts/%s'
+		delete: API_URL + '/shortcuts/%s',
+		reorder: API_URL + '/shortcuts/reorder'
 	},
 	statistics: {
 		overview: API_URL + '/statistics/overview'
