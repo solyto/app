@@ -10,6 +10,8 @@
 	import { setFeatures, getFeatures } from '$lib/state/Features.svelte';
 	import { getWelcomeTour } from '$lib/state/WelcomeTour.svelte.js';
 	import { setTimeTracking } from '$lib/state/TimeTracking.svelte.js';
+	import { getKeyManager } from '$lib/KeyManager.svelte.js';
+	import { getQuickAdd } from '$lib/state/QuickAdd.svelte';
 	import OnboardingModal from '$lib/components/dashboard/OnboardingModal.svelte';
 	import YourDay from '$lib/components/dashboard/YourDay.svelte';
 	import Inspiration from '$lib/components/dashboard/Inspiration.svelte';
@@ -28,6 +30,8 @@
 	const auth = getAuth();
 	const features = getFeatures();
 	const tour = getWelcomeTour();
+	const keyManager = getKeyManager();
+	const quickAdd = getQuickAdd();
 
 	let showOnboardingModal = $state<boolean>(false);
 
@@ -39,7 +43,20 @@
 		if (auth.user?.settings?.first_visit) {
 			showOnboardingModal = true;
 		}
+
+		const handlerId = keyManager.registerKeyDown('Enter', handleEnter, {
+			preventOthers: false,
+			preventDefault: false
+		});
+
+		return () => keyManager.unregisterKeyDown(handlerId);
 	});
+
+	function handleEnter(): void {
+		const tag = document.activeElement?.tagName.toLowerCase();
+		if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return;
+		if (!quickAdd.open) quickAdd.openModal();
+	}
 
 	function handleOnboardingModalComplete(): void {
 		showOnboardingModal = false;
