@@ -5,7 +5,7 @@
 		CreateFeedSubscriptionRequest,
 		FeedTestItem,
 		UpdateFeedSubscriptionRequest
-	} from '$lib/types/feedSubscription';
+	} from '$lib/types/feed';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';

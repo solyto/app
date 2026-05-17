@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import type { FeedItem } from '$lib/types/feedSubscription';
+	import type { FeedItem } from '$lib/types/feed';
 	import { getFeeds } from '$lib/state/Feeds.svelte';
 	import { formatDateTime } from '$lib/helpers/DateHelper';
 	import { grabFaviconFromUrl } from '$lib/helpers/ImageHelper';

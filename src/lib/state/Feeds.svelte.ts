@@ -7,7 +7,7 @@ import type {
 	FeedEntrySize,
 	Feed,
 	FriendFeed
-} from '$lib/types/feedSubscription';
+} from '$lib/types/feed';
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';

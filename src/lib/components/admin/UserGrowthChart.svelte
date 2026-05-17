@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { User } from '$lib/types/user';
+	import type { ManagedUser } from '$lib/types/managed_user';
 	import SmoothLineChart from '$lib/components/charts/SmoothLineChart.svelte';
 
 	type GroupBy = 'year' | 'month' | 'week' | 'day';
 
-	let { users }: { users: User[] } = $props();
+	let { users }: { users: ManagedUser[] } = $props();
 
 	let groupBy = $state<GroupBy>('month');
 
@@ -87,7 +87,7 @@
 	}
 
 	function computeGrowthData(
-		users: User[],
+		users: ManagedUser[],
 		group: GroupBy
 	): { categories: string[]; values: number[] } {
 		if (!users.length) return { categories: [], values: [] };

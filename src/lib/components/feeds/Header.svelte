@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { FeedSubscription } from '$lib/types/feedSubscription';
+	import type { FeedSubscription } from '$lib/types/feed';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getFeeds } from '$lib/state/Feeds.svelte';
 	import InlineEditButton from '$lib/components/ui/buttons/InlineEditButton.svelte';

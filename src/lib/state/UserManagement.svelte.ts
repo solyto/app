@@ -2,11 +2,11 @@ import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import type { User, UpdateUserRoleRequest } from '$lib/types/user';
+import type { ManagedUser, UpdateUserRoleRequest } from '$lib/types/managed_user';
 
 export class UserManagement {
 	loaded = $state<boolean>(false);
-	users = $state<User[]>([]);
+	users = $state<ManagedUser[]>([]);
 	auth = getAuth();
 	apiService: ApiService;
 	search = $state<string>('');
@@ -15,7 +15,7 @@ export class UserManagement {
 		this.apiService = new ApiService(this.auth.getToken());
 	}
 
-	filterUsers(): User[] {
+	filterUsers(): ManagedUser[] {
 		if (this.search === '') return this.users;
 		return this.users.filter(
 			(user) =>
@@ -27,12 +27,12 @@ export class UserManagement {
 	async load(): Promise<void> {
 		const res = await this.apiService.get(apiRoutes.admin.users.list, null);
 		if (res) {
-			this.users = res.data as User[];
+			this.users = res.data as ManagedUser[];
 			this.loaded = true;
 		}
 	}
 
-	async updateRole(user: User, role: UpdateUserRoleRequest['role']): Promise<boolean> {
+	async updateRole(user: ManagedUser, role: UpdateUserRoleRequest['role']): Promise<boolean> {
 		const res = await this.apiService.update(apiRoutes.admin.users.update, user.id, { role });
 		if (res) await this.load();
 		return res;

@@ -62,6 +62,7 @@
 			<h2 class="text-sm font-semibold uppercase tracking-wider text-c-neutral-4 dark:text-c-neutral-5">Users</h2>
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 				<StatisticWidget label="Users" number={statistics.overview?.users ?? 0} icon={IconUser} color="blue" loadDelay={delay()} />
+				<StatisticWidget label="Confirmed Users" number={statistics.overview?.confirmed_users ?? 0} icon={IconUsers} color="teal" loadDelay={delay()} />
 				<StatisticWidget label="Friends" number={statistics.overview?.friends ?? 0} icon={IconUserPlus} color="purple" loadDelay={delay()} />
 				<StatisticWidget label="Notifications" number={statistics.overview?.ui_notifications ?? 0} icon={IconBell} color="yellow" loadDelay={delay()} />
 			</div>

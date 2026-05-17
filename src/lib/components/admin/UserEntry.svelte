@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AdminUser } from '$lib/types/user';
+	import type { ManagedUser } from '$lib/types/managed_user';
 	import { getUserManagement } from '$lib/state/UserManagement.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -8,6 +8,7 @@
 	import IconShield from '@lucide/svelte/icons/shield';
 	import IconShieldCheck from '@lucide/svelte/icons/shield-check';
 	import IconUser from '@lucide/svelte/icons/user';
+	import IconBadgeCheck from '@lucide/svelte/icons/badge-check';
 
 	const userManagement = getUserManagement();
 	const auth = getAuth();
@@ -15,12 +16,12 @@
 	const notifications = getUiNotifications();
 	const ts = getTranslation();
 
-	let { user } = $props<{ user: AdminUser }>();
+	let { user } = $props<{ user: ManagedUser }>();
 
 	const isSuperAdmin = auth.user?.role === 'super_admin';
 	const isCurrentUser = auth.user?.id === user.id;
 
-	const roleOptions: { value: AdminUser['role']; label: string }[] = isSuperAdmin
+	const roleOptions: { value: ManagedUser['role']; label: string }[] = isSuperAdmin
 		? [
 				{ value: 'user', label: 'User' },
 				{ value: 'admin', label: 'Admin' },
@@ -33,7 +34,7 @@
 
 	async function handleRoleChange(event: Event): Promise<void> {
 		const target = event.target as HTMLSelectElement;
-		const newRole = target.value as AdminUser['role'];
+		const newRole = target.value as ManagedUser['role'];
 
 		if (newRole === user.role) return;
 
@@ -87,6 +88,9 @@
 	</div>
 
 	<div class="flex items-center gap-3">
+		{#if user.confirmed}
+			<IconBadgeCheck class="h-4 w-4 text-teal-500" title="Confirmed" />
+		{/if}
 		{#if canEditRole}
 			<select
 				class="rounded-lg border border-c-neutral-2 bg-white px-3 py-1.5 text-sm text-c-neutral-7 focus:border-transparent focus:ring-2 focus:ring-c-btn-hover focus:outline-none dark:border-s-dark-3 dark:bg-s-dark-3 dark:text-c-neutral-2"

@@ -7,7 +7,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { grabFaviconFromUrl } from '$lib/helpers/ImageHelper';
-	import type { Feed, FriendFeed } from '$lib/types/feedSubscription';
+	import type { Feed, FriendFeed } from '$lib/types/feed';
 
 	const ts = getTranslation();
 	const feeds = getFeeds();

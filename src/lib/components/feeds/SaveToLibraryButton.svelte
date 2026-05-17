@@ -2,7 +2,7 @@
 	import IconBookmarkPlus from '@lucide/svelte/icons/bookmark-plus';
 	import IconBookmarkCheck from '@lucide/svelte/icons/bookmark-check';
 	import { getLinkLibrary } from '$lib/state/LinkLibrary.svelte';
-	import type { FeedItem } from '$lib/types/feedSubscription';
+	import type { FeedItem } from '$lib/types/feed';
 	import { getFeeds } from '$lib/state/Feeds.svelte';
 	import { scale, blur } from 'svelte/transition';
 	import type { CreateLinkRequest } from '$lib/types/library_link';
