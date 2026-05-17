@@ -52,8 +52,8 @@ export class LinkLibrary {
 
 		if (res) {
 			this.entries = res.data as Link[];
-			this.filteredEntries = this.entries;
 			await this.loadCategories();
+			this.reapplyFilter();
 			this.loaded = true;
 		}
 	}
@@ -110,10 +110,7 @@ export class LinkLibrary {
 
 		if (categoryId === null) {
 			this.filteredEntries = this.entries;
-			return;
-		}
-
-		if (categoryId === 0) {
+		} else if (categoryId === 0) {
 			this.filteredEntries = this.entries.filter((link) => link.category === null);
 		} else {
 			this.filteredEntries = this.entries.filter((link) => link.category?.id === categoryId);
@@ -123,6 +120,14 @@ export class LinkLibrary {
 	filterByFavorite(): void {
 		this.activeFilter = 'favorite';
 		this.filteredEntries = this.entries.filter((link) => link.is_favorite);
+	}
+
+	reapplyFilter(): void {
+		if (this.activeFilter === 'favorite') {
+			this.filterByFavorite();
+		} else {
+			this.filterByCategory(this.activeFilter);
+		}
 	}
 
 	async dragToCategory(): Promise<void> {
