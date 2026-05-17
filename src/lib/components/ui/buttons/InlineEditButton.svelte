@@ -8,7 +8,6 @@
 
 <div
 	class="group relative z-40 flex size-[34px] cursor-pointer items-center justify-center rounded-full border-c-neutral-3 text-c-btn drop-shadow-md transition-all hover:drop-shadow-xl"
-	onclick={onClick}
 >
 	<button
 		class="absolute flex h-0 w-0 cursor-pointer items-center justify-center rounded-full bg-c-btn text-white transition-all group-hover:h-full group-hover:w-full hover:shadow-sm"

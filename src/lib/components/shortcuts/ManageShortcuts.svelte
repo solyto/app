@@ -8,16 +8,23 @@
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
+	import { getKeyManager } from '$lib/KeyManager.svelte.js';
+	import { onDestroy, tick } from 'svelte';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const shortcuts = getShortcuts();
+	const keyManager = getKeyManager();
 
 	let { onClose } = $props<{ onClose: () => void }>();
 
 	let create = $state<boolean>(false);
 	let titleValue = $state<string>('');
 	let urlValue = $state<string>('');
+	let titleInput = $state<HTMLInputElement | null>(null);
+	let keyHandlers = $state<{ Enter: string | null; Escape: string | null }>({ Enter: null, Escape: null });
+
+	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 
 	async function onCreate() {
 		if (titleValue === '' || urlValue === '') {
@@ -34,13 +41,22 @@
 		toggleCreate();
 	}
 
-	function toggleCreate() {
+	async function toggleCreate() {
 		create = !create;
+		if (create) {
+			keyHandlers.Enter = keyManager.registerKeyDown('Enter', onCreate);
+			keyHandlers.Escape = keyManager.registerKeyDown('Escape', toggleCreate);
+			await tick();
+			titleInput?.focus();
+		} else {
+			keyManager.unregisterAll(keyHandlers);
+			keyHandlers = { Enter: null, Escape: null };
+		}
 	}
 </script>
 
 <ContentModal title={ts.get.widgets.manage_shortcuts} rounded="2xl" p="4" {onClose}>
-	<div class="flex w-full flex-col gap-2">
+	<div class="flex w-full flex-col gap-0">
 		{#each shortcuts.shortcuts as shortcut (shortcut.id)}
 			<ShotcutEdit {shortcut} />
 		{/each}
@@ -48,6 +64,7 @@
 			{#if create}
 				<div class="flex w-full items-center gap-2">
 					<TextInput
+						bind:input={titleInput}
 						bind:value={titleValue}
 						placeholder={ts.get.widgets.shortcut_title}
 					/>
