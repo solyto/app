@@ -13,17 +13,21 @@ import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import { SvelteDate } from 'svelte/reactivity';
 
 export class Feeds {
 	static readonly LS_VIEW_KEY: string = 'feeds_entry_size';
 	static readonly LS_IN_LIBRARY_KEY: string = 'feeds_in_library';
+	static readonly ITEMS_PER_PAGE = 50;
 
 	loaded = $state<boolean>(false);
 	feeds = $state<FeedSubscription[]>([]);
 	activeFeed = $state<FeedSubscription | null>(null);
 	items = $state<FeedItem[]>([]);
 	filteredItems = $state<FeedItem[]>([]);
+	hasMore = $state<boolean>(true);
+	loadingMore = $state<boolean>(false);
+	offset = $state<number>(0);
+	feedCounts = $state<Record<string, number>>({});
 	modalOpen = $state<boolean>(false);
 	browseOpen = $state<boolean>(false);
 	view = $state<FeedEntrySize>('compact');
@@ -55,16 +59,38 @@ export class Feeds {
 
 		if (res) {
 			this.feeds = res.data as FeedSubscription[];
-			const item_res = await this.apiService.list(apiRoutes.feeds.listItems);
+			this.items = [];
+			this.offset = 0;
+			this.hasMore = true;
 
-			if (item_res) {
-				this.items = item_res.data as FeedItem[];
-			}
+			await this.loadMore();
 
 			this.loaded = true;
-			this.filter();
-			this.sort();
 			this.loadInLibrary();
+		}
+	}
+
+	async loadMore(): Promise<void> {
+		if (!this.hasMore || this.loadingMore) return;
+		this.loadingMore = true;
+
+		const res = await this.apiService.list(
+			`${apiRoutes.feeds.listItems}?offset=${this.offset}&limit=${Feeds.ITEMS_PER_PAGE}`
+		);
+
+		if (res) {
+			const newItems = res.data as FeedItem[];
+			this.items = [...this.items, ...newItems];
+			this.offset += newItems.length;
+			this.hasMore = (res.meta?.has_more as boolean) ?? false;
+			this.feedCounts = (res.meta?.feed_counts as Record<string, number>) ?? this.feedCounts;
+		}
+
+		this.loadingMore = false;
+		this.filter();
+
+		if (this.activeFeed && this.filteredItems.length < Feeds.ITEMS_PER_PAGE && this.hasMore) {
+			await this.loadMore();
 		}
 	}
 
@@ -77,21 +103,17 @@ export class Feeds {
 		this.filteredItems = this.items.filter((item) => item.feed_id === this.activeFeed?.feed_id);
 	}
 
-	sort(): void {
-		this.filteredItems = [...this.filteredItems].sort(
-			(a, b) =>
-				new SvelteDate(b.published_at).getTime() - new SvelteDate(a.published_at).getTime()
-		);
-	}
-
 	selectFeed(feed: FeedSubscription | null): void {
 		this.activeFeed = feed;
 		this.filter();
-		this.sort();
+
+		if (feed && this.filteredItems.length < Feeds.ITEMS_PER_PAGE && this.hasMore) {
+			this.loadMore();
+		}
 	}
 
 	getFeedCount(feed: FeedSubscription): number {
-		return this.items.filter((item) => item.feed_id === feed.feed_id).length;
+		return this.feedCounts[feed.feed_id] ?? 0;
 	}
 
 	saveToLibrary(feed: FeedSubscription): void {

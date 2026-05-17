@@ -1,5 +1,6 @@
 export interface ListResponse {
 	data: [];
+	meta?: Record<string, unknown>;
 }
 
 export interface GetResponse {

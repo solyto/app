@@ -5,6 +5,19 @@
 	import CardEntry from '$lib/components/feeds/CardEntry.svelte';
 
 	const feeds = getFeeds();
+
+	let sentinel: HTMLDivElement;
+
+	$effect(() => {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries[0].isIntersecting) feeds.loadMore();
+			},
+			{ rootMargin: '1000px' }
+		);
+		observer.observe(sentinel);
+		return () => observer.disconnect();
+	});
 </script>
 
 {#if feeds.view === 'compact'}
@@ -20,11 +33,11 @@
 		{/each}
 	</div>
 {:else}
-	<div
-		class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
-	>
+	<div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 		{#each feeds.filteredItems as item (item.id)}
 			<CardEntry {item} />
 		{/each}
 	</div>
 {/if}
+
+<div bind:this={sentinel} class="h-px"></div>
