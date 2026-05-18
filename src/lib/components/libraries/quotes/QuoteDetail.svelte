@@ -14,10 +14,10 @@
 </script>
 
 <DetailModal {entry} {library}>
-	<div class="text-lg font-bold" class:hidden={entry.author === null}>
-		{entry.author}
-	</div>
-	<div class="mt-4">
+	{#if entry.author !== null}
+		<div class="text-lg font-bold">{entry.author}</div>
+	{/if}
+	<div class:mt-4={entry.author !== null}>
 		{@html DOMPurify.sanitize(nl2br(entry.quote))}
 	</div>
 	<div class="mt-4" class:hidden={entry.summary === null}>
