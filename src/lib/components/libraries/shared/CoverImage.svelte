@@ -31,5 +31,5 @@
 	<img src={previewSrc} {alt} class={customClass} in:scale />
 {/if}
 {#if fullLoaded}
-	<img {src} {alt} class="absolute inset-0 {customClass}" in:blur={{ amount: 12, duration: 400 }} />
+	<img {src} {alt} class="{previewLoaded ? 'absolute inset-0 ' : ''}{customClass}" in:blur={{ amount: 12, duration: 400 }} />
 {/if}
