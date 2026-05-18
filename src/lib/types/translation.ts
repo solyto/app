@@ -536,6 +536,9 @@ export interface LibraryRecords {
 	release_date: string;
 	releases_none: string;
 	wishlist: string;
+	add_to_wishlist: string;
+	added_to_wishlist: string;
+	add_to_wishlist_error: string;
 	search_on: string;
 	show_on: string;
 }

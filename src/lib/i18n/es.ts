@@ -569,6 +569,9 @@ const libraries: LibraryRecords = {
 	release_date: 'Fecha de lanzamiento',
 	releases_none: 'No se encontraron lanzamientos.',
 	wishlist: 'Lista de deseos',
+	add_to_wishlist: 'Añadir a la lista de deseos',
+	added_to_wishlist: 'Añadido a la lista de deseos',
+	add_to_wishlist_error: 'No se pudo añadir a la lista de deseos',
 	search_on: 'Buscar en %s',
 	show_on: 'Ver en %s'
 };
