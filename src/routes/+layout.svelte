@@ -18,8 +18,6 @@
 	import { resolve } from '$app/paths';
 	import { setUserNotifications } from '$lib/state/UserNotifications.svelte';
 	import { setFeatures } from '$lib/state/Features.svelte';
-	import { getHelp, setHelp } from '$lib/state/Help.svelte';
-	import HelpOverlay from '$lib/components/help/HelpOverlay.svelte';
 	import { setCookieConsent } from '$lib/state/CookieConsent.svelte';
 	import CookieBanner from '$lib/components/ui/CookieBanner.svelte';
 	import { getPwaInstall, setPwaInstall } from '$lib/state/PwaInstall.svelte';
@@ -43,7 +41,6 @@
 	setUiNotifications();
 	setUserNotifications();
 	setFeatures();
-	setHelp();
 	setCookieConsent();
 	setPwaInstall();
 	setWelcomeTour();
@@ -55,7 +52,6 @@
 	const auth = getAuth();
 	const keyManager = getKeyManager();
 	const ts = getTranslation();
-	const help = getHelp();
 	const quickAdd = getQuickAdd();
 	const commandPalette = getCommandPalette();
 
@@ -72,7 +68,6 @@
 		ts.loadLanguage();
 
 		if (viewPoint.isDesktop) {
-			keyManager.registerKeyDown('F1', () => help.handleF1(), { preventOthers: false });
 			keyManager.registerKeyDown('Space', () => commandPalette.openPalette(), { priority: 0, withHelperKey: 'Control', preventOthers: true });
 		}
 
@@ -121,9 +116,6 @@
 		<div class="z-[100] block h-16 w-full 2xl:hidden">
 			<MobileNavbar />
 		</div>
-	{/if}
-	{#if help.visible}
-		<HelpOverlay />
 	{/if}
 	<WelcomeTour />
 	{#if !isAuthRoute()}

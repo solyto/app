@@ -6,7 +6,6 @@
 	import { tick, untrack } from 'svelte'
 	import { page } from '$app/state'
 	import { scale } from 'svelte/transition'
-	import type { HelpSection } from '$lib/state/Help.svelte'
 	import IconChevronLeft from '@lucide/svelte/icons/chevron-left'
 	import IconChevronRight from '@lucide/svelte/icons/chevron-right'
 	import IconX from '@lucide/svelte/icons/x'
@@ -71,9 +70,7 @@
 				tips: []
 			}
 		}
-		const section = ts.get.help[step.key as HelpSection] as
-			| Record<string, string>
-			| undefined
+		const section = ts.get.welcome_tour.steps[step.key]
 		if (!section) return null
 		const tips = Object.entries(section)
 			.filter(([key]) => key.endsWith('_tip'))

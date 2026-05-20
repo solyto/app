@@ -802,117 +802,6 @@ export interface ProfileRecords {
 	sent: string;
 }
 
-export interface HelpRecords {
-	title: string;
-	close: string;
-	section_overview: string;
-	keyboard_shortcuts: string;
-	tips: string;
-	shortcut_f1: string;
-	shortcut_escape: string;
-	shortcut_enter: string;
-	shortcut_enter_todo: string;
-	home: {
-		title: string;
-		description: string;
-		widgets_tip: string;
-		edit_tip: string;
-	};
-	todos: {
-		title: string;
-		description: string;
-		create_tip: string;
-		priority_tip: string;
-		workspace_tip: string;
-		subtask_tip: string;
-	};
-	calendar: {
-		title: string;
-		description: string;
-		views_tip: string;
-		create_tip: string;
-		sync_tip: string;
-	};
-	notes: {
-		title: string;
-		description: string;
-		markdown_tip: string;
-		folders_tip: string;
-		export_tip: string;
-	};
-	libraries: {
-		title: string;
-		description: string;
-		import_tip: string;
-		filter_tip: string;
-		recommend_tip: string;
-	};
-	contacts: {
-		title: string;
-		description: string;
-		sync_tip: string;
-		groups_tip: string;
-	};
-	checkIn: {
-		title: string;
-		description: string;
-		daily_tip: string;
-		stats_tip: string;
-	};
-	assistants: {
-		title: string;
-		description: string;
-		create_tip: string;
-		prompt_tip: string;
-	};
-	finances: {
-		title: string;
-		description: string;
-		wealth_tip: string;
-		budget_tip: string;
-	};
-	feeds: {
-		title: string;
-		description: string;
-		add_tip: string;
-		filter_tip: string;
-	};
-	clipboard: {
-		title: string;
-		description: string;
-		sync_tip: string;
-	};
-	timeTracking: {
-		title: string;
-		description: string;
-		projects_tip: string;
-		entries_tip: string;
-	};
-	settings: {
-		title: string;
-		description: string;
-		features_tip: string;
-		localization_tip: string;
-	};
-	profile: {
-		title: string;
-		description: string;
-		friends_tip: string;
-	};
-	dev_requests: {
-		title: string;
-		description: string;
-		create_tip: string;
-		status_tip: string;
-	};
-	timeTracking: {
-		title: string;
-		description: string;
-		timer_tip: string;
-		projects_tip: string;
-	};
-}
-
 export interface AdminRecords {
 	role_update_success: string;
 	role_update_error: string;
@@ -973,6 +862,7 @@ export interface WelcomeTourRecords {
 	tour_outro_title: string;
 	tour_outro_description: string;
 	tour_start: string;
+	steps: Record<string, Record<string, string>>;
 }
 
 export interface TimeTrackingRecords {
@@ -1107,7 +997,6 @@ export interface LanguageFile {
 	clipboard: ClipboardRecords;
 	profile: ProfileRecords;
 	dav: DavRecords;
-	help: HelpRecords;
 	welcome_tour: WelcomeTourRecords;
 	admin: AdminRecords;
 	cookie_consent: CookieConsentRecords;

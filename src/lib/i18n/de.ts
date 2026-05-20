@@ -21,7 +21,6 @@ import type {
 	ContactRecords,
 	ProfileRecords,
 	DavRecords,
-	HelpRecords,
 	WelcomeTourRecords,
 	AdminRecords,
 	CookieConsentRecords,
@@ -840,157 +839,6 @@ const profile: ProfileRecords = {
 	sent: 'Gesendet'
 };
 
-const help: HelpRecords = {
-	title: 'Hilfe',
-	close: 'Schließen',
-	section_overview: 'Über diesen Bereich',
-	keyboard_shortcuts: 'Tastenkürzel',
-	tips: 'Tipps & Tricks',
-	shortcut_f1: 'Hilfe ein-/ausblenden',
-	shortcut_escape: 'Dialoge schließen',
-	shortcut_enter: 'Aktionen bestätigen',
-	shortcut_enter_todo: 'Neue Aufgabe erstellen',
-	home: {
-		title: 'Dashboard',
-		description:
-			'Dein persönliches Dashboard mit Widgets für schnellen Zugriff auf deine wichtigsten Informationen. Passe es an, um genau das zu sehen, was dir wichtig ist.',
-		widgets_tip:
-			'Linke Spalte: dein Tag auf einen Blick. Mitte: Inspiration und Links. Rechts: Statistiken und Schnellzugriff.',
-		edit_tip:
-			'Einige Bereiche erscheinen erst, wenn du Inhalte hinzugefügt hast – füge Aufgaben, Termine oder Check-ins hinzu.'
-	},
-	todos: {
-		title: 'Aufgaben',
-		description:
-			'Verwalte deine Aufgaben mit Prioritäten, Fälligkeitsdaten, Kategorien und Arbeitsbereichen. Bleibe organisiert und verpasse keine Deadline.',
-		create_tip: 'Drücke Enter nach der Eingabe, um schnell eine neue Aufgabe zu erstellen.',
-		priority_tip:
-			'Setze Prioritäten (Hoch, Mittel, Niedrig), um dich auf das Wichtigste zu konzentrieren.',
-		workspace_tip:
-			'Nutze Arbeitsbereiche, um persönliche und berufliche Aufgaben zu trennen oder nach Projekten zu organisieren.',
-		subtask_tip:
-			'Teile komplexe Aufgaben in Unteraufgaben auf, um den Fortschritt Schritt für Schritt zu verfolgen.',
-		recurring_tip:
-			'Stelle eine Wiederholung für eine Aufgabe ein, damit sie automatisch nach einem Zeitplan neu erstellt wird.'
-	},
-	calendar: {
-		title: 'Kalender',
-		description:
-			'Plane Termine und Veranstaltungen. Synchronisiere mit deinen Geräten über CalDAV für nahtlosen Zugriff überall.',
-		views_tip:
-			'Wechsle zwischen Monats-, Wochen-, Tages- und Listenansicht mit den Buttons oben.',
-		create_tip:
-			'Klicke auf einen Tag oder Zeitraum, um schnell einen neuen Termin zu erstellen.',
-		sync_tip:
-			'Nutze CalDAV-Sync, um von jedem Gerät oder jeder App aus auf deinen Kalender zuzugreifen.'
-	},
-	notes: {
-		title: 'Notizen',
-		description:
-			'Schreibe und organisiere Notizen mit Markdown. Erstelle Ordner, um zusammengehörige Notizen zu gruppieren.',
-		markdown_tip:
-			'Nutze Markdown-Syntax für Formatierungen: **fett**, *kursiv*, # Überschriften, - Listen und mehr.',
-		folders_tip:
-			'Erstelle Ordner, um Notizen nach Thema, Projekt oder beliebigen Kategorien zu organisieren.',
-		export_tip: 'Exportiere deine Notizen, um sie mitzunehmen oder zu sichern.'
-	},
-	libraries: {
-		title: 'Bibliotheken',
-		description:
-			'Verwalte deine Sammlungen von Büchern, Musik, Filmen, Spielen, Rezepten, Zitaten und Links. Bewerte, tagge und organisiere alles, was du liebst.',
-		import_tip:
-			'Importiere Einträge von externen Quellen wie Deezer, Discogs, IMDb, Steam und mehr.',
-		filter_tip: 'Nutze Filter und Tags, um schnell Einträge in deiner Sammlung zu finden.',
-		recommend_tip:
-			'Probiere die Empfehlungsfunktion aus, um Einträge aus deiner Bibliothek neu zu entdecken.'
-	},
-	contacts: {
-		title: 'Kontakte',
-		description:
-			'Verwalte dein Adressbuch mit CardDAV-Sync-Unterstützung. Halte deine Kontakte auf allen Geräten zugänglich.',
-		sync_tip:
-			'Importiere und synchronisiere Kontakte über CardDAV, um alles auf allen Geräten synchron zu halten.',
-		groups_tip: 'Organisiere Kontakte in Gruppen für einfaches Filtern und Verwalten.'
-	},
-	checkIn: {
-		title: 'Check-in',
-		description:
-			'Verfolge deine täglichen Gewohnheiten, Stimmung, Schlaf und mehr. Entwickle ein Bewusstsein für deine Muster im Laufe der Zeit.',
-		daily_tip:
-			'Fülle dein tägliches Check-in aus, um ein Bild deiner Gewohnheiten und deines Wohlbefindens zu erstellen.',
-		stats_tip: 'Sieh dir Statistiken an, um Trends und Muster in deinen Daten zu erkennen.',
-		trackers_tip: 'Passe in den Check-in-Einstellungen an, welche Tracker du täglich erfassen möchtest.',
-		sport_tip: 'Wähle deinen Sporttyp in den Einstellungen, damit das Aktivitäts-Tracking zu deiner Routine passt.'
-	},
-	assistants: {
-		title: 'Assistenten',
-		description:
-			'Erstelle benutzerdefinierte KI-Assistenten mit spezifischen Prompts für verschiedene Aufgaben. Deine Gespräche bleiben privat.',
-		create_tip:
-			'Erstelle Assistenten mit benutzerdefinierten Prompts für spezifische Aufgaben wie Schreiben, Programmieren oder Brainstorming.',
-		prompt_tip:
-			'Schreibe detaillierte Prompts, um bessere, fokussiertere Antworten von deinen Assistenten zu erhalten.'
-	},
-	finances: {
-		title: 'Finanzen',
-		description:
-			'Verfolge dein Vermögen und Budget. Erhalte ein klares Bild deiner finanziellen Situation.',
-		wealth_tip:
-			'Füge Konten und Vermögenswerte hinzu, um dein Gesamtvermögen im Laufe der Zeit zu verfolgen.',
-		budget_tip: 'Richte Einnahmen- und Ausgabenkategorien ein, um deinen Cashflow zu verstehen.'
-	},
-	feeds: {
-		title: 'Feeds',
-		description:
-			'Folge RSS-Feeds deiner Lieblingsquellen. Keine Algorithmen, nur die Inhalte, die du wählst.',
-		add_tip:
-			'Füge Feeds hinzu, indem du die RSS-URL einfügst. Die meisten Blogs und Nachrichtenseiten haben RSS-Feeds.',
-		filter_tip:
-			'Nutze Whitelist- und Blacklist-Schlüsselwörter, um Artikel nach Inhalt zu filtern.'
-	},
-	clipboard: {
-		title: 'Zwischenablage',
-		description:
-			'Eine synchronisierte Zwischenablage, die auf allen deinen Geräten funktioniert. Speichere Textschnipsel für schnellen Zugriff.',
-		sync_tip:
-			'Speichere Zwischenablage-Einträge, um von jedem Gerät darauf zuzugreifen, auf dem du angemeldet bist.'
-	},
-	settings: {
-		title: 'Einstellungen',
-		description:
-			'Passe solyto an, damit es genau so funktioniert, wie du es möchtest. Konfiguriere Funktionen, Erscheinungsbild und Integrationen.',
-		features_tip:
-			'Aktiviere oder deaktiviere Funktionen, um nur das in der Navigation anzuzeigen, was du brauchst.',
-		localization_tip: 'Stelle deine bevorzugte Sprache, Zeitzone und Datums-/Zeitformate ein.'
-	},
-	profile: {
-		title: 'Profil',
-		description: 'Verwalte dein Konto und verbinde dich mit Freunden.',
-		friends_tip:
-			'Sende und akzeptiere Freundschaftsanfragen, um dich mit anderen solyto-Nutzern zu verbinden.'
-	},
-	dev_requests: {
-		title: 'Entwickleranfragen',
-		description:
-			'Sende Fehlerberichte und Funktionsanfragen direkt an das Entwicklerteam. Verfolge den Status deiner Einreichungen.',
-		create_tip:
-			'Füge Screenshots und detaillierte Beschreibungen hinzu, damit Entwickler Probleme schneller verstehen und beheben können.',
-		status_tip:
-			'Schau regelmäßig vorbei, um zu sehen, wann deine Anfrage von Backlog zu In Bearbeitung zu Abgeschlossen wechselt.'
-	},
-	timeTracking: {
-		title: 'Zeiterfassung',
-		description:
-			'Erfasse die Zeit für Projekte und Aufgaben. Nutze den Timer oder füge Einträge manuell hinzu. Sieh dir Statistiken an, um zu verstehen, wohin deine Zeit geht.',
-		timer_tip:
-			'Starte einen Timer, um die Zeit automatisch zu erfassen, oder füge Einträge manuell hinzu.',
-		projects_tip:
-			'Organisiere deine Zeiteinträge in Projekte und Kategorien für bessere Einblicke.',
-		pomodoro_tip:
-			'Nutze den eingebauten Pomodoro-Timer, um in fokussierten Intervallen mit Pausen dazwischen zu arbeiten.'
-	}
-};
-
 const welcome_tour: WelcomeTourRecords = {
 	welcome_title: 'Willkommen bei solyto!',
 	welcome_subtitle: 'Dein persönlicher Produktivitäts-Hub',
@@ -1033,7 +881,7 @@ const welcome_tour: WelcomeTourRecords = {
 	ready_title: 'Alles bereit!',
 	ready_subtitle: 'Bereit zum Loslegen',
 	ready_description: 'Dein solyto ist konfiguriert und startklar. Viel Spaß!',
-	ready_description_desktop: 'Drücke jederzeit F1, um Hilfe zur aktuellen Seite zu erhalten.',
+	ready_description_desktop: 'Alles bereit! Entdecke solyto.',
 	next: 'Weiter',
 	back: 'Zurück',
 	skip: 'Tour überspringen',
@@ -1048,8 +896,107 @@ const welcome_tour: WelcomeTourRecords = {
 	tour_intro_title: 'Lass uns einen kurzen Rundgang machen',
 	tour_intro_description: 'Ich zeige dir jede Funktion in deiner Navigation. Du kannst jederzeit in den Einstellungen zurückkehren.',
 	tour_outro_title: 'Alles bereit!',
-	tour_outro_description: 'Das ist solyto! Drücke jederzeit F1, um Hilfe zum aktuellen Bereich zu erhalten.',
-	tour_start: 'Tour starten'
+	tour_outro_description: 'Das ist solyto! Alles, was du brauchst, an einem Ort.',
+	tour_start: 'Tour starten',
+	steps: {
+		home: {
+			title: 'Dashboard',
+			description: 'Dein persönliches Dashboard mit Widgets für schnellen Zugriff auf deine wichtigsten Informationen. Passe es an, um genau das zu sehen, was dir wichtig ist.',
+			widgets_tip: 'Linke Spalte: dein Tag auf einen Blick. Mitte: Inspiration und Links. Rechts: Statistiken und Schnellzugriff.',
+			edit_tip: 'Einige Bereiche erscheinen erst, wenn du Inhalte hinzugefügt hast – füge Aufgaben, Termine oder Check-ins hinzu.'
+		},
+		todos: {
+			title: 'Aufgaben',
+			description: 'Verwalte deine Aufgaben mit Prioritäten, Fälligkeitsdaten, Kategorien und Arbeitsbereichen. Bleibe organisiert und verpasse keine Deadline.',
+			create_tip: 'Drücke Enter nach der Eingabe, um schnell eine neue Aufgabe zu erstellen.',
+			priority_tip: 'Setze Prioritäten (Hoch, Mittel, Niedrig), um dich auf das Wichtigste zu konzentrieren.',
+			workspace_tip: 'Nutze Arbeitsbereiche, um persönliche und berufliche Aufgaben zu trennen oder nach Projekten zu organisieren.',
+			subtask_tip: 'Teile komplexe Aufgaben in Unteraufgaben auf, um den Fortschritt Schritt für Schritt zu verfolgen.',
+			recurring_tip: 'Stelle eine Wiederholung für eine Aufgabe ein, damit sie automatisch nach einem Zeitplan neu erstellt wird.'
+		},
+		calendar: {
+			title: 'Kalender',
+			description: 'Plane Termine und Veranstaltungen. Synchronisiere mit deinen Geräten über CalDAV für nahtlosen Zugriff überall.',
+			views_tip: 'Wechsle zwischen Monats-, Wochen-, Tages- und Listenansicht mit den Buttons oben.',
+			create_tip: 'Klicke auf einen Tag oder Zeitraum, um schnell einen neuen Termin zu erstellen.',
+			sync_tip: 'Nutze CalDAV-Sync, um von jedem Gerät oder jeder App aus auf deinen Kalender zuzugreifen.'
+		},
+		notes: {
+			title: 'Notizen',
+			description: 'Schreibe und organisiere Notizen mit Markdown. Erstelle Ordner, um zusammengehörige Notizen zu gruppieren.',
+			markdown_tip: 'Nutze Markdown-Syntax für Formatierungen: **fett**, *kursiv*, # Überschriften, - Listen und mehr.',
+			folders_tip: 'Erstelle Ordner, um Notizen nach Thema, Projekt oder beliebigen Kategorien zu organisieren.',
+			export_tip: 'Exportiere deine Notizen, um sie mitzunehmen oder zu sichern.'
+		},
+		libraries: {
+			title: 'Bibliotheken',
+			description: 'Verwalte deine Sammlungen von Büchern, Musik, Filmen, Spielen, Rezepten, Zitaten und Links. Bewerte, tagge und organisiere alles, was du liebst.',
+			import_tip: 'Importiere Einträge von externen Quellen wie Deezer, Discogs, IMDb, Steam und mehr.',
+			filter_tip: 'Nutze Filter und Tags, um schnell Einträge in deiner Sammlung zu finden.',
+			recommend_tip: 'Probiere die Empfehlungsfunktion aus, um Einträge aus deiner Bibliothek neu zu entdecken.'
+		},
+		contacts: {
+			title: 'Kontakte',
+			description: 'Verwalte dein Adressbuch mit CardDAV-Sync-Unterstützung. Halte deine Kontakte auf allen Geräten zugänglich.',
+			sync_tip: 'Importiere und synchronisiere Kontakte über CardDAV, um alles auf allen Geräten synchron zu halten.',
+			groups_tip: 'Organisiere Kontakte in Gruppen für einfaches Filtern und Verwalten.'
+		},
+		checkIn: {
+			title: 'Check-in',
+			description: 'Verfolge deine täglichen Gewohnheiten, Stimmung, Schlaf und mehr. Entwickle ein Bewusstsein für deine Muster im Laufe der Zeit.',
+			daily_tip: 'Fülle dein tägliches Check-in aus, um ein Bild deiner Gewohnheiten und deines Wohlbefindens zu erstellen.',
+			stats_tip: 'Sieh dir Statistiken an, um Trends und Muster in deinen Daten zu erkennen.',
+			trackers_tip: 'Passe in den Check-in-Einstellungen an, welche Tracker du täglich erfassen möchtest.',
+			sport_tip: 'Wähle deinen Sporttyp in den Einstellungen, damit das Aktivitäts-Tracking zu deiner Routine passt.'
+		},
+		assistants: {
+			title: 'Assistenten',
+			description: 'Erstelle benutzerdefinierte KI-Assistenten mit spezifischen Prompts für verschiedene Aufgaben. Deine Gespräche bleiben privat.',
+			create_tip: 'Erstelle Assistenten mit benutzerdefinierten Prompts für spezifische Aufgaben wie Schreiben, Programmieren oder Brainstorming.',
+			prompt_tip: 'Schreibe detaillierte Prompts, um bessere, fokussiertere Antworten von deinen Assistenten zu erhalten.'
+		},
+		finances: {
+			title: 'Finanzen',
+			description: 'Verfolge dein Vermögen und Budget. Erhalte ein klares Bild deiner finanziellen Situation.',
+			wealth_tip: 'Füge Konten und Vermögenswerte hinzu, um dein Gesamtvermögen im Laufe der Zeit zu verfolgen.',
+			budget_tip: 'Richte Einnahmen- und Ausgabenkategorien ein, um deinen Cashflow zu verstehen.'
+		},
+		feeds: {
+			title: 'Feeds',
+			description: 'Folge RSS-Feeds deiner Lieblingsquellen. Keine Algorithmen, nur die Inhalte, die du wählst.',
+			add_tip: 'Füge Feeds hinzu, indem du die RSS-URL einfügst. Die meisten Blogs und Nachrichtenseiten haben RSS-Feeds.',
+			filter_tip: 'Nutze Whitelist- und Blacklist-Schlüsselwörter, um Artikel nach Inhalt zu filtern.'
+		},
+		clipboard: {
+			title: 'Zwischenablage',
+			description: 'Eine synchronisierte Zwischenablage, die auf allen deinen Geräten funktioniert. Speichere Textschnipsel für schnellen Zugriff.',
+			sync_tip: 'Speichere Zwischenablage-Einträge, um von jedem Gerät darauf zuzugreifen, auf dem du angemeldet bist.'
+		},
+		settings: {
+			title: 'Einstellungen',
+			description: 'Passe solyto an, damit es genau so funktioniert, wie du es möchtest. Konfiguriere Funktionen, Erscheinungsbild und Integrationen.',
+			features_tip: 'Aktiviere oder deaktiviere Funktionen, um nur das in der Navigation anzuzeigen, was du brauchst.',
+			localization_tip: 'Stelle deine bevorzugte Sprache, Zeitzone und Datums-/Zeitformate ein.'
+		},
+		profile: {
+			title: 'Profil',
+			description: 'Verwalte dein Konto und verbinde dich mit Freunden.',
+			friends_tip: 'Sende und akzeptiere Freundschaftsanfragen, um dich mit anderen solyto-Nutzern zu verbinden.'
+		},
+		dev_requests: {
+			title: 'Entwickleranfragen',
+			description: 'Sende Fehlerberichte und Funktionsanfragen direkt an das Entwicklerteam. Verfolge den Status deiner Einreichungen.',
+			create_tip: 'Füge Screenshots und detaillierte Beschreibungen hinzu, damit Entwickler Probleme schneller verstehen und beheben können.',
+			status_tip: 'Schau regelmäßig vorbei, um zu sehen, wann deine Anfrage von Backlog zu In Bearbeitung zu Abgeschlossen wechselt.'
+		},
+		timeTracking: {
+			title: 'Zeiterfassung',
+			description: 'Erfasse die Zeit für Projekte und Aufgaben. Nutze den Timer oder füge Einträge manuell hinzu. Sieh dir Statistiken an, um zu verstehen, wohin deine Zeit geht.',
+			timer_tip: 'Starte einen Timer, um die Zeit automatisch zu erfassen, oder füge Einträge manuell hinzu.',
+			projects_tip: 'Organisiere deine Zeiteinträge in Projekte und Kategorien für bessere Einblicke.',
+			pomodoro_tip: 'Nutze den eingebauten Pomodoro-Timer, um in fokussierten Intervallen mit Pausen dazwischen zu arbeiten.'
+		}
+	}
 };
 
 const admin: AdminRecords = {
@@ -1190,7 +1137,6 @@ export const de: LanguageFile = {
 	clipboard,
 	profile,
 	dav,
-	help,
 	welcome_tour,
 	admin,
 	cookie_consent,
