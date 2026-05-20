@@ -29,6 +29,9 @@
 	import { getQuickAdd, setQuickAdd } from '$lib/state/QuickAdd.svelte';
 	import QuickAddFab from '$lib/components/quick-add/QuickAddFab.svelte';
 	import QuickAddModal from '$lib/components/quick-add/QuickAddModal.svelte';
+	import { getCommandPalette, setCommandPalette } from '$lib/state/CommandPalette.svelte';
+	import CommandPaletteModal from '$lib/components/command-palette/CommandPalette.svelte';
+	import { registerCommands } from '$lib/components/command-palette/Commands.svelte';
 
 	let { children } = $props();
 
@@ -45,6 +48,7 @@
 	setPwaInstall();
 	setWelcomeTour();
 	setQuickAdd();
+	setCommandPalette();
 
 	const theme = setThemeState();
 	const viewPoint = getViewPoint();
@@ -53,17 +57,15 @@
 	const ts = getTranslation();
 	const help = getHelp();
 	const quickAdd = getQuickAdd();
+	const commandPalette = getCommandPalette();
 
 	let innerHeight = $state<number>(0);
 
-	onMount(() => {
+	onMount(async () => {
 		theme.load();
 		if (!auth.loggedIn && page.route.id !== '/auth/register') goto(resolve(urls.login));
 
-		const updateHeight = () => {
-			innerHeight = window.innerHeight;
-		};
-
+		const updateHeight = () => { innerHeight = window.innerHeight; };
 		updateHeight();
 		window.addEventListener('resize', updateHeight);
 
@@ -71,9 +73,10 @@
 
 		if (viewPoint.isDesktop) {
 			keyManager.registerKeyDown('F1', () => help.handleF1(), { preventOthers: false });
+			keyManager.registerKeyDown('Space', () => commandPalette.openPalette(), { priority: 0, withHelperKey: 'Control', preventOthers: true });
 		}
 
-		return () => window.removeEventListener('resize', updateHeight);
+		await registerCommands();
 	});
 
 	function showNavbar(): boolean {
@@ -131,6 +134,9 @@
 		{#if quickAdd.open}
 			<QuickAddModal />
 		{/if}
+	{/if}
+	{#if commandPalette.open}
+		<CommandPaletteModal />
 	{/if}
 </div>
 

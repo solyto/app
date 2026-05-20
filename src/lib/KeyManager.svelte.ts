@@ -14,6 +14,7 @@ export class KeyManager {
 	handlers = $state<{
 		Enter: KeyDownHandler[];
 		Escape: KeyDownHandler[];
+		Space: KeyDownHandler[];
 		e: KeyDownHandler[];
 		f: KeyDownHandler[];
 		s: KeyDownHandler[];
@@ -22,6 +23,7 @@ export class KeyManager {
 	}>({
 		Enter: [],
 		Escape: [],
+		Space: [],
 		e: [],
 		f: [],
 		s: [],
@@ -37,7 +39,7 @@ export class KeyManager {
 		Shift: false,
 		Alt: false
 	});
-	primaryKeys: PrimaryKey[] = ['Enter', 'Escape'];
+	primaryKeys: PrimaryKey[] = ['Enter', 'Escape', 'Space'];
 	characterKeys: CharacterKey[] = ['e', 'f', 's', 'n'];
 	helperKeys: HelperKey[] = ['Shift', 'Alt', 'Control'];
 	functionKeys: FunctionKey[] = ['F1'];
@@ -128,13 +130,18 @@ export class KeyManager {
 		}
 	}
 
-	handleKeyDown(event: KeyboardEvent): void {
-		if (!this.handledKeys.includes(event.key)) return;
+	normalizeKey(key: string): string {
+		return key === ' ' ? 'Space' : key;
+	}
 
-		if (this.isPrimaryKey(event.key)) this.handlePrimary(event);
-		else if (this.isCharacterKey(event.key)) this.handleCharacter(event);
-		else if (this.isFunctionKey(event.key)) this.handleFunction(event);
-		else if (this.isHelperKey(event.key)) this.handleHelper(event);
+	handleKeyDown(event: KeyboardEvent): void {
+		const key = this.normalizeKey(event.key);
+		if (!this.handledKeys.includes(key)) return;
+
+		if (this.isPrimaryKey(key)) this.handlePrimary(event);
+		else if (this.isCharacterKey(key)) this.handleCharacter(event);
+		else if (this.isFunctionKey(key)) this.handleFunction(event);
+		else if (this.isHelperKey(key)) this.handleHelper(event);
 	}
 
 	handleKeyUp(event: KeyboardEvent): void {
@@ -144,7 +151,7 @@ export class KeyManager {
 	}
 
 	handlePrimary(event: KeyboardEvent): void {
-		for (const handler of this.handlers[event.key as PrimaryKey]) {
+		for (const handler of this.handlers[this.normalizeKey(event.key) as PrimaryKey]) {
 			if (this.hasUnpressedHelperKeyRestriction(handler)) continue;
 			if (handler.options.preventDefault) event.preventDefault();
 
