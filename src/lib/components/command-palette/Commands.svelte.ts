@@ -4,7 +4,6 @@ import { urls } from '$lib/config/urls';
 import { getCommandPalette } from '$lib/state/CommandPalette.svelte';
 import type { Command } from '$lib/types/command';
 import { Todos } from '$lib/state/Todos.svelte';
-import { Tags } from '$lib/state/Tags.svelte';
 import { getTranslation } from '$lib/state/Translation.svelte';
 import { getFeatures } from '$lib/state/Features.svelte';
 import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -20,7 +19,6 @@ export async function registerCommands(): Promise<void> {
 	const features = getFeatures();
 	const notifications = getUiNotifications();
 	const todos = new Todos();
-	const tags = new Tags();
 
 	await features.load();
 
@@ -53,7 +51,7 @@ export async function registerCommands(): Promise<void> {
 	if (features.features.dev_requests) palette.register(navCommand('nav-dev-requests', ts.get.nav.dev_requests, urls.devRequests));
 
 	if (features.features.todos) {
-		await Promise.all([tags.load(), todos.loadCategories()]);
+		await todos.loadCategories();
 
 		palette.register({
 			id: 'create-todo',
@@ -61,7 +59,7 @@ export async function registerCommands(): Promise<void> {
 			category: 'Create',
 			inputPlaceholder: 'Buy milk #shopping due:tomorrow…',
 			execAfterInput: async (input) => {
-				const { ok } = await todos.quickCreate(input, tags);
+				const { ok } = await todos.quickCreate(input);
 				if (ok) notifications.success('Todo created.');
 				else notifications.error('Failed to create todo.');
 			}

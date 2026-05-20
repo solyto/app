@@ -85,7 +85,7 @@
 		loadingIndicator.start();
 
 		if (userInput.trim() !== '') {
-			const res = await todos.quickCreate(userInput, tags);
+			const res = await todos.quickCreate(userInput);
 			if (res.ok) {
 				if (res.recurrenceIgnored) {
 					notifications.warning(ts.get.todos.recurrence_requires_due);

@@ -27,7 +27,6 @@ import TodoGroupingService from '$lib/services/TodoGroupingService';
 import TodoSortingService from '$lib/services/TodoSortingService';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import { Tags } from '$lib/state/Tags.svelte';
 import TodoRelevanceService from '$lib/services/TodoRelevanceService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
@@ -225,77 +224,18 @@ export class Todos {
 		}
 	}
 
-	async quickCreate(
-		input: string,
-		tags: Tags
-	): Promise<{ ok: boolean; recurrenceIgnored: boolean }> {
-		const tagIds: number[] = [];
-		let category: number | null = null;
-		let dueDate = '';
-		let recurrenceFrequency: TodoRecurrenceFrequency | null = null;
-		let title = input;
+	async quickCreate(input: string): Promise<{ ok: boolean; recurrenceIgnored: boolean }> {
+		const recurrenceIgnored = /repeat:/i.test(input) && !/due:/i.test(input);
 
-		const tagMatches = input.match(/#[\w-]+/g);
-		if (tagMatches) {
-			for (const tag of tagMatches) {
-				const tagId = tags.tags.find(
-					(t) => t.name.toLowerCase() === tag.substring(1).toLowerCase()
-				)?.id;
+		const request: CreateTodoRequest = { title: input };
 
-				if (tagId) {
-					tagIds.push(tagId);
-					title = title.replace(tag, '').trim();
-				} else {
-					const newTag = await tags.create(tag.substring(1));
-					if (newTag) {
-						tagIds.push(newTag.id);
-					}
-				}
-			}
+		if (this.activeFilters.some((f) => f.type === 'tag')) {
+			request.tags = [this.activeFilters.find((f) => f.type === 'tag')?.value as number];
 		}
 
-		if (tagIds.length === 0 && this.activeFilters.some((f) => f.type === 'tag')) {
-			tagIds.push(this.activeFilters.find((f) => f.type === 'tag')?.value as number);
+		if (this.activeFilters.some((f) => f.type === 'category')) {
+			request.category_id = this.activeFilters.find((f) => f.type === 'category')?.value as number;
 		}
-
-		const categoryMatch = input.match(/\/[\w-]+/);
-		if (categoryMatch) {
-			const categoryTitle = categoryMatch[0].substring(1);
-			const foundCategory = this.categories.find(
-				(c) => c.title.toLowerCase() === categoryTitle.toLowerCase()
-			);
-
-			if (foundCategory) {
-				category = foundCategory.id;
-				title = title.replace(categoryMatch[0], '').trim();
-			}
-		}
-
-		if (category === null && this.activeFilters.some((f) => f.type === 'category')) {
-			category = this.activeFilters.find((f) => f.type === 'category')?.value as number;
-		}
-
-		const dueDateMatch = input.match(/due:[\w.-]+/);
-		if (dueDateMatch) {
-			dueDate = dueDateMatch[0].substring(4);
-			title = title.replace(/due:[\w.-]+/, '').trim();
-		}
-
-		const repeatMatch = input.match(/repeat:(daily|weekly|monthly|yearly)/);
-		if (repeatMatch) {
-			recurrenceFrequency = repeatMatch[1] as TodoRecurrenceFrequency;
-			title = title.replace(/repeat:(daily|weekly|monthly|yearly)/, '').trim();
-		}
-
-		const recurrenceIgnored = recurrenceFrequency !== null && !dueDate;
-
-		const request: CreateTodoRequest = {
-			title,
-			tags: tagIds,
-			category_id: category,
-			due_at: dueDate,
-			recurrence_frequency: dueDate ? recurrenceFrequency : null
-		};
 
 		const res = await this.apiService.create(apiRoutes.todos.create, request);
 
