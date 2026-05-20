@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getClipboard } from '$lib/state/Clipboard.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getClipboard } from '$lib/state/Clipboard.svelte';
 	import ClipboardCreate from '$lib/components/clipboard/ClipboardCreate.svelte';
 	import ClipboardList from '$lib/components/clipboard/ClipboardList.svelte';
 

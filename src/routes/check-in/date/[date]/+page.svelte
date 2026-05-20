@@ -15,10 +15,10 @@
 		isDateToday,
 		isDateYesterday
 	} from '$lib/helpers/DateHelper';
-	import { getCheckInData } from '$lib/state/CheckInData.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getCheckInData } from '$lib/state/CheckInData.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onMount } from 'svelte';
 
 	const checkInData = getCheckInData();

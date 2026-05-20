@@ -2,7 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import CheckInNavigation from '$lib/components/check-in/CheckInNavigation.svelte';
 	let { children } = $props();
-	import { setCheckInData } from '$lib/state/CheckInData.svelte.js';
+	import { setCheckInData } from '$lib/state/CheckInData.svelte';
 
 	setCheckInData();
 </script>

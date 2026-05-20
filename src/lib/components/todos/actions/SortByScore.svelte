@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getTodos } from '$lib/state/Todos.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const ts = getTranslation();
 	const todos = getTodos();

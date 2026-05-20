@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import ManagePushNotifications from '$lib/components/settings/notifications/ManagePushNotifications.svelte';
 	import ManageNotificationTypes from '$lib/components/settings/notifications/ManageNotificationTypes.svelte';

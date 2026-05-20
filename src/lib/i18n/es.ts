@@ -239,7 +239,10 @@ const todos: TodoRecords = {
 	recurrence_ends_at: 'Termina el',
 	add_recurrence: 'Añadir recurrencia',
 	remove_recurrence: 'Eliminar recurrencia',
-	recurrence_requires_due: 'Establece una fecha límite primero'
+	recurrence_requires_due: 'Establece una fecha límite primero',
+	link: 'Enlace',
+	no_link: 'Sin enlace',
+	add_link: 'Añadir enlace'
 };
 
 const checkIn: CheckInRecords = {

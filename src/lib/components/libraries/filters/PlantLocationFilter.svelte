@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getPlantLibrary } from '$lib/state/PlantLibrary.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getPlantLibrary } from '$lib/state/PlantLibrary.svelte';
 	import type { PlantLocation } from '$lib/types/library_plant';
 
 	const ts = getTranslation();

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconTrash from '@lucide/svelte/icons/trash-2';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { QuoteLibrary } from '$lib/state/QuoteLibrary.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { QuoteLibrary } from '$lib/state/QuoteLibrary.svelte';
 	import type { Quote } from '$lib/types/library_quote';
 	import { nl2br } from '$lib/helpers/FormatHelper.js';
 	import DOMPurify from 'dompurify';

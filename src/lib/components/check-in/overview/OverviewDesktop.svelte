@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CheckInType } from '$lib/types/check_in';
-	import { getCheckInData } from '$lib/state/CheckInData.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getCheckInData } from '$lib/state/CheckInData.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUrlFormat } from '$lib/helpers/DateHelper';
 	import { onMount } from 'svelte';
 	import { urls } from '$lib/config/urls';

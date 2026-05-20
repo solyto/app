@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { getNotes, setNotes } from '$lib/state/Notes.svelte.js';
+	import { getNotes, setNotes } from '$lib/state/Notes.svelte';
 	import NoteNavigationDesktop from '$lib/components/notes/NoteNavigationDesktop.svelte';
 	import NoteNavigationMobile from '$lib/components/notes/NoteNavigationMobile.svelte';
 	import Modal from '$lib/components/ui/Modal.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import { onMount } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTags, setTags } from '$lib/state/Tags.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTags, setTags } from '$lib/state/Tags.svelte';
 	import RightClickMenu from '$lib/components/ui/menus/RightClickMenu.svelte';
 	import type { RightClickMenuEntry } from '$lib/types/menu';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	setNotes();
 	setTags();

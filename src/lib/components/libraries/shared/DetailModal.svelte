@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import Rating from '$lib/components/libraries/shared/Rating.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import type { Book } from '$lib/types/library_book';
 	import type { Music } from '$lib/types/library_music';
 	import type { Movie } from '$lib/types/library_movie';

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Todo } from '$lib/types/todo';
 	import { onMount } from 'svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getTags } from '$lib/state/Tags.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getViewPoint } from '$lib/state/Viewpoint.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getTags } from '$lib/state/Tags.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import confetti from 'canvas-confetti';
 	import { createConfettiOptions } from '$lib/effects/confetti';
 	import TodoCreate from '$lib/components/todos/actions/TodoCreate.svelte';

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Book } from '$lib/types/library_book';
-	import { getBookLibrary } from '$lib/state/BookLibrary.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getBookLibrary } from '$lib/state/BookLibrary.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { formatDate } from '$lib/helpers/DateHelper.js';
 	import DetailModal from '$lib/components/libraries/shared/DetailModal.svelte';
 	import Divider from '$lib/components/ui/Divider.svelte';

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getAuth } from '$lib/state/Auth.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getAuth } from '$lib/state/Auth.svelte';
 
 	const ts = getTranslation();
 	const auth = getAuth();

@@ -11,6 +11,7 @@
 	import DueDate from '$lib/components/todos/props/DueDate.svelte';
 	import Title from '$lib/components/todos/props/Title.svelte';
 	import Description from '$lib/components/todos/props/Description.svelte';
+	import Link from '$lib/components/todos/props/Link.svelte';
 	import TodoDelete from '$lib/components/todos/actions/TodoDelete.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 	import ScoreBar from '$lib/components/todos/ScoreBar.svelte';
@@ -73,6 +74,7 @@
 	{#if expanded}
 		<div class="w-full p-4" transition:slide>
 			<Description {todo} />
+			<Link {todo} />
 			<Subtasks {todo} subtasks={todo.subtasks} />
 			<div class="relative mt-3">
 				<Recurrence {todo} />

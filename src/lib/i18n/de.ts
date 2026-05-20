@@ -240,7 +240,10 @@ const todos: TodoRecords = {
 	recurrence_ends_at: 'Endet am',
 	add_recurrence: 'Wiederholung hinzufügen',
 	remove_recurrence: 'Wiederholung entfernen',
-	recurrence_requires_due: 'Zuerst ein Fälligkeitsdatum setzen'
+	recurrence_requires_due: 'Zuerst ein Fälligkeitsdatum setzen',
+	link: 'Link',
+	no_link: 'Kein Link',
+	add_link: 'Link hinzufügen'
 };
 
 const checkIn: CheckInRecords = {

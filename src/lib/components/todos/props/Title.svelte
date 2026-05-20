@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Todo } from '$lib/types/todo';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getKeyManager } from '$lib/KeyManager.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { onDestroy, tick } from 'svelte';
 	import MovableHoverBox from '$lib/components/ui/MovableHoverBox.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';

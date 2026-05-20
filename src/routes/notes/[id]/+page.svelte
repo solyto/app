@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { getNotes } from '$lib/state/Notes.svelte.js';
+	import { getNotes } from '$lib/state/Notes.svelte';
 	import NoteHeader from '$lib/components/notes/NoteHeader.svelte';
 	import TipTapEditor from '$lib/components/notes/editor/TipTapEditor.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const notes = getNotes();
 	const ts = getTranslation();

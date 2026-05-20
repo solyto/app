@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getFeeds } from '$lib/state/Feeds.svelte.js';
+	import { getFeeds } from '$lib/state/Feeds.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import FeedNavigation from '$lib/components/feeds/FeedNavigation.svelte';
 	import FeedView from '$lib/components/feeds/FeedView.svelte';

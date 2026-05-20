@@ -9,7 +9,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 	import InlineEditButton from '$lib/components/ui/buttons/InlineEditButton.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte.js';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { onDestroy, tick } from 'svelte';
 
 	const ts = getTranslation();

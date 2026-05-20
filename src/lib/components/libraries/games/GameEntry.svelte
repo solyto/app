@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { Game } from '$lib/types/library_game';
-	import { GameLibrary } from '$lib/state/GameLibrary.svelte.js';
+	import { GameLibrary } from '$lib/state/GameLibrary.svelte';
 	import Rating from '$lib/components/libraries/shared/Rating.svelte';
 	import GenreFlexList from '$lib/components/libraries/shared/GenreFlexList.svelte';
 	import TagFlexList from '$lib/components/tags/TagFlexList.svelte';
 	import Flag from '$lib/components/ui/Flag.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const ts = getTranslation();
 

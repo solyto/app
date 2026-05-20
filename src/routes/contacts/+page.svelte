@@ -3,7 +3,7 @@
 	import ListView from '$lib/components/contacts/views/ListView.svelte';
 	import ContactDetail from '$lib/components/contacts/ContactDetail.svelte';
 	import ContactEdit from '$lib/components/contacts/ContactEdit.svelte';
-	import { getContacts } from '$lib/state/Contacts.svelte.js';
+	import { getContacts } from '$lib/state/Contacts.svelte';
 	import AddressBookCreateModal from '$lib/components/contacts/AddressBookCreateModal.svelte';
 	import AddressBookDeleteModal from '$lib/components/contacts/AddressBookDeleteModal.svelte';
 	import ContactNavigation from '$lib/components/contacts/ContactNavigation.svelte';

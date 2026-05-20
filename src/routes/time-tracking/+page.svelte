@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	import Heading from '$lib/components/ui/Heading.svelte';
 	import DashboardView from '$lib/components/time-tracking/DashboardView.svelte';

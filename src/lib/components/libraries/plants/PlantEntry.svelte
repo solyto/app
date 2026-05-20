@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Plant } from '$lib/types/library_plant';
-	import { PlantLibrary } from '$lib/state/PlantLibrary.svelte.js';
+	import { PlantLibrary } from '$lib/state/PlantLibrary.svelte';
 
 	let { entry, library } = $props<{
 		entry: Plant;

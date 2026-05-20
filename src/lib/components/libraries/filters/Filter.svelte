@@ -1,6 +1,6 @@
 <script lang="ts">
 	import IconFunnel from '@lucide/svelte/icons/funnel';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { Library } from '$lib/types/library';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import RecipeFilter from '$lib/components/libraries/filters/RecipeFilter.svelte';

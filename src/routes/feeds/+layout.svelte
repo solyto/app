@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getFeeds, setFeeds } from '$lib/state/Feeds.svelte.js';
+	import { getFeeds, setFeeds } from '$lib/state/Feeds.svelte';
 	import { onMount } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getLinkLibrary, setLinkLibrary } from '$lib/state/LinkLibrary.svelte';
 
 	let { children } = $props();

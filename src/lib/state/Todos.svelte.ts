@@ -429,6 +429,13 @@ export class Todos {
 		return res;
 	}
 
+	async changeLink(todo: Todo, link: string | null): Promise<boolean> {
+		const request: UpdateTodoRequest = { link };
+		const res = await this.apiService.update(apiRoutes.todos.update, todo.id, request);
+		if (res) await this.load();
+		return res;
+	}
+
 	async addSubtask(todo: Todo, title: string): Promise<boolean> {
 		const request: CreateTodoSubtaskRequest = { title };
 		const res = await this.apiService.post(

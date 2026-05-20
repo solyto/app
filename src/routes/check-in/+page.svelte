@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getLast30Days } from '$lib/helpers/DateHelper';
-	import { getViewPoint } from '$lib/state/Viewpoint.svelte.js';
-	import { getCheckInData } from '$lib/state/CheckInData.svelte.js';
+	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
+	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import OverviewDesktop from '$lib/components/check-in/overview/OverviewDesktop.svelte';
 	import OverviewMobile from '$lib/components/check-in/overview/OverviewMobile.svelte';
 	import CheckInSummaries from '$lib/components/check-in/overview/CheckInSummaries.svelte';

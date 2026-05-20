@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { getAuth } from '$lib/state/Auth.svelte.js';
+	import { getAuth } from '$lib/state/Auth.svelte';
 	import ApiService from '$lib/services/ApiService';
 	import { onMount } from 'svelte';
 	import { apiRoutes } from '$lib/config/apiRoutes';
 	import type { Connection } from '$lib/types/telegram_bot_connection';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const auth = getAuth();
 	const apiService = new ApiService(auth.getToken());

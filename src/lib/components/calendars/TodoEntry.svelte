@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { blur } from 'svelte/transition';
-	import { getCalendars } from '$lib/state/Calendars.svelte.js';
+	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import type { Todo } from '$lib/types/todo';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 

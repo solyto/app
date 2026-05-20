@@ -1,8 +1,8 @@
 <script lang="ts">
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import IconX from '@lucide/svelte/icons/x';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import CreateEntry from '$lib/components/settings/CreateEntry.svelte';
 	import type { MusicGenre } from '$lib/types/library_music';
 	import Heading from '$lib/components/ui/Heading.svelte';

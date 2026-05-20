@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getLinkLibrary, setLinkLibrary } from '$lib/state/LinkLibrary.svelte.js';
-	import { getTags, setTags } from '$lib/state/Tags.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getLinkLibrary, setLinkLibrary } from '$lib/state/LinkLibrary.svelte';
+	import { getTags, setTags } from '$lib/state/Tags.svelte';
 
 	setLinkLibrary();
 	setTags();

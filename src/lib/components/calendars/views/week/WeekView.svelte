@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { formatDate, getCalendarWeek, getISODateInfo } from '$lib/helpers/DateHelper';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Day from '$lib/components/calendars/views/week/Day.svelte';
 	import { onMount } from 'svelte';
 

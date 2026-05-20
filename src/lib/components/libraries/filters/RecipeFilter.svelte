@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getRecipeLibrary } from '$lib/state/RecipeLibrary.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getRecipeLibrary } from '$lib/state/RecipeLibrary.svelte';
 	import type { RecipeType } from '$lib/types/library_recipe';
 
 	const ts = getTranslation();

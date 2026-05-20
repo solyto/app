@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Music } from '$lib/types/library_music';
-	import { getMusicLibrary } from '$lib/state/MusicLibrary.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getMusicLibrary } from '$lib/state/MusicLibrary.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import DetailModal from '$lib/components/libraries/shared/DetailModal.svelte';
 
 	const library = getMusicLibrary();

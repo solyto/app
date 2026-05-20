@@ -1,10 +1,10 @@
 <script lang="ts">
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getCalendars } from '$lib/state/Calendars.svelte.js';
-	import { getAuth } from '$lib/state/Auth.svelte.js';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getCalendars } from '$lib/state/Calendars.svelte';
+	import { getAuth } from '$lib/state/Auth.svelte';
+	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { apiRoutes, API_USER_STORAGE_URL } from '$lib/config/apiRoutes.js';
 	import ApiService from '$lib/services/ApiService.js';
 	import type { Friend } from '$lib/types/friend.js';

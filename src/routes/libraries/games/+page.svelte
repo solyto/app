@@ -4,7 +4,7 @@
 	import GameCreate from '$lib/components/libraries/games/GameCreate.svelte';
 	import GameDetail from '$lib/components/libraries/games/GameDetail.svelte';
 	import Entries from '$lib/components/libraries/shared/Entries.svelte';
-	import { getGameLibrary } from '$lib/state/GameLibrary.svelte.js';
+	import { getGameLibrary } from '$lib/state/GameLibrary.svelte';
 
 	const library = getGameLibrary();
 </script>

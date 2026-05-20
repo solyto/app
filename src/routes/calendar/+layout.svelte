@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setCalendars } from '$lib/state/Calendars.svelte.js';
+	import { setCalendars } from '$lib/state/Calendars.svelte';
 	import { setTodos } from '$lib/state/Todos.svelte';
 
 	setCalendars();

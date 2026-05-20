@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CheckIn, CheckInType } from '$lib/types/check_in';
 	import CheckInStatisticsService from '$lib/services/CheckInStatisticsService';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import IconBedSingle from '@lucide/svelte/icons/bed-single';
 	import IconSparkles from '@lucide/svelte/icons/sparkles';

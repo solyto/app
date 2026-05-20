@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { getAssistants } from '$lib/state/Assistants.svelte.js';
+	import { getAssistants } from '$lib/state/Assistants.svelte';
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
 	import EditAssistant from '$lib/components/assistants/EditAssistant.svelte';
 	import type { CreateAssistantRequest } from '$lib/types/assistant';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconBot from '@lucide/svelte/icons/bot';
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import IconMessageSquare from '@lucide/svelte/icons/message-square';

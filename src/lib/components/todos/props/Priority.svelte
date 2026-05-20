@@ -3,8 +3,8 @@
 	import IconUp from '@lucide/svelte/icons/circle-arrow-up';
 	import IconRight from '@lucide/svelte/icons/circle-arrow-right';
 	import IconDown from '@lucide/svelte/icons/circle-arrow-down';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 
 	let {

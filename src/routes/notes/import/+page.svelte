@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getNotes } from '$lib/state/Notes.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte.js';
+	import { getNotes } from '$lib/state/Notes.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 
 	const notes = getNotes();
 	const loadingIndicator = getLoadingIndicator();

@@ -3,7 +3,7 @@
 	import RecipeCreate from '$lib/components/libraries/recipes/RecipeCreate.svelte';
 	import RecipeDetail from '$lib/components/libraries/recipes/RecipeDetail.svelte';
 	import Header from '$lib/components/libraries/shared/Header.svelte';
-	import { getRecipeLibrary } from '$lib/state/RecipeLibrary.svelte.js';
+	import { getRecipeLibrary } from '$lib/state/RecipeLibrary.svelte';
 
 	const library = getRecipeLibrary();
 </script>

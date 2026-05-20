@@ -2,8 +2,8 @@
 	import type { Tag } from '$lib/types/tag';
 	import { fade } from 'svelte/transition';
 	import ColorPicker from 'svelte-awesome-color-picker';
-	import { getTags } from '$lib/state/Tags.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTags } from '$lib/state/Tags.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 

@@ -2,8 +2,8 @@
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { setTimeTracking, getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { setTimeTracking, getTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import TimeTrackingNavigation from '$lib/components/time-tracking/TimeTrackingNavigation.svelte';
 	import ProjectCreate from '$lib/components/time-tracking/ProjectCreate.svelte';
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Toggle from '$lib/components/forms/Toggle.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const ts = getTranslation();
 

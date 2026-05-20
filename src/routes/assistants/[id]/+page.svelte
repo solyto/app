@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { getAssistants } from '$lib/state/Assistants.svelte.js';
+	import { getAssistants } from '$lib/state/Assistants.svelte';
 	import { onDestroy, onMount, tick } from 'svelte';
 	import type { UpdateAssistantRequest } from '$lib/types/assistant';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import ChatHistory from '$lib/components/chat/ChatHistory.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte.js';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import EditAssistant from '$lib/components/assistants/EditAssistant.svelte';
 	import Modal from '$lib/components/ui/Modal.svelte';
 	import { goto } from '$app/navigation';
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import InlineEditButton from '$lib/components/ui/buttons/InlineEditButton.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 	import IconBot from '@lucide/svelte/icons/bot';

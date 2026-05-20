@@ -2,7 +2,7 @@
 	import type { Todo } from '$lib/types/todo';
 	import ListEntry from '$lib/components/todos/views/ListEntry.svelte';
 	import NoTodos from '$lib/components/todos/NoTodos.svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
 
 	const todos = getTodos();
 

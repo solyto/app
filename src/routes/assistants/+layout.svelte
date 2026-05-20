@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getAssistants, setAssistants } from '$lib/state/Assistants.svelte.js';
+	import { getAssistants, setAssistants } from '$lib/state/Assistants.svelte';
 	import { onMount } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 
 	setAssistants();
 

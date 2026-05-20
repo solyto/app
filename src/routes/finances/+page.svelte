@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { fade, slide } from 'svelte/transition';
 	import Heading from '$lib/components/ui/Heading.svelte';
-	import { getFinances } from '$lib/state/Finances.svelte.js';
+	import { getFinances } from '$lib/state/Finances.svelte';
 	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { urls } from '$lib/config/urls';
 	import type { FinancePage } from '$lib/types/finance';
 	import { goto } from '$app/navigation';

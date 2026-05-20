@@ -9,9 +9,9 @@
 	import IconPen from '@lucide/svelte/icons/pen';
 	import IconTrash from '@lucide/svelte/icons/trash-2';
 	import ColorPicker from 'svelte-awesome-color-picker';
-	import { getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import { urls } from '$lib/config/urls';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';

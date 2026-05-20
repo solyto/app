@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setDevRequests } from '$lib/state/DevRequests.svelte.js';
+	import { setDevRequests } from '$lib/state/DevRequests.svelte';
 
 	setDevRequests();
 

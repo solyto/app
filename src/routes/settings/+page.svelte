@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getTags } from '$lib/state/Tags.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getTags } from '$lib/state/Tags.svelte';
 	import { onMount } from 'svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import Tabs from '$lib/components/ui/Tabs.svelte';
 	import TodoSettings from '$lib/components/settings/TodoSettings.svelte';
 	import TagSettings from '$lib/components/settings/TagSettings.svelte';

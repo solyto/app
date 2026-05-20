@@ -59,6 +59,7 @@ export interface CreateTodoRequest {
 export interface UpdateTodoRequest {
 	title?: string;
 	description?: string;
+	link?: string | null;
 	tags?: number[];
 	category_id?: number | null;
 	priority?: TodoPriority | null;

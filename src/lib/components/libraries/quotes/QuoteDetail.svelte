@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { nl2br } from '$lib/helpers/FormatHelper';
 	import DOMPurify from 'dompurify';
 	import Divider from '$lib/components/ui/Divider.svelte';

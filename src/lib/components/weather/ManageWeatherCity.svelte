@@ -1,8 +1,8 @@
 <script lang="ts">
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getWeather } from '$lib/state/Weather.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getWeather } from '$lib/state/Weather.svelte';
 	import type { NominatimResult, UpdateWeatherCityRequest } from '$lib/types/weather.js';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import IconMapPin from '@lucide/svelte/icons/map-pin';

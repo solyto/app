@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getPlantLibrary, setPlantLibrary } from '$lib/state/PlantLibrary.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getPlantLibrary, setPlantLibrary } from '$lib/state/PlantLibrary.svelte';
 
 	setPlantLibrary();
 

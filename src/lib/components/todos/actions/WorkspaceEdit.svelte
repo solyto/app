@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { TodoWorkspace, UpdateTodoWorkspaceRequest } from '$lib/types/todo';
 	import { fade } from 'svelte/transition';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Button from '$lib/components/ui/buttons/Button.svelte';
 	import FindCategoryMenu from '$lib/components/todos/FindCategoryMenu.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
