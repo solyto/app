@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setClipboard } from '$lib/state/Clipboard.svelte.js';
+	import { setClipboard } from '$lib/state/Clipboard.svelte';
 
 	setClipboard();
 

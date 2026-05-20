@@ -12,7 +12,7 @@
 	import BubbleMenu from '@tiptap/extension-bubble-menu'
 	import { marked } from 'marked'
 	import { onDestroy, onMount } from 'svelte'
-	import { getNotes } from '$lib/state/Notes.svelte.js'
+	import { getNotes } from '$lib/state/Notes.svelte'
 	import EditorToolbar from './EditorToolbar.svelte'
 	import TableBubbleMenu from './TableBubbleMenu.svelte'
 	import type { ActiveStates } from './EditorToolbar.svelte'

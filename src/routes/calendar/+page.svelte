@@ -3,8 +3,8 @@
 	import CalendarView from '$lib/components/calendars/CalendarView.svelte';
 	import CalendarNavigation from '$lib/components/calendars/CalendarNavigation.svelte';
 	import MobileCalendarHeader from '$lib/components/calendars/MobileCalendarHeader.svelte';
-	import { getViewPoint } from '$lib/state/Viewpoint.svelte.js';
-	import { getCalendars } from '$lib/state/Calendars.svelte.js';
+	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
+	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import DeleteModal from '$lib/components/calendars/DeleteModal.svelte';
 	import ImportModal from '$lib/components/calendars/ImportModal.svelte';
 	import SyncModal from '$lib/components/dav/SyncModal.svelte';

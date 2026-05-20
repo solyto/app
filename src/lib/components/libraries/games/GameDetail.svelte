@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { formatDate } from '$lib/helpers/DateHelper.js';
 	import DetailModal from '$lib/components/libraries/shared/DetailModal.svelte';
 	import { getGameLibrary } from '$lib/state/GameLibrary.svelte';

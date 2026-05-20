@@ -2,11 +2,11 @@
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
 	import Card from '$lib/components/todos/views/Card.svelte';
 	import type { GroupedTodos, Todo, TodoStatus } from '$lib/types/todo';
 	import { dndzone } from 'svelte-dnd-action';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();

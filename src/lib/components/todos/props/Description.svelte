@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Todo } from '$lib/types/todo';
 	import { onDestroy, tick } from 'svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getKeyManager } from '$lib/KeyManager.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { markdownToHtml } from '$lib/helpers/FormatHelper';
 	import { nl2br } from '$lib/helpers/FormatHelper.js';
 	import DOMPurify from 'dompurify';

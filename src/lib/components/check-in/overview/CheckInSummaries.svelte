@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { CheckIn, CheckInType } from '$lib/types/check_in';
-	import { getCheckInData } from '$lib/state/CheckInData.svelte.js';
+	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getUrlFormat, getISODateInfo } from '$lib/helpers/DateHelper';
 	import { buildDaySummary, buildPeriodSummary, getDayLabel } from '$lib/helpers/CheckInSummaryHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';

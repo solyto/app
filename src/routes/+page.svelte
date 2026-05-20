@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { setTodos, getTodos } from '$lib/state/Todos.svelte.js';
+	import { setTodos, getTodos } from '$lib/state/Todos.svelte';
 	import { onMount } from 'svelte';
-	import { setCalendars } from '$lib/state/Calendars.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { setWeather } from '$lib/state/Weather.svelte.js';
-	import { setCheckInData } from '$lib/state/CheckInData.svelte.js';
-	import { setShortcuts } from '$lib/state/Shortcuts.svelte.js';
+	import { setCalendars } from '$lib/state/Calendars.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { setWeather } from '$lib/state/Weather.svelte';
+	import { setCheckInData } from '$lib/state/CheckInData.svelte';
+	import { setShortcuts } from '$lib/state/Shortcuts.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { setFeatures, getFeatures } from '$lib/state/Features.svelte';
-	import { getWelcomeTour } from '$lib/state/WelcomeTour.svelte.js';
-	import { setTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getKeyManager } from '$lib/KeyManager.svelte.js';
+	import { getWelcomeTour } from '$lib/state/WelcomeTour.svelte';
+	import { setTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { getQuickAdd } from '$lib/state/QuickAdd.svelte';
 	import OnboardingModal from '$lib/components/dashboard/OnboardingModal.svelte';
 	import YourDay from '$lib/components/dashboard/YourDay.svelte';

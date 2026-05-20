@@ -4,7 +4,7 @@
 	import Entries from '$lib/components/libraries/shared/Entries.svelte';
 	import GenreModal from '$lib/components/libraries/shared/GenreModal.svelte';
 	import BookDetail from '$lib/components/libraries/books/BookDetail.svelte';
-	import { getBookLibrary } from '$lib/state/BookLibrary.svelte.js';
+	import { getBookLibrary } from '$lib/state/BookLibrary.svelte';
 
 	const library = getBookLibrary();
 </script>

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { blur } from 'svelte/transition';
-	import { getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { Translation } from '$lib/state/Translation.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { Translation } from '$lib/state/Translation.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import IconTimer from '@lucide/svelte/icons/timer';
 
 	const tt = getTimeTracking();

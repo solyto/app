@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Entry from '$lib/components/time-tracking/Entry.svelte';
 	import TimerWidget from '$lib/components/time-tracking/TimerWidget.svelte';
 	import PomodoroWidget from '$lib/components/time-tracking/PomodoroWidget.svelte';

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import CreateEntry from '$lib/components/settings/CreateEntry.svelte';
 	import TagEdit from '$lib/components/tags/TagEdit.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getTags } from '$lib/state/Tags.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getTags } from '$lib/state/Tags.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 
 	const ts = getTranslation();

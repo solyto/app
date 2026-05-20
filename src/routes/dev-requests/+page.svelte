@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import Button from '$lib/components/ui/buttons/Button.svelte';
 	import Divider from '$lib/components/ui/Divider.svelte';
 	import DevRequestEntry from '$lib/components/dev-requests/DevRequestEntry.svelte';
-	import { getDevRequests } from '$lib/state/DevRequests.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getDevRequests } from '$lib/state/DevRequests.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import DevRequestEdit from '$lib/components/dev-requests/DevRequestEdit.svelte';
 
 	const ts = getTranslation();

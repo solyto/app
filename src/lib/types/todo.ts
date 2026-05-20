@@ -23,6 +23,7 @@ export interface Todo {
 	id: string;
 	title: string;
 	description: string;
+	link: string | null;
 	priority: TodoPriority;
 	status: TodoStatus;
 	effort: TodoEffort;
@@ -58,11 +59,13 @@ export interface CreateTodoRequest {
 	recurrence_frequency?: TodoRecurrenceFrequency | null;
 	recurrence_interval?: number;
 	recurrence_ends_at?: string | null;
+	link?: string | null;
 }
 
 export interface UpdateTodoRequest {
 	title?: string;
 	description?: string;
+	link?: string | null;
 	tags?: number[];
 	category_id?: number | null;
 	priority?: TodoPriority | null;

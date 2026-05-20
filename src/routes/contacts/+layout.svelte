@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setContacts } from '$lib/state/Contacts.svelte.js';
+	import { setContacts } from '$lib/state/Contacts.svelte';
 
 	setContacts();
 

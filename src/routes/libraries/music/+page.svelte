@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getMusicLibrary } from '$lib/state/MusicLibrary.svelte.js';
+	import { getMusicLibrary } from '$lib/state/MusicLibrary.svelte';
 	import Header from '$lib/components/libraries/shared/Header.svelte';
 	import MusicCreate from '$lib/components/libraries/music/MusicCreate.svelte';
 	import GenreModal from '$lib/components/libraries/shared/GenreModal.svelte';

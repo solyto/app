@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Music } from '$lib/types/library_music';
-	import { MusicLibrary } from '$lib/state/MusicLibrary.svelte.js';
+	import { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
 	import Rating from '$lib/components/libraries/shared/Rating.svelte';
 	import GenreFlexList from '$lib/components/libraries/shared/GenreFlexList.svelte';
 	import Flag from '$lib/components/ui/Flag.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const ts = getTranslation();
 

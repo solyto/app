@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/buttons/Button.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import ViewSwitcher from '$lib/components/libraries/shared/ViewSwitcher.svelte';
 	import Search from '$lib/components/libraries/shared/Search.svelte';
 	import Recommender from '$lib/components/libraries/shared/Recommender.svelte';

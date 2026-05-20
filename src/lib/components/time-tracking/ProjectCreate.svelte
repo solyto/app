@@ -2,9 +2,9 @@
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import Button from '$lib/components/ui/buttons/Button.svelte';
-	import { getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 
 	const tt = getTimeTracking();
 	const ts = getTranslation();

@@ -2,7 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import IconBot from '@lucide/svelte/icons/bot';
 	import IconRotateCcw from '@lucide/svelte/icons/rotate-ccw';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import AiButton from '$lib/components/ui/buttons/AiButton.svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import LoadingLogo from '$lib/components/ui/LoadingLogo.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setFriends } from '$lib/state/Friends.svelte.js';
+	import { setFriends } from '$lib/state/Friends.svelte';
 
 	setFriends();
 

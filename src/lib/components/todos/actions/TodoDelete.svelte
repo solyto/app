@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Todo } from '$lib/types/todo';
 	import Modal from '$lib/components/ui/Modal.svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 
 	const todos = getTodos();

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getCheckInData } from '$lib/state/CheckInData.svelte.js';
+	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { onMount } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import Averages from '$lib/components/check-in/stats/Averages.svelte';
 	import SportsPerWeek from '$lib/components/check-in/stats/SportsPerWeek.svelte';
 

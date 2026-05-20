@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getLibraryNavigation, navigationItems } from '$lib/state/LibraryNavigation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getLibraryNavigation, navigationItems } from '$lib/state/LibraryNavigation.svelte';
 	import type { LibraryType } from '$lib/types/library.js';
 	import { resolve } from '$app/paths';
 	import LibraryNavigationEntry from '$lib/components/libraries/LibraryNavigationEntry.svelte';

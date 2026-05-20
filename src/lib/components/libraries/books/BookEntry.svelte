@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { Book } from '$lib/types/library_book';
-	import { BookLibrary } from '$lib/state/BookLibrary.svelte.js';
+	import { BookLibrary } from '$lib/state/BookLibrary.svelte';
 	import Rating from '$lib/components/libraries/shared/Rating.svelte';
 	import GenreFlexList from '$lib/components/libraries/shared/GenreFlexList.svelte';
 	import TagFlexList from '$lib/components/tags/TagFlexList.svelte';
 	import Flag from '$lib/components/ui/Flag.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const ts = getTranslation();
 

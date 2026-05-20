@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import DateInput from '$lib/components/forms/DateInput.svelte';
 	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
 	import Button from '$lib/components/ui/buttons/Button.svelte';
 	import type { Book, CreateBookRequest, UpdateBookRequest } from '$lib/types/library_book';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
-	import { getAuth } from '$lib/state/Auth.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTags } from '$lib/state/Tags.svelte.js';
+	import { getAuth } from '$lib/state/Auth.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTags } from '$lib/state/Tags.svelte';
 	import NumberInput from '$lib/components/forms/NumberInput.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import { getBookLibrary } from '$lib/state/BookLibrary.svelte';

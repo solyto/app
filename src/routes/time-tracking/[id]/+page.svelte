@@ -4,9 +4,9 @@
 	import { resolve } from '$app/paths';
 	import { fade } from 'svelte/transition';
 	import IconArrowLeft from '@lucide/svelte/icons/arrow-left';
-	import { getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { urls } from '$lib/config/urls';
 	import type { TimeTrackingProject, TimeTrackingEntry } from '$lib/types/time_tracking';

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Toggle from '$lib/components/forms/Toggle.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onMount } from 'svelte';
-	import { getAuth } from '$lib/state/Auth.svelte.js';
+	import { getAuth } from '$lib/state/Auth.svelte';
 	import ApiService from '$lib/services/ApiService';
 	import { apiRoutes } from '$lib/config/apiRoutes';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';

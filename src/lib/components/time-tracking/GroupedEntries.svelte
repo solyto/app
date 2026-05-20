@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import EntryEdit from '$lib/components/time-tracking/EntryEdit.svelte';
 	import Entry from '$lib/components/time-tracking/Entry.svelte';

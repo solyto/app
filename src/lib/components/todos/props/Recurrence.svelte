@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Todo, TodoRecurrenceFrequency } from '$lib/types/todo';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconRepeat from '@lucide/svelte/icons/repeat';
 	import IconX from '@lucide/svelte/icons/x';
 	import { formatDate } from '$lib/helpers/DateHelper';

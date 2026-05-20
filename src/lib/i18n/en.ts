@@ -239,7 +239,10 @@ const todos: TodoRecords = {
 	recurrence_ends_at: 'Ends at',
 	add_recurrence: 'Add recurrence',
 	remove_recurrence: 'Remove recurrence',
-	recurrence_requires_due: 'Set a due date first'
+	recurrence_requires_due: 'Set a due date first',
+	link: 'Link',
+	no_link: 'No link',
+	add_link: 'Add link'
 };
 
 const checkIn: CheckInRecords = {

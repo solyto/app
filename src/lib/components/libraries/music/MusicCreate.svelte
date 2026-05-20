@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
 	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
@@ -11,8 +11,8 @@
 		UpdateMusicRequest
 	} from '$lib/types/library_music';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
-	import { getAuth } from '$lib/state/Auth.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getAuth } from '$lib/state/Auth.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import NumberInput from '$lib/components/forms/NumberInput.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import { getMusicLibrary } from '$lib/state/MusicLibrary.svelte';

@@ -3,8 +3,8 @@
 	import { fade } from 'svelte/transition';
 	import CompactCard from '$lib/components/todos/views/CompactCard.svelte';
 	import NoTodos from '$lib/components/todos/NoTodos.svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const todos = getTodos();
 	const ts = getTranslation();

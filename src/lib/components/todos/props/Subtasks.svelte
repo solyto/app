@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Todo, TodoSubtask } from '$lib/types/todo';
 	import { onDestroy, tick } from 'svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getKeyManager } from '$lib/KeyManager.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Subtask from '$lib/components/todos/props/Subtask.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 

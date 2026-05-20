@@ -3,7 +3,7 @@
 	import PlantCreate from '$lib/components/libraries/plants/PlantCreate.svelte';
 	import PlantDetail from '$lib/components/libraries/plants/PlantDetail.svelte';
 	import Entries from '$lib/components/libraries/shared/Entries.svelte';
-	import { getPlantLibrary } from '$lib/state/PlantLibrary.svelte.js';
+	import { getPlantLibrary } from '$lib/state/PlantLibrary.svelte';
 
 	const library = getPlantLibrary();
 </script>

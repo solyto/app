@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Todo } from '$lib/types/todo';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 
 	let { todo } = $props<{ todo: Todo }>();
 

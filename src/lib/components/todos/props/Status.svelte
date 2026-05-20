@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Todo, TodoStatus } from '$lib/types/todo';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 
 	let { todo, changeStatus } = $props<{ todo: Todo; changeStatus: boolean }>();

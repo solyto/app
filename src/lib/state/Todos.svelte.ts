@@ -233,6 +233,7 @@ export class Todos {
 		let category: number | null = null;
 		let dueDate = '';
 		let recurrenceFrequency: TodoRecurrenceFrequency | null = null;
+		let link: string | null = null;
 		let title = input;
 
 		const tagMatches = input.match(/#[\w-]+/g);
@@ -287,6 +288,12 @@ export class Todos {
 			title = title.replace(/repeat:(daily|weekly|monthly|yearly)/, '').trim();
 		}
 
+		const linkMatch = input.match(/link:(\S+)/);
+		if (linkMatch) {
+			link = linkMatch[1];
+			title = title.replace(/link:\S+/, '').trim();
+		}
+
 		const recurrenceIgnored = recurrenceFrequency !== null && !dueDate;
 
 		const request: CreateTodoRequest = {
@@ -294,7 +301,8 @@ export class Todos {
 			tags: tagIds,
 			category_id: category,
 			due_at: dueDate,
-			recurrence_frequency: dueDate ? recurrenceFrequency : null
+			recurrence_frequency: dueDate ? recurrenceFrequency : null,
+			link
 		};
 
 		const res = await this.apiService.create(apiRoutes.todos.create, request);
@@ -484,6 +492,13 @@ export class Todos {
 
 	async changeDescription(todo: Todo, description: string): Promise<boolean> {
 		const request: UpdateTodoRequest = { description };
+		const res = await this.apiService.update(apiRoutes.todos.update, todo.id, request);
+		if (res) await this.load();
+		return res;
+	}
+
+	async changeLink(todo: Todo, link: string | null): Promise<boolean> {
+		const request: UpdateTodoRequest = { link };
 		const res = await this.apiService.update(apiRoutes.todos.update, todo.id, request);
 		if (res) await this.load();
 		return res;

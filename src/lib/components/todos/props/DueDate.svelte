@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Todo } from '$lib/types/todo';
 	import { formatDate } from '$lib/helpers/DateHelper';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconCalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import DatePicker from '$lib/components/forms/DatePicker.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';

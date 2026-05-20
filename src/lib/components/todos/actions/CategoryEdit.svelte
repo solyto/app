@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { TodoCategory } from '$lib/types/todo';
 	import { fade } from 'svelte/transition';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 
 	const todos = getTodos();

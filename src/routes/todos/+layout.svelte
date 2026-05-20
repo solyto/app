@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { setTodos } from '$lib/state/Todos.svelte.js';
-	import { setTags } from '$lib/state/Tags.svelte.js';
+	import { setTodos } from '$lib/state/Todos.svelte';
+	import { setTags } from '$lib/state/Tags.svelte';
 
 	setTodos();
 	setTags();

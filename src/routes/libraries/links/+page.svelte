@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/components/libraries/shared/Header.svelte';
-	import { getLinkLibrary } from '$lib/state/LinkLibrary.svelte.js';
+	import { getLinkLibrary } from '$lib/state/LinkLibrary.svelte';
 	import LinkCreate from '$lib/components/libraries/links/LinkCreate.svelte';
 	import Entries from '$lib/components/libraries/shared/Entries.svelte';
 	import CategoryHeader from '$lib/components/libraries/links/CategoryHeader.svelte';

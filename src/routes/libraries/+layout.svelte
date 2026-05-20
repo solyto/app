@@ -1,6 +1,6 @@
 <script lang="ts">
 	import LibraryNavigation from '$lib/components/libraries/LibraryNavigation.svelte';
-	import { setLibraryNavigation } from '$lib/state/LibraryNavigation.svelte.js';
+	import { setLibraryNavigation } from '$lib/state/LibraryNavigation.svelte';
 
 	setLibraryNavigation();
 

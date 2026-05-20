@@ -2,8 +2,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { urls } from '$lib/config/urls';
-	import { getAuth } from '$lib/state/Auth.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getAuth } from '$lib/state/Auth.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
 
 	const auth = getAuth();

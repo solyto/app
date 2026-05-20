@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import ViewSwitcher from '$lib/components/ui/ViewSwitcher.svelte';
 
 	const todos = getTodos();

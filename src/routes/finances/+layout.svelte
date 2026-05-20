@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { getFinances, setFinances } from '$lib/state/Finances.svelte.js';
+	import { getFinances, setFinances } from '$lib/state/Finances.svelte';
 	import FinanceNavigation from '$lib/components/finances/FinanceNavigation.svelte';
 	import { onMount } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 
 	let { children } = $props();
 

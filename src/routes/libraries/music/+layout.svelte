@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getMusicLibrary, setMusicLibrary } from '$lib/state/MusicLibrary.svelte.js';
+	import { getMusicLibrary, setMusicLibrary } from '$lib/state/MusicLibrary.svelte';
 	import { onMount } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 
 	setMusicLibrary();
 

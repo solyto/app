@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Rating from '$lib/components/libraries/shared/Rating.svelte';
 	import type { Recipe } from '$lib/types/library_recipe';
-	import type { RecipeLibrary } from '$lib/state/RecipeLibrary.svelte.js';
+	import type { RecipeLibrary } from '$lib/state/RecipeLibrary.svelte';
 
 	let { entry, library } = $props<{
 		entry: Recipe;

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import Button from '$lib/components/ui/buttons/Button.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getTags } from '$lib/state/Tags.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getTags } from '$lib/state/Tags.svelte';
 	import type { CreateQuoteRequest, Quote, UpdateQuoteRequest } from '$lib/types/library_quote';
 	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';

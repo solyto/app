@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Card from '$lib/components/ui/Card.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { LibraryType } from '$lib/types/library';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { getLibraryNavigation, navigationItems } from '$lib/state/LibraryNavigation.svelte.js';
+	import { getLibraryNavigation, navigationItems } from '$lib/state/LibraryNavigation.svelte';
 
 	const ts = getTranslation();
 	const navigation = getLibraryNavigation();

@@ -3,9 +3,9 @@
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 	import type { Todo, TodoSubtask } from '$lib/types/todo.js';
 	import { onDestroy, tick } from 'svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getKeyManager } from '$lib/KeyManager.svelte.js';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getTodos } from '$lib/state/Todos.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import MovableHoverBox from '$lib/components/ui/MovableHoverBox.svelte';

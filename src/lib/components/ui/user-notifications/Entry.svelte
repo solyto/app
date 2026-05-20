@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { UserNotification, UserNotificationType } from '$lib/types/user_notification';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getUserNotifications } from '$lib/state/UserNotifications.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getUserNotifications } from '$lib/state/UserNotifications.svelte';
 
 	const ts = getTranslation();
 	const userNotifications = getUserNotifications();

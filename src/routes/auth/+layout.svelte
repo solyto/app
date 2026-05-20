@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../../app.css';
 	import favicon from '$lib/assets/favicon.ico';
-	import { setTranslation } from '$lib/state/Translation.svelte.js';
+	import { setTranslation } from '$lib/state/Translation.svelte';
 
 	let { children } = $props();
 

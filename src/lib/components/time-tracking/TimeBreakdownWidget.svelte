@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	interface Breakdown {
 		title: string;

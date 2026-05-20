@@ -3,10 +3,10 @@
 	import { goto } from '$app/navigation';
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
-	import { getAuth } from '$lib/state/Auth.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte.js';
+	import { getAuth } from '$lib/state/Auth.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 
 	import { fade } from 'svelte/transition';
 	import Button from '$lib/components/ui/buttons/Button.svelte';

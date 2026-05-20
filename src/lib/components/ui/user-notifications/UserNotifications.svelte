@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
 	import IconBell from '@lucide/svelte/icons/bell';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
-	import { getUserNotifications } from '$lib/state/UserNotifications.svelte.js';
+	import { getUserNotifications } from '$lib/state/UserNotifications.svelte';
 	import { onMount } from 'svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import Entry from '$lib/components/ui/user-notifications/Entry.svelte';

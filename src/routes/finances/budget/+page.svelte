@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { slide, fade } from 'svelte/transition';
-	import { getFinances } from '$lib/state/Finances.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getFinances } from '$lib/state/Finances.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
 	import AddBudget from '$lib/components/finances/AddBudget.svelte';
 	import BudgetField from '$lib/components/finances/BudgetField.svelte';
 	import IconTrash from '@lucide/svelte/icons/trash-2';
 	import type { Budget, UpdateBudgetRequest } from '$lib/types/finance';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onMount } from 'svelte';
 
 	const ts = getTranslation();

@@ -4,7 +4,7 @@
 	import MovieCreate from '$lib/components/libraries/movies/MovieCreate.svelte';
 	import MovieDetail from '$lib/components/libraries/movies/MovieDetail.svelte';
 	import Entries from '$lib/components/libraries/shared/Entries.svelte';
-	import { getMovieLibrary } from '$lib/state/MovieLibrary.svelte.js';
+	import { getMovieLibrary } from '$lib/state/MovieLibrary.svelte';
 
 	const library = getMovieLibrary();
 </script>

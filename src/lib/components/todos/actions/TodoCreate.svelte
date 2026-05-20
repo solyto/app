@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { getKeyManager } from '$lib/KeyManager.svelte.js';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { onMount, onDestroy } from 'svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getTags } from '$lib/state/Tags.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getTags } from '$lib/state/Tags.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Button from '$lib/components/ui/buttons/Button.svelte';
 	import InlineAutocomplete from '$lib/components/forms/InlineAutocomplete.svelte';
 
@@ -133,6 +133,10 @@
 			<div class="flex items-center gap-1">
 				<div class="bg-c-neutral-1 px-2 py-1 dark:bg-s-dark-2">repeat:</div>
 				<span>Recurrence</span>
+			</div>
+			<div class="flex items-center gap-1">
+				<div class="bg-c-neutral-1 px-2 py-1 dark:bg-s-dark-2">link:</div>
+				<span>Link</span>
 			</div>
 		</div>
 	{:else}

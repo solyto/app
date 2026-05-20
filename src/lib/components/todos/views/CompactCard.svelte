@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import DueDate from '$lib/components/todos/props/DueDate.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
 
 	let { todo, handleCheck } = $props<{
 		todo: Todo;

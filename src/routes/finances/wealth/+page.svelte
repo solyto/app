@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { fade, slide } from 'svelte/transition';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getFinances } from '$lib/state/Finances.svelte.js';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getFinances } from '$lib/state/Finances.svelte';
 	import AddWealthField from '$lib/components/finances/AddWealthField.svelte';
 	import WealthFieldDisplay from '$lib/components/finances/WealthField.svelte';
 	import type { WealthField, UpdateWealthValueRequest } from '$lib/types/finance';
 	import { europeanFormat } from '$lib/helpers/NumberHelper';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import DoughnutChart from '$lib/components/charts/DoughnutChart.svelte';
 	import { onMount } from 'svelte';
 	import WealthStatisticsService from '$lib/services/WealthStatisticsService';

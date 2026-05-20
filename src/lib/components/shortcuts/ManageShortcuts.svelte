@@ -1,15 +1,15 @@
 <script lang="ts">
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getShortcuts } from '$lib/state/Shortcuts.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getShortcuts } from '$lib/state/Shortcuts.svelte';
 	import type { CreateShortcutRequest } from '$lib/types/shortcut.js';
 	import type { Shortcut } from '$lib/types/shortcut.js';
 	import ShotcutEdit from '$lib/components/shortcuts/ShortcutEdit.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte.js';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { onDestroy, tick } from 'svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';

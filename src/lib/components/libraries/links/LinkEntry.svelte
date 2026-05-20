@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Link } from '$lib/types/library_link';
-	import { LinkLibrary } from '$lib/state/LinkLibrary.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { LinkLibrary } from '$lib/state/LinkLibrary.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { formatDate } from '$lib/helpers/DateHelper';
 	import { grabFaviconFromUrl } from '$lib/helpers/ImageHelper';
 	import TagFlexList from '$lib/components/tags/TagFlexList.svelte';

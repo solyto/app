@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getTimeTracking } from '$lib/state/TimeTracking.svelte.js';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import ActiveTimer from '$lib/components/time-tracking/ActiveTimer.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
 	import Button from '$lib/components/ui/buttons/Button.svelte';

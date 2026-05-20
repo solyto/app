@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getPwaInstall } from '$lib/state/PwaInstall.svelte';
-	import { getWelcomeTour } from '$lib/state/WelcomeTour.svelte.js';
-	import { getFeatures } from '$lib/state/Features.svelte.js';
-	import { getThemeState } from '$lib/state/Theme.svelte.js';
+	import { getWelcomeTour } from '$lib/state/WelcomeTour.svelte';
+	import { getFeatures } from '$lib/state/Features.svelte';
+	import { getThemeState } from '$lib/state/Theme.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import IconSmartphone from '@lucide/svelte/icons/smartphone';
 	import IconCheckCircle from '@lucide/svelte/icons/check-circle';

@@ -3,7 +3,7 @@
 	import IconSearch from '@lucide/svelte/icons/search';
 	import IconCircleX from '@lucide/svelte/icons/circle-x';
 	import { onDestroy, onMount, tick } from 'svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte.js';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import type { Library } from '$lib/types/library';
 
 	const keyManager = getKeyManager();

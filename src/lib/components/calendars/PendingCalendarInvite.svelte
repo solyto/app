@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
-	import { getCalendars } from '$lib/state/Calendars.svelte.js';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getCalendars } from '$lib/state/Calendars.svelte';
+	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import type { Calendar } from '$lib/types/calendar.js';
 	import IconCheck from '@lucide/svelte/icons/check';
 	import IconX from '@lucide/svelte/icons/x';

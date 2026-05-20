@@ -208,6 +208,9 @@ export interface TodoRecords {
 	add_recurrence: string;
 	remove_recurrence: string;
 	recurrence_requires_due: string;
+	link: string;
+	no_link: string;
+	add_link: string;
 }
 
 export interface CheckInRecords {

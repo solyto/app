@@ -2,7 +2,7 @@
 	import { tick } from 'svelte';
 	import { useSwipe } from 'svelte-gestures';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import CalendarWeekDay from '$lib/components/calendars/views/week/Day.svelte';
 
 	const calendars = getCalendars();

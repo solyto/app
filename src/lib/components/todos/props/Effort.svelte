@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Todo, TodoEffort } from '$lib/types/todo';
 	import IconClock from '@lucide/svelte/icons/clock';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 
 	let { todo, changeEffort = true } = $props<{ todo: Todo; changeEffort: boolean }>();

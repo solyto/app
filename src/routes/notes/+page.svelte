@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getTranslation } from '$lib/state/Translation.svelte.js';
-	import { getNotes } from '$lib/state/Notes.svelte.js';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getNotes } from '$lib/state/Notes.svelte';
 	import OverviewEntries from '$lib/components/notes/OverviewEntries.svelte';
 	import Typewriter from 'svelte-typewriter';
 	import { onMount } from 'svelte';

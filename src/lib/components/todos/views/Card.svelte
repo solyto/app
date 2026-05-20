@@ -12,7 +12,7 @@
 	import ScoreBar from '$lib/components/todos/ScoreBar.svelte';
 	import Description from '$lib/components/todos/props/Description.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
-	import { getTodos } from '$lib/state/Todos.svelte.js';
+	import { getTodos } from '$lib/state/Todos.svelte';
 	import Subtasks from '$lib/components/todos/props/Subtasks.svelte';
 	import TodoDelete from '$lib/components/todos/actions/TodoDelete.svelte';
 	import IconChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
