@@ -59,7 +59,11 @@ export class DevRequests {
 	async create(request: CreateDevRequestRequest): Promise<boolean> {
 		request.created_by_user_id = this.auth.user?.id;
 		const res = await this.apiService.create(apiRoutes.dev.requests.create, request);
-		if (res) await this.load();
+		if (res) {
+			const devRequest = res.data as DevRequest;
+			await this.vote(devRequest, 'up');
+			await this.load();
+		}
 		return Promise.resolve(res !== null);
 	}
 
