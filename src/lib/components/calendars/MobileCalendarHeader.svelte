@@ -100,7 +100,7 @@
 			/>
 			<button
 				class="cursor-pointer rounded-lg p-2 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
-				onclick={async () => await calendars.showSidebar(new Date())}
+				onclick={async () => await calendars.showSidebar(calendars.mobileSelectedDate)}
 			>
 				<IconPlus class="size-5" />
 			</button>
