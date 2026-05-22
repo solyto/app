@@ -55,7 +55,7 @@
 				}}
 			>
 				<div
-					class="relative flex md:min-h-[10rem] w-full flex-col gap-2 rounded-md bg-white p-3 shadow-sm transition-all hover:bg-c-neutral dark:bg-s-dark-2 dark:shadow-s-dark-shadow dark:hover:bg-s-dark-3"
+					class="relative flex md:min-h-[10rem] w-full flex-col gap-2 rounded-md bg-c-bg-surface p-3 shadow-sm transition-all hover:bg-c-neutral"
 					style="border-left: 3px solid {getAccentColor(note.category_id)}"
 				>
 					{#if note.is_favorite}
