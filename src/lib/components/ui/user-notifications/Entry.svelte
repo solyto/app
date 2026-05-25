@@ -6,16 +6,13 @@
 	const ts = getTranslation();
 	const userNotifications = getUserNotifications();
 
-	let { notification, select, onClose } = $props<{
+	let { notification, onClose } = $props<{
 		notification: UserNotification;
-		select: (slug: string) => void;
 		onClose: () => void;
 	}>();
 
-	function goTo(notification: UserNotification): void {
+	function goTo(): void {
 		onClose();
-		const slug = userNotifications.getPageSlug(notification.type as UserNotificationType);
-		select(slug);
 	}
 
 	let notificationType = $derived(
@@ -76,7 +73,7 @@
 <a
 	class="relative flex w-full cursor-pointer flex-col gap-1 px-4 py-2 hover:bg-c-neutral dark:hover:bg-s-dark-2"
 	href={userNotifications.getLink(notification)}
-	onclick={() => goTo(notification)}
+	onclick={goTo}
 >
 	<div class="flex items-center gap-2">
 		{#if !notification.read_at}

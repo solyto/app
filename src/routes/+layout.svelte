@@ -12,12 +12,11 @@
 	import { getKeyManager, setKeyManager } from '$lib/KeyManager.svelte';
 	import { setUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { urls } from '$lib/config/urls';
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import { setUserNotifications } from '$lib/state/UserNotifications.svelte';
-	import { setFeatures } from '$lib/state/Features.svelte';
 	import { setCookieConsent } from '$lib/state/CookieConsent.svelte';
 	import CookieBanner from '$lib/components/ui/CookieBanner.svelte';
 	import { getPwaInstall, setPwaInstall } from '$lib/state/PwaInstall.svelte';
@@ -30,6 +29,8 @@
 	import { getCommandPalette, setCommandPalette } from '$lib/state/CommandPalette.svelte';
 	import CommandPaletteModal from '$lib/components/command-palette/CommandPalette.svelte';
 	import { registerCommands } from '$lib/components/command-palette/Commands.svelte';
+	import { getNavigation, setNavigation } from '$lib/state/Navigation.svelte';
+	import { getPageSlug, getPageFeature } from '$lib/helpers/NavHelper';
 
 	let { children } = $props();
 
@@ -40,7 +41,7 @@
 	setLoadingIndicator();
 	setUiNotifications();
 	setUserNotifications();
-	setFeatures();
+	setNavigation();
 	setCookieConsent();
 	setPwaInstall();
 	setWelcomeTour();
@@ -54,6 +55,7 @@
 	const ts = getTranslation();
 	const quickAdd = getQuickAdd();
 	const commandPalette = getCommandPalette();
+	const nav = getNavigation();
 
 	let innerHeight = $state<number>(0);
 
@@ -72,6 +74,11 @@
 		}
 
 		await registerCommands();
+	});
+
+	afterNavigate(() => {
+		const feature = getPageFeature();
+		if (feature) nav.addUsage(feature);
 	});
 
 	function showNavbar(): boolean {

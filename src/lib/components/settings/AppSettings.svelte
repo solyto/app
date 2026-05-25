@@ -2,7 +2,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getPwaInstall } from '$lib/state/PwaInstall.svelte';
 	import { getWelcomeTour } from '$lib/state/WelcomeTour.svelte';
-	import { getFeatures } from '$lib/state/Features.svelte';
+	import { getNavigation } from '$lib/state/Navigation.svelte';
 	import { getThemeState } from '$lib/state/Theme.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import IconSmartphone from '@lucide/svelte/icons/smartphone';
@@ -13,7 +13,7 @@
 	const ts = getTranslation();
 	const pwa = getPwaInstall();
 	const tour = getWelcomeTour();
-	const features = getFeatures();
+	const nav = getNavigation();
 	const themeState = getThemeState();
 </script>
 
@@ -49,7 +49,7 @@
 	<Card label={ts.get.welcome_tour.tour_start} hover={false}>
 		<button
 			class="mt-2 flex cursor-pointer items-center gap-2 rounded-lg bg-c-btn px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-c-btn/80"
-			onclick={() => tour.start(features)}
+			onclick={() => tour.start(nav.features)}
 		>
 			<IconMapPin size={15} />
 			{ts.get.welcome_tour.tour_start}

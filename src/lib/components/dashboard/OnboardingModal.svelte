@@ -5,15 +5,15 @@
 	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import { getFeatures } from '$lib/state/Features.svelte';
 	import OnboardingModalStepWelcome from './onboarding-modal/OnboardingModalStepWelcome.svelte';
 	import OnboardingModalStepLocalization from './onboarding-modal/OnboardingModalStepLocalization.svelte';
 	import OnboardingModalStepFeatures from './onboarding-modal/OnboardingModalStepFeatures.svelte';
 	import OnboardingModalStepReady from './onboarding-modal/OnboardingModalStepReady.svelte';
+	import { getNavigation } from '$lib/state/Navigation.svelte';
 
 	const ts = getTranslation();
 	const auth = getAuth();
-	const features = getFeatures();
+	const nav = getNavigation();
 
 	let { onComplete } = $props<{ onComplete: () => void }>();
 
@@ -55,7 +55,7 @@
 			await auth.updateDateFormat(selectedDateFormat);
 			await auth.updateTimeFormat(selectedTimeFormat);
 		} else if (currentStep === 2) {
-			await features.save();
+			await nav.save();
 		}
 
 		if (currentStep < totalSteps - 1) {

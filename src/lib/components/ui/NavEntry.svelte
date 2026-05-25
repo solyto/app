@@ -1,3 +1,9 @@
+
+
+
+
+
+
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 
@@ -5,29 +11,25 @@
 		slug,
 		title,
 		href,
-		onSelect,
+		onSelect = () => {},
 		active = false,
 		children,
 		mobile = false,
-		fixedWidth = false,
 		dataTour = undefined
 	} = $props<{
 		slug: string;
 		title: string;
 		href: string;
-		onSelect: (slug: string) => void;
+		onSelect?: (slug: string) => void;
 		active?: boolean;
 		children?: any;
 		mobile?: boolean;
-		fixedWidth?: boolean;
 		dataTour?: string;
 	}>();
 </script>
 
 <a
-	class="flex items-center justify-center rounded-sm transition-all md:max-h-[5vh]"
-	class:w-full={!fixedWidth}
-	class:w-14={fixedWidth}
+	class="flex w-full items-center justify-center rounded-sm transition-all md:max-h-[5vh]"
 	class:h-14={!mobile}
 	class:h-12={mobile}
 	{href}

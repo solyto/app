@@ -7,7 +7,7 @@
 	import { setCheckInData } from '$lib/state/CheckInData.svelte';
 	import { setShortcuts } from '$lib/state/Shortcuts.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import { setFeatures, getFeatures } from '$lib/state/Features.svelte';
+	import { getNavigation } from '$lib/state/Navigation.svelte';
 	import { getWelcomeTour } from '$lib/state/WelcomeTour.svelte';
 	import { setTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { getKeyManager } from '$lib/KeyManager.svelte';
@@ -22,13 +22,12 @@
 	setWeather();
 	setCheckInData();
 	setShortcuts();
-	setFeatures();
 	setTimeTracking();
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
 	const auth = getAuth();
-	const features = getFeatures();
+	const nav = getNavigation();
 	const tour = getWelcomeTour();
 	const keyManager = getKeyManager();
 	const quickAdd = getQuickAdd();
@@ -60,7 +59,7 @@
 
 	function handleOnboardingModalComplete(): void {
 		showOnboardingModal = false;
-		tour.start(features);
+		tour.start(nav.features);
 	}
 </script>
 

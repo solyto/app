@@ -15,7 +15,6 @@
 		await userNotifications.load();
 	});
 
-	let { select } = $props<{ select: (slug: string) => void }>();
 
 	let open = $state<boolean>(false);
 	let unreadNotificationCount = $derived(userNotifications.getUnread().length);
@@ -63,7 +62,7 @@
 			use:clickOutside={() => (open = false)}
 		>
 			{#each userNotifications.notifications as notification (notification.id)}
-				<Entry {notification} {select} {onClose} />
+				<Entry {notification} {onClose} />
 			{/each}
 		</div>
 	{/if}

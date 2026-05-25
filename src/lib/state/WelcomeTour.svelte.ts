@@ -1,7 +1,6 @@
 import { getContext, setContext } from 'svelte';
 import { urls } from '$lib/config/urls';
-import type { Features } from '$lib/state/Features.svelte';
-import type { FeatureType } from '$lib/types/feature';
+import type { FeatureType } from '$lib/config/navigation';
 
 export interface TourStep {
 	key: string
@@ -37,9 +36,9 @@ export class WelcomeTour {
 	currentStepIndex = $state(0)
 	steps = $state<TourStep[]>([])
 
-	start(features: Features): void {
+	start(features: Record<FeatureType, boolean>): void {
 		const featureSteps: TourStep[] = FEATURE_STEPS
-			.filter(s => s.always || features.features[s.key as FeatureType])
+			.filter(s => s.always || features[s.key as FeatureType])
 			.map(s => ({
 				key: s.key,
 				route: s.route,

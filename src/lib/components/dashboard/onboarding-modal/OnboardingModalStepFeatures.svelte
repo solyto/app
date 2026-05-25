@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { blur } from 'svelte/transition';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { getFeatures } from '$lib/state/Features.svelte';
 	import IconLayoutGrid from '@lucide/svelte/icons/layout-grid';
 	import IconCalendar from '@lucide/svelte/icons/calendar';
 	import IconCheckSquare from '@lucide/svelte/icons/check-square';
@@ -13,10 +12,11 @@
 	import IconWallet from '@lucide/svelte/icons/wallet';
 	import IconRss from '@lucide/svelte/icons/rss';
 	import IconClipboard from '@lucide/svelte/icons/clipboard';
-	import type { FeatureType } from '$lib/types/feature';
+	import type { FeatureType } from '$lib/config/navigation';
+	import { getNavigation } from '$lib/state/Navigation.svelte';
 
 	const ts = getTranslation();
-	const features = getFeatures();
+	const nav = getNavigation();
 
 	const featureConfig = [
 		{ key: 'calendar' as FeatureType, icon: IconCalendar, labelKey: 'feature_calendar', descKey: 'feature_calendar_desc' },
@@ -32,7 +32,7 @@
 	];
 
 	function toggleFeature(key: FeatureType): void {
-		features.features[key] = !features.features[key];
+		nav.features[key] = !nav.features[key];
 	}
 </script>
 
@@ -58,14 +58,14 @@
 		{#each featureConfig as feature}
 			<button
 				class="flex cursor-pointer items-start gap-3 rounded-xl border-2 p-3 text-left transition-all
-					{features.features[feature.key]
+					{nav.features[feature.key]
 					? 'border-c-btn bg-c-btn/5 dark:bg-c-btn/10'
 					: 'border-c-neutral-2 hover:border-c-neutral-3 dark:border-s-dark-3'}"
 				onclick={() => toggleFeature(feature.key)}
 			>
 				<div
 					class="flex size-8 shrink-0 items-center justify-center rounded-lg
-					{features.features[feature.key]
+					{nav.features[feature.key]
 						? 'bg-c-btn text-white'
 						: 'bg-c-neutral-1 text-c-neutral-5 dark:bg-s-dark-3 dark:text-c-neutral-4'}"
 				>
