@@ -5,7 +5,7 @@
 	import logo from '$lib/assets/logo_cut.png';
 
 	import { urls } from '$lib/config/urls';
-	import { navItems, desktopOrder } from '$lib/config/navigation';
+	import { navItems, desktopOrder, type FeatureType } from '$lib/config/navigation';
 	import { slide } from 'svelte/transition';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import UserNotifications from '$lib/components/ui/user-notifications/UserNotifications.svelte';
@@ -17,6 +17,17 @@
 	const nav = getNavigation();
 
 	let active = $derived(getPageSlug());
+
+	let sortedDesktopOrder = $derived([
+		'home',
+		...desktopOrder
+			.filter(s => s !== 'home')
+			.sort((a, b) => {
+				const aUsage = navItems[a]?.featureFlag ? (nav.usage[navItems[a].featureFlag!] ?? 0) : 0;
+				const bUsage = navItems[b]?.featureFlag ? (nav.usage[navItems[b].featureFlag!] ?? 0) : 0;
+				return bUsage - aUsage;
+			})
+	]);
 </script>
 
 <div class="nav-desktop-container h-full bg-c-bg p-1" transition:slide={{ axis: 'x' }}>
@@ -33,7 +44,7 @@
 		</div>
 
 		<div class="flex flex-1 flex-col items-center justify-center">
-			{#each desktopOrder as slug}
+			{#each sortedDesktopOrder as slug}
 				{@const item = navItems[slug]}
 				{#if item.featureFlag === null || nav.features[item.featureFlag]}
 					<div data-tour={item.dataTour} class="w-full">

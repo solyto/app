@@ -4,7 +4,7 @@ import ApiService from '$lib/services/ApiService';
 import type { FeatureType, FeatureUsage } from '$lib/config/navigation';
 import { env } from '$env/dynamic/public';
 import LocalStorageService from '$lib/services/LocalStorageService';
-import { mobileDefaultOrder, mobileVisibleCount } from '$lib/config/navigation';
+import { mobileDefaultOrder, mobileVisibleCount, navItems } from '$lib/config/navigation';
 
 export class Navigation {
 	static readonly LS_USAGE_KEY: string = 'navigation_usage';
@@ -63,9 +63,11 @@ export class Navigation {
 		if (submenuIndex < mobileVisibleCount) return;
 
 		const barItems = order.slice(0, mobileVisibleCount).filter(s => s !== 'home');
-		const leastUsed = barItems.reduce((a, b) =>
-			(this.usage[a as FeatureType] ?? 0) <= (this.usage[b as FeatureType] ?? 0) ? a : b
-		);
+		const leastUsed = barItems.reduce((a, b) => {
+			const aUsage = navItems[a]?.featureFlag ? (this.usage[navItems[a].featureFlag!] ?? 0) : 0;
+			const bUsage = navItems[b]?.featureFlag ? (this.usage[navItems[b].featureFlag!] ?? 0) : 0;
+			return aUsage <= bUsage ? a : b;
+		});
 
 		const leastUsedIndex = order.indexOf(leastUsed);
 		order[leastUsedIndex] = slug;
