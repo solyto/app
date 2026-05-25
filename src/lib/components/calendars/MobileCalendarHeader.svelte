@@ -3,7 +3,7 @@
 	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import IconChevronDown from '@lucide/svelte/icons/chevron-down';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconMonth from '$lib/components/ui/icons/IconMonth.svelte';
 	import IconWeek from '$lib/components/ui/icons/IconWeek.svelte';
 	import IconDay from '$lib/components/ui/icons/IconDay.svelte';
@@ -93,7 +93,7 @@
 			</button>
 		</div>
 		<div class="flex items-center gap-1">
-			<Button
+			<TextButton
 				title={ts.get.calendar.today}
 				onclick={async () => await calendars.goToToday()}
 				type="slight"

@@ -9,7 +9,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
 	import PasswordStrengthIndicator from '$lib/components/forms/PasswordStrengthIndicator.svelte';
@@ -131,7 +131,7 @@
 			{/if}
 		</label>
 		<div class="mt-4 flex items-center justify-end">
-			<Button title={ts.get.auth.register} class="w-full" />
+			<TextButton title={ts.get.auth.register} class="w-full" />
 		</div>
 	</form>
 </div>

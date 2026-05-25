@@ -3,7 +3,7 @@
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
 	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import type {
 		CreateMusicRequest,
 		DeezerImport,
@@ -287,6 +287,6 @@
 	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
 		<DiscogsImportButton loading={importLoading} onClick={importFromDiscogs} />
 		<DeezerImportButton loading={importLoading} onClick={importFromDeezer} />
-		<Button title={ts.get.layout.save} onclick={onsubmit} />
+		<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 	</div>
 </CreateModal>

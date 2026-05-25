@@ -3,7 +3,7 @@
 	import SlidingSideBar from '$lib/components/ui/SlidingSideBar.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import type {
 		EventForm,
@@ -219,9 +219,9 @@
 			class:justify-end={!calendars.activeEvent}
 		>
 			{#if calendars.activeEvent}
-				<Button title={ts.get.calendar.delete_entry} onclick={onDelete} type="error" />
+				<TextButton title={ts.get.calendar.delete_entry} onclick={onDelete} type="danger" />
 			{/if}
-			<Button title={ts.get.layout.save} onclick={onsubmit} />
+			<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 		</div>
 	</div>
 </SlidingSideBar>

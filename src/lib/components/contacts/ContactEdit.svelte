@@ -12,7 +12,7 @@
 	import IconStickyNote from '@lucide/svelte/icons/sticky-note';
 	import IconUsersRound from '@lucide/svelte/icons/users-round';
 	import IconBookUser from '@lucide/svelte/icons/book-user';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import ChooseAddressBook from '$lib/components/contacts/ChooseAddressBook.svelte';
 	import PhoneEdit from '$lib/components/contacts/PhoneEdit.svelte';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
@@ -179,7 +179,7 @@
 			<TextInput placeholder="Notes" multiLine={true} height={80} bind:value={form.note} />
 		</div>
 		<div class="mt-8 flex w-full flex-row items-center justify-end">
-			<Button title={ts.get.layout.save} onclick={onsubmit} />
+			<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 		</div>
 	</div>
 </ContentModal>

@@ -8,7 +8,7 @@
 	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { onDestroy, onMount, tick } from 'svelte';
 	import IconStar from '@lucide/svelte/icons/star';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import Modal from '$lib/components/ui/Modal.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import type { Note } from '$lib/types/note';
@@ -150,7 +150,7 @@
 					/>
 				</button>
 				<DeleteButton onClick={() => (deleteModalOpen = true)} inModal={false} buttonStyle="plain" />
-				<Button title={ts.get.layout.save} onclick={saveNote} />
+				<TextButton title={ts.get.layout.save} onclick={saveNote} />
 			</div>
 		</div>
 		<NoteTags />

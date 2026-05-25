@@ -2,7 +2,7 @@
 	import { tick, onDestroy } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getKeyManager } from '$lib/KeyManager.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 
 	const keyManager = getKeyManager();
@@ -15,7 +15,7 @@
 	} = $props<{
 		label: string;
 		create: (title: string) => void | Promise<void> | Promise<boolean>;
-		buttonType?: 'plain' | 'slight' | 'primary';
+		buttonType?: 'plain' | 'slight' | 'btn';
 	}>();
 
 	let formOpen = $state<boolean>(false);
@@ -65,6 +65,6 @@
 			<TextInput bind:input bind:value={title} {onblur} placeholder="Name" />
 		</div>
 	{:else}
-		<Button title="+ {label}" onclick={toggleForm} type={buttonType} />
+		<TextButton title="+ {label}" onclick={toggleForm} type={buttonType} />
 	{/if}
 </div>

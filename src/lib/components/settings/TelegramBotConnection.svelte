@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { apiRoutes } from '$lib/config/apiRoutes';
 	import type { Connection } from '$lib/types/telegram_bot_connection';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const auth = getAuth();
@@ -52,7 +52,7 @@
 				</div>
 			{/if}
 		{:else}
-			<Button title={ts.get.settings.telegram_bot_create} onclick={() => getConnection()} />
+			<TextButton title={ts.get.settings.telegram_bot_create} onclick={() => getConnection()} />
 		{/if}
 	</div>
 {/if}

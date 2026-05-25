@@ -3,7 +3,7 @@
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
 	const tt = getTimeTracking();
 	const ts = getTranslation();
@@ -61,6 +61,6 @@
 				</span>
 			{/if}
 		</div>
-		<Button title={ts.get.timeTracking.stop_timer} type="error" onclick={stopTimer} />
+		<TextButton title={ts.get.timeTracking.stop_timer} type="danger" onclick={stopTimer} />
 	</div>
 {/if}

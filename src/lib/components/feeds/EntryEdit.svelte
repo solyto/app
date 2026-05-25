@@ -10,7 +10,7 @@
 	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 
 	const ts = getTranslation();
@@ -156,9 +156,9 @@
 			{#if !feeds.activeFeed}
 				<span class="mr-4 text-sm">Looks right?</span>
 			{/if}
-			<Button title={ts.get.layout.save} onclick={onSave} />
+			<TextButton title={ts.get.layout.save} onclick={onSave} />
 		{:else}
-			<Button title={ts.get.feeds.test_feed} onclick={testFeed} />
+			<TextButton title={ts.get.feeds.test_feed} onclick={testFeed} />
 		{/if}
 	</div>
 </div>

@@ -3,7 +3,7 @@
 	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onDestroy, onMount } from 'svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
 	const ts = getTranslation(),
 		keyManager = getKeyManager();
@@ -60,19 +60,19 @@
 						: ts.get.calendar.recurring_delete_question}
 				</div>
 				<div class="flex w-full flex-col gap-2">
-					<Button
+					<TextButton
 						title={ts.get.calendar.this_occurrence}
 						onclick={onThisOccurrence}
 						type={action === 'delete' ? 'error' : 'action'}
 						fullWidth={true}
 					/>
-					<Button
+					<TextButton
 						title={ts.get.calendar.all_occurrences}
 						onclick={onAllOccurrences}
 						type={action === 'delete' ? 'error' : 'action'}
 						fullWidth={true}
 					/>
-					<Button
+					<TextButton
 						title={ts.get.layout.modal_cancel}
 						onclick={onCancel}
 						fullWidth={true}

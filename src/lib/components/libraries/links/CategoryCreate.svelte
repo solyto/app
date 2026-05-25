@@ -8,7 +8,7 @@
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import ColorPicker from 'svelte-awesome-color-picker';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 
 	const keyManager = getKeyManager();
@@ -93,7 +93,7 @@
 			/>
 		</div>
 		<div class="mt-8 flex w-full flex-row items-center justify-end">
-			<Button title={ts.get.layout.save} onclick={onsubmit} />
+			<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 		</div>
 	</ContentModal>
 {/if}

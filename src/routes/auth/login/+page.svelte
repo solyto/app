@@ -9,7 +9,7 @@
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 
 	import { fade } from 'svelte/transition';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
@@ -84,7 +84,7 @@
 			{/if}
 		</label>
 		<div class="mt-4 flex items-center justify-end">
-			<Button title={ts.get.auth.sign_in} class="w-full" />
+			<TextButton title={ts.get.auth.sign_in} class="w-full" />
 		</div>
 	</form>
 </div>

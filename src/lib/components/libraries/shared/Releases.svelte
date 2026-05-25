@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import IconNewspaper from '@lucide/svelte/icons/newspaper';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import type { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -39,12 +42,10 @@
 	}
 </script>
 
-<button
-	class="cursor-pointer rounded-sm bg-c-primary p-1 px-4 py-2 font-bold text-white transition-all hover:bg-c-success hover:shadow-xs"
-	onclick={toggleModal}
->
-	{ts.get.libraries.releases}
-</button>
+<TextButton title={ts.get.libraries.releases} type="primary" onclick={toggleModal} class="max-md:hidden" />
+<IconButton type="primary" onclick={toggleModal} class="md:hidden">
+	<IconNewspaper />
+</IconButton>
 
 {#if modalOpen}
 	<ContentModal title={ts.get.libraries.releases} onClose={toggleModal} transparent={true}>

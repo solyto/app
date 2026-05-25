@@ -8,7 +8,7 @@
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { scale } from 'svelte/transition';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
 	const auth = getAuth();
 	const ts = getTranslation();
@@ -45,7 +45,7 @@
 			{#if status || errors.includes('already_verified')}
 				<span>{ts.get.auth.verify_success}</span>
 				<div class="mt-4 flex items-center justify-end">
-					<Button
+					<TextButton
 						title={ts.get.auth.sign_in}
 						href={urls.login}
 						align="center"

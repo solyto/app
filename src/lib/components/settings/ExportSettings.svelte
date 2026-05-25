@@ -3,7 +3,7 @@
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import ApiService from '$lib/services/ApiService';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import { onMount } from 'svelte';
 	import { apiRoutes } from '$lib/config/apiRoutes';
@@ -123,14 +123,14 @@
 	</div>
 
 	<div class="flex gap-2">
-		<Button title={ts.get.settings.export_select_all} onclick={selectAll} type="slight" />
-		<Button title={ts.get.settings.export_deselect_all} onclick={deselectAll} type="slight" />
+		<TextButton title={ts.get.settings.export_select_all} onclick={selectAll} type="slight" />
+		<TextButton title={ts.get.settings.export_deselect_all} onclick={deselectAll} type="slight" />
 	</div>
 
-	<Button
+	<TextButton
 		title={ts.get.settings.export_start}
 		onclick={startExport}
-		type="primary"
+		type="btn"
 		class={loading ? 'opacity-50 cursor-wait' : ''}
 	/>
 
@@ -143,7 +143,7 @@
 
 			{#if exportStatus.status === 'completed' && !exportStatus.is_expired}
 				<div class="mt-2">
-					<Button title={ts.get.settings.export_download} type="action" onclick={downloadExport} />
+					<TextButton title={ts.get.settings.export_download} type="action" onclick={downloadExport} />
 				</div>
 			{/if}
 

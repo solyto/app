@@ -3,7 +3,7 @@
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import type {
 		ImportForm,
 		ImportRequest,
@@ -129,7 +129,7 @@
 				<ModalFormRow label="Secret">
 					<PasswordInput bind:value={form.secret} />
 				</ModalFormRow>
-				<Button title="Import" onclick={initImport} class="mt-4" />
+				<TextButton title="Import" onclick={initImport} class="mt-4" />
 			</div>
 		{:else if importState === null && loading}
 			<p>{ts.get.calendar.import_start}</p>
@@ -148,7 +148,7 @@
 						/>
 					</div>
 				{/each}
-				<Button title="Import" onclick={startImport} class="mt-4" />
+				<TextButton title="Import" onclick={startImport} class="mt-4" />
 			</div>
 		{:else if importState?.stage === 'calendars'}
 			{#if importState?.calendars_current}

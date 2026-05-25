@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
 	let {
 		hours = $bindable(),
@@ -68,7 +68,7 @@
 					</button>
 				{/each}
 				<div class="absolute right-4 bottom-4 cursor-pointer">
-					<Button
+					<TextButton
 						title="Set"
 						onclick={() => {
 							menu = false;

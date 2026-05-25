@@ -8,7 +8,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import InlineAutocomplete from '$lib/components/forms/InlineAutocomplete.svelte';
 
 	const keyManager = getKeyManager();
@@ -140,6 +140,6 @@
 			</div>
 		</div>
 	{:else}
-		<Button title={ts.get.todos.new_todo} onclick={toggleForm} />
+		<TextButton title={ts.get.todos.new_todo} onclick={toggleForm} />
 	{/if}
 </div>

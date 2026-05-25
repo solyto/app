@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getClipboard } from '$lib/state/Clipboard.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -106,7 +106,7 @@
 			</div>
 		</div>
 		<div class="flex w-full justify-end gap-4">
-			<Button title={ts.get.clipboard.save} onclick={onSaveImage} />
+			<TextButton title={ts.get.clipboard.save} onclick={onSaveImage} />
 		</div>
 	{:else}
 		<div onpaste={onPasteEvent}>
@@ -119,7 +119,7 @@
 			>
 				<IconImage class="size-4" />
 			</button>
-			<Button title={ts.get.clipboard.save} onclick={onSave} />
+			<TextButton title={ts.get.clipboard.save} onclick={onSave} />
 		</div>
 	{/if}
 </div>

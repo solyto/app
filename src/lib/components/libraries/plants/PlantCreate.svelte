@@ -2,7 +2,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import DateInput from '$lib/components/forms/DateInput.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -222,6 +222,6 @@
 		<TextInput bind:value={linkValue} placeholder="https://" />
 	</ModalFormRow>
 	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
-		<Button title={ts.get.layout.save} onclick={onsubmit} disabled={!canSubmit} />
+		<TextButton title={ts.get.layout.save} onclick={onsubmit} disabled={!canSubmit} />
 	</div>
 </CreateModal>

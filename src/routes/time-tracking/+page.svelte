@@ -6,7 +6,7 @@
 	import DashboardView from '$lib/components/time-tracking/DashboardView.svelte';
 	import GroupedEntries from '$lib/components/time-tracking/GroupedEntries.svelte';
 	import EntryCreate from '$lib/components/time-tracking/EntryCreate.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
 	const tt = getTimeTracking();
 	const ts = getTranslation();
@@ -20,7 +20,7 @@
 		<div>
 			<div class="mb-4 flex flex-row items-center justify-between">
 				<Heading title={ts.get.timeTracking.entries} my={0} />
-				<Button
+				<TextButton
 					title={ts.get.timeTracking.add_entry}
 					onclick={() => (showEntryCreate = true)}
 				/>

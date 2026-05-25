@@ -6,7 +6,7 @@
 	import DoughnutChart from '$lib/components/charts/DoughnutChart.svelte';
 	import BarChart from '$lib/components/charts/BarChart.svelte';
 	import Heading from '$lib/components/ui/Heading.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
 	const tt = getTimeTracking();
 	const ts = getTranslation();
@@ -102,7 +102,7 @@
 					class="rounded-lg border-1 border-c-neutral-2 px-3 py-2 text-sm shadow-xs dark:border-s-dark-3 dark:bg-inherit dark:text-white"
 				/>
 			</div>
-			<Button title={ts.get.layout.apply} onclick={loadStats} />
+			<TextButton title={ts.get.layout.apply} onclick={loadStats} />
 		</div>
 	</div>
 

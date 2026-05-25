@@ -4,7 +4,7 @@
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import FindCategoryMenu from '$lib/components/todos/FindCategoryMenu.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
@@ -77,7 +77,7 @@
 				</div>
 			{/each}
 			<div class="text-sm">
-				<Button
+				<TextButton
 					title="+ {ts.get.todos.add_category}"
 					onclick={() => {
 						findCategoryMenuVisible = true;

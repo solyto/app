@@ -15,7 +15,7 @@
 	import Entry from '$lib/components/time-tracking/Entry.svelte';
 	import ProjectCreate from '$lib/components/time-tracking/ProjectCreate.svelte';
 	import EntryCreate from '$lib/components/time-tracking/EntryCreate.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import Modal from '$lib/components/ui/Modal.svelte';
 
 	const tt = getTimeTracking();
@@ -136,7 +136,7 @@
 					</div>
 				</div>
 				<div class="flex flex-row items-center gap-2">
-					<Button
+					<TextButton
 						title={ts.get.timeTracking.add_entry}
 						onclick={() => (showEntryCreate = true)}
 					/>

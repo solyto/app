@@ -3,7 +3,7 @@
 	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onDestroy, onMount } from 'svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import Divider from '$lib/components/ui/Divider.svelte';
 
 	const ts = getTranslation(),
@@ -84,8 +84,8 @@
 					</div>
 				{/if}
 				<div class="mt-4 flex w-full flex-row justify-center gap-4">
-					<Button title={ts.get.layout.modal_cancel} onclick={onCancel} />
-					<Button
+					<TextButton title={ts.get.layout.modal_cancel} onclick={onCancel} />
+					<TextButton
 						title={ts.get.layout.modal_confirm}
 						type={type === 'confirm-delete' ? 'error' : 'action'}
 						onclick={onConfirm}

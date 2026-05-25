@@ -76,4 +76,4 @@
 	</div>
 </div>
 
-<!-- md:rounded-lg md:rounded-xl md:rounded-2xl md:w-2xl md:w-3xl md:w-4xl p-8 p-10 p-12 p-16 -->
+<!-- md:rounded-lg md:rounded-xl md:rounded-2xl md:w-60 md:w-72 md:w-96 md:w-2xl md:w-3xl md:w-4xl p-8 p-10 p-12 p-16 -->

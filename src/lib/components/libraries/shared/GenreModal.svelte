@@ -26,13 +26,13 @@
 	}
 </script>
 
-<ContentModal rounded="2xl" p="4" small={true} onClose={() => library.closeGenreModal()}>
+<ContentModal rounded="2xl" p="4" small={true} width="96" onClose={() => library.closeGenreModal()}>
 	<div class="flex flex-col gap-4">
 		<Heading title={ts.get.libraries.genres} my={2} />
 		<div class="flex flex-col gap-2">
 			{#each library.genres as genre (genre.id)}
 				<div class="flex items-center gap-2">
-					<div class="w-48">{genre.title}</div>
+					<div class="flex-1">{genre.title}</div>
 					<button
 						class="cursor-pointer"
 						onclick={() => {

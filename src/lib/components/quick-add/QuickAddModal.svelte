@@ -10,7 +10,7 @@
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconBookOpen from '@lucide/svelte/icons/book-open';
 	import IconFilm from '@lucide/svelte/icons/film';
 	import IconMusic from '@lucide/svelte/icons/music';
@@ -160,13 +160,13 @@
 				<p class="rounded-lg bg-c-danger/10 px-3 py-2 text-sm text-c-danger">{quickAdd.error}</p>
 			{/if}
 			<div class="flex justify-end gap-2">
-				<Button
+				<TextButton
 					title={ts.get.quick_add.choose_different}
 					type="slight"
 					onclick={() => quickAdd.rejectDetection()}
 					disabled={quickAdd.loading}
 				/>
-				<Button
+				<TextButton
 					title={ts.get.quick_add.confirm}
 					onclick={() => quickAdd.confirm(quickAdd.detectedType!)}
 					disabled={quickAdd.loading}
@@ -182,7 +182,7 @@
 					placeholder={ts.get.quick_add.placeholder}
 				/>
 			</div>
-			<Button
+			<TextButton
 				title={quickAdd.loading ? ts.get.quick_add.adding : ts.get.quick_add.add}
 				disabled={quickAdd.loading || !quickAdd.url.trim()}
 				onclick={handleSubmit}

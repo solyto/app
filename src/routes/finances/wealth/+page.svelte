@@ -12,7 +12,7 @@
 	import WealthStatisticsService from '$lib/services/WealthStatisticsService';
 	import StackedAreaChart from '$lib/components/charts/StackedAreaChart.svelte';
 	import SmoothLineChart from '$lib/components/charts/SmoothLineChart.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import Divider from '$lib/components/ui/Divider.svelte';
 
 	const ts = getTranslation();
@@ -68,7 +68,7 @@
 </script>
 
 {#if finances.wealthLoaded}
-	<Button
+	<TextButton
 		title={showHistory ? ts.get.finances.hide_history : ts.get.finances.show_history}
 		onclick={() => {
 			showHistory = !showHistory;

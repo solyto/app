@@ -1,5 +1,8 @@
 <script lang="ts">
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
+	import IconTag from '@lucide/svelte/icons/tag';
+	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import ViewSwitcher from '$lib/components/libraries/shared/ViewSwitcher.svelte';
 	import Search from '$lib/components/libraries/shared/Search.svelte';
@@ -29,17 +32,15 @@
 			<Recommender {library} />
 		{/if}
 		{#if library.config.hasGenres}
-			<div class="relative">
-				<Button
-					title={ts.get.libraries.edit_genres}
-					onclick={() => library.openGenreModal()}
-					type="slight"
-				/>
-			</div>
+			<TextButton title={ts.get.libraries.edit_genres} onclick={() => library.openGenreModal()} type="slight" class="max-md:hidden" />
+			<IconButton type="slight" onclick={() => library.openGenreModal()} class="md:hidden">
+				<IconTag />
+			</IconButton>
 		{/if}
-		<div class="relative">
-			<Button title={ts.get.libraries.create} onclick={() => library.openCreateModal()} />
-		</div>
+		<TextButton title={ts.get.libraries.create} onclick={() => library.openCreateModal()} class="max-md:hidden" />
+		<IconButton onclick={() => library.openCreateModal()} class="md:hidden">
+			<IconPlus />
+		</IconButton>
 	</div>
 	<div class="text-surface-300 mx-2 my-4 text-xs">{library.entries.length} entries</div>
 </div>

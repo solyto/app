@@ -9,7 +9,7 @@
 	} from '$lib/types/dev_request';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getDevRequests } from '$lib/state/DevRequests.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import FileUpload from '$lib/components/forms/FileUpload.svelte';
@@ -99,6 +99,6 @@
 			bind:filename={form.screenshot_name}
 		/>
 		<TextInput placeholder="URL" bind:value={form.url} />
-		<Button title={ts.get.layout.save} type="primary" onclick={onSave} class="mt-6" />
+		<TextButton title={ts.get.layout.save} type="btn" onclick={onSave} class="mt-6" />
 	</div>
 </div>

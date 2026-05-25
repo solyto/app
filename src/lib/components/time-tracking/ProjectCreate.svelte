@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -134,7 +134,7 @@
 			</div>
 		</div>
 		<div class="mt-4 flex w-full justify-end">
-			<Button title={ts.get.layout.save} onclick={onSave} />
+			<TextButton title={ts.get.layout.save} onclick={onSave} />
 		</div>
 	</div>
 </ContentModal>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -180,6 +180,6 @@
 	</ModalFormRow>
 	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
 		<ChefkochImportButton loading={importLoading} onClick={importFromChefkoch} />
-		<Button title={ts.get.layout.save} onclick={onsubmit} />
+		<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 	</div>
 </CreateModal>

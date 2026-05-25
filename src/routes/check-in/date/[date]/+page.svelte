@@ -3,7 +3,7 @@
 	import DailyCheckIn from '$lib/components/check-in/daily/DailyCheckIn.svelte';
 	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import {
@@ -97,6 +97,6 @@
 		<DailyCheckIn {type} label={ts.get.checkIn[type]} currentValue={dayData?.[type]} {onChange} selectedSports={checkInData.settings.selectedSports} />
 	{/each}
 	<div class="mb-8 flex w-full justify-center sm:absolute sm:top-0 sm:right-8 sm:mb-0 sm:w-auto">
-		<Button title={ts.get.layout.save} onclick={onSave} class="max-sm:h-14 max-sm:w-full" />
+		<TextButton title={ts.get.layout.save} onclick={onSave} class="max-sm:h-14 max-sm:w-full" />
 	</div>
 </div>

@@ -3,7 +3,7 @@
 	import IconBot from '@lucide/svelte/icons/bot';
 	import IconRotateCcw from '@lucide/svelte/icons/rotate-ccw';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import AiButton from '$lib/components/ui/buttons/AiButton.svelte';
+	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import LoadingLogo from '$lib/components/ui/LoadingLogo.svelte';
 	import type { LibraryRecommendation, LibraryRecommendationType } from '$lib/types/library';
@@ -73,10 +73,10 @@
 </script>
 
 <div class="relative">
-	<AiButton onclick={toggleChat}>
+	<IconButton type="action" onclick={toggleChat}>
 		<IconBot />
-		<span class="ml-2 max-md:hidden">{ts.get.libraries.recommend}</span>
-	</AiButton>
+		<span class="max-md:hidden">{ts.get.libraries.recommend}</span>
+	</IconButton>
 </div>
 
 {#if modalVisible}

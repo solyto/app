@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import type { CreateLinkRequest } from '$lib/types/library_link';
 	import { getTags } from '$lib/state/Tags.svelte';
@@ -59,6 +59,6 @@
 		<MultiSelect bind:value={selectedTags} options={tagOptions} />
 	</ModalFormRow>
 	<div class="mt-8 flex w-full flex-row items-center justify-end">
-		<Button title={ts.get.layout.save} onclick={onsubmit} />
+		<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 	</div>
 </CreateModal>

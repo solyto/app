@@ -5,7 +5,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { formatDate } from '$lib/helpers/DateHelper';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getKeyManager } from '$lib/KeyManager.svelte';
@@ -73,7 +73,7 @@
 				placeholder={ts.get.dev.requests.comments_placeholder}
 				bind:value={newComment}
 			/>
-			<Button onclick={submitComment} title={ts.get.dev.requests.comments_submit} />
+			<TextButton onclick={submitComment} title={ts.get.dev.requests.comments_submit} />
 		</div>
 	</div>
 </div>

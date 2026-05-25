@@ -2,7 +2,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getNotes } from '$lib/state/Notes.svelte';
 	import OverviewEntries from '$lib/components/notes/OverviewEntries.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import Typewriter from 'svelte-typewriter';
 	import { onMount } from 'svelte';
 
@@ -23,7 +23,7 @@
 
 <div class="flex h-full w-full flex-col gap-4 px-4 max-md:mt-16 md:px-8">
 	<div class="absolute top-4 right-4 z-40 md:hidden">
-		<Button title={ts.get.notes.new_note} onclick={() => notes.openModal('note')} />
+		<TextButton title={ts.get.notes.new_note} onclick={() => notes.openModal('note')} />
 	</div>
 	{#if notes.loaded}
 		{#if favorites.length > 0}

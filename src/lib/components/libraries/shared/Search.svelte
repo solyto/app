@@ -53,16 +53,17 @@
 	const oninput = () => library.search(searchTerm);
 </script>
 
-<button class="cursor-pointer max-md:hidden" onclick={openSearch}>
+<button class="cursor-pointer" onclick={openSearch}>
 	<IconSearch />
 </button>
 
 {#if library.searchVisible}
-	<div class="absolute flex w-full justify-center">
+	<div class="absolute z-30 flex w-full justify-center">
 		<input
 			type="text"
 			class="w-0 rounded-xl border-1 border-c-neutral-2 bg-transparent text-xl backdrop-blur-xs transition-all duration-300"
-			class:w-96={inputExpanded}
+			class:w-72={inputExpanded}
+			class:md:w-96={inputExpanded}
 			in:fade
 			bind:this={searchInput}
 			bind:value={library.searchTerm}

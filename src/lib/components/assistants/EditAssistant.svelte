@@ -5,7 +5,7 @@
 		UpdateAssistantRequest
 	} from '$lib/types/assistant';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconBot from '@lucide/svelte/icons/bot';
@@ -93,7 +93,7 @@
 				height={300}
 			/>
 		</div>
-		<Button
+		<TextButton
 			title={isEditing ? ts.get.assistants.update : ts.get.assistants.create}
 			onclick={onSave}
 		/>

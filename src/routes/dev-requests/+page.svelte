@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import Divider from '$lib/components/ui/Divider.svelte';
 	import DevRequestEntry from '$lib/components/dev-requests/DevRequestEntry.svelte';
 	import { getDevRequests } from '$lib/state/DevRequests.svelte';
@@ -29,10 +29,10 @@
 		<h2 class="order-2 mt-2 pl-4 pb-2 text-2xl font-normal text-c-neutral-7 dark:text-c-neutral-3 md:order-1 md:mt-4">
 			{ts.get.dev.requests.current_requests}
 		</h2>
-		<Button
+		<TextButton
 			class="order-1 mt-4 mr-4 ml-auto mb-1 w-48 md:order-2 md:mt-5 md:ml-0 md:mb-0"
 			title={ts.get.dev.requests.new}
-			type="primary"
+			type="btn"
 			onclick={() => (createOpen = !createOpen)}
 		/>
 	</div>

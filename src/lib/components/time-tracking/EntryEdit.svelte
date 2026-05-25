@@ -3,7 +3,7 @@
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import DateTimeInput from '$lib/components/forms/DateTimeInput.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
-	import Button from '$lib/components/ui/buttons/Button.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconChevronDown from '@lucide/svelte/icons/chevron-down';
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -137,7 +137,7 @@
 			</div>
 		{/if}
 		<div class="mt-4 flex w-full justify-end">
-			<Button title={ts.get.layout.save} onclick={onSave} />
+			<TextButton title={ts.get.layout.save} onclick={onSave} />
 		</div>
 	</div>
 </ContentModal>
