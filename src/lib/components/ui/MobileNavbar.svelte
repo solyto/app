@@ -57,7 +57,7 @@
 					{#each nav.mobileOrder.slice(mobileVisibleCount) as slug}
 						{@const item = navItems[slug]}
 						{#if item.featureFlag === null || nav.features[item.featureFlag]}
-							<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} onSelect={(s) => { select(); nav.promoteMobileItem(s); }}>
+							<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} onSelect={select}>
 								<NavEntryIcon type={item.iconType} />
 							</NavEntry>
 						{/if}
