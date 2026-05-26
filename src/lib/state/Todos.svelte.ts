@@ -260,11 +260,11 @@ export class Todos {
 		return ok;
 	}
 
-	async createCategory(title: string): Promise<boolean> {
+	async createCategory(title: string): Promise<TodoCategory | null> {
 		const request: CreateTodoCategoryRequest = { title };
 		const res = await this.apiService.create(apiRoutes.todos.createCategory, request);
 		if (res) await this.loadCategories();
-		return Promise.resolve(res !== null);
+		return res ? (res.data as TodoCategory) : null;
 	}
 
 	async deleteCategory(category: TodoCategory): Promise<boolean> {

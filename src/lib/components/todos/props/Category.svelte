@@ -66,12 +66,18 @@
 			return;
 		}
 
-		const categoryId = todos.categories.filter((c) => c.title === categoryTitle)[0]?.id;
+		let categoryId = todos.categories.find(
+			(c) => c.title.toLowerCase() === categoryTitle.toLowerCase()
+		)?.id;
 
 		if (!categoryId) {
-			loadingIndicator.stop();
-			notifications.error(ts.get.todos.category_error);
-			return;
+			const created = await todos.createCategory(categoryTitle);
+			if (!created) {
+				loadingIndicator.stop();
+				notifications.error(ts.get.todos.category_error);
+				return;
+			}
+			categoryId = created.id;
 		}
 
 		await todos.addCategory(todo, categoryId);
