@@ -99,13 +99,4 @@ export const themes: Theme[] = [
 		previewText: '#ffffff',
 		previewAccent: '#ff6600'
 	},
-	{
-		id: 'one-piece',
-		name: 'Grand Line',
-		supportsDarkMode: false,
-		previewBg: '#050e20',
-		previewSurface: '#0a1e3c',
-		previewText: '#f0e8d0',
-		previewAccent: '#f2c838'
-	},
 ]
