@@ -1,8 +1,7 @@
 <script lang="ts">
 	import type { CheckIn, CheckInType } from '$lib/types/check_in';
-	import CheckInStatisticsService from '$lib/services/CheckInStatisticsService';
+	import { getMeanValue, getTotalMeanValue } from '$lib/helpers/CheckInHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import Card from '$lib/components/ui/Card.svelte';
 	import IconBedSingle from '@lucide/svelte/icons/bed-single';
 	import IconSparkles from '@lucide/svelte/icons/sparkles';
 	import IconBriefcaseBusiness from '@lucide/svelte/icons/briefcase-business';
@@ -14,16 +13,13 @@
 	import IconUsersRound from '@lucide/svelte/icons/users-round';
 	import IconSmile from '@lucide/svelte/icons/smile';
 	import IconPizza from '@lucide/svelte/icons/pizza';
-
-	const service = new CheckInStatisticsService();
 	const ts = getTranslation();
 
 	let { data, activeTrackers } = $props<{ data: CheckIn[]; activeTrackers: CheckInType[] }>();
 
-	service.setData(data);
-
 	const entries = $derived(activeTrackers.filter((t) => t !== 'sports'));
-	const totalMean = $derived(service.getTotalMeanValue(entries));
+	const totalMean = $derived(getTotalMeanValue(data, entries));
+
 
 	function getIcon(type: CheckInType) {
 		switch (type) {
@@ -72,10 +68,10 @@
 
 </script>
 
-<Card fixedWidth={true} fullWidth={true} hover={false}>
+<div class="max-2xl:px-4 border-t-2 pt-6 border-c-neutral-1 dark:border-s-dark">
 	<div class="flex flex-col gap-3">
 		{#each entries as entry (entry)}
-			{@const value = service.getMeanValue(entry)}
+			{@const value = getMeanValue(data, entry)}
 			{@const IconComponent = getIcon(entry)}
 			<div class="flex items-center gap-3">
 				{#if IconComponent}
@@ -147,4 +143,4 @@
 			</div>
 		</div>
 	</div>
-</Card>
+</div>

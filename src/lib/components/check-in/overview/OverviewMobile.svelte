@@ -1,9 +1,7 @@
 <script lang="ts">
 	import type { CheckInType } from '$lib/types/check_in';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUrlFormat } from '$lib/helpers/DateHelper';
-	import { onMount } from 'svelte';
 	import { urls } from '$lib/config/urls';
 	import CheckInIcon from '$lib/components/check-in/overview/CheckInIcon.svelte';
 	import { goto } from '$app/navigation';
@@ -16,14 +14,7 @@
 	}>();
 
 	const checkInData = getCheckInData();
-	const loadingIndicator = getLoadingIndicator();
 	const auth = getAuth();
-
-	onMount(async () => {
-		loadingIndicator.start();
-		await checkInData.load();
-		loadingIndicator.stop();
-	});
 
 	function getData(date: string, type: CheckInType): number | null {
 		const dayData = checkInData.getDayData(date);

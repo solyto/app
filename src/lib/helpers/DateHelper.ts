@@ -162,6 +162,15 @@ export function getPrevDay(date: Date): Date {
 	return getDateMinusDays(date, 1);
 }
 
+export function getDaysInMonth(year: number, month: number): SvelteDate[] {
+	const days: SvelteDate[] = [];
+	const count = new SvelteDate(year, month + 1, 0).getDate();
+	for (let d = 1; d <= count; d++) {
+		days.push(new SvelteDate(year, month, d));
+	}
+	return days;
+}
+
 export function getLast30Days(): Date[] {
 	const dates: Date[] = [];
 	const today = new Date();

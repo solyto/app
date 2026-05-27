@@ -8,13 +8,20 @@ import { getUrlFormat } from '$lib/helpers/DateHelper';
 import { page } from '$app/state';
 import { SvelteDate } from 'svelte/reactivity';
 
+export interface HistoryMonth {
+	year: number;
+	month: number;
+}
+
 export class CheckInData {
 	loaded = $state<boolean>(false);
 	data = $state<CheckIn[]>([]);
 	settings = $state<CheckInSettings>({ enabledTrackers: [...ALL_CHECK_IN_TRACKERS], selectedSports: [...DEFAULT_SPORTS] });
+	historyMonth = $state<HistoryMonth>({ year: new SvelteDate().getFullYear(), month: new SvelteDate().getMonth() });
+	activeTrackers = $derived(ALL_CHECK_IN_TRACKERS.filter((t) => this.settings.enabledTrackers.includes(t)));
+	selectedDate = $derived(page.params.date);
 	auth = getAuth();
 	apiService: ApiService;
-	selectedDate = $derived(page.params.date);
 
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
@@ -53,8 +60,19 @@ export class CheckInData {
 		this.settings = settings;
 	}
 
-	get activeTrackers(): CheckInType[] {
-		return ALL_CHECK_IN_TRACKERS.filter((t) => this.settings.enabledTrackers.includes(t));
+	prevMonth(): void {
+		const d = new SvelteDate(this.historyMonth.year, this.historyMonth.month - 1, 1);
+		this.historyMonth = { year: d.getFullYear(), month: d.getMonth() };
+	}
+
+	nextMonth(): void {
+		const d = new SvelteDate(this.historyMonth.year, this.historyMonth.month + 1, 1);
+		this.historyMonth = { year: d.getFullYear(), month: d.getMonth() };
+	}
+
+	isCurrentMonth(): boolean {
+		const now = new SvelteDate();
+		return this.historyMonth.year === now.getFullYear() && this.historyMonth.month === now.getMonth();
 	}
 
 	getDayData(day?: string): CheckIn | null {

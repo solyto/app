@@ -3,7 +3,7 @@
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { clickOutside } from '$lib/helpers/ClickHelper';
+	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';
 
 	let { todo, changeStatus } = $props<{ todo: Todo; changeStatus: boolean }>();
 
@@ -68,11 +68,9 @@
 			{getLabel(todo.status)}
 		</div>
 		{#if statusMenuVisible}
-			<div
-				use:clickOutside={() => {
-					statusMenuVisible = false;
-				}}
-				class="absolute top-0 z-30 flex w-48 flex-col gap-2 rounded-lg bg-white p-4 font-bold text-c-neutral-7 dark:text-white drop-shadow-lg dark:bg-s-dark-2"
+			<QuickSelectOverlay
+				onClose={() => (statusMenuVisible = false)}
+				class="w-48 font-bold text-c-neutral-7 dark:text-white"
 			>
 				<div
 					class="cursor-pointer rounded-lg px-2 py-1 text-xs dark:text-white {getColor('backlog')}"
@@ -104,7 +102,7 @@
 				>
 					{getLabel('almost-done')}
 				</div>
-			</div>
+			</QuickSelectOverlay>
 		{/if}
 	{:else}
 		<div class="rounded-lg px-2 py-1 text-xs {getColor(todo.status)}">

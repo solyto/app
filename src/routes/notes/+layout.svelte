@@ -75,17 +75,17 @@
 	});
 
 	async function createNote(): Promise<void> {
+		notes.closeModal();
 		loadingIndicator.start();
 		await notes.create();
 		loadingIndicator.stop();
-		notes.closeModal();
 	}
 
 	async function createCategory(): Promise<void> {
+		notes.closeModal();
 		loadingIndicator.start();
 		await notes.createCategory(edit);
 		loadingIndicator.stop();
-		notes.closeModal();
 	}
 </script>
 

@@ -203,7 +203,14 @@ export class NotesSvelte {
 				: { title: this.inputValue };
 		const res = await this.apiService.create(apiRoutes.notes.create, request);
 
-		if (res) await this.load();
+		if (!res) {
+			this.inputValue = '';
+			this.createParent = null;
+			this.rightClickMenuOpen = false;
+			return null;
+		}
+
+		const note = res.data as Note;
 
 		if (this.createParent && !this.collapsedCategories.includes(this.createParent)) {
 			this.toggleCollapseCategory(this.createParent);
@@ -213,11 +220,9 @@ export class NotesSvelte {
 		this.createParent = null;
 		this.rightClickMenuOpen = false;
 
-		if (!res) return null;
-
-		const note = res.data as Note;
-		
-		this.selectNote(note.id);
+		await this.load();
+		this.activeNote = this.notes.find((n) => n.id === note.id) ?? note;
+		await goto(resolve(urls.note, { id: note.id }));
 
 		return note;
 	}

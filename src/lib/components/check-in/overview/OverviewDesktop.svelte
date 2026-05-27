@@ -1,14 +1,11 @@
 <script lang="ts">
 	import type { CheckInType } from '$lib/types/check_in';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUrlFormat } from '$lib/helpers/DateHelper';
-	import { onMount } from 'svelte';
 	import { urls } from '$lib/config/urls';
 	import CheckInIcon from '$lib/components/check-in/overview/CheckInIcon.svelte';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	let { dates, trackers } = $props<{
@@ -17,15 +14,7 @@
 	}>();
 
 	const checkInData = getCheckInData();
-	const loadingIndicator = getLoadingIndicator();
-	const auth = getAuth();
 	const ts = getTranslation();
-
-	onMount(async () => {
-		loadingIndicator.start();
-		await checkInData.load();
-		loadingIndicator.stop();
-	});
 
 	function getData(date: string, type: CheckInType): number | null {
 		const dayData = checkInData.getDayData(date);
@@ -35,33 +24,28 @@
 </script>
 
 <div class="flex">
-	<div class="flex flex-col w-32">
-		<div class="h-16">&nbsp;</div>
+	<div class="flex flex-col w-32 shrink-0">
+		<div class="h-10">&nbsp;</div>
 		{#each trackers as tracker (tracker)}
 			<div class="flex w-full items-center justify-start font-bold h-12 p-3">
 				<p>{ts.get.checkIn[tracker]}</p>
 			</div>
 		{/each}
 	</div>
-	<div class="flex flex-row items-start justify-center">
+	<div class="flex flex-row items-start">
 		{#each dates as date (date.getTime())}
+			{@const dateStr = getUrlFormat(new Date(date))}
 			<div class="flex h-full flex-col w-8 items-center justify-center">
 				<button
 					type="button"
-					class="h-16 flex items-center rotate-90 cursor-pointer text-sm hover:font-bold"
-					onclick={() =>
-						goto(resolve(urls.checkInDate, { date: getUrlFormat(new Date(date)) }))}
+					class="h-10 flex items-center justify-center cursor-pointer font-medium hover:font-bold hover:scale-125 transition-transform"
+					onclick={() => goto(resolve(urls.checkInDate, { date: dateStr }))}
 				>
-					{auth.getDateWithoutYearInUserPreferredFormat(date)}
+					{date.getDate()}
 				</button>
 				{#each trackers as tracker (tracker)}
 					<div class="size-12 flex items-center justify-center p-3">
-						{#if getData(getUrlFormat(new Date(date)), tracker) !== null}
-							<CheckInIcon
-								type={tracker}
-								value={getData(getUrlFormat(new Date(date)), tracker)}
-							/>
-						{/if}
+						<CheckInIcon type={tracker} value={getData(dateStr, tracker)} />
 					</div>
 				{/each}
 			</div>

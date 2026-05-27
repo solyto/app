@@ -137,6 +137,7 @@
 					<SmoothLineChart
 						categories={statistics.map((stat) => stat.date)}
 						values={getTotalSeriesData(statistics)}
+						filled={true}
 					/>
 				</div>
 			</div>

@@ -245,9 +245,9 @@ const todos: TodoRecords = {
 };
 
 const checkIn: CheckInRecords = {
-	overview: 'Overview',
-	daily: 'Daily',
-	statistics: 'Statistics',
+	history: 'History',
+	today: 'Today',
+	trends: 'Trends',
 	settings: 'Settings',
 	mood: 'Mood',
 	sports: 'Sports',

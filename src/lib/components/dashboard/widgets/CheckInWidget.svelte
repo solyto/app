@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconActivity from '@lucide/svelte/icons/activity';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
-	import CheckInStatisticsService from '$lib/services/CheckInStatisticsService';
+	import { getMeanValue, getTotalMeanValue } from '$lib/helpers/CheckInHelper';
 	import type { CheckInType } from '$lib/types/check_in';
 	import IconSmile from '@lucide/svelte/icons/smile';
 	import IconBedSingle from '@lucide/svelte/icons/bed-single';
@@ -17,9 +17,8 @@
 	import { onMount, tick } from 'svelte';
 
 	const checkInData = getCheckInData();
-	const service = new CheckInStatisticsService();
 	const entries = $derived(checkInData.activeTrackers.filter((t) => t !== 'sports'));
-	const totalMean = $derived(service.getTotalMeanValue(entries));
+	const totalMean = $derived(getTotalMeanValue(checkInData.data, entries));
 
 	let { ts } = $props();
 
@@ -27,7 +26,6 @@
 
 	onMount(async () => {
 		await checkInData.load();
-		service.setData(checkInData.data);
 		await tick();
 		loaded = true;
 	});
@@ -88,7 +86,7 @@
 		</div>
 		<div class="flex flex-col gap-2.5">
 			{#each entries as entry (entry)}
-				{@const value = service.getMeanValue(entry)}
+				{@const value = getMeanValue(checkInData.data, entry)}
 				{@const IconComponent = getIcon(entry)}
 				<div class="flex items-center gap-2.5">
 					{#if IconComponent}

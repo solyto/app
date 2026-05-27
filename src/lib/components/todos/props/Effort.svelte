@@ -3,7 +3,7 @@
 	import IconClock from '@lucide/svelte/icons/clock';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { clickOutside } from '$lib/helpers/ClickHelper';
+	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';
 
 	let { todo, changeEffort = true } = $props<{ todo: Todo; changeEffort: boolean }>();
 
@@ -47,12 +47,7 @@
 	{#if changeEffort}
 		<IconClock class="cursor-pointer {getColor(todo.effort)}" onclick={toggleEffortMenu} />
 		{#if effortMenuVisible}
-			<div
-				use:clickOutside={() => {
-					effortMenuVisible = false;
-				}}
-				class="absolute top-0 z-30 flex flex-col gap-2 rounded-lg bg-white p-4 drop-shadow-lg dark:bg-s-dark-2"
-			>
+			<QuickSelectOverlay onClose={() => (effortMenuVisible = false)}>
 				<IconClock
 					class="cursor-pointer rounded-full hover:bg-c-neutral dark:hover:bg-s-dark-3 {getColor(
 						'low'
@@ -71,7 +66,7 @@
 					)}"
 					onclick={() => handleEffortChange(todo, 'high')}
 				/>
-			</div>
+			</QuickSelectOverlay>
 		{/if}
 	{:else}
 		<IconClock class={getColor(todo.effort)} />

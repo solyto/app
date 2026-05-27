@@ -1,17 +1,11 @@
 <script lang="ts">
 	import type { CreateCheckInRequest, CheckInType } from '$lib/types/check_in';
 	import DailyCheckIn from '$lib/components/check-in/daily/DailyCheckIn.svelte';
-	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
-	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
 	import {
 		formatDate,
 		getUrlFormat,
-		getNextDay,
-		getPrevDay,
-		isDateInTheFuture,
 		isDateToday,
 		isDateYesterday
 	} from '$lib/helpers/DateHelper';
@@ -19,7 +13,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { onMount } from 'svelte';
+	import { SvelteDate } from 'svelte/reactivity';
 
 	const checkInData = getCheckInData();
 	const ts = getTranslation();
@@ -30,11 +24,8 @@
 	let date = $state(page.params.date);
 	let dayData = $state(checkInData.getDayData());
 
-	onMount(async () => {
-		loadingIndicator.start();
-		await checkInData.load();
-		loadingIndicator.stop();
-	});
+	const isToday = $derived(isDateToday(new SvelteDate(date)));
+	const isYesterday = $derived(isDateYesterday(new SvelteDate(date)));
 
 	$effect(() => {
 		date = page.params.date;
@@ -44,20 +35,14 @@
 
 	async function onChange(type: CheckInType, value: number): Promise<void> {
 		if (save === null) {
-			save = {
-				date: checkInData.selectedDate,
-				[type]: value
-			};
+			save = { date: checkInData.selectedDate, [type]: value };
 		} else {
 			save[type] = value;
 		}
 	}
 
 	async function onSave(): Promise<void> {
-		if (save === null || save.date === null) {
-			return;
-		}
-
+		if (save === null || save.date === null) return;
 		loadingIndicator.start();
 		await checkInData.save(save);
 		loadingIndicator.stop();
@@ -66,36 +51,22 @@
 </script>
 
 <div class="relative mt-8 flex-row space-y-4">
-	<div class="mb-8 flex w-full flex-row items-center justify-center gap-4">
-		<button
-			type="button"
-			class="cursor-pointer"
-			onclick={() => goto(getUrlFormat(getPrevDay(new Date(date))))}
-		>
-			<IconChevronLeft />
-		</button>
-		<h2 class="text-xl font-bold sm:text-2xl">
-			{#if isDateToday(new Date(date))}
-				Today
-			{:else if isDateYesterday(new Date(date))}
-				Yesterday
+	<div class="mb-8 flex w-full flex-col items-center justify-center gap-1">
+		<h2 class="text-3xl font-bold">
+			{#if isToday}
+				{ts.get.checkIn.today}
+			{:else if isYesterday}
+				{ts.get.checkInSummary.day_yesterday}
 			{:else}
 				{formatDate(date)}
 			{/if}
 		</h2>
-		<button
-			type="button"
-			class="cursor-pointer {isDateInTheFuture(getNextDay(new Date(date)))
-				? 'opacity-0'
-				: 'opacity-100'}"
-			onclick={() => goto(getUrlFormat(getNextDay(new Date(date))))}
-		>
-			<IconChevronRight />
-		</button>
 	</div>
+
 	{#each checkInData.activeTrackers as type (type)}
 		<DailyCheckIn {type} label={ts.get.checkIn[type]} currentValue={dayData?.[type]} {onChange} selectedSports={checkInData.settings.selectedSports} />
 	{/each}
+
 	<div class="mb-8 flex w-full justify-center sm:absolute sm:top-0 sm:right-8 sm:mb-0 sm:w-auto">
 		<TextButton title={ts.get.layout.save} onclick={onSave} class="max-sm:h-14 max-sm:w-full" />
 	</div>

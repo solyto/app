@@ -173,6 +173,6 @@
 		</div>
 	</div>
 	{#key groupBy}
-		<SmoothLineChart categories={growthData.categories} values={growthData.values} />
+		<SmoothLineChart categories={growthData.categories} values={growthData.values} filled={true} />
 	{/key}
 </div>

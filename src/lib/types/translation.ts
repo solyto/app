@@ -214,9 +214,9 @@ export interface TodoRecords {
 }
 
 export interface CheckInRecords {
-	overview: string;
-	daily: string;
-	statistics: string;
+	history: string;
+	today: string;
+	trends: string;
 	settings: string;
 	mood: string;
 	sports: string;

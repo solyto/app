@@ -84,23 +84,22 @@
 </script>
 
 <div class="relative flex w-full flex-row items-center space-x-4 p-4 pt-0">
-	<a href={resolve(urls.checkIn)}>
-		<h1 class="text-2xl" class:font-bold={page.url.pathname === '/check-in'}>
-			{ts.get.checkIn.overview}
-		</h1>
-	</a>
 	<a href={resolve(urls.checkInDate, { date: getUrlFormat(new Date()) })}>
 		<h1
 			class="text-2xl"
-			class:font-bold={page.url.pathname !== '/check-in' &&
-				page.url.pathname !== '/check-in/statistics'}
+			class:font-bold={page.url.pathname === `/check-in/date/${getUrlFormat(new Date())}`}
 		>
-			{ts.get.checkIn.daily}
+			{ts.get.checkIn.today}
 		</h1>
 	</a>
-	<a href={resolve(urls.checkInStatistics)}>
-		<h1 class="text-2xl" class:font-bold={page.url.pathname === '/check-in/statistics'}>
-			{ts.get.checkIn.statistics}
+	<a href={resolve(urls.checkInHistory)}>
+		<h1 class="text-2xl" class:font-bold={page.url.pathname === '/check-in/history' || (page.url.pathname.startsWith('/check-in/date') && page.url.pathname !== `/check-in/date/${getUrlFormat(new Date())}`)}>
+			{ts.get.checkIn.history}
+		</h1>
+	</a>
+	<a href={resolve(urls.checkInTrends)}>
+		<h1 class="text-2xl" class:font-bold={page.url.pathname === '/check-in/trends'}>
+			{ts.get.checkIn.trends}
 		</h1>
 	</a>
 	<div class="ml-auto">

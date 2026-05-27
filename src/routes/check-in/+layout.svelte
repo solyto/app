@@ -4,7 +4,8 @@
 	let { children } = $props();
 	import { setCheckInData } from '$lib/state/CheckInData.svelte';
 
-	setCheckInData();
+	const checkInData = setCheckInData();
+	checkInData.load();
 </script>
 
 <div class="flex flex-col p-2 xl:p-8" in:fade>

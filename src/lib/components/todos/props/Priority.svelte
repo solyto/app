@@ -5,7 +5,7 @@
 	import IconDown from '@lucide/svelte/icons/circle-arrow-down';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { clickOutside } from '$lib/helpers/ClickHelper';
+	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';
 
 	let {
 		todo,
@@ -95,12 +95,7 @@
 			/>
 		{/if}
 		{#if priorityMenuVisible}
-			<div
-				use:clickOutside={() => {
-					priorityMenuVisible = false;
-				}}
-				class="absolute top-0 z-30 flex flex-col gap-2 rounded-lg bg-white p-4 drop-shadow-lg dark:bg-s-dark-2"
-			>
+			<QuickSelectOverlay onClose={() => (priorityMenuVisible = false)}>
 				<IconUp
 					class="cursor-pointer rounded-full text-c-danger hover:bg-c-neutral dark:hover:bg-s-dark-3"
 					onclick={() => handlePriorityChange(todo, 'high')}
@@ -113,7 +108,7 @@
 					class="cursor-pointer rounded-full text-c-success hover:bg-c-neutral dark:hover:bg-s-dark-3"
 					onclick={() => handlePriorityChange(todo, 'low')}
 				/>
-			</div>
+			</QuickSelectOverlay>
 		{/if}
 	{:else if todo.priority === 'high'}
 		<IconUp class="text-c-danger" />

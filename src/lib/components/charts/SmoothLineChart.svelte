@@ -3,10 +3,22 @@
 	import type { ECharts } from 'echarts';
 	import { onMount, onDestroy, tick } from 'svelte';
 
-	let { title, categories, values } = $props<{
+	let {
+		title,
+		categories,
+		values,
+		min,
+		max,
+		filled = false,
+		class: extraClass = 'h-96'
+	} = $props<{
 		title?: string;
 		categories?: string[];
 		values?: number[];
+		min?: number;
+		max?: number;
+		filled?: boolean;
+		class?: string;
 	}>();
 
 	let chartContainer = $state<HTMLDivElement | null>(null);
@@ -41,7 +53,9 @@
 				data: categories
 			},
 			yAxis: {
-				type: 'value'
+				type: 'value',
+				...(min !== undefined ? { min } : {}),
+				...(max !== undefined ? { max } : {})
 			},
 			series: [
 				{
@@ -50,7 +64,25 @@
 					data: values,
 					itemStyle: {
 						color: '#61d96a'
-					}
+					},
+					lineStyle: {
+						width: 2.5,
+						color: '#61d96a'
+					},
+					...(filled
+						? {
+								areaStyle: {
+									color: {
+										type: 'linear',
+										x: 0, y: 0, x2: 0, y2: 1,
+										colorStops: [
+											{ offset: 0, color: 'rgba(97, 217, 106, 0.25)' },
+											{ offset: 1, color: 'rgba(97, 217, 106, 0.02)' }
+										]
+									}
+								}
+							}
+						: {})
 				}
 			]
 		};
@@ -91,4 +123,4 @@
 	});
 </script>
 
-<div bind:this={chartContainer} class="h-96 w-full"></div>
+<div bind:this={chartContainer} class="w-full {extraClass}"></div>
