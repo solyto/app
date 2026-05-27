@@ -21,6 +21,14 @@
 	}
 
 	let active = $derived(getPageSlug());
+	const overflowOnlyItems: Record<string, { iconType: string }> = {
+		settings: { iconType: 'settings' },
+		profile: { iconType: 'profile' },
+	};
+	let activeInOverflow = $derived(
+		nav.mobileOrder.slice(mobileVisibleCount).some((slug) => slug === active) || active in overflowOnlyItems
+	);
+	let activeOverflowItem = $derived(activeInOverflow ? (navItems[active] ?? overflowOnlyItems[active] ?? null) : null);
 </script>
 
 <div class="nav-mobile-container h-full p-1 bg-c-bg">
@@ -39,6 +47,8 @@
 			class="relative flex h-full items-center justify-center rounded-sm"
 			class:bg-c-btn={submenuVisible}
 			class:text-white={submenuVisible}
+			class:bg-c-nav-active={activeInOverflow && !submenuVisible}
+			class:text-c-nav-active-text={activeInOverflow && !submenuVisible}
 		>
 			<button
 				class="cursor-pointer p-4"
@@ -46,7 +56,14 @@
 					submenuVisible = !submenuVisible;
 				}}
 			>
-				<IconEllipsisVertical />
+				<div class="relative">
+					<IconEllipsisVertical />
+					{#if activeOverflowItem}
+						<div class="absolute right-[-15px] top-[-10px] [&>svg]:size-5">
+							<NavEntryIcon type={activeOverflowItem.iconType} />
+						</div>
+					{/if}
+				</div>
 			</button>
 			{#if submenuVisible}
 				<div
