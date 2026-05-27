@@ -37,7 +37,7 @@ interface TrackerPhrase {
 const GROUPS: CheckInType[][] = [
 	['mood', 'sleep', 'dreams'],
 	['water', 'food_quality', 'food_amount', 'menstruation'],
-	['sports', 'work'],
+	['sports', 'work', 'social_life'],
 	['alcohol', 'smoking']
 ];
 

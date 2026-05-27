@@ -216,7 +216,7 @@ export class NotesSvelte {
 		if (!res) return null;
 
 		const note = res.data as Note;
-
+		
 		this.selectNote(note.id);
 
 		return note;

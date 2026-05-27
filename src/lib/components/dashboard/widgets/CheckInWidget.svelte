@@ -13,6 +13,7 @@
 	import IconDroplet from '@lucide/svelte/icons/droplet';
 	import IconWine from '@lucide/svelte/icons/wine';
 	import IconCigarette from '@lucide/svelte/icons/cigarette';
+	import IconUsersRound from '@lucide/svelte/icons/users-round';
 	import { onMount, tick } from 'svelte';
 
 	const checkInData = getCheckInData();
@@ -53,6 +54,8 @@
 				return IconWine;
 			case 'smoking':
 				return IconCigarette;
+			case 'social_life':
+				return IconUsersRound;
 			default:
 				return null;
 		}

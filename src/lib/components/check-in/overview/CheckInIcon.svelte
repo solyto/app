@@ -19,6 +19,7 @@
 	import IconDropletFill from '$lib/components/ui/icons/IconDropletFill.svelte';
 	import IconWine from '@lucide/svelte/icons/wine';
 	import IconCigarette from '@lucide/svelte/icons/cigarette';
+	import IconUsersRound from '@lucide/svelte/icons/users-round';
 	import type { CheckInType } from '$lib/types/check_in';
 	import { SPORT_BY_ID } from '$lib/types/check_in';
 
@@ -98,6 +99,8 @@
 			<IconWine class="size-full" />
 		{:else if type === 'smoking'}
 			<IconCigarette class="size-full" />
+		{:else if type === 'social_life'}
+			<IconUsersRound class="size-full" />
 		{:else if value === 1}
 			<IconAngry class="size-full" />
 		{:else if value === 2}

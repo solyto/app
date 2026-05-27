@@ -11,6 +11,7 @@
 	import IconDroplet from '@lucide/svelte/icons/droplet';
 	import IconWine from '@lucide/svelte/icons/wine';
 	import IconCigarette from '@lucide/svelte/icons/cigarette';
+	import IconUsersRound from '@lucide/svelte/icons/users-round';
 	import IconSmile from '@lucide/svelte/icons/smile';
 	import IconPizza from '@lucide/svelte/icons/pizza';
 
@@ -46,6 +47,8 @@
 				return IconWine;
 			case 'smoking':
 				return IconCigarette;
+			case 'social_life':
+				return IconUsersRound;
 			default:
 				return null;
 		}

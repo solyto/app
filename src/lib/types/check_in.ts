@@ -14,7 +14,8 @@ export type CheckInType =
 	| 'food_amount'
 	| 'menstruation'
 	| 'alcohol'
-	| 'smoking';
+	| 'smoking'
+	| 'social_life';
 
 export interface CheckIn {
 	id: number;
@@ -30,6 +31,7 @@ export interface CheckIn {
 	menstruation: number | null;
 	alcohol: number | null;
 	smoking: number | null;
+	social_life: number | null;
 	created_at: string;
 	updated_at: string;
 }
@@ -45,7 +47,8 @@ export const ALL_CHECK_IN_TRACKERS: CheckInType[] = [
 	'work',
 	'menstruation',
 	'alcohol',
-	'smoking'
+	'smoking',
+	'social_life'
 ];
 
 export type SportId = 'dumbbell' | 'bike' | 'mountain' | 'footprints' | 'waves_ladder' | 'yoga';
@@ -98,4 +101,5 @@ export interface CreateCheckInRequest {
 	menstruation?: number | null;
 	alcohol?: number | null;
 	smoking?: number | null;
+	social_life?: number | null;
 }

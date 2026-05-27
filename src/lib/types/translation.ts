@@ -229,6 +229,7 @@ export interface CheckInRecords {
 	menstruation: string;
 	alcohol: string;
 	smoking: string;
+	social_life: string;
 	save_success: string;
 	averages: string;
 	total: string;
@@ -253,6 +254,7 @@ export interface CheckInSummaryRecords {
 	alcohol_1: string; alcohol_2: string; alcohol_3: string; alcohol_4: string; alcohol_5: string;
 	smoking_1: string; smoking_2: string; smoking_3: string; smoking_4: string; smoking_5: string;
 	menstruation_1: string; menstruation_2: string; menstruation_3: string; menstruation_4: string; menstruation_5: string;
+	social_life_1: string; social_life_2: string; social_life_3: string; social_life_4: string; social_life_5: string;
 	sports_dumbbell: string; sports_bike: string; sports_mountain: string; sports_footprints: string; sports_waves_ladder: string; sports_yoga: string;
 	day_today: string; day_yesterday: string;
 	day_0: string; day_1: string; day_2: string; day_3: string; day_4: string; day_5: string; day_6: string;
