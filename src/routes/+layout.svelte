@@ -79,6 +79,7 @@
 	afterNavigate(() => {
 		const feature = getPageFeature();
 		if (feature) nav.addUsage(feature);
+		if (!isDashboard()) quickAdd.closeModal();
 	});
 
 	function showNavbar(): boolean {
