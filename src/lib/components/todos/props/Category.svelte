@@ -59,7 +59,12 @@
 	async function onsubmit(): Promise<void> {
 		loadingIndicator.start();
 		keyManager.unregisterKeyDown(keyHandlers.Enter);
-		let categoryTitle = addCategoryTitle.trim().replace('/', '');
+
+		let categoryTitle = addCategoryTitle.trim();
+
+		if (categoryTitle.trim().startsWith('/')) {
+			categoryTitle = addCategoryTitle.slice(1);
+		}
 
 		if (categoryTitle === '') {
 			loadingIndicator.stop();
