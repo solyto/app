@@ -1,17 +1,15 @@
 <script lang="ts">
-	import { tick } from 'svelte';
 	import { blur } from 'svelte/transition';
-	import { useSwipe } from 'svelte-gestures';
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { isDateToday, formatDate, formatTime } from '$lib/helpers/DateHelper';
+	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
 	const weekdays = Array.from({ length: 7 }, (_, i) => i + 1);
-	const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 	let selectedDate = $derived(calendars.mobileSelectedDate);
 	let allDayEvents = $derived(calendars.getAllDayEventsForDate(selectedDate));
@@ -21,10 +19,13 @@
 		allDayEvents.length > 0 || nonAllDayEvents.length > 0 || todos.length > 0
 	);
 
-	let isAnimating = $state(false);
-	let translateX = $state(0);
-	let transitioning = $state(false);
+	const swipe = new SwipeNavigate({
+		onLeft: () => calendars.nextMonth(),
+		onRight: () => calendars.lastMonth()
+	});
+
 	let contentEl: HTMLDivElement;
+	$effect(() => { if (contentEl) swipe.setTarget(contentEl); });
 
 	function isSelected(date: Date): boolean {
 		return formatDate(date) === formatDate(selectedDate);
@@ -55,41 +56,13 @@
 	function selectDay(date: Date): void {
 		calendars.selectMobileDate(date);
 	}
-
-	async function animateNavigation(dir: 'left' | 'right'): Promise<void> {
-		if (isAnimating) return;
-		isAnimating = true;
-
-		transitioning = true;
-		translateX = dir === 'left' ? -100 : 100;
-		await sleep(200);
-
-		transitioning = false;
-		if (dir === 'left') await calendars.nextMonth();
-		else await calendars.lastMonth();
-		translateX = dir === 'left' ? 100 : -100;
-		await tick();
-		void contentEl?.offsetWidth;
-
-		transitioning = true;
-		translateX = 0;
-		await sleep(200);
-
-		transitioning = false;
-		isAnimating = false;
-	}
 </script>
 
 <div class="flex h-full w-full flex-col overflow-hidden bg-c-bg dark:bg-s-dark">
 	<div
 		class="w-full flex-shrink-0"
-		{...useSwipe(
-			(e) => {
-				if (e.detail.direction === 'left') animateNavigation('left');
-				else if (e.detail.direction === 'right') animateNavigation('right');
-			},
-			() => ({ timeframe: 300, minSwipeDistance: 60, touchAction: 'pan-y' })
-		)}
+		style="touch-action: pan-y;"
+		{...swipe.handlers}
 	>
 		<div
 			class="grid w-full grid-cols-7 border-b border-c-neutral-1 bg-c-bg-surface dark:border-s-dark"
@@ -106,9 +79,7 @@
 			<div
 				bind:this={contentEl}
 				class="w-full"
-				style="transform: translateX({translateX}%);{transitioning
-					? ' transition: transform 200ms cubic-bezier(0.33, 1, 0.68, 1);'
-					: ''}"
+				style={swipe.style}
 			>
 				{#each calendars.month.weeks as week (week.number)}
 					<div class="grid grid-cols-7">

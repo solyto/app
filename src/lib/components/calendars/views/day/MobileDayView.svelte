@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { tick } from 'svelte';
-	import { useSwipe } from 'svelte-gestures';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import CalendarWeekDay from '$lib/components/calendars/views/week/Day.svelte';
 
 	const calendars = getCalendars();
@@ -10,46 +9,21 @@
 	const hours = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
 		(i - 1).toString().padStart(2, '0')
 	);
-	const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
-	let isAnimating = $state(false);
-	let translateX = $state(0);
-	let transitioning = $state(false);
+	const swipe = new SwipeNavigate({
+		onLeft: () => calendars.nextDay(),
+		onRight: () => calendars.lastDay(),
+		duration: 120
+	});
+
 	let contentEl: HTMLDivElement;
-
-	async function animateNavigation(dir: 'left' | 'right'): Promise<void> {
-		if (isAnimating) return;
-		isAnimating = true;
-
-		transitioning = true;
-		translateX = dir === 'left' ? -100 : 100;
-		await sleep(120);
-
-		transitioning = false;
-		if (dir === 'left') calendars.nextDay();
-		else calendars.lastDay();
-		translateX = dir === 'left' ? 100 : -100;
-		await tick();
-		void contentEl?.offsetWidth;
-
-		transitioning = true;
-		translateX = 0;
-		await sleep(120);
-
-		transitioning = false;
-		isAnimating = false;
-	}
+	$effect(() => { if (contentEl) swipe.setTarget(contentEl); });
 </script>
 
 <div
 	class="flex h-full w-full flex-col bg-c-bg dark:bg-s-dark"
-	{...useSwipe(
-		(e) => {
-			if (e.detail.direction === 'left') animateNavigation('left');
-			else if (e.detail.direction === 'right') animateNavigation('right');
-		},
-		() => ({ timeframe: 300, minSwipeDistance: 60, touchAction: 'pan-y' })
-	)}
+	style="touch-action: pan-y;"
+	{...swipe.handlers}
 >
 	<div class="flex flex-1 overflow-y-auto">
 		<!-- hour label gutter -->
@@ -70,9 +44,7 @@
 			<div
 				bind:this={contentEl}
 				class="flex w-full flex-col"
-				style="transform: translateX({translateX}%);{transitioning
-					? ' transition: transform 120ms cubic-bezier(0.33, 1, 0.68, 1);'
-					: ''}"
+				style={swipe.style}
 			>
 				<div
 					class="flex w-full flex-col border-1 border-c-neutral-1 bg-c-bg-surface dark:border-s-dark"
