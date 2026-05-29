@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { setTodos, getTodos } from '$lib/state/Todos.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { setCalendars } from '$lib/state/Calendars.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { setWeather } from '$lib/state/Weather.svelte';
@@ -33,6 +33,7 @@
 	const quickAdd = getQuickAdd();
 
 	let showOnboardingModal = $state<boolean>(false);
+	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null });
 
 	onMount(async () => {
 		loadingIndicator.start();
@@ -42,14 +43,16 @@
 		if (auth.user?.settings?.first_visit) {
 			showOnboardingModal = true;
 		}
+	});
 
-		const handlerId = keyManager.registerKeyDown('Enter', handleEnter, {
+	onMount(() => {
+		keyHandlers.Enter = keyManager.registerKeyDown('Enter', handleEnter, {
 			preventOthers: false,
 			preventDefault: false
 		});
-
-		return () => keyManager.unregisterKeyDown(handlerId);
 	});
+
+	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 
 	function handleEnter(): void {
 		const tag = document.activeElement?.tagName.toLowerCase();
