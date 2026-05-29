@@ -87,7 +87,7 @@
 					<TextButton title={ts.get.layout.modal_cancel} onclick={onCancel} />
 					<TextButton
 						title={ts.get.layout.modal_confirm}
-						type={type === 'confirm-delete' ? 'error' : 'action'}
+						type={type === 'confirm-delete' ? 'danger' : 'action'}
 						onclick={onConfirm}
 					/>
 				</div>
