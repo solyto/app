@@ -143,6 +143,20 @@ export class Auth {
 		return Promise.resolve(res);
 	}
 
+	async forgotPassword(email: string): Promise<void> {
+		await this.apiService.post(apiRoutes.auth.forgotPassword, { email });
+	}
+
+	async resetPassword(token: string, email: string, password: string, passwordConfirmation: string): Promise<{ success: boolean; errors?: Record<string, string[]> }> {
+		const res: any = await this.apiService.postRaw(apiRoutes.auth.resetPassword, {
+			token,
+			email,
+			password,
+			password_confirmation: passwordConfirmation
+		});
+		return { success: res?.success === true, errors: res?.errors };
+	}
+
 	getToken(): string | null {
 		return this.authToken?.token ?? null;
 	}

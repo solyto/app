@@ -148,6 +148,19 @@ export interface AuthRecords {
 	verify_general_error: string;
 	verify_token_mismatch: string;
 	verify_token_expired: string;
+	forgot_password_hint: string;
+	forgot_password_send: string;
+	forgot_password_sent_title: string;
+	forgot_password_sent_desc: string;
+	forgot_password_resend: string;
+	reset_password_title: string;
+	reset_password_new: string;
+	reset_password_confirm: string;
+	reset_password_submit: string;
+	reset_password_success: string;
+	reset_password_invalid: string;
+	reset_password_used: string;
+	reset_password_expired: string;
 }
 
 export interface TodoRecords {

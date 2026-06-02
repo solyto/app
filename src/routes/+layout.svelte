@@ -61,7 +61,8 @@
 
 	onMount(async () => {
 		theme.load();
-		if (!auth.loggedIn && page.route.id !== '/auth/register') goto(resolve(urls.login));
+
+		if (!auth.loggedIn && !isAuthRoute()) await goto(resolve(urls.login));
 
 		const updateHeight = () => { innerHeight = window.innerHeight; };
 		updateHeight();
@@ -69,7 +70,7 @@
 
 		ts.loadLanguage();
 
-		if (viewPoint.isDesktop) {
+		if (viewPoint.isDesktop && !isAuthRoute()) {
 			keyManager.registerKeyDown('Space', () => commandPalette.openPalette(), { priority: 0, withHelperKey: 'Control', preventOthers: true });
 		}
 
@@ -94,11 +95,7 @@
 	}
 
 	function isAuthRoute(): boolean {
-		return (
-			page.url.pathname == urls.login ||
-			page.url.pathname == urls.logout ||
-			page.url.pathname == urls.register
-		);
+		return page.url.pathname.startsWith('/auth');
 	}
 </script>
 

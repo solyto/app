@@ -19,6 +19,8 @@ export const urls = {
 	login: '/auth/login',
 	logout: '/auth/logout',
 	register: '/auth/register',
+	forgotPassword: '/auth/forgot-password',
+	resetPassword: '/auth/reset-password',
 	profile: '/profile',
 	checkIn: '/check-in',
 	checkInHistory: '/check-in/history',

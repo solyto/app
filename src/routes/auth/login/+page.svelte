@@ -64,7 +64,7 @@
 		<StaggeredLogo path="../" />
 	</div>
 	<form
-		class="mb-4 flex flex-col space-y-4 rounded-lg border-2 border-white/5 bg-white px-8 pt-6 pb-8 shadow-sm md:min-w-80 dark:bg-s-dark-2"
+		class="mb-4 relative flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-white px-8 pt-6 pb-8 shadow-sm md:min-w-80 dark:bg-s-dark-2"
 		{onsubmit}
 	>
 		<label class="label">
@@ -75,8 +75,14 @@
 			{/if}
 		</label>
 		<label class="label">
-			<div class="label-text mb-2 text-sm font-bold dark:text-white">
-				{ts.get.auth.password}
+			<div class="label-text mb-2 flex items-center justify-between">
+				<span class="text-sm font-bold dark:text-white">{ts.get.auth.password}</span>
+				<a
+					href={urls.forgotPassword}
+					class="text-xs text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
+				>
+					{ts.get.auth.forgot_password}
+				</a>
 			</div>
 			<PasswordInput bind:value={password} showToggle />
 			{#if passwordError}

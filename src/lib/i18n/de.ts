@@ -103,7 +103,20 @@ const auth: AuthRecords = {
 	already_verified: 'Dein Konto wurde bereits bestätigt. Du kannst dich gerne anmelden!',
 	verify_token_mismatch:
 		'Dein Konto konnte nicht bestätigt werden. Das Token stimmt nicht überein.',
-	verify_token_expired: 'Dein Konto konnte nicht bestätigt werden. Das Token ist abgelaufen.'
+	verify_token_expired: 'Dein Konto konnte nicht bestätigt werden. Das Token ist abgelaufen.',
+	forgot_password_hint: 'Gib deine E-Mail ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.',
+	forgot_password_send: 'Reset-Link senden',
+	forgot_password_sent_title: 'Schau in dein Postfach!',
+	forgot_password_sent_desc: 'Wir haben einen Passwort-Reset-Link an %s gesendet. Er läuft in 60 Minuten ab.',
+	forgot_password_resend: 'Erneut senden',
+	reset_password_title: 'Neues Passwort setzen',
+	reset_password_new: 'Neues Passwort',
+	reset_password_confirm: 'Neues Passwort bestätigen',
+	reset_password_submit: 'Passwort zurücksetzen',
+	reset_password_success: 'Passwort erfolgreich zurückgesetzt. Du kannst dich jetzt anmelden.',
+	reset_password_invalid: 'Dieser Reset-Link ist ungültig.',
+	reset_password_used: 'Dieser Reset-Link wurde bereits verwendet.',
+	reset_password_expired: 'Dieser Reset-Link ist abgelaufen. Fordere einen neuen an.'
 };
 
 const home: HomeRecords = {

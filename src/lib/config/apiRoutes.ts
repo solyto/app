@@ -24,7 +24,9 @@ export const apiRoutes = {
 		login: API_URL + '/auth/login',
 		refresh: API_URL + '/auth/refresh',
 		register: API_URL + '/auth/register',
-		verify: API_URL + '/auth/verify'
+		verify: API_URL + '/auth/verify',
+		forgotPassword: API_URL + '/auth/forgot-password',
+		resetPassword: API_URL + '/auth/reset-password'
 	},
 	users: {
 		get: API_URL + '/users/me',

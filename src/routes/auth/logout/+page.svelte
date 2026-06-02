@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
+	import { env } from '$env/dynamic/public';
 	import { urls } from '$lib/config/urls';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -14,7 +14,8 @@
 			auth.logout();
 
 			await new Promise((resolve) => setTimeout(resolve, 1500));
-			window.location.href = urls.landingPage;
+
+			window.location.href = env.PUBLIC_REDIRECT_AFTER_LOGOUT || urls.landingPage;
 		}
 	});
 </script>

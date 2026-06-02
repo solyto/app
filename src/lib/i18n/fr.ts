@@ -102,7 +102,20 @@ const auth: AuthRecords = {
 	verify_general_error: 'Une erreur est survenue lors de la confirmation de ton compte.',
 	already_verified: 'Ton compte est déjà confirmé. Tu peux te connecter!',
 	verify_token_mismatch: 'Ton compte n\'a pas pu être confirmé. Le token ne correspond pas.',
-	verify_token_expired: 'Ton compte n\'a pas pu être confirmé. Le token a expiré.'
+	verify_token_expired: 'Ton compte n\'a pas pu être confirmé. Le token a expiré.',
+	forgot_password_hint: "Entre ton e-mail et nous t'enverrons un lien pour réinitialiser ton mot de passe.",
+	forgot_password_send: 'Envoyer le lien de réinitialisation',
+	forgot_password_sent_title: 'Vérifie ta boîte mail !',
+	forgot_password_sent_desc: 'Nous avons envoyé un lien de réinitialisation à %s. Il expire dans 60 minutes.',
+	forgot_password_resend: 'Renvoyer',
+	reset_password_title: 'Définir un nouveau mot de passe',
+	reset_password_new: 'Nouveau mot de passe',
+	reset_password_confirm: 'Confirmer le nouveau mot de passe',
+	reset_password_submit: 'Réinitialiser le mot de passe',
+	reset_password_success: 'Mot de passe réinitialisé. Tu peux maintenant te connecter.',
+	reset_password_invalid: 'Ce lien de réinitialisation est invalide.',
+	reset_password_used: 'Ce lien de réinitialisation a déjà été utilisé.',
+	reset_password_expired: 'Ce lien a expiré. Demandes-en un nouveau.'
 };
 
 const home: HomeRecords = {

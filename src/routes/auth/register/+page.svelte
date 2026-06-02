@@ -5,7 +5,6 @@
 	import { resolve } from '$app/paths';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { fade } from 'svelte/transition';
-	import AuthNavbar from '$lib/components/auth/AuthNavbar.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -88,7 +87,7 @@
 		<StaggeredLogo path="../" />
 	</div>
 	<form
-		class="mb-4 flex flex-col space-y-4 rounded-lg border-2 border-white/5 bg-white px-8 pt-6 pb-8 shadow-sm md:min-w-80 dark:bg-s-dark-2"
+		class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-white px-8 pt-6 pb-8 shadow-sm md:min-w-80 dark:bg-s-dark-2"
 		{onsubmit}
 	>
 		<label class="label">

@@ -102,7 +102,20 @@ const auth: AuthRecords = {
 	verify_general_error: 'There was an error confirming your account.',
 	already_verified: 'Your account has already been confirmed. Feel free to log in!',
 	verify_token_mismatch: 'Your account could not be confirmed. The token does not match.',
-	verify_token_expired: 'Your account could not be confirmed. The token has expired.'
+	verify_token_expired: 'Your account could not be confirmed. The token has expired.',
+	forgot_password_hint: "Enter your email and we'll send you a link to reset your password.",
+	forgot_password_send: 'Send reset link',
+	forgot_password_sent_title: 'Check your inbox!',
+	forgot_password_sent_desc: 'We sent a password reset link to %s. It expires in 60 minutes.',
+	forgot_password_resend: 'Send again',
+	reset_password_title: 'Set a new password',
+	reset_password_new: 'New password',
+	reset_password_confirm: 'Confirm new password',
+	reset_password_submit: 'Reset password',
+	reset_password_success: 'Password reset successfully. You can now sign in.',
+	reset_password_invalid: 'This reset link is invalid.',
+	reset_password_used: 'This reset link has already been used.',
+	reset_password_expired: 'This reset link has expired. Request a new one.'
 };
 
 const home: HomeRecords = {

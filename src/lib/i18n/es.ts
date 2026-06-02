@@ -102,7 +102,20 @@ const auth: AuthRecords = {
 	verify_general_error: 'Hubo un error al confirmar su cuenta.',
 	already_verified: 'Su cuenta ya está confirmada. ¡Puede iniciar sesión!',
 	verify_token_mismatch: 'No se pudo confirmar su cuenta. El token no coincide.',
-	verify_token_expired: 'No se pudo confirmar su cuenta. El token ha expirado.'
+	verify_token_expired: 'No se pudo confirmar su cuenta. El token ha expirado.',
+	forgot_password_hint: 'Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.',
+	forgot_password_send: 'Enviar enlace de restablecimiento',
+	forgot_password_sent_title: '¡Revisa tu bandeja de entrada!',
+	forgot_password_sent_desc: 'Enviamos un enlace de restablecimiento a %s. Expira en 60 minutos.',
+	forgot_password_resend: 'Reenviar',
+	reset_password_title: 'Establecer nueva contraseña',
+	reset_password_new: 'Nueva contraseña',
+	reset_password_confirm: 'Confirmar nueva contraseña',
+	reset_password_submit: 'Restablecer contraseña',
+	reset_password_success: 'Contraseña restablecida. Ya puedes iniciar sesión.',
+	reset_password_invalid: 'Este enlace de restablecimiento no es válido.',
+	reset_password_used: 'Este enlace ya fue utilizado.',
+	reset_password_expired: 'Este enlace ha expirado. Solicita uno nuevo.'
 };
 
 const home: HomeRecords = {
