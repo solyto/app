@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import Card from '$lib/components/ui/Card.svelte';
+	import SettingsSection from '$lib/components/settings/SettingsSection.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getNavigation } from '$lib/state/Navigation.svelte';
@@ -17,7 +17,7 @@
 </script>
 
 <div class="md:p-4">
-	<Card label={ts.get.settings.features} hover={false}>
+	<SettingsSection label={ts.get.settings.features}>
 		<div class="flex w-full flex-col gap-2">
 			{#each Object.keys(nav.features) as featureType (featureType)}
 				<div class="flex w-full justify-between">
@@ -26,5 +26,5 @@
 				</div>
 			{/each}
 		</div>
-	</Card>
+	</SettingsSection>
 </div>

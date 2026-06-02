@@ -45,6 +45,6 @@
 	</div>
 	<span>#{tag.name}</span>
 	<div class="ml-2">
-		<DeleteButton onClick={() => onDelete(tag)} inModal={false} buttonStyle="plain" />
+		<DeleteButton onClick={() => onDelete(tag)} inModal={false} buttonStyle="minimal" />
 	</div>
 </div>

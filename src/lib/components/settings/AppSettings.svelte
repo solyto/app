@@ -4,7 +4,7 @@
 	import { getWelcomeTour } from '$lib/state/WelcomeTour.svelte';
 	import { getNavigation } from '$lib/state/Navigation.svelte';
 	import { getThemeState } from '$lib/state/Theme.svelte';
-	import Card from '$lib/components/ui/Card.svelte';
+	import SettingsSection from '$lib/components/settings/SettingsSection.svelte';
 	import IconSmartphone from '@lucide/svelte/icons/smartphone';
 	import IconCheckCircle from '@lucide/svelte/icons/check-circle';
 	import IconMapPin from '@lucide/svelte/icons/map-pin';
@@ -18,7 +18,7 @@
 </script>
 
 <div class="flex flex-col gap-6 md:p-4">
-	<Card label="Theme" hover={false} fullWidth={true}>
+	<SettingsSection label="Theme">
 		<div class="mt-2 flex flex-wrap items-stretch gap-3">
 			{#each themes as t (t.id)}
 				{@const active = themeState.theme.id === t.id}
@@ -45,8 +45,8 @@
 				</button>
 			{/each}
 		</div>
-	</Card>
-	<Card label={ts.get.welcome_tour.tour_start} hover={false}>
+	</SettingsSection>
+	<SettingsSection label={ts.get.welcome_tour.tour_start}>
 		<button
 			class="mt-2 flex cursor-pointer items-center gap-2 rounded-lg bg-c-btn px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-c-btn/80"
 			onclick={() => tour.start(nav.features)}
@@ -54,8 +54,8 @@
 			<IconMapPin size={15} />
 			{ts.get.welcome_tour.tour_start}
 		</button>
-	</Card>
-	<Card label={ts.get.welcome_tour.pwa_title} hover={false}>
+	</SettingsSection>
+	<SettingsSection label={ts.get.welcome_tour.pwa_title}>
 		<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">
 			{ts.get.welcome_tour.pwa_description}
 		</p>
@@ -81,6 +81,5 @@
 				{ts.get.welcome_tour.pwa_browser_hint}
 			</p>
 		{/if}
-	</Card>
+	</SettingsSection>
 </div>
-

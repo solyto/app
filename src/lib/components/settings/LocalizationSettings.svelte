@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Language } from '$lib/types/translation.js';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import Card from '$lib/components/ui/Card.svelte';
+	import SettingsSection from '$lib/components/settings/SettingsSection.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
 	import { getTimeZones } from '@vvo/tzdb';
 	import { getAuth } from '$lib/state/Auth.svelte';
@@ -57,36 +57,36 @@
 </script>
 
 <div class="flex gap-8 max-lg:flex-col md:p-4">
-	<Card label={ts.get.settings.language} hover={false}>
+	<SettingsSection label={ts.get.settings.language}>
 		<Select
 			bind:input={languageInput}
 			bind:value={languageValues}
 			onchange={(value) => handleLanguageChange(value)}
 			options={languageOptions}
 		/>
-	</Card>
-	<Card label={ts.get.settings.timezone} hover={false}>
+	</SettingsSection>
+	<SettingsSection label={ts.get.settings.timezone}>
 		<Select
 			bind:input={timezoneInput}
 			bind:value={timezoneValues}
 			onchange={(value) => handleTimezoneChange(value)}
 			options={timezoneOptions}
 		/>
-	</Card>
-	<Card label={ts.get.settings.date_format} hover={false}>
+	</SettingsSection>
+	<SettingsSection label={ts.get.settings.date_format}>
 		<Select
 			bind:input={dateFormatInput}
 			bind:value={dateFormatValues}
 			onchange={(value) => handleDateFormatChange(value)}
 			options={dateFormatOptions}
 		/>
-	</Card>
-	<Card label={ts.get.settings.time_format} hover={false}>
+	</SettingsSection>
+	<SettingsSection label={ts.get.settings.time_format}>
 		<Select
 			bind:input={timeFormatInput}
 			bind:value={timeFormatValues}
 			onchange={(value) => handleTimeFormatChange(value)}
 			options={timeFormatOptions}
 		/>
-	</Card>
+	</SettingsSection>
 </div>

@@ -44,7 +44,7 @@
 	}
 </script>
 
-<div class="relative flex flex-col">
+<div class="relative flex flex-col max-md:w-full">
 	{#if findCategoryMenuVisible}
 		<FindCategoryMenu
 			x={0}
@@ -62,18 +62,20 @@
 		<div class="flex items-center justify-between gap-2 px-4 py-2" in:fade>
 			<span class="font-bold">{workspace.title}</span>
 			<div class="mr-[-7px] flex items-center gap-1">
-				<DeleteButton onClick={() => onDelete(workspace)} inModal={false} />
+				<DeleteButton onClick={() => onDelete(workspace)} inModal={false} buttonStyle="plain" />
 			</div>
 		</div>
-		<div class="flex flex-col gap-1 px-4 py-2">
+		<div class="flex flex-col gap-2 px-4 py-2">
 			{#each workspace.categories as category (workspace.id + '-' + category.id)}
 				<div class="flex w-full items-center justify-between gap-1">
 					<span class="text-sm">- /{category.title}</span>
-					<DeleteButton
-						onClick={() => detachCategory(category.id)}
-						inModal={false}
-						buttonStyle="plain"
-					/>
+					<div class="mr-[-7px] flex items-center gap-1">
+						<DeleteButton
+							onClick={() => detachCategory(category.id)}
+							inModal={false}
+							buttonStyle="minimal"
+						/>
+					</div>
 				</div>
 			{/each}
 			<div class="text-sm">

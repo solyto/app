@@ -23,6 +23,6 @@
 >
 	<span>/{category.title}</span>
 	<div class="ml-2">
-		<DeleteButton onClick={() => onDelete(category)} inModal={false} buttonStyle="plain" />
+		<DeleteButton onClick={() => onDelete(category)} inModal={false} buttonStyle="minimal" />
 	</div>
 </div>
