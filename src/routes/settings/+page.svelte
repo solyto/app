@@ -11,6 +11,7 @@
 	import FeatureSettings from '$lib/components/settings/FeatureSettings.svelte';
 	import AppSettings from '$lib/components/settings/AppSettings.svelte';
 	import ExportSettings from '$lib/components/settings/ExportSettings.svelte';
+	import SecuritySettings from '$lib/components/settings/SecuritySettings.svelte';
 	import SettingsNavigationMobile from '$lib/components/settings/SettingsNavigationMobile.svelte';
 	import SettingsNavigationDesktop from '$lib/components/settings/SettingsNavigationDesktop.svelte';
 
@@ -32,7 +33,8 @@
 		{ id: 4, title: ts.get.settings.features, component: FeatureSettings },
 		{ id: 5, title: ts.get.settings.notifications, component: NotificationSettings },
 		{ id: 6, title: ts.get.settings.app, component: AppSettings },
-		{ id: 7, title: ts.get.settings.export_data, component: ExportSettings }
+		{ id: 7, title: ts.get.settings.security, component: SecuritySettings },
+		{ id: 8, title: ts.get.settings.export_data, component: ExportSettings }
 	]);
 
 	let selected = $state<number>(1);

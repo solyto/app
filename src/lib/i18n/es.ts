@@ -115,7 +115,10 @@ const auth: AuthRecords = {
 	reset_password_success: 'Contraseña restablecida. Ya puedes iniciar sesión.',
 	reset_password_invalid: 'Este enlace de restablecimiento no es válido.',
 	reset_password_used: 'Este enlace ya fue utilizado.',
-	reset_password_expired: 'Este enlace ha expirado. Solicita uno nuevo.'
+	reset_password_expired: 'Este enlace ha expirado. Solicita uno nuevo.',
+	passkey_sign_in: 'Iniciar sesión con una clave de acceso',
+	passkey_not_supported: 'Las claves de acceso no son compatibles con este navegador.',
+	passkey_error: 'Fallo al iniciar sesión con clave de acceso. Por favor, prueba otro método.'
 };
 
 const home: HomeRecords = {
@@ -191,7 +194,20 @@ const settings: SettingsRecords = {
 	export_next_available: 'Próxima exportación disponible en',
 	export_expired: 'La exportación ha expirado.',
 	export_expires_at: 'Expira el',
-	export_no_exports: 'Aún no hay exportaciones.'
+	export_no_exports: 'Aún no hay exportaciones.',
+	security: 'Seguridad',
+	passkeys: 'Claves de acceso',
+	passkey_add: 'Añadir clave de acceso',
+	passkey_name_placeholder: 'p.ej. Mi MacBook',
+	passkey_added: 'Clave de acceso añadida correctamente.',
+	passkey_add_error: 'No se pudo añadir la clave de acceso.',
+	passkey_delete_confirm: '¿Estás seguro de que quieres eliminar esta clave de acceso?',
+	passkey_deleted: 'Clave de acceso eliminada.',
+	passkey_delete_error: 'No se pudo eliminar la clave de acceso.',
+	passkey_rename_error: 'No se pudo renombrar la clave de acceso.',
+	passkey_last_used: 'Último uso',
+	passkey_never_used: 'Nunca utilizada',
+	passkey_no_passkeys: 'Aún no hay claves de acceso registradas.'
 };
 
 const todos: TodoRecords = {

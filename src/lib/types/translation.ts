@@ -113,6 +113,19 @@ export interface SettingsRecords {
 	export_expired: string;
 	export_expires_at: string;
 	export_no_exports: string;
+	security: string;
+	passkeys: string;
+	passkey_add: string;
+	passkey_name_placeholder: string;
+	passkey_added: string;
+	passkey_add_error: string;
+	passkey_delete_confirm: string;
+	passkey_deleted: string;
+	passkey_delete_error: string;
+	passkey_rename_error: string;
+	passkey_last_used: string;
+	passkey_never_used: string;
+	passkey_no_passkeys: string;
 }
 
 export interface AuthRecords {
@@ -161,6 +174,9 @@ export interface AuthRecords {
 	reset_password_invalid: string;
 	reset_password_used: string;
 	reset_password_expired: string;
+	passkey_sign_in: string;
+	passkey_not_supported: string;
+	passkey_error: string;
 }
 
 export interface TodoRecords {

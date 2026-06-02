@@ -116,7 +116,10 @@ const auth: AuthRecords = {
 	reset_password_success: 'Passwort erfolgreich zurückgesetzt. Du kannst dich jetzt anmelden.',
 	reset_password_invalid: 'Dieser Reset-Link ist ungültig.',
 	reset_password_used: 'Dieser Reset-Link wurde bereits verwendet.',
-	reset_password_expired: 'Dieser Reset-Link ist abgelaufen. Fordere einen neuen an.'
+	reset_password_expired: 'Dieser Reset-Link ist abgelaufen. Fordere einen neuen an.',
+	passkey_sign_in: 'Mit einem Passkey anmelden',
+	passkey_not_supported: 'Passkeys werden in diesem Browser nicht unterstützt.',
+	passkey_error: 'Passkey-Anmeldung fehlgeschlagen. Bitte versuche eine andere Methode.'
 };
 
 const home: HomeRecords = {
@@ -192,7 +195,20 @@ const settings: SettingsRecords = {
 	export_next_available: 'Nächster Export möglich in',
 	export_expired: 'Export ist abgelaufen.',
 	export_expires_at: 'Läuft ab am',
-	export_no_exports: 'Noch keine Exporte.'
+	export_no_exports: 'Noch keine Exporte.',
+	security: 'Sicherheit',
+	passkeys: 'Passkeys',
+	passkey_add: 'Passkey hinzufügen',
+	passkey_name_placeholder: 'z.B. Mein MacBook',
+	passkey_added: 'Passkey erfolgreich hinzugefügt.',
+	passkey_add_error: 'Passkey konnte nicht hinzugefügt werden.',
+	passkey_delete_confirm: 'Bist du sicher, dass du diesen Passkey löschen möchtest?',
+	passkey_deleted: 'Passkey gelöscht.',
+	passkey_delete_error: 'Passkey konnte nicht gelöscht werden.',
+	passkey_rename_error: 'Passkey konnte nicht umbenannt werden.',
+	passkey_last_used: 'Zuletzt verwendet',
+	passkey_never_used: 'Noch nie verwendet',
+	passkey_no_passkeys: 'Noch keine Passkeys registriert.'
 };
 
 const todos: TodoRecords = {

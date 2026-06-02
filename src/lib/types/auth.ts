@@ -57,3 +57,11 @@ export interface VerifyRequest {
 	user_id: string;
 	token: string;
 }
+
+export interface Passkey {
+	id: string;
+	name: string;
+	created_at: string;
+	last_used_at: string | null;
+	transports: string[] | null;
+}

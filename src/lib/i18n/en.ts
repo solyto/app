@@ -115,7 +115,10 @@ const auth: AuthRecords = {
 	reset_password_success: 'Password reset successfully. You can now sign in.',
 	reset_password_invalid: 'This reset link is invalid.',
 	reset_password_used: 'This reset link has already been used.',
-	reset_password_expired: 'This reset link has expired. Request a new one.'
+	reset_password_expired: 'This reset link has expired. Request a new one.',
+	passkey_sign_in: 'Sign in with a passkey',
+	passkey_not_supported: 'Passkeys are not supported in this browser.',
+	passkey_error: 'Passkey sign-in failed. Please try another method.'
 };
 
 const home: HomeRecords = {
@@ -191,7 +194,20 @@ const settings: SettingsRecords = {
 	export_next_available: 'Next export available in',
 	export_expired: 'Export has expired.',
 	export_expires_at: 'Expires at',
-	export_no_exports: 'No exports yet.'
+	export_no_exports: 'No exports yet.',
+	security: 'Security',
+	passkeys: 'Passkeys',
+	passkey_add: 'Add Passkey',
+	passkey_name_placeholder: 'e.g. My MacBook',
+	passkey_added: 'Passkey added successfully.',
+	passkey_add_error: 'Failed to add passkey.',
+	passkey_delete_confirm: 'Are you sure you want to delete this passkey?',
+	passkey_deleted: 'Passkey deleted.',
+	passkey_delete_error: 'Failed to delete passkey.',
+	passkey_rename_error: 'Failed to rename passkey.',
+	passkey_last_used: 'Last used',
+	passkey_never_used: 'Never used',
+	passkey_no_passkeys: 'No passkeys registered yet.'
 };
 
 const todos: TodoRecords = {

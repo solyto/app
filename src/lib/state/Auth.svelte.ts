@@ -4,7 +4,8 @@ import type {
 	LoginRequest,
 	LoginResponse,
 	RegisterRequest,
-	VerifyRequest
+	VerifyRequest,
+	Passkey
 } from '$lib/types/auth';
 import { setContext, getContext } from 'svelte';
 import { apiRoutes } from '$lib/config/apiRoutes';
@@ -155,6 +156,51 @@ export class Auth {
 			password_confirmation: passwordConfirmation
 		});
 		return { success: res?.success === true, errors: res?.errors };
+	}
+
+	async passkeyAuthenticationOptions(): Promise<any> {
+		const res = await this.apiService.post(apiRoutes.auth.passkeys.authenticateOptions, {});
+		return res?.data ?? null;
+	}
+
+	async passkeyAuthenticate(response: any): Promise<void> {
+		const res: any = await this.apiService.postRaw(apiRoutes.auth.passkeys.authenticate, { response });
+		if (!res?.success) {
+			throw new Error(res?.message ?? 'Passkey authentication failed');
+		}
+		const data = res.data as LoginResponse;
+		this.user = data.user;
+		this.authToken = {
+			token: data.token,
+			token_type: data.token_type,
+			expires_at: data.token_expires_at
+		};
+		this.loggedIn = true;
+		this.apiService.updateAuthToken(this.getToken()!);
+		this.save();
+		await this.loadAdditionalData();
+	}
+
+	async passkeyRegistrationOptions(): Promise<any> {
+		const res = await this.apiService.post(apiRoutes.auth.passkeys.registerOptions, {});
+		return res?.data ?? null;
+	}
+
+	async passkeyRegister(response: any, name: string): Promise<void> {
+		await this.apiService.post(apiRoutes.auth.passkeys.register, { response, name });
+	}
+
+	async getPasskeys(): Promise<Passkey[]> {
+		const res = await this.apiService.get(apiRoutes.auth.passkeys.list, null);
+		return (res?.data ?? []) as Passkey[];
+	}
+
+	async deletePasskey(id: string): Promise<void> {
+		await this.apiService.delete(apiRoutes.auth.passkeys.delete, id);
+	}
+
+	async renamePasskey(id: string, name: string): Promise<void> {
+		await this.apiService.update(apiRoutes.auth.passkeys.update, id, { name });
 	}
 
 	getToken(): string | null {

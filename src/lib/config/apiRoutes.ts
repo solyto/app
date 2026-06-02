@@ -26,7 +26,16 @@ export const apiRoutes = {
 		register: API_URL + '/auth/register',
 		verify: API_URL + '/auth/verify',
 		forgotPassword: API_URL + '/auth/forgot-password',
-		resetPassword: API_URL + '/auth/reset-password'
+		resetPassword: API_URL + '/auth/reset-password',
+		passkeys: {
+			registerOptions: API_URL + '/auth/passkeys/register-options',
+			register: API_URL + '/auth/passkeys/register',
+			authenticateOptions: API_URL + '/auth/passkey/authenticate-options',
+			authenticate: API_URL + '/auth/passkey/authenticate',
+			list: API_URL + '/auth/passkeys',
+			update: API_URL + '/auth/passkeys/%s',
+			delete: API_URL + '/auth/passkeys/%s',
+		},
 	},
 	users: {
 		get: API_URL + '/users/me',

@@ -115,7 +115,10 @@ const auth: AuthRecords = {
 	reset_password_success: 'Mot de passe réinitialisé. Tu peux maintenant te connecter.',
 	reset_password_invalid: 'Ce lien de réinitialisation est invalide.',
 	reset_password_used: 'Ce lien de réinitialisation a déjà été utilisé.',
-	reset_password_expired: 'Ce lien a expiré. Demandes-en un nouveau.'
+	reset_password_expired: 'Ce lien a expiré. Demandes-en un nouveau.',
+	passkey_sign_in: 'Se connecter avec une clé d\'accès',
+	passkey_not_supported: 'Les clés d\'accès ne sont pas prises en charge par ce navigateur.',
+	passkey_error: 'Échec de la connexion avec la clé d\'accès. Veuillez essayer une autre méthode.'
 };
 
 const home: HomeRecords = {
@@ -190,7 +193,20 @@ const settings: SettingsRecords = {
 	export_next_available: 'Prochain export disponible dans',
 	export_expired: 'L\'export a expiré.',
 	export_expires_at: 'Expire le',
-	export_no_exports: 'Aucun export pour l\'instant.'
+	export_no_exports: 'Aucun export pour l\'instant.',
+	security: 'Sécurité',
+	passkeys: 'Clés d\'accès',
+	passkey_add: 'Ajouter une clé d\'accès',
+	passkey_name_placeholder: 'ex. Mon MacBook',
+	passkey_added: 'Clé d\'accès ajoutée avec succès.',
+	passkey_add_error: 'Impossible d\'ajouter la clé d\'accès.',
+	passkey_delete_confirm: 'Es-tu sûr de vouloir supprimer cette clé d\'accès ?',
+	passkey_deleted: 'Clé d\'accès supprimée.',
+	passkey_delete_error: 'Impossible de supprimer la clé d\'accès.',
+	passkey_rename_error: 'Impossible de renommer la clé d\'accès.',
+	passkey_last_used: 'Dernière utilisation',
+	passkey_never_used: 'Jamais utilisée',
+	passkey_no_passkeys: 'Aucune clé d\'accès enregistrée pour l\'instant.'
 };
 
 const todos: TodoRecords = {

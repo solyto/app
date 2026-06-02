@@ -9,6 +9,8 @@
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 
 	import { fade } from 'svelte/transition';
+	import { startAuthentication } from '@simplewebauthn/browser';
+	import IconFingerprint from '@lucide/svelte/icons/fingerprint';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
@@ -24,9 +26,11 @@
 	let password = $state<string>('');
 	let passwordError = $state<boolean>(false);
 	let error = $state<boolean>(false);
+	let passkeySupported = $state(false);
 
 	onMount(() => {
 		if (auth.loggedIn) goto(resolve(urls.home));
+		passkeySupported = typeof window !== 'undefined' && !!window.PublicKeyCredential;
 	});
 
 	async function onsubmit(e: SubmitEvent): Promise<void> {
@@ -45,6 +49,23 @@
 		} else {
 			notifications.error(ts.get.auth.login_error);
 			error = true;
+		}
+	}
+
+	async function signInWithPasskey(): Promise<void> {
+		loadingIndicator.start();
+		try {
+			const options = await auth.passkeyAuthenticationOptions();
+			if (!options) throw new Error('No options');
+			const response = await startAuthentication({ optionsJSON: options });
+			await auth.passkeyAuthenticate(response);
+			ts.loadLanguage();
+			notifications.success(ts.get.auth.login_success);
+			await goto(resolve(urls.home));
+		} catch (e) {
+			notifications.error(ts.get.auth.passkey_error);
+		} finally {
+			loadingIndicator.stop();
 		}
 	}
 
@@ -93,4 +114,16 @@
 			<TextButton title={ts.get.auth.sign_in} class="w-full" />
 		</div>
 	</form>
+	{#if passkeySupported}
+		<div class="mt-3 flex justify-center">
+			<button
+				type="button"
+				onclick={signInWithPasskey}
+				class="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 text-sm text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
+			>
+				<IconFingerprint size={16} />
+				{ts.get.auth.passkey_sign_in}
+			</button>
+		</div>
+	{/if}
 </div>
