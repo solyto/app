@@ -328,7 +328,11 @@ export const apiRoutes = {
 		unsubscribe: API_URL + '/calendars/%d/unsubscribe',
 		listInvites: API_URL + '/calendars/invites',
 		acceptInvite: API_URL + '/calendars/invites/%s/accept',
-		declineInvite: API_URL + '/calendars/invites/%s/decline'
+		declineInvite: API_URL + '/calendars/invites/%s/decline',
+		eventAttachmentTodos: API_URL + '/calendars/events/%d/attachments/todos',
+		eventAttachmentNotes: API_URL + '/calendars/events/%d/attachments/notes',
+		eventDetachTodo: API_URL + '/calendars/events/%d/attachments/todos/%s',
+		eventDetachNote: API_URL + '/calendars/events/%d/attachments/notes/%s'
 	},
 	contacts: {
 		listAddressBooks: API_URL + '/address-books',

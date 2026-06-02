@@ -25,6 +25,7 @@ import {
 	getWeekNumber
 } from '$lib/helpers/DateHelper';
 import type { Todo, UpdateTodoRequest } from '$lib/types/todo';
+import type { Note } from '$lib/types/note';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class Calendars {
@@ -47,6 +48,10 @@ export class Calendars {
 	lastSync = $state<number | null>(null);
 	view = $state<'month' | 'week' | 'day' | 'list'>('month');
 	activeEvent = $state<Event | null>(null);
+	activeEventTodos = $state<Todo[]>([]);
+	activeEventNotes = $state<Note[]>([]);
+	availableNotes = $state<Note[]>([]);
+	availableNotesLoaded = $state<boolean>(false);
 	selectedCalendar = $state<Calendar | null>(null);
 	deletionModal = $state<boolean>(false);
 	importModal = $state<boolean>(false);
@@ -332,11 +337,17 @@ export class Calendars {
 		this.selectedDate = new SvelteDate(selectedDate);
 		this.activeEvent = selectedEntry;
 		this.editSidebar = true;
+		if (selectedEntry) {
+			this.loadEventTodos(selectedEntry.id);
+			this.loadEventNotes(selectedEntry.id);
+		}
 	}
 
 	hideSidebar(): void {
 		this.editSidebar = false;
 		this.selectedDate = null;
+		this.activeEventTodos = [];
+		this.activeEventNotes = [];
 	}
 
 	async createEvent(request: CreateEventRequest): Promise<boolean> {
@@ -365,6 +376,63 @@ export class Calendars {
 		);
 		if (res) await this.loadEvents();
 		return res;
+	}
+
+	async loadEventTodos(eventId: number): Promise<void> {
+		const res = await this.apiService.list(
+			apiRoutes.calendars.eventAttachmentTodos.replace('%d', eventId.toString())
+		);
+		if (res) this.activeEventTodos = res.data as Todo[];
+	}
+
+	async loadEventNotes(eventId: number): Promise<void> {
+		const res = await this.apiService.list(
+			apiRoutes.calendars.eventAttachmentNotes.replace('%d', eventId.toString())
+		);
+		if (res) this.activeEventNotes = res.data as Note[];
+	}
+
+	async loadAvailableNotes(): Promise<void> {
+		if (this.availableNotesLoaded) return;
+		const res = await this.apiService.list(apiRoutes.notes.list);
+		if (res) {
+			this.availableNotes = res.data as Note[];
+			this.availableNotesLoaded = true;
+		}
+	}
+
+	async attachTodo(eventId: number, todoId: string): Promise<boolean> {
+		const res = await this.apiService.post(
+			apiRoutes.calendars.eventAttachmentTodos.replace('%d', eventId.toString()),
+			{ todo_id: todoId }
+		);
+		if (res) await this.loadEventTodos(eventId);
+		return !!res;
+	}
+
+	async detachTodo(eventId: number, todoId: string): Promise<void> {
+		await this.apiService.delete(
+			apiRoutes.calendars.eventDetachTodo.replace('%d', eventId.toString()),
+			todoId
+		);
+		await this.loadEventTodos(eventId);
+	}
+
+	async attachNote(eventId: number, noteId: string): Promise<boolean> {
+		const res = await this.apiService.post(
+			apiRoutes.calendars.eventAttachmentNotes.replace('%d', eventId.toString()),
+			{ note_id: noteId }
+		);
+		if (res) await this.loadEventNotes(eventId);
+		return !!res;
+	}
+
+	async detachNote(eventId: number, noteId: string): Promise<void> {
+		await this.apiService.delete(
+			apiRoutes.calendars.eventDetachNote.replace('%d', eventId.toString()),
+			noteId
+		);
+		await this.loadEventNotes(eventId);
 	}
 
 	async updateOccurrence(

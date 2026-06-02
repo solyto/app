@@ -739,6 +739,13 @@ export interface CalendarRecords {
 	invite_declined: string;
 	unsubscribed: string;
 	synchronize: string;
+	attachments: string;
+	attachment_todo: string;
+	attachment_note: string;
+	attach_todo: string;
+	attach_note: string;
+	search_todo: string;
+	search_note: string;
 }
 
 export interface ContactRecords {

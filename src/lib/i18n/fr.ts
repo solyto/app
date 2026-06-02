@@ -771,7 +771,14 @@ const calendar: CalendarRecords = {
 	invite_accepted: 'Invitation acceptée',
 	invite_declined: 'Invitation refusée',
 	unsubscribed: 'Désabonné du calendrier',
-	synchronize: 'Synchroniser'
+	synchronize: 'Synchroniser',
+	attachments: 'Pièces jointes',
+	attachment_todo: 'Todo',
+	attachment_note: 'Note',
+	attach_todo: 'Associer un todo',
+	attach_note: 'Associer une note',
+	search_todo: 'Rechercher un todo',
+	search_note: 'Rechercher une note',
 };
 
 const contacts: ContactRecords = {

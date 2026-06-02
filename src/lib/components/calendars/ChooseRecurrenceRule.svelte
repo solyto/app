@@ -158,7 +158,7 @@
 	});
 </script>
 
-<div class="flex w-full flex-col gap-2" transition:slide>
+<div class="flex w-full flex-col gap-2 p-1" transition:slide>
 	<Select bind:value={type} options={typeOptions} />
 
 	{#if type === 'weekly'}

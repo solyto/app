@@ -20,6 +20,7 @@
 	import TimePickerTest from '$lib/components/forms/TimePickerTest.svelte';
 	import ChooseRecurrenceRule from '$lib/components/calendars/ChooseRecurrenceRule.svelte';
 	import RecurrenceActionModal from '$lib/components/calendars/RecurrenceActionModal.svelte';
+	import EventAttachments from '$lib/components/calendars/EventAttachments.svelte';
 	import { formatFloatingDate, getDateDiffInDays, getDateDiffInMinutes } from '$lib/helpers/DateHelper';
 
 	const calendars = getCalendars();
@@ -251,6 +252,11 @@
 		{/if}
 		<TextInput bind:value={form.description} placeholder={ts.get.calendar.description} />
 		<TextInput bind:value={form.location} placeholder={ts.get.calendar.location} />
+
+		{#if calendars.activeEvent}
+			<EventAttachments eventId={calendars.activeEvent.id} />
+		{/if}
+
 		<div
 			class="mt-8 flex w-full flex-row items-center"
 			class:justify-between={calendars.activeEvent}

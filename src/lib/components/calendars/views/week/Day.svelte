@@ -50,7 +50,7 @@
 			onclick={async () => {
 				await calendars.showSidebar(date);
 			}}
-			class="absolute top-0 right-0 z-50 cursor-pointer rounded-bl-lg border-r-1 border-b-1 border-c-neutral-1 p-2 font-bold opacity-0 transition-all group-hover:bg-c-primary group-hover:opacity-100 dark:border-s-dark
+			class="absolute top-0 right-0 z-50 cursor-pointer rounded-bl-lg border-r-1 border-b-1 border-c-neutral-1 p-2 font-bold opacity-0 transition-all group-hover:bg-c-btn group-hover:text-c-neutral group-hover:opacity-100 dark:border-s-dark
 			"
 		>
 			<IconPlus class="size-3" />
