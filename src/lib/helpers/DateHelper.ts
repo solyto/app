@@ -278,6 +278,11 @@ export function getDateDiffInMinutes(date1: Date, date2: Date): number {
 	return Math.floor(diffInMs / (1000 * 60));
 }
 
+export function getDateDiffInDays(date1: Date, date2: Date): number {
+	const diffInMs = date2.getTime() - date1.getTime();
+	return Math.trunc(diffInMs / (1000 * 60 * 60 * 24));
+}
+
 export function getCurrentTimestamp(): number {
 	return Math.floor(new Date().getTime() / 1000);
 }

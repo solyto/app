@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import SlidingSideBar from '$lib/components/ui/SlidingSideBar.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -19,7 +20,7 @@
 	import TimePickerTest from '$lib/components/forms/TimePickerTest.svelte';
 	import ChooseRecurrenceRule from '$lib/components/calendars/ChooseRecurrenceRule.svelte';
 	import RecurrenceActionModal from '$lib/components/calendars/RecurrenceActionModal.svelte';
-	import { formatFloatingDate } from '$lib/helpers/DateHelper';
+	import { formatFloatingDate, getDateDiffInDays, getDateDiffInMinutes } from '$lib/helpers/DateHelper';
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
@@ -42,10 +43,9 @@
 		end_minutes: 0
 	};
 	let form = $state<EventForm>({
-		calendar_id:
-			calendars.activeEvent && calendars.activeEvent.calendar_id
-				? parseInt(calendars.activeEvent.calendar_id)
-				: 0,
+		calendar_id: calendars.activeEvent && calendars.activeEvent.calendar_id ?
+			parseInt(calendars.activeEvent.calendar_id) :
+			0,
 		title: calendars.activeEvent ? calendars.activeEvent.title : '',
 		description: calendars.activeEvent ? calendars.activeEvent.description : '',
 		location: calendars.activeEvent ? calendars.activeEvent.location : '',
@@ -80,6 +80,39 @@
 		if (calendars.activeEvent) return new SvelteDate(calendars.activeEvent.end_date);
 		if (calendars.selectedDate) return new SvelteDate(calendars.selectedDate);
 		return new SvelteDate();
+	}
+
+	async function afterSelectStartDate(): Promise<void> {
+		await tick();
+
+		console.log(form.start_date, form.end_date);
+		if (form.start_date.getTime() > form.end_date.getTime()) {
+			form.end_date = new SvelteDate(form.start_date);
+		}
+	}
+
+	async function afterSelectEndDate(): Promise<void> {
+		await tick();
+
+		if (form.end_date.getTime() < form.start_date.getTime()) {
+			form.start_date = new SvelteDate(form.end_date);
+		}
+	}
+
+	async function afterSelectStartTime(): Promise<void> {
+		await tick();
+
+		if (form.start_date.getTime() === form.end_date.getTime() && form.start_hours > form.end_hours) {
+			form.end_hours = form.start_hours;
+		}
+	}
+
+	async function afterSelectEndTime(): Promise<void> {
+		await tick();
+
+		if (form.start_date.getTime() === form.end_date.getTime() && form.end_hours < form.start_hours) {
+			form.start_hours = form.end_hours;
+		}
 	}
 
 	function buildRequest(): UpdateEventRequest {
@@ -188,20 +221,25 @@
 		</div>
 		{#if form.start_date}
 			<div class="flex w-full gap-2">
-				<SvelteDateInput bind:date={form.start_date} />
+				<SvelteDateInput bind:date={form.start_date} oninput={() => afterSelectStartDate()} />
 				{#if !form.is_all_day}
 					<TimePickerTest
 						bind:hours={form.start_hours}
 						bind:minutes={form.start_minutes}
+						oninput={() => afterSelectStartTime()}
 					/>
 				{/if}
 			</div>
 		{/if}
 		{#if form.end_date}
 			<div class="flex w-full gap-2">
-				<SvelteDateInput bind:date={form.end_date} />
+				<SvelteDateInput bind:date={form.end_date} oninput={() => afterSelectEndDate()} />
 				{#if !form.is_all_day}
-					<TimePickerTest bind:hours={form.end_hours} bind:minutes={form.end_minutes} />
+					<TimePickerTest
+						bind:hours={form.end_hours}
+						bind:minutes={form.end_minutes}
+						oninput={() => afterSelectEndTime()}
+					/>
 				{/if}
 			</div>
 		{/if}

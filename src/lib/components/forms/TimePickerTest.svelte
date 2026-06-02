@@ -4,10 +4,12 @@
 
 	let {
 		hours = $bindable(),
-		minutes = $bindable()
+		minutes = $bindable(),
+		oninput
 	}: {
 		hours: number;
 		minutes: number;
+		oninput?: () => void;
 	} = $props();
 
 	const hourOptions = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
@@ -72,6 +74,7 @@
 						title="Set"
 						onclick={() => {
 							menu = false;
+							if (oninput) {oninput()}
 						}}
 					/>
 				</div>
