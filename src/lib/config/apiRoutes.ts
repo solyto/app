@@ -310,7 +310,8 @@ export const apiRoutes = {
 	calendars: {
 		listCalendars: API_URL + '/calendars',
 		createCalendar: API_URL + '/calendars',
-		updateCalendar: API_URL + '/calendars/%d',
+		updateCalendarColor: API_URL + '/calendars/%d',
+		updateCalendarsOrder: API_URL + '/calendars/order',
 		deleteCalendar: API_URL + '/calendars/%d',
 		listEvents: API_URL + '/calendars/events/%s',
 		listWidgetEvents: API_URL + '/calendars/events/widget',

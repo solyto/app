@@ -29,7 +29,7 @@
 </script>
 
 <button
-	class="relative my-1 flex cursor-pointer items-center justify-center rounded-full border-c-neutral-1 transition-all duration-100 dark:!bg-s-dark-3"
+	class="relative my-1 flex max-md:min-w-8 cursor-pointer items-center justify-center rounded-full border-c-neutral-1 transition-all duration-100 dark:!bg-s-dark-3"
 	class:border-l-4={!hidden}
 	class:border-r-4={hidden}
 	style="border-color: {getBorderColor()}; background-color: {getBgColor()};"

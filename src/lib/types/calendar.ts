@@ -4,7 +4,7 @@ export interface Calendar {
 	color: string;
 	description: string;
 	timezone: string;
-	is_default: boolean;
+	order: number;
 	is_shared: boolean;
 	share_owner: string | null;
 	invite_status: 'pending' | 'accepted' | null;

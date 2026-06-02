@@ -24,6 +24,7 @@
 
 	const flipDurationMs = 200;
 	let items = $state<Shortcut[]>([]);
+	let dragDisabled = $state(true);
 
 	$effect(() => {
 		items = shortcuts.shortcuts;
@@ -35,6 +36,7 @@
 
 	async function handleFinalize(e: CustomEvent) {
 		items = e.detail.items;
+		dragDisabled = true;
 		await shortcuts.reorder(items.map((s) => s.id));
 	}
 
@@ -78,14 +80,24 @@
 <ContentModal title={ts.get.widgets.manage_shortcuts} rounded="2xl" p="4" {onClose}>
 	<div class="flex w-full flex-col gap-0">
 		<div
-			use:dndzone={{ items, flipDurationMs, dropTargetClasses: ['shadow-lg', 'ring-2', 'ring-d-lightblue'] }}
+			use:dndzone={{
+				items,
+				flipDurationMs,
+				dragDisabled,
+				dropTargetClasses: ['shadow-lg', 'ring-2', 'ring-d-lightblue']
+			}}
 			onconsider={handleConsider}
 			onfinalize={handleFinalize}
 			class="flex flex-col !outline-0"
 		>
 			{#each items as shortcut (shortcut.id)}
 				<div class="flex items-center gap-1" animate:flip={{ duration: flipDurationMs }}>
-					<IconGripVertical size={16} class="shrink-0 cursor-grab text-c-neutral-3" />
+					<IconGripVertical
+						size={16}
+						class="shrink-0 cursor-grab text-c-neutral-3"
+						onpointerdown={() => (dragDisabled = false)}
+						onpointerup={() => (dragDisabled = true)}
+					/>
 					<ShotcutEdit {shortcut} />
 				</div>
 			{/each}

@@ -27,7 +27,7 @@
 
 		loadingIndicator.start();
 		const request: UpdateCalendarRequest = { color: hex };
-		await calendars.updateCalendar(calendar, request);
+		await calendars.updateCalendarColor(calendar, request);
 		loadingIndicator.stop();
 	}
 
@@ -56,7 +56,7 @@
 		calendar.is_shared ? calendar.name + ' (' + calendar.share_owner + ')' : calendar.name;
 </script>
 
-<div class="flex items-center gap-4">
+<div class="flex w-full items-center gap-4">
 	<div use:clickOutside={onColorChange}>
 		<ColorPicker
 			bind:hex
@@ -67,8 +67,8 @@
 			--cp-border-color="var(--color-c-neutral-2)"
 		/>
 	</div>
-	<span class="flex-1 text-lg">{getDisplayName()}</span>
-	<div class="flex items-center gap-2">
+	<span class="flex-1 text-md">{getDisplayName()}</span>
+	<div class="flex items-center">
 		{#if isOwned}
 			<button
 				class="cursor-pointer rounded-full p-2 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-primary dark:hover:bg-s-dark-3"

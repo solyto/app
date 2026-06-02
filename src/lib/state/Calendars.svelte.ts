@@ -402,9 +402,9 @@ export class Calendars {
 		return res !== null;
 	}
 
-	async updateCalendar(calendar: Calendar, request: UpdateCalendarRequest): Promise<boolean> {
+	async updateCalendarColor(calendar: Calendar, request: UpdateCalendarRequest): Promise<boolean> {
 		const res = await this.apiService.update(
-			apiRoutes.calendars.updateCalendar,
+			apiRoutes.calendars.updateCalendarColor,
 			calendar.id,
 			request
 		);
@@ -413,6 +413,10 @@ export class Calendars {
 			await this.loadEvents();
 		}
 		return res !== null;
+	}
+
+	async updateCalendarsOrder(orderedIds: number[]): Promise<boolean> {
+		return this.apiService.put(apiRoutes.calendars.updateCalendarsOrder, { order: orderedIds });
 	}
 
 	async deleteCalendar(calendar: Calendar): Promise<boolean> {
