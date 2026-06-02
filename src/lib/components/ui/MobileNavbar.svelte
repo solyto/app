@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition';
+	import { fly, scale } from 'svelte/transition';
 	import IconEllipsisVertical from '@lucide/svelte/icons/ellipsis-vertical';
 	import NavEntry from '$lib/components/ui/NavEntry.svelte';
 	import NavProfileEntry from '$lib/components/ui/NavProfileEntry.svelte';
@@ -59,7 +59,10 @@
 				<div class="relative">
 					<IconEllipsisVertical />
 					{#if activeOverflowItem}
-						<div class="absolute right-[-15px] top-[-10px] [&>svg]:size-5">
+						<div
+							class="absolute right-[-22px] top-[-20px] [&>svg]:size-5 rounded-full p-1 bg-c-nav-active shadow-xl shadow-c-neutral-5 border-c-neutral text-c-neutral"
+							transition:scale
+						>
 							<NavEntryIcon type={activeOverflowItem.iconType} />
 						</div>
 					{/if}
