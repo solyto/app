@@ -17,7 +17,7 @@
 	const checkInData = getCheckInData();
 	const ts = getTranslation();
 
-	const dates = $derived(getDaysInMonth(checkInData.historyMonth.year, checkInData.historyMonth.month));
+	const dates = $derived(getDaysInMonth(checkInData.historyMonth.year, checkInData.historyMonth.month).reverse());
 
 	const monthData = $derived.by((): CheckIn[] => {
 		const dateStrings = new Set(dates.map((d) => getUrlFormat(d)));
