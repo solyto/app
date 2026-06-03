@@ -1,7 +1,16 @@
 <script lang="ts">
-	import { SvelteDate } from 'svelte/reactivity';
+	import { scale } from 'svelte/transition';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
-	let { date = $bindable() }: { date: SvelteDate } = $props();
+	let {
+		hours = $bindable(),
+		minutes = $bindable(),
+		oninput
+	}: {
+		hours: number;
+		minutes: number;
+		oninput?: () => void;
+	} = $props();
 
 	const hourOptions = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
 		(i - 1).toString().padStart(2, '0')
@@ -9,67 +18,67 @@
 	const minuteOptions = Array.from({ length: 12 }, (_, i) => i).map((i) =>
 		(i * 5).toString().padStart(2, '0')
 	);
-	let hours = $state(date.getHours());
-	let minutes = $state(date.getMinutes());
-	let hourMenu = $state<boolean>(false);
-	let minuteMenu = $state<boolean>(false);
-
-	const setHours = (option: string) => {
-		hours = parseInt(option);
-		date.setHours(parseInt(option));
-	};
-	const setMinutes = (option: string) => {
-		minutes = parseInt(option);
-		date.setMinutes(parseInt(option));
-	};
+	let menu = $state<boolean>(false);
 </script>
 
 <div
-	class="relative flex w-full items-center justify-center rounded-lg border-1 border-c-neutral-2 bg-c-bg-elevated text-sm shadow-xs transition-all focus:ring-2 focus:ring-c-primary focus:outline-none dark:border-s-dark-2"
+	class="relative flex w-full items-center justify-center gap-1 rounded-lg text-sm transition-all"
 >
-	<button
-		class="w-full cursor-pointer"
+	<input
+		type="number"
+		class="w-full rounded-lg border-1 border-c-neutral-2 text-sm shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-3 dark:bg-inherit dark:text-white dark:focus:ring-c-primary"
+		bind:value={hours}
 		onclick={() => {
-			hourMenu = true;
-		}}>{hours}</button
-	>
+			menu = true;
+		}}
+	/>
 	<span>:</span>
-	<button
-		class="w-full cursor-pointer"
+	<input
+		type="number"
+		class="w-full rounded-lg border-1 border-c-neutral-2 text-sm shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-3 dark:bg-inherit dark:text-white dark:focus:ring-c-primary"
+		bind:value={minutes}
 		onclick={() => {
-			minuteMenu = true;
-		}}>{minutes}</button
-	>
-	{#if hourMenu || minuteMenu}
+			menu = true;
+		}}
+	/>
+	{#if menu}
 		<div
-			class="absolute top-10 right-0 z-40 flex max-h-40 w-full flex-col overflow-y-auto rounded-lg bg-c-bg-elevated p-4 shadow-lg"
+			class="absolute top-10 right-0 z-40 w-60 flex items-start gap-8 overflow-y-auto rounded-lg bg-white p-4 text-md shadow-lg dark:bg-s-dark-3"
+			transition:scale
 		>
-			{#if hourMenu}
+			<div class="grid w-1/2 grid-cols-3 flex-wrap gap-4">
 				{#each hourOptions as option (option)}
 					<button
-						class="flex cursor-pointer items-center justify-center rounded-full text-sm hover:font-bold"
-						onclick={() => {
-							setHours(option);
-							hourMenu = false;
-						}}
+						class="cursor-pointer transition-all hover:scale-105 hover:font-bold"
+						class:font-bold={hours === parseInt(option)}
+						class:scale-125={hours === parseInt(option)}
+						onclick={() => (hours = parseInt(option))}
 					>
 						{option}
 					</button>
 				{/each}
-			{/if}
-			{#if minuteMenu}
+			</div>
+			<div class="grid w-1/2 grid-cols-3 flex-wrap gap-4">
 				{#each minuteOptions as option (option)}
 					<button
-						class="flex cursor-pointer items-center justify-center rounded-full text-sm hover:font-bold"
-						onclick={() => {
-							setMinutes(option);
-							minuteMenu = false;
-						}}
+						class="cursor-pointer transition-all hover:scale-105 hover:font-bold"
+						class:font-bold={minutes === parseInt(option)}
+						class:scale-125={minutes === parseInt(option)}
+						onclick={() => (minutes = parseInt(option))}
 					>
 						{option}
 					</button>
 				{/each}
-			{/if}
+				<div class="absolute right-4 bottom-4 cursor-pointer">
+					<TextButton
+						title="Set"
+						onclick={() => {
+							menu = false;
+							if (oninput) {oninput()}
+						}}
+					/>
+				</div>
+			</div>
 		</div>
 	{/if}
 </div>

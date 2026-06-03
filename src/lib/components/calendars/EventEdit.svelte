@@ -17,7 +17,7 @@
 	import ChooseCalendar from '$lib/components/calendars/ChooseCalendar.svelte';
 	import { SvelteDate } from 'svelte/reactivity';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
-	import TimePickerTest from '$lib/components/forms/TimePickerTest.svelte';
+	import TimePicker from '$lib/components/forms/TimePicker.svelte';
 	import ChooseRecurrenceRule from '$lib/components/calendars/ChooseRecurrenceRule.svelte';
 	import RecurrenceActionModal from '$lib/components/calendars/RecurrenceActionModal.svelte';
 	import EventAttachments from '$lib/components/calendars/EventAttachments.svelte';
@@ -224,7 +224,7 @@
 			<div class="flex w-full gap-2">
 				<SvelteDateInput bind:date={form.start_date} oninput={() => afterSelectStartDate()} />
 				{#if !form.is_all_day}
-					<TimePickerTest
+					<TimePicker
 						bind:hours={form.start_hours}
 						bind:minutes={form.start_minutes}
 						oninput={() => afterSelectStartTime()}
@@ -236,7 +236,7 @@
 			<div class="flex w-full gap-2">
 				<SvelteDateInput bind:date={form.end_date} oninput={() => afterSelectEndDate()} />
 				{#if !form.is_all_day}
-					<TimePickerTest
+					<TimePicker
 						bind:hours={form.end_hours}
 						bind:minutes={form.end_minutes}
 						oninput={() => afterSelectEndTime()}
