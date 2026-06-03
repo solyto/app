@@ -39,7 +39,7 @@
 		if (!validateInput()) return;
 
 		loadingIndicator.start();
-		let success = await auth.login({ email, password });
+		let success = await auth.login(email, password);
 		loadingIndicator.stop();
 
 		if (success) {
@@ -100,6 +100,7 @@
 				<span class="text-sm font-bold dark:text-white">{ts.get.auth.password}</span>
 				<a
 					href={urls.forgotPassword}
+					tabindex="-1"
 					class="text-xs text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
 				>
 					{ts.get.auth.forgot_password}

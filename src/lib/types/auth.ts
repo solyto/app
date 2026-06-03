@@ -1,3 +1,5 @@
+import type { Platform } from '$lib/types/platform';
+
 export interface AuthToken {
 	token: string | null;
 	token_type: string | null;
@@ -36,6 +38,7 @@ export interface User {
 export interface LoginRequest {
 	email: string;
 	password: string;
+	platform: Platform;
 }
 
 export interface LoginResponse {
