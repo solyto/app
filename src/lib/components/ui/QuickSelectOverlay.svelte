@@ -6,7 +6,7 @@
 		onClose,
 		children,
 		class: className = '',
-		p
+		p = null
 	} = $props<{
 		onClose: () => void;
 		children?: any;

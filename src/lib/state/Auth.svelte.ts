@@ -187,7 +187,10 @@ export class Auth {
 	}
 
 	async passkeyRegister(response: any, name: string): Promise<void> {
-		await this.apiService.post(apiRoutes.auth.passkeys.register, { response, name });
+		const res: any = await this.apiService.postRaw(apiRoutes.auth.passkeys.register, { response, name });
+		if (!res?.success) {
+			throw new Error(res?.message ?? 'Registration failed');
+		}
 	}
 
 	async getPasskeys(): Promise<Passkey[]> {
