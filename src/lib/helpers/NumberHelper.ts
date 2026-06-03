@@ -1,7 +1,7 @@
 export function average(numbers: number[], decimals: number = 2): number {
 	const average = numbers.reduce((a, b) => a + b, 0) / numbers.length;
 
-	return decimals ? Number(average.toFixed(decimals)) : average;
+	return Number(average.toFixed(decimals));
 }
 
 export function withDecimals(number: number, decimals: number = 2): string {
