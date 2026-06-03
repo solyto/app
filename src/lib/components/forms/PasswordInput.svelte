@@ -9,7 +9,8 @@
 		placeholder,
 		showToggle = false,
 		onblur,
-		oninput
+		oninput,
+		tabindex = null
 	} = $props<{
 		input?: HTMLInputElement | null;
 		value: string;
@@ -17,6 +18,7 @@
 		showToggle?: boolean;
 		onblur?: () => void;
 		oninput?: () => void;
+		tabindex?: number | null;
 	}>();
 
 	const ts = getTranslation();
@@ -31,10 +33,12 @@
 		{onblur}
 		{oninput}
 		type={visible ? 'text' : 'password'}
-		class="w-full rounded-lg border-1 border-c-neutral-2 text-sm shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-3 dark:bg-inherit dark:text-white dark:focus:ring-c-primary {showToggle
-			? 'pr-9'
-			: ''}"
+		class="
+			w-full rounded-lg border-1 border-c-neutral-2 text-sm shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-3 dark:bg-inherit dark:text-white dark:focus:ring-c-primary
+			{showToggle ? 'pr-9': ''}
+		"
 		{placeholder}
+		{tabindex}
 	/>
 	{#if showToggle}
 		<button

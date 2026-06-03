@@ -90,7 +90,7 @@
 	>
 		<label class="label">
 			<div class="label-text mb-2 text-sm font-bold dark:text-white">{ts.get.auth.email}</div>
-			<TextInput bind:value={email} />
+			<TextInput bind:value={email} tabindex={1} />
 			{#if emailError}
 				<p class="mt-2 pl-2 text-xs text-red-500" in:fade>{ts.get.auth.email_error}</p>
 			{/if}
@@ -100,13 +100,12 @@
 				<span class="text-sm font-bold dark:text-white">{ts.get.auth.password}</span>
 				<a
 					href={urls.forgotPassword}
-					tabindex="-1"
 					class="text-xs text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
 				>
 					{ts.get.auth.forgot_password}
 				</a>
 			</div>
-			<PasswordInput bind:value={password} showToggle />
+			<PasswordInput bind:value={password} showToggle tabindex={2} />
 			{#if passwordError}
 				<p class="mt-2 pl-2 text-xs text-red-500" in:fade>{ts.get.auth.password_error}</p>
 			{/if}
