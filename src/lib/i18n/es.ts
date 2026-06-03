@@ -440,6 +440,7 @@ const libraries: LibraryRecords = {
 		is_where: 'Ubicación',
 		cover: 'URL de la portada',
 		link: 'Enlace',
+		summary: 'Resumen',
 		started_at: 'Comenzado el',
 		finished_at: 'Finalizado el',
 		add_book: 'Agregar libro',
@@ -565,7 +566,8 @@ const libraries: LibraryRecords = {
 		cover: 'URL de la imagen',
 		link: 'Enlace',
 		add_plant: 'Agregar planta',
-		edit_plant: 'Editar planta'
+		edit_plant: 'Editar planta',
+		unidentified: 'No identificado'
 	},
 	recommendations: {
 		welcome_slogan: '¿Qué puedo recomendarle hoy?',

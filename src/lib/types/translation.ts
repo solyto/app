@@ -77,6 +77,8 @@ export interface SettingsRecords {
 	notifications: string;
 	push_notifications: string;
 	enable_push_notifications: string;
+	push_notification_error: string;
+	notification_permission_denied: string;
 	email_notifications: string;
 	enable_email_notifications: string;
 	nextcloud: string;
@@ -405,6 +407,8 @@ export interface LibraryRecords {
 		deezer_import_validation_error: string;
 		discogs_import: string;
 		discogs_import_validation_error: string;
+		create_error: string;
+		update_error: string;
 	};
 	books: {
 		title: string;
@@ -426,6 +430,8 @@ export interface LibraryRecords {
 		hardcover_import_validation_error: string;
 		goodreads_import: string;
 		goodreads_import_validation_error: string;
+		create_error: string;
+		update_error: string;
 	};
 	movies: {
 		title: string;
@@ -441,6 +447,8 @@ export interface LibraryRecords {
 		import_error: string;
 		imdb_import: string;
 		imdb_import_validation_error: string;
+		create_error: string;
+		update_error: string;
 	};
 	games: {
 		title: string;
@@ -489,6 +497,8 @@ export interface LibraryRecords {
 		source: string;
 		add_quote: string;
 		edit_quote: string;
+		create_error: string;
+		update_error: string;
 	};
 	recipes: {
 		title: string;
@@ -508,6 +518,11 @@ export interface LibraryRecords {
 		minutes: string;
 		add_recipe: string;
 		edit_recipe: string;
+		import_error: string;
+		chefkoch_import: string;
+		chefkoch_import_validation_error: string;
+		create_error: string;
+		update_error: string;
 	};
 	plants: {
 		name: string;
