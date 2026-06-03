@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import FunnelButton from '$lib/components/ui/buttons/FunnelButton.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
+	import HamburgerButton from '$lib/components/ui/buttons/HamburgerButton.svelte';
 
 	let {
 		sections,
@@ -21,7 +21,7 @@
 	}
 </script>
 
-<FunnelButton onclick={() => (open = true)} />
+<HamburgerButton onclick={() => (open = true)} />
 
 {#if open}
 	<div
