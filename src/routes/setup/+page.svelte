@@ -53,14 +53,14 @@
 	{#if step === 0}
 		<div class="flex w-full flex-col-reverse gap-3 md:flex-row" in:blur>
 			<button
-				class="flex flex-1 cursor-pointer flex-col gap-2 rounded-lg border-2 border-white/5 bg-white px-8 py-6 text-left shadow-sm transition-colors hover:bg-c-neutral-1 dark:bg-s-dark-2 dark:hover:bg-s-dark"
+				class="flex flex-1 max-md:mx-4 cursor-pointer flex-col gap-2 rounded-lg border-2 border-white/5 bg-white px-8 py-6 text-left shadow-sm transition-colors hover:bg-c-neutral-1 dark:bg-s-dark-2 dark:hover:bg-s-dark"
 				onclick={chooseSelfhosted}
 			>
 				<span class="font-semibold">{ts.get.setup.selfhosted_title}</span>
 				<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.setup.selfhosted_description}</span>
 			</button>
 			<button
-				class="flex flex-1 cursor-pointer flex-col gap-2 rounded-lg border-2 border-white/5 bg-white px-8 py-6 text-left shadow-sm transition-colors hover:bg-c-neutral-1 dark:bg-s-dark-2 dark:hover:bg-s-dark"
+				class="flex flex-1 max-md:mx-4 cursor-pointer flex-col gap-2 rounded-lg border-2 border-white/5 bg-white px-8 py-6 text-left shadow-sm transition-colors hover:bg-c-neutral-1 dark:bg-s-dark-2 dark:hover:bg-s-dark"
 				onclick={chooseHosted}
 			>
 				<span class="font-semibold">{ts.get.setup.hosted_title}</span>
@@ -77,7 +77,6 @@
 				<TextInput
 					placeholder={ts.get.setup.api_url_placeholder}
 					bind:value={customApiUrl}
-					disabled={checking}
 				/>
 				{#if urlError}
 					<p class="mt-2 pl-2 text-xs text-red-500" in:fade>{ts.get.setup.url_error}</p>

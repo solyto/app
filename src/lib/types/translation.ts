@@ -178,6 +178,8 @@ export interface AuthRecords {
 	passkey_sign_in: string;
 	passkey_not_supported: string;
 	passkey_error: string;
+	no_account: string;
+	register_link: string;
 }
 
 export interface TodoRecords {

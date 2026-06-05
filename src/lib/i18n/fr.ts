@@ -117,7 +117,9 @@ const auth: AuthRecords = {
 	reset_password_expired: 'Ce lien a expiré. Demandes-en un nouveau.',
 	passkey_sign_in: 'Se connecter avec une clé d\'accès',
 	passkey_not_supported: 'Les clés d\'accès ne sont pas prises en charge par ce navigateur.',
-	passkey_error: 'Échec de la connexion avec la clé d\'accès. Veuillez essayer une autre méthode.'
+	passkey_error: 'Échec de la connexion avec la clé d\'accès. Veuillez essayer une autre méthode.',
+	no_account: 'Pas encore de compte ?',
+	register_link: 'Créer un compte'
 };
 
 const home: HomeRecords = {

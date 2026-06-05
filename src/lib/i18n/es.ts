@@ -117,7 +117,9 @@ const auth: AuthRecords = {
 	reset_password_expired: 'Este enlace ha expirado. Solicita uno nuevo.',
 	passkey_sign_in: 'Iniciar sesión con una clave de acceso',
 	passkey_not_supported: 'Las claves de acceso no son compatibles con este navegador.',
-	passkey_error: 'Fallo al iniciar sesión con clave de acceso. Por favor, prueba otro método.'
+	passkey_error: 'Fallo al iniciar sesión con clave de acceso. Por favor, prueba otro método.',
+	no_account: '¿No tienes una cuenta?',
+	register_link: 'Crear cuenta'
 };
 
 const home: HomeRecords = {

@@ -118,7 +118,9 @@ const auth: AuthRecords = {
 	reset_password_expired: 'Dieser Reset-Link ist abgelaufen. Fordere einen neuen an.',
 	passkey_sign_in: 'Mit einem Passkey anmelden',
 	passkey_not_supported: 'Passkeys werden in diesem Browser nicht unterstützt.',
-	passkey_error: 'Passkey-Anmeldung fehlgeschlagen. Bitte versuche eine andere Methode.'
+	passkey_error: 'Passkey-Anmeldung fehlgeschlagen. Bitte versuche eine andere Methode.',
+	no_account: 'Noch kein Konto?',
+	register_link: 'Konto erstellen'
 };
 
 const home: HomeRecords = {

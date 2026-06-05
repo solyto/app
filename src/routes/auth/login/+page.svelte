@@ -148,4 +148,13 @@
 			</button>
 		</div>
 	{/if}
+	<div class="flex items-center gap-2 text-sm text-c-neutral-5 dark:text-c-neutral-4">
+		<span>{ts.get.auth.no_account}</span>
+		<a
+			href={urls.register}
+			class="font-medium text-c-btn transition-colors hover:underline"
+		>
+			{ts.get.auth.register_link}
+		</a>
+	</div>
 </div>

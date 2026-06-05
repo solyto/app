@@ -117,7 +117,9 @@ const auth: AuthRecords = {
 	reset_password_expired: 'This reset link has expired. Request a new one.',
 	passkey_sign_in: 'Sign in with a passkey',
 	passkey_not_supported: 'Passkeys are not supported in this browser.',
-	passkey_error: 'Passkey sign-in failed. Please try another method.'
+	passkey_error: 'Passkey sign-in failed. Please try another method.',
+	no_account: "Don't have an account?",
+	register_link: 'Create account'
 };
 
 const home: HomeRecords = {
