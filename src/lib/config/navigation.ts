@@ -20,8 +20,6 @@ export interface Feature {
 	order?: number | null;
 }
 
-
-
 export type FeatureUsage = Partial<Record<FeatureType, number>>;
 
 export type NavItem = {

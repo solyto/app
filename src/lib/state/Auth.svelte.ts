@@ -7,7 +7,7 @@ import type {
 	VerifyRequest,
 	Passkey
 } from '$lib/types/auth';
-import { getPlatform } from '$lib/helpers/PlatformHelper';
+import { PLATFORM } from '$lib/config/platform';
 import { setContext, getContext } from 'svelte';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import ApiService from '$lib/services/ApiService';
@@ -88,7 +88,7 @@ export class Auth {
 	}
 
 	async login(email: string, password: string): Promise<boolean> {
-		const request: LoginRequest = { email, password, platform: getPlatform() };
+		const request: LoginRequest = { email, password, platform: PLATFORM };
 		const res = await this.apiService.post(apiRoutes.auth.login, request);
 
 		if (!res) return Promise.resolve(false);
@@ -110,7 +110,7 @@ export class Auth {
 	}
 
 	private shouldRefresh(expiresAt: number): boolean {
-		const thresholdDays = getPlatform() === 'web' ? 5 : 14;
+		const thresholdDays = PLATFORM === 'web' ? 5 : 14;
 		return expiresAt < Date.now() + thresholdDays * 24 * 60 * 60 * 1000;
 	}
 
@@ -172,7 +172,7 @@ export class Auth {
 	}
 
 	async passkeyAuthenticate(response: any): Promise<void> {
-		const res: any = await this.apiService.postRaw(apiRoutes.auth.passkeys.authenticate, { response, platform: getPlatform() });
+		const res: any = await this.apiService.postRaw(apiRoutes.auth.passkeys.authenticate, { response, platform: PLATFORM });
 		if (!res?.success) {
 			throw new Error(res?.message ?? 'Passkey authentication failed');
 		}

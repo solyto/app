@@ -10,6 +10,7 @@ export const hasLegalUrls = !!(legalUrls.legalNotice || legalUrls.privacy || leg
 
 export const urls = {
 	home: '/',
+	setup: '/setup',
 	settings: '/settings',
 	todos: '/todos',
 	notes: '/notes',

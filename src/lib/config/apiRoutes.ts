@@ -1,20 +1,6 @@
-import { dev, browser } from '$app/environment';
-import { env } from '$env/dynamic/public';
+import { getApiUrl } from '$lib/config/platform';
 
-function getBaseUrl(): string {
-	if (dev) return 'http://localhost:8000';
-	if (env.PUBLIC_API_URL) return env.PUBLIC_API_URL;
-	if (!browser) return 'https://api.solyto.app';
-
-	const domainMap: Record<string, string> = {
-		'app.solyto.de': 'https://api.solyto.de',
-		'my.solyto.app': 'https://api.solyto.app'
-	};
-
-	return domainMap[window.location.hostname] || 'https://api.solyto.de';
-}
-
-const BASE_URL = getBaseUrl();
+const BASE_URL = getApiUrl();
 const API_URL = `${BASE_URL}/api/v1`;
 export const API_STORAGE_URL = `${BASE_URL}/storage`;
 export const API_USER_STORAGE_URL = `${BASE_URL}/storage/user`;
