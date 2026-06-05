@@ -10,6 +10,7 @@
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
+	import { PLATFORM } from '$lib/config/platform';
 
 	const auth = getAuth();
 	const ts = getTranslation();
@@ -34,7 +35,7 @@
 		if (emailError) return;
 
 		loadingIndicator.start();
-		await auth.forgotPassword(email);
+		await auth.forgotPassword(email, PLATFORM);
 		loadingIndicator.stop();
 
 		sent = true;
@@ -55,7 +56,7 @@
 	async function resend(): Promise<void> {
 		if (resendCooldown > 0) return;
 		loadingIndicator.start();
-		await auth.forgotPassword(email);
+		await auth.forgotPassword(email, PLATFORM);
 		loadingIndicator.stop();
 		startCooldown();
 	}

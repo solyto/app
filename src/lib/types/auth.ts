@@ -54,6 +54,7 @@ export interface RegisterRequest {
 	password: string;
 	password_confirmation: string;
 	language?: string;
+	platform?: string;
 }
 
 export interface VerifyRequest {

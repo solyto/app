@@ -56,3 +56,13 @@ export const urls = {
 	},
 	landingPage: 'https://solyto.app'
 } as const;
+
+const deepLinkUrls: Record<string, string> = {
+	mobile: 'app.solyto://auth/login',
+	desktop: 'solyto://auth/login'
+};
+
+export function getDeepLinkUrl(platform: string | null): string | null {
+	if (!platform) return null;
+	return deepLinkUrls[platform] ?? null;
+}

@@ -119,7 +119,9 @@ const auth: AuthRecords = {
 	passkey_not_supported: 'Les clés d\'accès ne sont pas prises en charge par ce navigateur.',
 	passkey_error: 'Échec de la connexion avec la clé d\'accès. Veuillez essayer une autre méthode.',
 	no_account: 'Pas encore de compte ?',
-	register_link: 'Créer un compte'
+	register_link: 'Créer un compte',
+	have_account: 'Déjà un compte ?',
+	open_in_app: "Ouvrir dans l'application"
 };
 
 const home: HomeRecords = {

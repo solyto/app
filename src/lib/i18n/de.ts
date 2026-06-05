@@ -120,7 +120,9 @@ const auth: AuthRecords = {
 	passkey_not_supported: 'Passkeys werden in diesem Browser nicht unterstützt.',
 	passkey_error: 'Passkey-Anmeldung fehlgeschlagen. Bitte versuche eine andere Methode.',
 	no_account: 'Noch kein Konto?',
-	register_link: 'Konto erstellen'
+	register_link: 'Konto erstellen',
+	have_account: 'Bereits ein Konto?',
+	open_in_app: 'In App öffnen'
 };
 
 const home: HomeRecords = {

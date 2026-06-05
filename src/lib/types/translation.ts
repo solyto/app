@@ -180,6 +180,8 @@ export interface AuthRecords {
 	passkey_error: string;
 	no_account: string;
 	register_link: string;
+	have_account: string;
+	open_in_app: string;
 }
 
 export interface TodoRecords {

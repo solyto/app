@@ -152,8 +152,8 @@ export class Auth {
 		return Promise.resolve(res);
 	}
 
-	async forgotPassword(email: string): Promise<void> {
-		await this.apiService.post(apiRoutes.auth.forgotPassword, { email });
+	async forgotPassword(email: string, platform: string): Promise<void> {
+		await this.apiService.post(apiRoutes.auth.forgotPassword, { email, platform });
 	}
 
 	async resetPassword(token: string, email: string, password: string, passwordConfirmation: string): Promise<{ success: boolean; errors?: Record<string, string[]> }> {

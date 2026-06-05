@@ -14,6 +14,7 @@
 	import PasswordStrengthIndicator from '$lib/components/forms/PasswordStrengthIndicator.svelte';
 	import PasswordMatchIndicator from '$lib/components/forms/PasswordMatchIndicator.svelte';
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
+	import { PLATFORM } from '$lib/config/platform';
 
 	onMount(() => {
 		if (auth.loggedIn) {
@@ -48,7 +49,8 @@
 			email,
 			password,
 			password_confirmation: passwordConfirmation,
-			language: ts.locale
+			language: ts.locale,
+			platform: PLATFORM
 		});
 		loadingIndicator.stop();
 
@@ -133,4 +135,10 @@
 			<TextButton title={ts.get.auth.register} class="w-full" />
 		</div>
 	</form>
+	<div class="flex items-center gap-2 text-sm text-c-neutral-5 dark:text-c-neutral-4">
+		<span>{ts.get.auth.have_account}</span>
+		<a href={urls.login} class="font-medium text-c-btn transition-colors hover:underline">
+			{ts.get.auth.sign_in}
+		</a>
+	</div>
 </div>

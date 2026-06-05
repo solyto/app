@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { urls } from '$lib/config/urls';
+	import { urls, getDeepLinkUrl } from '$lib/config/urls';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { resolve } from '$app/paths';
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
@@ -14,6 +14,7 @@
 	const ts = getTranslation();
 	const userId = page.params.user_id;
 	const token = page.params.token;
+	const deepLinkUrl = getDeepLinkUrl(page.url.searchParams.get('platform'));
 	let loaded = $state<boolean>(false);
 	let status = $state<boolean>(false);
 	let errors = $state<string[]>([]);
@@ -44,14 +45,33 @@
 		>
 			{#if status || errors.includes('already_verified')}
 				<span>{ts.get.auth.verify_success}</span>
-				<div class="mt-4 flex items-center justify-end">
-					<TextButton
-						title={ts.get.auth.sign_in}
-						href={urls.login}
-						align="center"
-						class="w-full"
-					/>
-				</div>
+				{#if deepLinkUrl}
+					<div class="mt-4 flex items-center justify-end">
+						<TextButton
+							title={ts.get.auth.open_in_app}
+							href={deepLinkUrl}
+							align="center"
+							class="w-full"
+						/>
+					</div>
+					<div class="mt-3 flex justify-center">
+						<a
+							href={urls.login}
+							class="text-xs text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
+						>
+							{ts.get.auth.sign_in}
+						</a>
+					</div>
+				{:else}
+					<div class="mt-4 flex items-center justify-end">
+						<TextButton
+							title={ts.get.auth.sign_in}
+							href={urls.login}
+							align="center"
+							class="w-full"
+						/>
+					</div>
+				{/if}
 			{:else if errors.length === 0}
 				<span>{ts.get.auth.verify_general_error}</span>
 			{:else if errors.includes('token_mismatch')}

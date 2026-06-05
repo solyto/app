@@ -119,7 +119,9 @@ const auth: AuthRecords = {
 	passkey_not_supported: 'Las claves de acceso no son compatibles con este navegador.',
 	passkey_error: 'Fallo al iniciar sesión con clave de acceso. Por favor, prueba otro método.',
 	no_account: '¿No tienes una cuenta?',
-	register_link: 'Crear cuenta'
+	register_link: 'Crear cuenta',
+	have_account: '¿Ya tienes una cuenta?',
+	open_in_app: 'Abrir en la app'
 };
 
 const home: HomeRecords = {

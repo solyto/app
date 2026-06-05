@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
-	import { urls } from '$lib/config/urls';
+	import { urls, getDeepLinkUrl } from '$lib/config/urls';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -17,6 +17,8 @@
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
+
+	const deepLinkUrl = getDeepLinkUrl(page.url.searchParams.get('platform'));
 
 	let token = $state<string>('');
 	let email = $state<string>('');
@@ -84,7 +86,19 @@
 			in:scale
 		>
 			<p class="text-sm dark:text-white">{ts.get.auth.reset_password_success}</p>
-			<TextButton title={ts.get.auth.sign_in} href={urls.login} align="center" class="w-full" />
+			{#if deepLinkUrl}
+				<TextButton title={ts.get.auth.open_in_app} href={deepLinkUrl} align="center" class="w-full" />
+				<div class="flex justify-center">
+					<a
+						href={urls.login}
+						class="text-xs text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
+					>
+						{ts.get.auth.sign_in}
+					</a>
+				</div>
+			{:else}
+				<TextButton title={ts.get.auth.sign_in} href={urls.login} align="center" class="w-full" />
+			{/if}
 		</div>
 	{:else}
 		<form
