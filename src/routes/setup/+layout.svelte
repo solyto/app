@@ -2,10 +2,19 @@
 	import '../../app.css';
 	import favicon from '$lib/assets/favicon.ico';
 	import { setTranslation } from '$lib/state/Translation.svelte';
+	import { PLATFORM } from '$lib/config/platform';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
+	import { urls } from '$lib/config/urls';
 
 	let { children } = $props();
 
 	setTranslation();
+
+	onMount(() => {
+		if (PLATFORM === 'web') goto(resolve(urls.login));
+	});
 </script>
 
 <svelte:head>

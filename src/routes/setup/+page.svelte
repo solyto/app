@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { blur, fade } from 'svelte/transition';
-	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import { setCustomApiUrl } from '$lib/config/platform';
+	import { setCustomApiUrl, dropCustomApiUrl } from '$lib/config/platform';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { urls } from '$lib/config/urls';
 
@@ -16,8 +15,9 @@
 	let checking = $state<boolean>(false);
 	let urlError = $state<boolean>(false);
 
-	async function chooseHosted(): Promise<void> {
-		await goto(resolve(urls.login));
+	function chooseHosted(): void {
+		dropCustomApiUrl();
+		window.location.href = resolve(urls.login);
 	}
 
 	function chooseSelfhosted(): void {
@@ -36,7 +36,7 @@
 			const data = await res.json();
 			if (data?.app !== 'solyto' || !data?.version) throw new Error();
 			setCustomApiUrl(baseUrl);
-			await goto(resolve(urls.login));
+			window.location.href = resolve(urls.login);
 		} catch {
 			urlError = true;
 		} finally {

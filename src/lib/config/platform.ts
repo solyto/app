@@ -36,3 +36,8 @@ export function setCustomApiUrl(url: string) {
 	const ls = new LocalStorageService();
 	ls.set(LS_CUSTOM_API_URL_KEY, url);
 }
+
+export function dropCustomApiUrl() {
+	const ls = new LocalStorageService();
+	ls.destroy(LS_CUSTOM_API_URL_KEY);
+}
