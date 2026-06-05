@@ -11,7 +11,7 @@ export function getPageFeature(): FeatureType | null {
 }
 
 export function showNavbar(): boolean {
-	return !isAuthRoute() && !isAdminRoute();
+	return !isAuthRoute() && !isAdminRoute() && !isSetupRoute();
 }
 
 export function isDashboard(): boolean {

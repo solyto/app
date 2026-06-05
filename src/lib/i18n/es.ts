@@ -24,7 +24,8 @@ import type {
 	AdminRecords,
 	CookieConsentRecords,
 	TimeTrackingRecords,
-	QuickAddRecords
+	QuickAddRecords,
+	SetupRecords
 } from '$lib/types/translation';
 
 const layout: LayoutRecords = {
@@ -1128,6 +1129,19 @@ const quick_add: QuickAddRecords = {
 	}
 };
 
+const setup: SetupRecords = {
+	hosted_title: 'Usar solyto.app',
+	hosted_description: 'Conectarse al servicio oficial alojado',
+	selfhosted_title: 'Auto-alojado',
+	selfhosted_description: 'Ejecuto mi propia instancia de solyto',
+	api_url_label: 'Introduce tu URL de API',
+	api_url_placeholder: 'https://api.ejemplo.es',
+	continue: 'Continuar',
+	done: '¡Todo listo!',
+	checking: 'Comprobando conexión…',
+	url_error: 'No se pudo conectar. Comprueba la URL e inténtalo de nuevo.'
+};
+
 export const es: LanguageFile = {
 	layout,
 	nav,
@@ -1153,5 +1167,6 @@ export const es: LanguageFile = {
 	admin,
 	cookie_consent,
 	timeTracking,
-	quick_add
+	quick_add,
+	setup
 };

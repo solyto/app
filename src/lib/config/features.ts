@@ -11,5 +11,5 @@ if (firstStartup) ls.setBool(LS_FIRST_STARTUP_KEY, true);
 
 export const featureConfig: FeatureConfig = {
 	setCustomApiUrl: !isWeb,
-	firstStartupOptions: true
+	firstStartupOptions: firstStartup
 };

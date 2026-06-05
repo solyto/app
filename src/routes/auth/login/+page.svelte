@@ -11,10 +11,22 @@
 	import { fade } from 'svelte/transition';
 	import { startAuthentication } from '@simplewebauthn/browser';
 	import IconFingerprint from '@lucide/svelte/icons/fingerprint';
+	import IconSettings from '@lucide/svelte/icons/settings';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
+	import { PLATFORM, getApiUrl, getPwaApiUrl } from '$lib/config/platform';
+
+	function getApiLabel(): string {
+		const url = getApiUrl();
+		if (url === getPwaApiUrl()) return 'solyto.app';
+		try {
+			return new URL(url).hostname;
+		} catch {
+			return url;
+		}
+	}
 
 	const auth = getAuth();
 	const ts = getTranslation();
@@ -79,6 +91,16 @@
 		return !(emailError || passwordError);
 	}
 </script>
+
+{#if PLATFORM !== 'web'}
+	<a
+		href={urls.setup}
+		class="fixed top-10 right-4 flex items-center gap-2 text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
+	>
+		<span class="text-xs">{getApiLabel()}</span>
+		<IconSettings size={24} />
+	</a>
+{/if}
 
 <div class="flex w-full max-w-xs flex-col items-center gap-12" class:animate-shake={error}>
 	<div style="width: 56px; height: 71px;">

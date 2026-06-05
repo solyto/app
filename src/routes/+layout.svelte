@@ -19,7 +19,7 @@
 	import { setUserNotifications } from '$lib/state/UserNotifications.svelte';
 	import { setCookieConsent } from '$lib/state/CookieConsent.svelte';
 	import CookieBanner from '$lib/components/ui/CookieBanner.svelte';
-	import { getPwaInstall, setPwaInstall } from '$lib/state/PwaInstall.svelte';
+	import { setPwaInstall } from '$lib/state/PwaInstall.svelte';
 	import { setWelcomeTour } from '$lib/state/WelcomeTour.svelte';
 	import WelcomeTour from '$lib/components/tour/WelcomeTour.svelte';
 	import { setThemeState } from '$lib/state/Theme.svelte';
@@ -30,7 +30,8 @@
 	import CommandPaletteModal from '$lib/components/command-palette/CommandPalette.svelte';
 	import { registerCommands } from '$lib/components/command-palette/Commands.svelte';
 	import { getNavigation, setNavigation } from '$lib/state/Navigation.svelte';
-	import { getPageSlug, getPageFeature } from '$lib/helpers/NavHelper';
+	import { getPageFeature, isAuthRoute, isDashboard, isSetupRoute, showNavbar } from '$lib/helpers/NavHelper';
+	import { featureConfig } from '$lib/config/features';
 
 	let { children } = $props();
 
@@ -62,7 +63,13 @@
 	onMount(async () => {
 		theme.load();
 
-		if (!auth.loggedIn && !isAuthRoute()) await goto(resolve(urls.login));
+		if (!auth.loggedIn && !isAuthRoute() && !isSetupRoute()) {
+			if (featureConfig.firstStartupOptions) {
+				await goto(resolve(urls.setup));
+			} else {
+				await goto(resolve(urls.login));
+			}
+		}
 
 		const updateHeight = () => { innerHeight = window.innerHeight; };
 		updateHeight();
@@ -81,26 +88,10 @@
 		const feature = getPageFeature();
 		if (feature) nav.addUsage(feature);
 	});
-
-	function showNavbar(): boolean {
-		return !isAuthRoute() && !isAdminRoute();
-	}
-
-	function isDashboard(): boolean {
-		return page.url.pathname === urls.home;
-	}
-
-	function isAdminRoute(): boolean {
-		return page.url.pathname.startsWith('/admin');
-	}
-
-	function isAuthRoute(): boolean {
-		return page.url.pathname.startsWith('/auth');
-	}
 </script>
 
 <svelte:head>
-	<title>s o l y t o</title>
+	<title>solyto</title>
 	<link rel="icon" href={favicon} />
 	<link rel="manifest" href="/site.webmanifest" />
 </svelte:head>

@@ -3,6 +3,7 @@ import { browser, dev } from '$app/environment';
 import type { Platform } from '$lib/types/platform';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
+const LS_CUSTOM_API_URL_KEY = 'custom_api_url';
 export const PLATFORM: Platform = (() => {
 	if (env.PUBLIC_DESKTOP) return 'desktop';
 	if (env.PUBLIC_MOBILE) return 'mobile';
@@ -10,7 +11,7 @@ export const PLATFORM: Platform = (() => {
 })();
 
 export function getApiUrl(): string {
-	return PLATFORM === 'web' ? getPwaApiUrl() : getDesktopMobileApiUrl();
+	return PLATFORM === 'web' ? getPwaApiUrl() : getCustomApiUrl();
 }
 
 export function getPwaApiUrl(): string {
@@ -26,7 +27,12 @@ export function getPwaApiUrl(): string {
 	return domainMap[window.location.hostname] || 'https://api.solyto.app';
 }
 
-export function getDesktopMobileApiUrl(): string {
+export function getCustomApiUrl(): string {
 	const ls = new LocalStorageService();
-	return ls.get('custom_api_url') || getPwaApiUrl();
+	return ls.get(LS_CUSTOM_API_URL_KEY) || getPwaApiUrl();
+}
+
+export function setCustomApiUrl(url: string) {
+	const ls = new LocalStorageService();
+	ls.set(LS_CUSTOM_API_URL_KEY, url);
 }

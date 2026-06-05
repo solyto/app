@@ -1014,10 +1014,24 @@ export interface QuickAddRecords {
 	};
 }
 
+export interface SetupRecords {
+	hosted_title: string;
+	hosted_description: string;
+	selfhosted_title: string;
+	selfhosted_description: string;
+	api_url_label: string;
+	api_url_placeholder: string;
+	continue: string;
+	done: string;
+	checking: string;
+	url_error: string;
+}
+
 export interface LanguageFile {
 	layout: LayoutRecords;
 	nav: NavigationRecords;
 	auth: AuthRecords;
+	setup: SetupRecords;
 	home: HomeRecords;
 	settings: SettingsRecords;
 	todos: TodoRecords;
