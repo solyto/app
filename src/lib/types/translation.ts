@@ -31,7 +31,6 @@ export interface NavigationRecords {
 	checkIn: string;
 	libraries: string;
 	dev_requests: string;
-	assistants: string;
 	finances: string;
 	feeds: string;
 	admin: string;
@@ -636,18 +635,6 @@ export interface FinanceRecords {
 	wealth_trend: string;
 }
 
-export interface AssistantRecords {
-	add: string;
-	create: string;
-	update: string;
-	no_assistants: string;
-	deletion_title: string;
-	deletion_description: string;
-	chat_placeholder: string;
-	title: string;
-	description: string;
-	prompt: string;
-}
 
 export interface FeedRecords {
 	feeds: string;
@@ -707,6 +694,7 @@ export interface CalendarRecords {
 		7: string;
 	};
 	weekdays_short: {
+		[key: number]: string;
 		1: string;
 		2: string;
 		3: string;
@@ -879,8 +867,6 @@ export interface WelcomeTourRecords {
 	feature_contacts_desc: string;
 	feature_check_in: string;
 	feature_check_in_desc: string;
-	feature_assistants: string;
-	feature_assistants_desc: string;
 	feature_finances: string;
 	feature_finances_desc: string;
 	feature_feeds: string;
@@ -1042,7 +1028,6 @@ export interface LanguageFile {
 	libraries: LibraryRecords;
 	dev: DevRecords;
 	finances: FinanceRecords;
-	assistants: AssistantRecords;
 	feeds: FeedRecords;
 	calendar: CalendarRecords;
 	contacts: ContactRecords;

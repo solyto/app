@@ -259,7 +259,7 @@ export class NotesSvelte {
 		this.createParent = null;
 		this.rightClickMenuOpen = false;
 
-		return res ? (res.data as NoteCategory) : null;
+		return res && typeof res === 'object' ? (res.data as NoteCategory) : null;
 	}
 
 	async saveContent(): Promise<boolean> {

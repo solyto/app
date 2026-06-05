@@ -45,7 +45,7 @@
 	};
 	let form = $state<EventForm>({
 		calendar_id: calendars.activeEvent && calendars.activeEvent.calendar_id ?
-			parseInt(calendars.activeEvent.calendar_id) :
+			calendars.activeEvent.calendar_id :
 			0,
 		title: calendars.activeEvent ? calendars.activeEvent.title : '',
 		description: calendars.activeEvent ? calendars.activeEvent.description : '',
@@ -66,8 +66,8 @@
 
 	function isRecurring(): boolean {
 		return (
-			calendars.activeEvent?.is_recurring &&
-			calendars.activeEvent?.original_start_date !== null
+			calendars.activeEvent!.is_recurring &&
+			calendars.activeEvent!.original_start_date !== null
 		);
 	}
 
@@ -116,7 +116,7 @@
 		}
 	}
 
-	function buildRequest(): UpdateEventRequest {
+	function buildRequest(): CreateEventRequest | UpdateEventRequest {
 		if (form.is_all_day) {
 			form.start_date.setHours(0);
 			form.start_date.setMinutes(0);
@@ -162,12 +162,12 @@
 		const ok = thisOccurrenceOnly
 			? await calendars.updateOccurrence(
 					calendars.activeEvent!,
-					request,
+					request as UpdateEventRequest,
 					calendars.activeEvent!.original_start_date!
 				)
 			: calendars.activeEvent
-				? await calendars.updateEvent(calendars.activeEvent, request)
-				: await calendars.createEvent(request);
+				? await calendars.updateEvent(calendars.activeEvent, request as UpdateEventRequest)
+				: await calendars.createEvent(request as CreateEventRequest);
 
 		loadingIndicator.stop();
 		if (ok) {

@@ -91,9 +91,8 @@
 		isInitialized = true;
 	}
 
-	onMount(async () => {
-		await tick();
-		createChart();
+	onMount(() => {
+		tick().then(createChart);
 
 		const handleResize = () => {
 			if (myChart) {

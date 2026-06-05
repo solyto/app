@@ -13,7 +13,6 @@ import type {
 	LibraryRecords,
 	DevRecords,
 	FinanceRecords,
-	AssistantRecords,
 	FeedRecords,
 	CalendarRecords,
 	NotificationRecords,
@@ -59,7 +58,6 @@ const nav: NavigationRecords = {
 	checkIn: 'Check-in',
 	libraries: 'Bibliothèques',
 	dev_requests: 'Demandes de dev',
-	assistants: 'Assistants',
 	finances: 'Finances',
 	feeds: 'Flux',
 	admin: 'Admin',
@@ -654,18 +652,6 @@ const finances: FinanceRecords = {
 	wealth_trend: 'Tendance du patrimoine'
 };
 
-const assistants: AssistantRecords = {
-	add: 'Ajouter un assistant',
-	create: 'Créer',
-	update: 'Mettre à jour',
-	no_assistants: 'Aucun assistant pour le moment.',
-	deletion_title: 'Supprimer l\'assistant',
-	deletion_description: 'Es-tu sûr de vouloir supprimer cet assistant?',
-	chat_placeholder: 'Tapez votre message…',
-	title: 'Titre',
-	description: 'Description',
-	prompt: 'Prompt'
-};
 
 const feeds: FeedRecords = {
 	feeds: 'Flux',
@@ -896,8 +882,6 @@ const welcome_tour: WelcomeTourRecords = {
 	feature_contacts_desc: 'Carnet d\'adresses, synchroniser avec CardDAV',
 	feature_check_in: 'Suivi',
 	feature_check_in_desc: 'Humeur quotidienne, sommeil et habitudes',
-	feature_assistants: 'Assistants',
-	feature_assistants_desc: 'Chat IA avec prompts personnalisés',
 	feature_finances: 'Finances',
 	feature_finances_desc: 'Suivre patrimoine et budget',
 	feature_feeds: 'Flux',
@@ -984,12 +968,6 @@ const welcome_tour: WelcomeTourRecords = {
 			stats_tip: 'Consulte les statistiques pour voir les tendances et les modèles dans tes données.',
 			trackers_tip: 'Personnalise les trackers que tu souhaites enregistrer chaque jour dans les paramètres du check-in.',
 			sport_tip: 'Choisis ton type de sport dans les paramètres pour que le suivi d\'activité corresponde à ta routine.'
-		},
-		assistants: {
-			title: 'Assistants',
-			description: 'Crée des assistants IA personnalisés avec des prompts spécifiques pour différentes tâches. Tes conversations restent privées.',
-			create_tip: 'Crée des assistants avec des prompts personnalisés pour des tâches spécifiques comme l\'écriture, le codage ou le brainstorming.',
-			prompt_tip: 'Écris des prompts détaillés pour obtenir des réponses meilleures et plus ciblées de tes assistants.'
 		},
 		finances: {
 			title: 'Finances',
@@ -1165,7 +1143,6 @@ export const fr: LanguageFile = {
 	libraries,
 	dev,
 	finances,
-	assistants,
 	feeds,
 	calendar,
 	contacts,

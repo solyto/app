@@ -34,7 +34,7 @@
 				text: title || ''
 			},
 			legend: {
-				data: dataPoints.map((p) => p.title)
+				data: dataPoints.map((p: { title: string; values: number[] }) => p.title)
 			},
 			grid: {
 				left: '3%',
@@ -49,7 +49,7 @@
 			yAxis: {
 				type: 'value'
 			},
-			series: dataPoints.map((p) => ({
+			series: dataPoints.map((p: { title: string; values: number[] }) => ({
 				name: p.title,
 				type: 'line',
 				areaStyle: {},
@@ -69,9 +69,8 @@
 		isInitialized = true;
 	}
 
-	onMount(async () => {
-		await tick();
-		createChart();
+	onMount(() => {
+		tick().then(createChart);
 
 		const handleResize = () => {
 			if (myChart) {

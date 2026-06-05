@@ -165,7 +165,7 @@
 			<div class="flex flex-col gap-2">
 				<p>
 					{ts.get.contacts.import_contacts_running
-						.replace('%s', importState.address_books_current)
+						.replace('%s', importState.address_books_current ?? '')
 						.replace(
 							'%d',
 							importState.contacts_done > 0 ? importState.contacts_count + ' ' : ''

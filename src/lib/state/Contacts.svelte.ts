@@ -186,7 +186,7 @@ export class Contacts {
 
 		this.searchEntries = this.contacts.filter((contact) => {
 			return ['first_name', 'last_name'].some((field) => {
-				return String(contact[field]).toLowerCase().includes(searchTerm.toLowerCase());
+				return String((contact as any)[field]).toLowerCase().includes(searchTerm.toLowerCase());
 			});
 		});
 	}

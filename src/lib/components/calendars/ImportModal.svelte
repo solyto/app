@@ -165,7 +165,7 @@
 			<div class="flex flex-col gap-2">
 				<p>
 					{ts.get.calendar.import_events
-						.replace('%s', importState.calendars_current)
+						.replace('%s', importState.calendars_current ?? '')
 						.replace(
 							'%d',
 							importState.events_count > 0 ? importState.events_count + ' ' : ''

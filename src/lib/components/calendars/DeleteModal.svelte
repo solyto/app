@@ -13,7 +13,7 @@
 		description={ts.get.calendar.delete_description}
 		type="confirm-delete"
 		onConfirm={() => {
-			calendars.deleteCalendar(calendars.selectedCalendar);
+			calendars.deleteCalendar(calendars.selectedCalendar!);
 		}}
 		onCancel={() => {
 			calendars.deletionModal = false;

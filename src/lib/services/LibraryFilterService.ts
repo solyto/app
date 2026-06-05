@@ -1,3 +1,4 @@
+
 import type { Music, MusicGenre } from '$lib/types/library_music';
 import type { Book, BookGenre } from '$lib/types/library_book';
 import type { Quote } from '$lib/types/library_quote';
@@ -17,7 +18,7 @@ export default class LibraryFilterService {
 
 		return entries.filter((entry) => {
 			return fields.some((field) => {
-				return String(entry[field]).toLowerCase().includes(searchTerm.toLowerCase());
+				return String((entry as any)[field]).toLowerCase().includes(searchTerm.toLowerCase());
 			});
 		});
 	}
@@ -60,7 +61,7 @@ export default class LibraryFilterService {
 		return entries.filter((entry) => entry.name === null && entry.latin_name === null);
 	}
 
-	byWishlist<T extends Music | Book | Movie | Game | Plant>(entries: T[]): T[] {
+	byWishlist<T extends Music | Book | Movie | Game>(entries: T[]): T[] {
 		return entries.filter((entry) => entry.wishlist);
 	}
 }

@@ -6,7 +6,6 @@
 	import IconNotebook from '@lucide/svelte/icons/notebook';
 	import IconBug from '@lucide/svelte/icons/bug';
 	import IconLibraryBig from '@lucide/svelte/icons/library-big';
-	import IconBot from '@lucide/svelte/icons/bot';
 	import IconEuro from '@lucide/svelte/icons/euro';
 	import IconTimer from '@lucide/svelte/icons/timer';
 	import IconNewspaper from '@lucide/svelte/icons/newspaper';
@@ -31,8 +30,6 @@
 	<IconContactRound />
 {:else if type === 'checkIn'}
 	<IconGoal />
-{:else if type === 'assistants'}
-	<IconBot />
 {:else if type === 'finances'}
 	<IconEuro />
 {:else if type === 'feeds'}

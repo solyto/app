@@ -89,7 +89,7 @@
 
 	<div class="flex items-center gap-3">
 		{#if user.confirmed}
-			<IconBadgeCheck class="h-4 w-4 text-teal-500" title="Confirmed" />
+			<IconBadgeCheck class="h-4 w-4 text-teal-500" />
 		{/if}
 		{#if canEditRole}
 			<select

@@ -12,7 +12,7 @@
 		action: 'edit' | 'delete';
 		onThisOccurrence: () => void | Promise<any>;
 		onAllOccurrences: () => void | Promise<any>;
-		onCancel: () => void | Promise<any>;
+		onCancel: () => any;
 	}>();
 
 	let visible = $state<boolean>(false);
@@ -63,19 +63,19 @@
 					<TextButton
 						title={ts.get.calendar.this_occurrence}
 						onclick={onThisOccurrence}
-						type={action === 'delete' ? 'error' : 'action'}
-						fullWidth={true}
+						type={action === 'delete' ? 'danger' : 'action'}
+						class="w-full"
 					/>
 					<TextButton
 						title={ts.get.calendar.all_occurrences}
 						onclick={onAllOccurrences}
-						type={action === 'delete' ? 'error' : 'action'}
-						fullWidth={true}
+						type={action === 'delete' ? 'danger' : 'action'}
+						class="w-full"
 					/>
 					<TextButton
 						title={ts.get.layout.modal_cancel}
 						onclick={onCancel}
-						fullWidth={true}
+						class="w-full"
 					/>
 				</div>
 			</div>

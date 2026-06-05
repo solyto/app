@@ -1,5 +1,4 @@
 import { goto } from '$app/navigation';
-import { resolve } from '$app/paths';
 import { urls } from '$lib/config/urls';
 import { getCommandPalette } from '$lib/state/CommandPalette.svelte';
 import type { Command } from '$lib/types/command';
@@ -9,7 +8,7 @@ import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 import { getNavigation } from '$lib/state/Navigation.svelte';
 
 function navCommand(id: string, title: string, url: string): Command {
-	return { id, title, category: 'Navigate', action: () => goto(resolve(url)) };
+	return { id, title, category: 'Navigate', action: () => goto(url) };
 }
 
 export async function registerCommands(): Promise<void> {

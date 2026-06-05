@@ -13,7 +13,6 @@ import type {
 	LibraryRecords,
 	DevRecords,
 	FinanceRecords,
-	AssistantRecords,
 	FeedRecords,
 	CalendarRecords,
 	NotificationRecords,
@@ -59,7 +58,6 @@ const nav: NavigationRecords = {
 	checkIn: 'Check-in',
 	libraries: 'Bibliotheken',
 	dev_requests: 'Dev Requests',
-	assistants: 'Assistenten',
 	finances: 'Finanzen',
 	feeds: 'Feeds',
 	admin: 'Admin',
@@ -656,18 +654,6 @@ const finances: FinanceRecords = {
 	wealth_trend: 'Vermögensverlauf'
 };
 
-const assistants: AssistantRecords = {
-	add: 'Neuen Assistenten hinzufügen',
-	create: 'Erstellen',
-	update: 'Aktualisieren',
-	no_assistants: 'Es scheint noch keine Assistenten zu geben.',
-	deletion_title: 'Assistent löschen',
-	deletion_description: 'Bist du sicher, dass du diesen Assistenten löschen möchtest?',
-	chat_placeholder: 'Schreibe eine Nachricht..',
-	title: 'Titel',
-	description: 'Beschreibung',
-	prompt: 'Prompt'
-};
 
 const feeds: FeedRecords = {
 	feeds: 'Feeds',
@@ -898,8 +884,6 @@ const welcome_tour: WelcomeTourRecords = {
 	feature_contacts_desc: 'Adressbuch, mit CardDAV synchronisieren',
 	feature_check_in: 'Check-in',
 	feature_check_in_desc: 'Tägliche Stimmung, Schlaf und Gewohnheiten',
-	feature_assistants: 'Assistenten',
-	feature_assistants_desc: 'KI-Chat mit benutzerdefinierten Prompts',
 	feature_finances: 'Finanzen',
 	feature_finances_desc: 'Vermögen und Budget verfolgen',
 	feature_feeds: 'Feeds',
@@ -986,12 +970,6 @@ const welcome_tour: WelcomeTourRecords = {
 			stats_tip: 'Sieh dir Statistiken an, um Trends und Muster in deinen Daten zu erkennen.',
 			trackers_tip: 'Passe in den Check-in-Einstellungen an, welche Tracker du täglich erfassen möchtest.',
 			sport_tip: 'Wähle deinen Sporttyp in den Einstellungen, damit das Aktivitäts-Tracking zu deiner Routine passt.'
-		},
-		assistants: {
-			title: 'Assistenten',
-			description: 'Erstelle benutzerdefinierte KI-Assistenten mit spezifischen Prompts für verschiedene Aufgaben. Deine Gespräche bleiben privat.',
-			create_tip: 'Erstelle Assistenten mit benutzerdefinierten Prompts für spezifische Aufgaben wie Schreiben, Programmieren oder Brainstorming.',
-			prompt_tip: 'Schreibe detaillierte Prompts, um bessere, fokussiertere Antworten von deinen Assistenten zu erhalten.'
 		},
 		finances: {
 			title: 'Finanzen',
@@ -1167,7 +1145,6 @@ export const de: LanguageFile = {
 	libraries,
 	dev,
 	finances,
-	assistants,
 	feeds,
 	calendar,
 	contacts,

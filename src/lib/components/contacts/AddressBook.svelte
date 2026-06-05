@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconPen from '@lucide/svelte/icons/pen';
 	import Badge from '$lib/components/ui/Badge.svelte';
-	import type { AddressBook, UpdateAddressBookRequest } from '$lib/types_contact';
+	import type { AddressBook, UpdateAddressBookRequest } from '$lib/types/contact';
 	import { getContacts } from '$lib/state/Contacts.svelte';
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
@@ -21,7 +21,7 @@
 		edit = !edit;
 	}
 
-	async function onColorChange(): void {
+	async function onColorChange(): Promise<void> {
 		if (hex === addressBook.color) return;
 
 		loadingIndicator.start();

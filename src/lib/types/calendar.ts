@@ -1,3 +1,5 @@
+import { SvelteDate } from 'svelte/reactivity';
+
 export interface Calendar {
 	id: number;
 	name: string;
@@ -53,8 +55,10 @@ export interface CalendarDay {
 }
 
 export interface OutOfScopeCalendarDay {
+	number: number;
 	weekday: number;
 	date: Date;
+	is_grayed_out: boolean;
 }
 
 export interface CalendarWeek {
@@ -108,10 +112,10 @@ export interface EventForm {
 	title: string;
 	description: string;
 	location: string;
-	start_date: Date;
+	start_date: SvelteDate;
 	start_hours: number;
 	start_minutes: number;
-	end_date: Date;
+	end_date: SvelteDate;
 	end_hours: number;
 	end_minutes: number;
 	is_all_day: boolean;

@@ -210,14 +210,6 @@ export const apiRoutes = {
 		updateYourDayAlert: API_URL + '/telegram/your-day-alert',
 		updateCheckInAlert: API_URL + '/telegram/check-in-alert'
 	},
-	assistants: {
-		list: API_URL + '/assistants',
-		create: API_URL + '/assistants',
-		update: API_URL + '/assistants/%s',
-		delete: API_URL + '/assistants/%s',
-		chat: API_URL + '/assistants/%s/chat',
-		chatHistory: API_URL + '/assistants/%s/chat/history'
-	},
 	finances: {
 		wealth: {
 			listFields: API_URL + '/finances/wealth/fields',

@@ -59,7 +59,7 @@
 			<TodoEntry {todo} />
 		{/each}
 		{#each allDayEntries as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
-			{#if !calendars.isCalendarHidden(parseInt(item.calendar_id))}
+			{#if !calendars.isCalendarHidden(item.calendar_id)}
 				<button
 					class="flex w-full cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 					class:!border-l-0={item.start_date < date}
@@ -88,7 +88,7 @@
 			</button>
 			{#if entriesByHour[parseInt(hour)].entries.length > 0}
 				{#each entriesByHour[parseInt(hour)].entries as item, i (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
-					{#if !calendars.isCalendarHidden(parseInt(item.calendar_id))}
+					{#if !calendars.isCalendarHidden(item.calendar_id)}
 						<button
 							class="absolute z-40 flex w-2/3 cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm shadow-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 							class:left-0={i === 0}

@@ -30,7 +30,7 @@
 
 		myChart = init(chartContainer);
 
-		const total = values.reduce((sum, item) => sum + item.value, 0);
+		const total = values.reduce((sum: number, item: { value: number; name: string; color?: string | null }) => sum + item.value, 0);
 
 		const options = {
 			title: {
@@ -80,7 +80,7 @@
 					labelLine: {
 						show: false
 					},
-					data: values.map((v) => ({
+					data: values.map((v: { value: number; name: string; color?: string | null }) => ({
 						value: v.value,
 						name: v.name,
 						...(v.color ? { itemStyle: { color: v.color } } : {})
@@ -93,9 +93,8 @@
 		isInitialized = true;
 	}
 
-	onMount(async () => {
-		await tick();
-		createChart();
+	onMount(() => {
+		tick().then(createChart);
 
 		const handleResize = () => {
 			if (myChart) {

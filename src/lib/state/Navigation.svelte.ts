@@ -104,7 +104,7 @@ export class Navigation {
 
 	async save(): Promise<void> {
 		const features = JSON.stringify(this.features);
-		this.auth.user.settings.navigation = features;
+		this.auth.user!.settings.navigation = features;
 		await this.auth.updateNavigation(features);
 		await this.auth.loadAdditionalData();
 	}

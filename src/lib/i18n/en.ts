@@ -13,7 +13,6 @@ import type {
 	LibraryRecords,
 	DevRecords,
 	FinanceRecords,
-	AssistantRecords,
 	FeedRecords,
 	CalendarRecords,
 	NotificationRecords,
@@ -59,7 +58,6 @@ const nav: NavigationRecords = {
 	checkIn: 'Check-in',
 	libraries: 'Libraries',
 	dev_requests: 'Dev Requests',
-	assistants: 'Assistants',
 	finances: 'Finances',
 	feeds: 'Feeds',
 	admin: 'Admin',
@@ -655,18 +653,6 @@ const finances: FinanceRecords = {
 	wealth_trend: 'Wealth Trend'
 };
 
-const assistants: AssistantRecords = {
-	add: 'Add new Assistant',
-	create: 'Create',
-	update: 'Update',
-	no_assistants: 'There seem to be no assistants yet.',
-	deletion_title: 'Delete Assistant',
-	deletion_description: 'Are you sure you want to delete this assistant?',
-	chat_placeholder: 'Type your message..',
-	title: 'Title',
-	description: 'Description',
-	prompt: 'Prompt'
-};
 
 const feeds: FeedRecords = {
 	feeds: 'Feeds',
@@ -901,9 +887,7 @@ const welcome_tour: WelcomeTourRecords = {
 	feature_contacts_desc: 'Address book, sync with CardDAV',
 	feature_check_in: 'Check-in',
 	feature_check_in_desc: 'Daily mood, sleep, and habits',
-	feature_assistants: 'Assistants',
-	feature_assistants_desc: 'AI chat with custom prompts',
-	feature_finances: 'Finances',
+	feature_finances:'Finances',
 	feature_finances_desc: 'Track wealth and budget',
 	feature_feeds: 'Feeds',
 	feature_feeds_desc: 'RSS feeds from your sources',
@@ -988,12 +972,6 @@ const welcome_tour: WelcomeTourRecords = {
 			stats_tip: 'View statistics to see trends and patterns in your data.',
 			trackers_tip: 'Customize which trackers you want to log each day in the Check-in settings.',
 			sport_tip: 'Choose your sport type in settings so your activity tracking fits your routine.'
-		},
-		assistants: {
-			title: 'Assistants',
-			description: 'Create custom AI assistants with specific prompts for different tasks. Your conversations stay private.',
-			create_tip: 'Create assistants with custom prompts for specific tasks like writing, coding, or brainstorming.',
-			prompt_tip: 'Write detailed prompts to get better, more focused responses from your assistants.'
 		},
 		finances: {
 			title: 'Finances',
@@ -1164,7 +1142,6 @@ export const en: LanguageFile = {
 	libraries,
 	dev,
 	finances,
-	assistants,
 	feeds,
 	calendar,
 	contacts,

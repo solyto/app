@@ -42,7 +42,7 @@
 		const colors: string[] = [];
 		for (const event of events) {
 			if (
-				!calendars.isCalendarHidden(parseInt(event.calendar_id)) &&
+				!calendars.isCalendarHidden(event.calendar_id) &&
 				event.calendar_color &&
 				!colors.includes(event.calendar_color)
 			) {
@@ -138,7 +138,7 @@
 		{#if hasEvents}
 			<div class="flex flex-col px-2">
 				{#each allDayEvents as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
-					{#if !calendars.isCalendarHidden(parseInt(item.calendar_id))}
+					{#if !calendars.isCalendarHidden(item.calendar_id)}
 						<button
 							class="my-0.5 flex w-full cursor-pointer items-center justify-start border-l-4 px-3 py-2.5 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 							style="border-color: {item.calendar_color ?? 'var(--color-c-neutral-2)'}; background-color: {item.calendar_color ? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))` : ''};"
@@ -153,7 +153,7 @@
 					<TodoEntry {todo} />
 				{/each}
 				{#each nonAllDayEvents as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
-					{#if !calendars.isCalendarHidden(parseInt(item.calendar_id))}
+					{#if !calendars.isCalendarHidden(item.calendar_id)}
 						<button
 							class="my-0.5 flex w-full cursor-pointer items-center justify-start border-l-4 px-3 py-2.5 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 							style="border-color: {item.calendar_color ?? 'var(--color-c-neutral-2)'}; background-color: {item.calendar_color ? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))` : ''};"

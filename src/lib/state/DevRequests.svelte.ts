@@ -52,12 +52,12 @@ export class DevRequests {
 				if (a.status === 'cancelled' && b.status !== 'cancelled') return 1;
 				if (a.status !== 'cancelled' && b.status === 'cancelled') return -1;
 			}
-			return b.priority - a.priority;
+			return (b.priority ?? 0) - (a.priority ?? 0);
 		});
 	}
 
 	async create(request: CreateDevRequestRequest): Promise<boolean> {
-		request.created_by_user_id = this.auth.user?.id;
+		request.created_by_user_id = this.auth.user?.id ?? null;
 		const res = await this.apiService.create(apiRoutes.dev.requests.create, request);
 		if (res) {
 			const devRequest = res.data as DevRequest;
