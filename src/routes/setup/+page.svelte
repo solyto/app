@@ -51,7 +51,7 @@
 	</div>
 
 	{#if step === 0}
-		<div class="flex w-full flex-col gap-3 md:flex-row" in:blur>
+		<div class="flex w-full flex-col-reverse gap-3 md:flex-row" in:blur>
 			<button
 				class="flex flex-1 cursor-pointer flex-col gap-2 rounded-lg border-2 border-white/5 bg-white px-8 py-6 text-left shadow-sm transition-colors hover:bg-c-neutral-1 dark:bg-s-dark-2 dark:hover:bg-s-dark"
 				onclick={chooseSelfhosted}
