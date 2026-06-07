@@ -9,7 +9,7 @@
 	let days = $state<Date[]>(getNextXDays(30));
 </script>
 
-<div class="flex h-full w-full dark:bg-s-dark" style="background-color: color-mix(in srgb, var(--color-c-primary) 12%, white);">
+<div class="flex h-full w-full dark:bg-s-dark" style="background-color: color-mix(in srgb, var(--color-c-primary) 12%, var(--color-c-bg));">
 	<div class="flex h-full w-8 flex-col pt-8 max-md:hidden"></div>
 	<div class="flex h-full w-full flex-col">
 		<div class="flex w-full">

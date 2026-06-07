@@ -4,7 +4,7 @@ import type { Platform } from '$lib/types/platform';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
 const LS_CUSTOM_API_URL_KEY = 'custom_api_url';
-export const PLATFORM: Platform = (() => {	
+export const PLATFORM: Platform = (() => {
 	if (env.PUBLIC_DESKTOP) return 'desktop';
 	if (env.PUBLIC_MOBILE) return 'mobile';
 	return 'web';

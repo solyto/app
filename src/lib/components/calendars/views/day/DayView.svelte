@@ -10,7 +10,7 @@
 	);
 </script>
 
-<div class="flex h-full w-full dark:bg-s-dark" style="background-color: color-mix(in srgb, var(--color-c-primary) 12%, white);">
+<div class="flex h-full w-full dark:bg-s-dark" style="background-color: color-mix(in srgb, var(--color-c-primary) 12%, var(--color-c-bg));">
 	<div class="flex h-full w-8 flex-col pt-8">
 		<div class="flex h-3/30 w-full items-center justify-center">
 			<span class="px-1 text-center text-sm">{ts.get.calendar.is_all_day}</span>
