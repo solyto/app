@@ -7,7 +7,7 @@
 		oninput
 	} = $props<{
 		input?: HTMLInputElement | HTMLTextAreaElement | null;
-		value: number;
+		value: number | null;
 		placeholder?: string;
 		onblur?: () => void;
 		oninput?: () => void;

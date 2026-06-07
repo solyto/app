@@ -45,10 +45,6 @@ export const urls = {
 	calendar: '/calendar',
 	contacts: '/contacts',
 	clipboard: '/clipboard',
-	test: {
-		calendars: '/test/calendars',
-		contacts: '/test/contacts'
-	},
 	admin: {
 		home: '/admin',
 		users: '/admin/users'

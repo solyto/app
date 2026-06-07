@@ -22,7 +22,7 @@
 
 	let changeTitle = $state<boolean>(false);
 	let titleInput = $state<HTMLInputElement | null>(null);
-	let titleValue = $state<string>(notes.activeNote.title);
+	let titleValue = $state<string>(notes.activeNote!.title);
 	let lastSaved = $state<Date | null>(null);
 	let keyHandlers = $state<{ [key: string]: string | null }>({
 		CtrlS: null,
@@ -50,7 +50,7 @@
 		changeTitle = !changeTitle;
 
 		if (changeTitle) {
-			titleValue = notes.activeNote.title;
+			titleValue = notes.activeNote!.title;
 			await tick();
 			titleInput?.focus();
 
@@ -141,7 +141,7 @@
 						? ts.get.notes.remove_from_favorites
 						: ts.get.notes.add_to_favorites}
 					onclick={async () => {
-						changeFavoriteStatus(notes.activeNote);
+						changeFavoriteStatus(notes.activeNote!);
 					}}
 				>
 					<IconStar
@@ -149,7 +149,7 @@
 						fill={notes.activeNote.is_favorite ? 'currentColor' : 'none'}
 					/>
 				</button>
-				<DeleteButton onClick={() => (deleteModalOpen = true)} inModal={false} buttonStyle="plain" />
+				<DeleteButton onClick={() => { deleteModalOpen = true; }} inModal={false} buttonStyle="plain" />
 				<TextButton title={ts.get.layout.save} onclick={saveNote} />
 			</div>
 		</div>
@@ -163,6 +163,6 @@
 		description={ts.get.notes.delete_confirm_message}
 		type="confirm-delete"
 		onConfirm={onDeleteConfirm}
-		onCancel={() => (deleteModalOpen = false)}
+		onCancel={() => { deleteModalOpen = false; }}
 	/>
 {/if}

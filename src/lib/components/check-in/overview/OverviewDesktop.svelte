@@ -28,7 +28,7 @@
 		<div class="h-10">&nbsp;</div>
 		{#each trackers as tracker (tracker)}
 			<div class="flex w-full items-center justify-start font-bold h-12 p-3">
-				<p>{ts.get.checkIn[tracker]}</p>
+				<p>{ts.get.checkIn[tracker as keyof typeof ts.get.checkIn]}</p>
 			</div>
 		{/each}
 	</div>

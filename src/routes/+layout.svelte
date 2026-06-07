@@ -69,12 +69,15 @@
 		window.addEventListener('resize', updateHeight);
 
 		ts.loadLanguage();
+<<<<<<< Updated upstream
 
 		if (viewPoint.isDesktop && !isAuthRoute()) {
 			keyManager.registerKeyDown('Space', () => commandPalette.openPalette(), { priority: 0, withHelperKey: 'Control', preventOthers: true });
 		}
 
 		await registerCommands();
+=======
+>>>>>>> Stashed changes
 	});
 
 	afterNavigate(() => {

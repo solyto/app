@@ -37,7 +37,7 @@
 					<div class="size-8">
 						<img
 							src={API_USER_STORAGE_URL + '/' + request.user.profile_image_path}
-							alt="Profile Image"
+							alt={request.user.name + ' Profile'}
 							class="h-full w-full rounded-full object-cover"
 						/>
 					</div>
@@ -57,7 +57,7 @@
 				<div class="size-8">
 					<img
 						src={API_USER_STORAGE_URL + '/' + request.user.profile_image_path}
-						alt="Profile Image"
+						alt={request.user.name + ' Profile'}
 						class="h-full w-full rounded-full object-cover"
 					/>
 				</div>

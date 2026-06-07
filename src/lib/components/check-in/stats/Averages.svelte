@@ -17,7 +17,7 @@
 
 	let { data, activeTrackers } = $props<{ data: CheckIn[]; activeTrackers: CheckInType[] }>();
 
-	const entries = $derived(activeTrackers.filter((t) => t !== 'sports'));
+	const entries = $derived(activeTrackers.filter((t: CheckInType) => t !== 'sports'));
 	const totalMean = $derived(getTotalMeanValue(data, entries));
 
 
@@ -92,7 +92,7 @@
 				<div class="min-w-0 flex-1">
 					<div class="mb-1 flex items-center justify-between">
 						<p class="text-sm font-medium text-c-neutral-7 dark:text-c-neutral-3">
-							{ts.get.checkIn[entry]}
+							{ts.get.checkIn[entry as keyof typeof ts.get.checkIn]}
 						</p>
 						<p class="text-sm font-semibold text-c-neutral-9 dark:text-white">
 							{#if isNaN(value)}

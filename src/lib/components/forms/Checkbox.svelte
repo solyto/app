@@ -1,11 +1,11 @@
 <script lang="ts">
 	let {
-		isChecked = false,
+		isChecked = $bindable(false),
 		onchange,
 		class: customClass = ''
 	} = $props<{
 		isChecked: boolean;
-		onchange: any;
+		onchange?: () => void;
 		class?: string;
 	}>();
 </script>

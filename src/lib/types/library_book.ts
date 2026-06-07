@@ -43,7 +43,7 @@ export interface CreateBookRequest {
 	rating?: number | null;
 	publication_year?: number | null;
 	wishlist?: boolean;
-	summary?: string;
+	summary?: string | null;
 	cover_path?: string | null;
 	link?: string | null;
 	started_at?: string | null;
@@ -64,7 +64,7 @@ export interface UpdateBookRequest {
 	rating?: number | null;
 	publication_year?: number | null;
 	wishlist?: boolean;
-	summary?: string;
+	summary?: string | null;
 	cover_path?: string | null;
 	link?: string | null;
 	started_at?: string | null;

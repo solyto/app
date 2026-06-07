@@ -90,7 +90,7 @@
 			<div class="size-8">
 				<img
 					src={API_USER_STORAGE_URL + '/' + friend.profile_image_path}
-					alt="Profile Image"
+					alt="Profile"
 					class="h-full w-full rounded-full object-cover"
 				/>
 			</div>

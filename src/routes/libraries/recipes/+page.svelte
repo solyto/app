@@ -11,7 +11,7 @@
 <div class="h-full max-h-full w-full overflow-y-auto p-4">
 	<Header {library} />
 	{#if library.createModalVisible}
-		<RecipeCreate activeEntry={library.activeEntry} />
+		<RecipeCreate />
 	{/if}
 	{#if library.detailModalVisible}
 		<RecipeDetail />

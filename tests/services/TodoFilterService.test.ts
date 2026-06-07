@@ -36,7 +36,7 @@ function category(id: number, title = 'Category'): TodoCategory {
 }
 
 function tag(id: number, name = 'tag'): Tag {
-	return { id, name, color: null, created_at: '', updated_at: '' };
+	return { id, name, color: '#000000', created_at: '', updated_at: '' };
 }
 
 function workspace(id: number, categories: TodoCategory[], hideable = false): TodoWorkspace {

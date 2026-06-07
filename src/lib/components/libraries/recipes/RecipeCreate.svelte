@@ -28,13 +28,13 @@
 	let activeEntry = $state<Recipe | null>(library.activeEntry);
 
 	let titleValue = $state<string>(activeEntry ? activeEntry.title : '');
-	let descriptionValue = $state<string>(activeEntry ? activeEntry.description : '');
-	let timeToMakeValue = $state<string>(activeEntry ? activeEntry.time_to_make : '');
-	let ingredientsValue = $state<string>(activeEntry ? activeEntry.ingredients : '');
+	let descriptionValue = $state<string>(activeEntry?.description ?? '');
+	let timeToMakeValue = $state<number | null>(activeEntry?.time_to_make ?? null);
+	let ingredientsValue = $state<string>(activeEntry?.ingredients ?? '');
 	let coverValue = $state<string>('');
-	let linkValue = $state<string>(activeEntry ? activeEntry.link : '');
-	let typeValue = $state<string>(activeEntry ? activeEntry.type : '');
-	let selectedRating = $state(activeEntry ? activeEntry.rating : 0);
+	let linkValue = $state<string>(activeEntry?.link ?? '');
+	let typeValue = $state<string>(activeEntry?.type ?? '');
+	let selectedRating = $state(activeEntry?.rating ?? 0);
 	let linkInput = $state<HTMLInputElement | null>(null);
 	let importLoading = $state<boolean>(false);
 
@@ -47,6 +47,7 @@
 		{ label: ts.get.libraries.recipes.type_drink, value: 'drink' },
 		{ label: ts.get.libraries.recipes.type_other, value: 'other' }
 	];
+
 	async function onsubmit(): Promise<void> {
 		if (activeEntry) {
 			return await update();
@@ -62,7 +63,7 @@
 			title: titleValue,
 			description: descriptionValue != '' ? descriptionValue : null,
 			type: typeValue != '' ? (typeValue as RecipeType) : null,
-			time_to_make: timeToMakeValue !== '' ? parseInt(timeToMakeValue) : null,
+			time_to_make: timeToMakeValue,
 			ingredients: ingredientsValue !== '' ? ingredientsValue : null,
 			rating: selectedRating > 0 ? selectedRating : null,
 			cover_path: coverValue != '' ? coverValue : null,
@@ -72,7 +73,7 @@
 		if (ok) {
 			titleValue = '';
 			descriptionValue = '';
-			timeToMakeValue = '';
+			timeToMakeValue = null;
 			ingredientsValue = '';
 			typeValue = '';
 			coverValue = '';
@@ -93,13 +94,13 @@
 			title: titleValue,
 			description: descriptionValue != '' ? descriptionValue : null,
 			type: typeValue != '' ? (typeValue as RecipeType) : null,
-			time_to_make: timeToMakeValue !== '' ? parseInt(timeToMakeValue) : null,
+			time_to_make: timeToMakeValue,
 			ingredients: ingredientsValue !== '' ? ingredientsValue : null,
 			rating: selectedRating > 0 ? selectedRating : null,
 			...(coverValue !== '' ? { cover_path: coverValue } : {}),
 			link: linkValue != '' ? linkValue : null
 		};
-		const ok = await library.update(activeEntry, request);
+		const ok = await library.update(activeEntry!, request);
 		if (ok) {
 			library.closeCreateModal();
 			await library.load();
@@ -133,13 +134,10 @@
 		}
 
 		titleValue = recipe.title;
-		coverValue = recipe.cover;
-		ingredientsValue = recipe.ingredients;
-		descriptionValue = recipe.description;
-
-		if (recipe.time_to_make) {
-			timeToMakeValue = recipe.time_to_make.toString();
-		}
+		coverValue = recipe.cover ?? '';
+		ingredientsValue = recipe.ingredients ?? '';
+		descriptionValue = recipe.description ?? '';
+		timeToMakeValue = recipe.time_to_make;
 
 		loadingIndicator.stop();
 		importLoading = false;
@@ -152,7 +150,7 @@
 		: ts.get.libraries.recipes.add_recipe}
 	{library}
 	existingCover={activeEntry
-		? `${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${activeEntry.cover}`
+		? `${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${activeEntry.cover}`
 		: null}
 	newCover={coverValue}
 	bind:selectedRating

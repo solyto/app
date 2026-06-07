@@ -16,7 +16,7 @@ export interface CreateQuoteRequest {
 	author?: string | null;
 	quote: string;
 	source?: string | null;
-	tags?: Tag[];
+	tags?: number[];
 }
 
 export interface UpdateQuoteRequest {
@@ -24,5 +24,5 @@ export interface UpdateQuoteRequest {
 	author?: string | null;
 	quote?: string | null;
 	source?: string | null;
-	tags?: Tag[];
+	tags?: number[];
 }

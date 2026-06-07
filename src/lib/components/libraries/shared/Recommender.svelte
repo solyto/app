@@ -64,7 +64,7 @@
 				)
 			);
 			if (res !== null && res.data.length > 0) {
-				const item = res.data[0];
+				const item = (res.data as Array<{ link: string; cover_big: string }>)[0];
 				recommendation.link = item.link;
 				recommendation.cover = item.cover_big;
 			}
@@ -113,9 +113,9 @@
 	</ContentModal>
 {/if}
 
-{#snippet recommenderOption(type: string, color: string)}
-	<a
-		href="#"
+{#snippet recommenderOption(type: LibraryRecommendationType, color: string)}
+	<button
+		type="button"
 		class="relative w-full cursor-pointer rounded-lg border-1 border-c-neutral-1 bg-c-bg-surface text-left shadow-sm transition-all hover:bg-c-neutral dark:border-s-dark-2 dark:hover:bg-s-dark-3"
 		onclick={() => select(type)}
 	>
@@ -124,7 +124,7 @@
 			style="background-color: var(--color-s-{color}); height: calc(100% - 16px); top: 8px; left: 12px;"
 		></div>
 		<div class="ml-4 w-full px-4 py-2">
-			{ts.get.libraries.recommendations[type]}
+			{ts.get.libraries.recommendations[type as keyof typeof ts.get.libraries.recommendations]}
 		</div>
-	</a>
+	</button>
 {/snippet}

@@ -30,35 +30,29 @@
 
 	let titleValue = $state<string>(activeEntry ? activeEntry.title : '');
 	let coverValue = $state<string>('');
-	let linkValue = $state<string>(activeEntry ? activeEntry.link : '');
-	let publicationYearValue = $state<string>(activeEntry ? activeEntry.publication_year : '');
-	let startedAtValue = $state<string>(
-		activeEntry ? activeEntry.started_at?.substring(0, 10) : ''
-	);
-	let finishedAtValue = $state<string>(
-		activeEntry ? activeEntry.finished_at?.substring(0, 10) : ''
-	);
-	let platformValue = $state<string>(activeEntry ? activeEntry.platform : 'pc');
-	let developerValue = $state<string>(activeEntry ? activeEntry.developer : '');
-	let publisherValue = $state<string>(activeEntry ? activeEntry.publisher : '');
-	let playtimeHoursValue = $state<string>(activeEntry ? activeEntry.playtime_hours : '');
+	let linkValue = $state<string>(activeEntry?.link ?? '');
+	let publicationYearValue = $state<number | null>(activeEntry?.publication_year ?? null);
+	let startedAtValue = $state<string>(activeEntry?.started_at?.substring(0, 10) ?? '');
+	let finishedAtValue = $state<string>(activeEntry?.finished_at?.substring(0, 10) ?? '');
+	let platformValue = $state<string>(activeEntry?.platform ?? 'pc');
+	let developerValue = $state<string>(activeEntry?.developer ?? '');
+	let publisherValue = $state<string>(activeEntry?.publisher ?? '');
+	let playtimeHoursValue = $state<number | null>(activeEntry?.playtime_hours ?? null);
 	let completedValue = $state<boolean>(activeEntry ? activeEntry.completed : false);
-	let selectedGenres = $state(
-		activeEntry
-			? activeEntry.genres.map((genre) => ({ label: genre.title, value: genre.id }))
-			: []
+	let selectedGenres = $state<string[]>(
+		activeEntry ? activeEntry.genres.map((g) => g.id.toString()) : []
 	);
-	let selectedTags = $state(
-		activeEntry ? activeEntry.tags.map((tag) => ({ label: tag.name, value: tag.id })) : []
+	let selectedTags = $state<string[]>(
+		activeEntry ? activeEntry.tags.map((t) => t.id.toString()) : []
 	);
-	let selectedRating = $state(activeEntry ? activeEntry.rating : 0);
+	let selectedRating = $state(activeEntry?.rating ?? 0);
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
 	let linkInput = $state<HTMLInputElement | null>(null);
 	let importLoading = $state<boolean>(false);
 
 	const genreOptions: { label: string; value: string }[] = library.genres.map((genre) => ({
 		label: genre.title,
-		value: genre.id
+		value: genre.id.toString()
 	}));
 
 	const tagOptions: { label: string; value: string }[] = tags.tags.map((tag) => ({
@@ -92,14 +86,14 @@
 			platform: platformValue,
 			developer: developerValue !== '' ? developerValue : null,
 			publisher: publisherValue !== '' ? publisherValue : null,
-			publication_year: publicationYearValue !== '' ? parseInt(publicationYearValue) : null,
-			playtime_hours: playtimeHoursValue !== '' ? parseInt(playtimeHoursValue) : null,
+			publication_year: publicationYearValue,
+			playtime_hours: playtimeHoursValue,
 			completed: completedValue,
 			started_at: startedAtValue !== '' ? startedAtValue : null,
 			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
-			wishlist: isWishlist ? isWishlist : false,
-			genres: selectedGenres.length > 0 ? selectedGenres.map((genre) => genre.value) : null,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null,
+			wishlist: isWishlist,
+			genres: selectedGenres.map((v) => parseInt(v)),
+			tags: selectedTags.map((v) => parseInt(v)),
 			rating: selectedRating > 0 ? selectedRating : null,
 			cover_path: coverValue != '' ? coverValue : null,
 			link: linkValue != '' ? linkValue : null
@@ -110,13 +104,15 @@
 			platformValue = 'pc';
 			developerValue = '';
 			publisherValue = '';
-			playtimeHoursValue = '';
+			playtimeHoursValue = null;
+			publicationYearValue = null;
 			completedValue = false;
 			startedAtValue = '';
 			finishedAtValue = '';
 			coverValue = '';
 			linkValue = '';
 			selectedGenres = [];
+			selectedTags = [];
 			isWishlist = false;
 			library.closeCreateModal();
 			await library.load();
@@ -133,19 +129,19 @@
 			platform: platformValue,
 			developer: developerValue !== '' ? developerValue : null,
 			publisher: publisherValue !== '' ? publisherValue : null,
-			publication_year: publicationYearValue !== '' ? parseInt(publicationYearValue) : null,
-			playtime_hours: playtimeHoursValue !== '' ? parseInt(playtimeHoursValue) : null,
+			publication_year: publicationYearValue,
+			playtime_hours: playtimeHoursValue,
 			completed: completedValue,
 			started_at: startedAtValue !== '' ? startedAtValue : null,
 			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
-			wishlist: isWishlist ? isWishlist : false,
-			genres: selectedGenres.length > 0 ? selectedGenres.map((genre) => genre.value) : null,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null,
+			wishlist: isWishlist,
+			genres: selectedGenres.map((v) => parseInt(v)),
+			tags: selectedTags.map((v) => parseInt(v)),
 			rating: selectedRating > 0 ? selectedRating : null,
 			...(coverValue !== '' ? { cover_path: coverValue } : {}),
 			link: linkValue != '' ? linkValue : null
 		};
-		const ok = await library.update(activeEntry, request);
+		const ok = await library.update(activeEntry!, request);
 		if (ok) {
 			library.closeCreateModal();
 			await library.load();
@@ -184,7 +180,7 @@
 		if (game.release_date) {
 			const year = game.release_date.match(/\d{4}/);
 			if (year) {
-				publicationYearValue = year[0];
+				publicationYearValue = parseInt(year[0]);
 			}
 		}
 
@@ -196,7 +192,7 @@
 					continue;
 				}
 
-				selectedGenres.push({ label: genre, value: existing.id });
+				selectedGenres.push(existing.id.toString());
 			}
 		}
 
@@ -233,7 +229,7 @@
 		platformValue = 'boardgame';
 
 		if (game.publication_year) {
-			publicationYearValue = game.publication_year.toString();
+			publicationYearValue = game.publication_year;
 		}
 
 		if (game.genres.length > 0) {
@@ -244,7 +240,7 @@
 					continue;
 				}
 
-				selectedGenres.push({ label: genre, value: existing.id });
+				selectedGenres.push(existing.id.toString());
 			}
 		}
 
@@ -259,7 +255,7 @@
 		: ts.get.libraries.games.add_game}
 	{library}
 	existingCover={activeEntry
-		? `${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${activeEntry.cover}`
+		? `${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${activeEntry.cover}`
 		: null}
 	newCover={coverValue}
 	bind:selectedRating
@@ -290,7 +286,7 @@
 		<NumberInput bind:value={playtimeHoursValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.games.completed}>
-		<Checkbox bind:checked={completedValue} class="pt-[9px]" />
+		<Checkbox bind:isChecked={completedValue} class="pt-[9px]" />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.games.started_at}>
 		<DateInput bind:value={startedAtValue} />

@@ -20,7 +20,7 @@
 	function getSelected(id: number): Calendar | null {
 		if (!id) return null;
 
-		return availableCalendars.find((c) => c.id === id) || null;
+		return availableCalendars.find((c: Calendar) => c.id === id) || null;
 	}
 </script>
 
