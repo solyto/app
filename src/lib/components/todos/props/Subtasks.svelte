@@ -17,7 +17,7 @@
 
 	let addSubtaskVisible = $state<boolean>(false);
 	let subtaskInput = $state<HTMLInputElement | null>(null);
-	let subtaskValue = $state<string | null>('');
+	let subtaskValue = $state<string>('');
 	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
 
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));

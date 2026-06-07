@@ -95,7 +95,7 @@
 	}
 
 	function coverUrl(entry: ShelfEntry): string {
-		return `${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${entry.cover}`;
+		return `${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${entry.cover}`;
 	}
 </script>
 

@@ -148,9 +148,13 @@
 		/>
 	{:else}
 		<div
+			role="button"
+			tabindex="0"
 			ondblclick={toggleChangeDescription}
 			onmouseover={() => (showExplanationBox = true)}
 			onmouseout={() => (showExplanationBox = false)}
+			onfocus={() => (showExplanationBox = true)}
+			onblur={() => (showExplanationBox = false)}
 			onmousemove={(e) => setExplanationBoxPosition(e)}
 		>
 			{#if todo.description}

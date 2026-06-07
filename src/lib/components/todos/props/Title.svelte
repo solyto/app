@@ -83,9 +83,13 @@
 {:else}
 	<span
 		class="text-base"
+		role="button"
+		tabindex="0"
 		ondblclick={toggleChangeTitle}
 		onmouseover={() => (showExplanationBox = true)}
 		onmouseout={() => (showExplanationBox = false)}
+		onfocus={() => (showExplanationBox = true)}
+		onblur={() => (showExplanationBox = false)}
 		onmousemove={(e) => setExplanationBoxPosition(e)}
 	>
 		{todo.title}

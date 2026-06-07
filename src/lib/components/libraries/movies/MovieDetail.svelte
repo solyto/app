@@ -31,11 +31,11 @@
 	</div>
 	<div class:hidden={entry.started_at === null}>
 		{ts.get.libraries.movies.started_at}
-		{formatDate(entry.started_at)}
+		{entry.started_at ? formatDate(entry.started_at) : ''}
 	</div>
 	<div class:hidden={entry.finished_at === null}>
 		{ts.get.libraries.movies.finished_at}
-		{formatDate(entry.finished_at)}
+		{entry.finished_at ? formatDate(entry.finished_at) : ''}
 	</div>
 
 </DetailModal>

@@ -29,7 +29,7 @@
 				</div>
 			{:else if item.id}
 				<img
-					src={`${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${item.cover}`}
+					src={`${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${item.cover}`}
 					loading="lazy"
 					alt="Cover"
 					class="rounded-lg md:size-48"
