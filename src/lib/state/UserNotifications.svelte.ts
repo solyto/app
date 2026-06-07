@@ -2,20 +2,44 @@ import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import type { UserNotification, UserNotificationType } from '$lib/types/user_notification';
-import { urls } from '$lib/config/urls';
+import type { UserNotification } from '$lib/types/user_notification';
+
+const POLL_INTERVAL_MS = 5 * 60 * 1000;
 
 export class UserNotifications {
 	notifications = $state<UserNotification[]>([]);
 	loaded = $state<boolean>(false);
 	auth = getAuth();
 	apiService: ApiService;
+	private pollInterval: ReturnType<typeof setInterval> | null = null;
+	private visibilityHandler: (() => void) | null = null;
 
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
 	}
 
 	async load(): Promise<void> {
+		await this.fetch();
+		this.startPolling();
+
+		this.visibilityHandler = () => {
+			if (document.hidden) {
+				this.stopPolling();
+			} else {
+				this.fetch();
+				this.startPolling();
+			}
+		};
+
+		document.addEventListener('visibilitychange', this.visibilityHandler);
+	}
+
+	private startPolling(): void {
+		this.stopPolling();
+		this.pollInterval = setInterval(() => this.fetch(), POLL_INTERVAL_MS);
+	}
+
+	private async fetch(): Promise<void> {
 		const res = await this.apiService.list(apiRoutes.notifications.list);
 		if (res) {
 			this.notifications = res.data as UserNotification[];
@@ -23,28 +47,19 @@ export class UserNotifications {
 		}
 	}
 
-	getLink(notification: UserNotification): string {
-		const type = notification.type;
-		if (type === 'friend_request') return urls.profile;
-		if (type === 'music_release') return urls.musicLibrary + '?releases';
-		if (type === 'book_release') return urls.bookLibrary + '?releases';
-		if (type === 'movie_release') return urls.movieLibrary + '?releases';
-		if (type === 'dev_request_comment') return urls.devRequests;
-		if (type === 'calendar_share') return urls.calendar;
-		if (type === 'daily_check_in_reminder')
-			return urls.checkInDate.replace('[date]', notification.data.date);
-		if (type === 'daily_day_reminder') return urls.calendar;
-		if (type === 'export_ready') return urls.settings;
-
-		return '';
+	destroy(): void {
+		this.stopPolling();
+		if (this.visibilityHandler) {
+			document.removeEventListener('visibilitychange', this.visibilityHandler);
+			this.visibilityHandler = null;
+		}
 	}
 
-	getPageSlug(type: UserNotificationType): string {
-		if (type === 'friend_request') {
-			return 'profile';
+	private stopPolling(): void {
+		if (this.pollInterval !== null) {
+			clearInterval(this.pollInterval);
+			this.pollInterval = null;
 		}
-
-		return '';
 	}
 
 	getUnread(): UserNotification[] {
@@ -53,6 +68,14 @@ export class UserNotifications {
 
 	async markRead(notification: UserNotification): Promise<void> {
 		await this.apiService.update(apiRoutes.notifications.markRead, notification.id, {});
+	}
+
+	async markAllRead(): Promise<void> {
+		await this.apiService.create(apiRoutes.notifications.markAllRead, {});
+		this.notifications = this.notifications.map((n) => ({
+			...n,
+			read_at: n.read_at ?? new Date().toISOString()
+		}));
 	}
 }
 

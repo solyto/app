@@ -4,6 +4,7 @@
 	import ManagePushNotifications from '$lib/components/settings/notifications/ManagePushNotifications.svelte';
 	import ManageNotificationTypes from '$lib/components/settings/notifications/ManageNotificationTypes.svelte';
 	import TelegramBotConnection from '$lib/components/settings/TelegramBotConnection.svelte';
+	import { PLATFORM } from '$lib/config/platform';
 
 	const ts = getTranslation();
 </script>
@@ -13,9 +14,11 @@
 		<SettingsSection label={ts.get.settings.telegram_bot}>
 			<TelegramBotConnection />
 		</SettingsSection>
-		<SettingsSection label={ts.get.settings.push_notifications}>
-			<ManagePushNotifications />
-		</SettingsSection>
+		{#if PLATFORM === 'web'}
+			<SettingsSection label={ts.get.settings.push_notifications}>
+				<ManagePushNotifications />
+			</SettingsSection>
+		{/if}
 	</div>
 
 	<div class="md:p-4">

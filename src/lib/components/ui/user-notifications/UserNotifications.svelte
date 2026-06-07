@@ -4,7 +4,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import { getUserNotifications } from '$lib/state/UserNotifications.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import Entry from '$lib/components/ui/user-notifications/Entry.svelte';
 
@@ -13,6 +13,10 @@
 
 	onMount(async () => {
 		await userNotifications.load();
+	});
+
+	onDestroy(() => {
+		userNotifications.destroy();
 	});
 
 
@@ -29,9 +33,7 @@
 		open = !open;
 
 		if (open) {
-			for (const notification of userNotifications.notifications) {
-				await userNotifications.markRead(notification);
-			}
+			await userNotifications.markAllRead();
 		}
 	}
 

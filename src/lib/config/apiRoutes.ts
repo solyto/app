@@ -248,6 +248,7 @@ export const apiRoutes = {
 	notifications: {
 		list: API_URL + '/notifications',
 		markRead: API_URL + '/notifications/%s/read',
+		markAllRead: API_URL + '/notifications/read-all',
 		push: {
 			getVapidKey: API_URL + '/notifications/push/vapid-key',
 			subscribe: API_URL + '/notifications/push/subscribe',

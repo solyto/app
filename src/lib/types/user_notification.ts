@@ -1,20 +1,8 @@
-export type UserNotificationType =
-	| 'friend_request'
-	| 'music_release'
-	| 'book_release'
-	| 'dev_request_comment'
-	| 'calendar_share'
-	| 'daily_check_in_reminder'
-	| 'daily_day_reminder'
-	| 'export_ready'
-	| 'movie_release'
-	| 'other';
-
 export interface UserNotification {
 	id: string;
-	type: UserNotificationType;
-	data: Record<string, string>;
-	read_at: string;
+	title: string;
+	body: string;
+	link: string | null;
+	read_at: string | null;
 	created_at: string;
-	updated_at: string;
 }
