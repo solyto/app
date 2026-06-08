@@ -17,8 +17,8 @@
 	let vapidPublicKey = $state<string>('');
 
 	onMount(async () => {
-		const res = await apiService.list(apiRoutes.notifications.push.getVapidKey);
-		if (res?.data) vapidPublicKey = res.data;
+		const res = await apiService.get(apiRoutes.notifications.push.getVapidKey, null);
+		if (res?.data) vapidPublicKey = (res.data as { public_key: string }).public_key;
 
 		await checkPushSubscription();
 	});

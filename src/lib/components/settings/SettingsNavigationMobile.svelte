@@ -32,7 +32,7 @@
 			class="flex shrink-0 items-center justify-between border-b border-c-neutral-2 p-4 dark:border-s-dark-3"
 		>
 			<span class="text-2xl font-bold">Settings</span>
-			<CloseButton onClick={() => (open = false)} inModal={false} />
+			<CloseButton onClick={() => { open = false; }} inModal={false} />
 		</div>
 		<div class="flex-1 overflow-y-auto">
 			{#each sections as section (section.id)}

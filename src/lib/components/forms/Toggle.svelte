@@ -17,8 +17,8 @@
 		type="checkbox"
 		class="peer sr-only h-4 w-4 rounded-sm border-c-neutral-3 bg-c-neutral-1 focus:ring-2 dark:border-c-neutral-6 dark:bg-c-neutral-7 dark:ring-offset-gray-800"
 		bind:checked
-		onchange={(value: boolean) => {
-			onchange(value);
+		onchange={(event: Event) => {
+			onchange((event.currentTarget as HTMLInputElement).checked);
 		}}
 	/>
 	<span

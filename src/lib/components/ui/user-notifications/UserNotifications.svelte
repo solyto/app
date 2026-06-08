@@ -21,7 +21,7 @@
 	let x = $state<number>(0);
 	let y = $state<number>(0);
 
-	async function toggleOpen(e: MouseEvent): void {
+	async function toggleOpen(e: MouseEvent): Promise<void> {
 		if (userNotifications.notifications.length === 0) return;
 
 		x = e.clientX + 45;

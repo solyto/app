@@ -117,8 +117,8 @@
 			[key]: newValue
 		});
 
-		if (res?.data) {
-			settings = res.data as NotificationSettings;
+		if (res) {
+			settings = { ...settings, [key]: newValue };
 		}
 		updating = false;
 	}

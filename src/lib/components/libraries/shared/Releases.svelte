@@ -31,7 +31,7 @@
 		}
 	});
 
-	async function toggleModal(): void {
+	async function toggleModal(): Promise<void> {
 		modalOpen = !modalOpen;
 
 		if (modalOpen && !library.releasesLoaded) {

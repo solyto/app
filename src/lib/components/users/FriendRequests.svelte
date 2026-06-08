@@ -4,6 +4,7 @@
 	import Heading from '$lib/components/ui/Heading.svelte';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import type { FriendRequest } from '$lib/types/friend';
+	import type { ProfileRecords } from '$lib/types/translation';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import AcceptButton from '$lib/components/ui/buttons/AcceptButton.svelte';
@@ -70,7 +71,7 @@
 					class:text-white={request.status === 'rejected' ||
 						request.status === 'accepted'}
 				>
-					{ts.get.profile['request_' + request.status]}
+					{ts.get.profile[('request_' + request.status) as keyof ProfileRecords]}
 				</div>
 			</div>
 		{/each}

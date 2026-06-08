@@ -20,7 +20,7 @@
 	function getSelected(name: string): AddressBook | null {
 		if (name === '') return null;
 
-		return availableAddressBooks.find((c) => c.name === name) || null;
+		return availableAddressBooks.find((c: AddressBook) => c.name === name) || null;
 	}
 </script>
 

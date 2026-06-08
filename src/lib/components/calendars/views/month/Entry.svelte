@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { blur } from 'svelte/transition';
 	import { formatTime } from '$lib/helpers/DateHelper';
-	import type { Event } from '$lib/types/calendar';
+	import type { CalendarEvent } from '$lib/types/calendar';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 
 	const calendars = getCalendars();
 
-	let { item, date } = $props<{ item: Event; date: Date }>();
+	let { item, date } = $props<{ item: CalendarEvent; date: Date }>();
 </script>
 
 {#if !calendars.isCalendarHidden(parseInt(item.calendar_id))}

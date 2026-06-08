@@ -10,7 +10,7 @@
 		EventForm,
 		CreateEventRequest,
 		UpdateEventRequest,
-		Event
+		CalendarEvent
 	} from '$lib/types/calendar';
 	import SvelteDateInput from '$lib/components/forms/SvelteDateInput.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';

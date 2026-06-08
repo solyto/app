@@ -6,7 +6,7 @@
 	const clipId = `dc-${id}`;
 
 	const fillMap: Record<0 | 25 | 50 | 75 | 100, number> = { 0: 0, 25: 18, 50: 36, 75: 58, 100: 100 };
-	const pct = $derived(fillMap[fill]);
+	const pct = $derived(fillMap[fill as 0 | 25 | 50 | 75 | 100]);
 	const rectY = $derived((1 - pct / 100) * 24);
 	const rectH = $derived((pct / 100) * 24);
 </script>

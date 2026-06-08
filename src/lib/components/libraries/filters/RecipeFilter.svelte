@@ -12,7 +12,7 @@
 
 	let submenuVisible = $state<boolean>(false);
 
-	const typeOptions: { key: string; label: string }[] = [
+	const typeOptions: { key: RecipeType; label: string }[] = [
 		{ key: 'breakfast', label: ts.get.libraries.recipes.type_breakfast },
 		{ key: 'lunch', label: ts.get.libraries.recipes.type_lunch },
 		{ key: 'dinner', label: ts.get.libraries.recipes.type_dinner },

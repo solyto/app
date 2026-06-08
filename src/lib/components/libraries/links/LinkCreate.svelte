@@ -19,7 +19,7 @@
 
 	let titleValue = $state<string>('');
 	let urlValue = $state<string>('');
-	let selectedTags = $state([]);
+	let selectedTags = $state<string[]>([]);
 
 	const tagOptions: { label: string; value: string }[] = tags.tags.map((tag) => ({
 		label: tag.name,
@@ -32,7 +32,7 @@
 		const request: CreateLinkRequest = {
 			title: titleValue || null,
 			url: urlValue,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null
+			tags: selectedTags.length > 0 ? selectedTags.map((tag) => Number(tag)) : undefined
 		};
 		const ok = await library.create(request);
 		if (ok) {

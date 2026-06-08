@@ -3,7 +3,7 @@
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getDateDiffInMinutes } from '$lib/helpers/DateHelper';
-	import type { Event } from '$lib/types/calendar';
+	import type { CalendarEvent } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 
 	const calendars = getCalendars();
@@ -25,7 +25,7 @@
 		}))
 	);
 
-	function getTop(entry: Event): string {
+	function getTop(entry: CalendarEvent): string {
 		if (entry.start_date?.getMinutes() === 0) {
 			return '0';
 		}
@@ -33,7 +33,7 @@
 		return entry.start_date?.getMinutes() + '%';
 	}
 
-	function getHeight(entry: Event): string {
+	function getHeight(entry: CalendarEvent): string {
 		if (!entry.end_date) {
 			return '65%';
 		}

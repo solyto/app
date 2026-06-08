@@ -50,7 +50,7 @@
 		await onsubmit();
 	}
 
-	function handleEscape(event: KeyboardEvent): Promise<void> {
+	function handleEscape(event: KeyboardEvent): void {
 		onblur();
 	}
 

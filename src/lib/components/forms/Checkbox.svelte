@@ -5,7 +5,7 @@
 		class: customClass = ''
 	} = $props<{
 		isChecked: boolean;
-		onchange?: () => void;
+		onchange?: (event: Event) => void;
 		class?: string;
 	}>();
 </script>

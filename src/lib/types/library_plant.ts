@@ -33,7 +33,7 @@ export interface CreatePlantRequest {
 }
 
 export interface UpdatePlantRequest {
-	name?: string;
+	name?: string | null;
 	latin_name?: string | null;
 	location?: PlantLocation | null;
 	sunlight?: PlantSunlight | null;

@@ -25,7 +25,7 @@ export interface CalendarSharee {
 	status: 'pending' | 'accepted' | 'declined';
 }
 
-export interface Event {
+export interface CalendarEvent {
 	id: number;
 	uri: string;
 	title: string;
@@ -50,7 +50,7 @@ export interface CalendarDay {
 	number: number;
 	weekday: number;
 	date: Date;
-	entries: Event[];
+	entries: CalendarEvent[];
 	is_grayed_out: boolean;
 }
 

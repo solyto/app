@@ -65,7 +65,8 @@
 		groups = [...groups];
 
 		if (firstTick) {
-			await handleStatusChange(e.detail.info.id, e.target.dataset.status);
+			const status = (e.target as HTMLElement | null)?.dataset.status as TodoStatus;
+			await handleStatusChange(e.detail.info.id, status);
 		}
 
 		firstTick = !firstTick;

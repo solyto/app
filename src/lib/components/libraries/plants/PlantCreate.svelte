@@ -23,7 +23,7 @@
 
 	let activeEntry = $state<Plant | null>(library.activeEntry);
 
-	let nameValue = $state<string>(activeEntry ? activeEntry.name : '');
+	let nameValue = $state<string>(activeEntry?.name ?? '');
 	let latinNameValue = $state<string>(activeEntry?.latin_name ?? '');
 	let locationValue = $state<string>(activeEntry?.location ?? '');
 	let sunlightValue = $state<string>(activeEntry?.sunlight ?? '');

@@ -181,7 +181,6 @@
 				{#if isAdmin}
 					{#if changeDescription}
 						<textarea
-							type="text"
 							class="w-full dark:bg-s-dark-3 dark:text-white"
 							{onblur}
 							bind:this={descriptionInput}

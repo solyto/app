@@ -1,6 +1,6 @@
 import type {
 	Calendar,
-	Event,
+	CalendarEvent,
 	CalendarWeek,
 	CalendarMonth,
 	UpdateCalendarRequest,
@@ -32,8 +32,8 @@ export class Calendars {
 	static readonly LS_VIEW_KEY: string = 'calendars_view';
 
 	calendars = $state<Calendar[]>([]);
-	events = $state<Event[]>([]);
-	sortedEvents = $state<Record<string, Event[]>>({});
+	events = $state<CalendarEvent[]>([]);
+	sortedEvents = $state<Record<string, CalendarEvent[]>>({});
 	todos = $state<Todo[]>([]);
 	month = $state<CalendarMonth>({ weeks: [] });
 	currentWeek = $state<number>(0);
@@ -47,7 +47,7 @@ export class Calendars {
 	isSyncing = $state<boolean>(false);
 	lastSync = $state<number | null>(null);
 	view = $state<'month' | 'week' | 'day' | 'list'>('month');
-	activeEvent = $state<Event | null>(null);
+	activeEvent = $state<CalendarEvent | null>(null);
 	activeEventTodos = $state<Todo[]>([]);
 	activeEventNotes = $state<Note[]>([]);
 	availableNotes = $state<Note[]>([]);
@@ -111,10 +111,10 @@ export class Calendars {
 			)
 		);
 		if (res) {
-			const newEvents: Event[] = [];
-			const newSortedEvents: Record<string, Event[]> = {};
+			const newEvents: CalendarEvent[] = [];
+			const newSortedEvents: Record<string, CalendarEvent[]> = {};
 
-			for (const item of res.data as Event[]) {
+			for (const item of res.data as CalendarEvent[]) {
 				const start_date = item.start_date ? new SvelteDate(item.start_date) : null;
 				const end_date = item.end_date ? new SvelteDate(item.end_date) : null;
 				const recurrence_end = item.recurrence_end
@@ -132,7 +132,7 @@ export class Calendars {
 					original_start_date
 				};
 
-				newEvents.push(<Event>itemWithDates);
+				newEvents.push(<CalendarEvent>itemWithDates);
 
 				if (start_date !== null) {
 					const dateSlug = formatDate(start_date);
@@ -141,7 +141,7 @@ export class Calendars {
 						newSortedEvents[dateSlug] = [];
 					}
 
-					newSortedEvents[dateSlug].push(<Event>itemWithDates);
+					newSortedEvents[dateSlug].push(<CalendarEvent>itemWithDates);
 
 					if (
 						item.is_all_day &&
@@ -157,7 +157,7 @@ export class Calendars {
 							if (!newSortedEvents[dateSlug]) {
 								newSortedEvents[dateSlug] = [];
 							}
-							newSortedEvents[dateSlug].push(<Event>itemWithDates);
+							newSortedEvents[dateSlug].push(<CalendarEvent>itemWithDates);
 						}
 					}
 				}
@@ -168,9 +168,9 @@ export class Calendars {
 		}
 	}
 
-	async getWidgetEvents(): Promise<Event[]> {
+	async getWidgetEvents(): Promise<CalendarEvent[]> {
 		const res = await this.apiService.list(apiRoutes.calendars.listWidgetEvents);
-		if (res) return res.data as Event[];
+		if (res) return res.data as CalendarEvent[];
 		return [];
 	}
 
@@ -268,7 +268,7 @@ export class Calendars {
 		await this.loadEvents();
 	}
 
-	getEventsForDate(date: Date): Event[] {
+	getEventsForDate(date: Date): CalendarEvent[] {
 		const dateSlug = formatDate(date);
 
 		if (!this.sortedEvents[dateSlug]) {
@@ -278,7 +278,7 @@ export class Calendars {
 		return this.sortedEvents[dateSlug] ?? [];
 	}
 
-	getAllDayEventsForDate(date: Date): Event[] {
+	getAllDayEventsForDate(date: Date): CalendarEvent[] {
 		const dateSlug = formatDate(date);
 
 		if (!this.sortedEvents[dateSlug]) {
@@ -288,7 +288,7 @@ export class Calendars {
 		return this.sortedEvents[dateSlug]?.filter((e) => e.is_all_day) ?? [];
 	}
 
-	getNonAllDayEventsForDate(date: Date): Event[] {
+	getNonAllDayEventsForDate(date: Date): CalendarEvent[] {
 		const dateSlug = formatDate(date);
 
 		if (!this.sortedEvents[dateSlug]) {
@@ -330,7 +330,7 @@ export class Calendars {
 
 	async showSidebar(
 		selectedDate: Date | null = null,
-		selectedEntry: Event | null = null
+		selectedEntry: CalendarEvent | null = null
 	): Promise<void> {
 		this.hideSidebar();
 		await tick();
@@ -359,7 +359,7 @@ export class Calendars {
 		return res !== null;
 	}
 
-	async updateEvent(entry: Event, request: UpdateEventRequest): Promise<boolean> {
+	async updateEvent(entry: CalendarEvent, request: UpdateEventRequest): Promise<boolean> {
 		const res = await this.apiService.update(
 			apiRoutes.calendars.updateEvent.replace('%d', entry.calendar_id.toString()),
 			entry.uri,
@@ -369,7 +369,7 @@ export class Calendars {
 		return res;
 	}
 
-	async deleteEvent(entry: Event): Promise<boolean> {
+	async deleteEvent(entry: CalendarEvent): Promise<boolean> {
 		const res = await this.apiService.delete(
 			apiRoutes.calendars.deleteEvent.replace('%d', entry.calendar_id.toString()),
 			entry.uri
@@ -436,7 +436,7 @@ export class Calendars {
 	}
 
 	async updateOccurrence(
-		entry: Event,
+		entry: CalendarEvent,
 		request: UpdateEventRequest,
 		occurrenceDate: Date
 	): Promise<boolean> {
@@ -450,7 +450,7 @@ export class Calendars {
 		return res;
 	}
 
-	async deleteOccurrence(entry: Event, occurrenceDate: Date): Promise<boolean> {
+	async deleteOccurrence(entry: CalendarEvent, occurrenceDate: Date): Promise<boolean> {
 		const occDateStr = occurrenceDate.toISOString();
 		const url = apiRoutes.calendars.deleteOccurrence
 			.replace('%d', entry.calendar_id.toString())

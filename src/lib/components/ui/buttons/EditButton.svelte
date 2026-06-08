@@ -3,11 +3,11 @@
 
 	let {
 		onClick,
-		title,
+		title = '',
 		inModal = true
 	} = $props<{
 		onClick: Function;
-		title: string;
+		title?: string;
 		inModal?: boolean;
 	}>();
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Todo } from '$lib/types/todo';
-	import type { Event } from '$lib/types/calendar';
+	import type { CalendarEvent } from '$lib/types/calendar';
 	import { blur } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
@@ -30,7 +30,7 @@
 
 	const today = new Date();
 
-	let allEvents = $state<Event[]>([]);
+	let allEvents = $state<CalendarEvent[]>([]);
 	let todayEvents = $derived(
 		allEvents
 			.filter((e) => {
@@ -78,7 +78,7 @@
 		});
 	});
 
-	async function handleCheck(event: MouseEvent, todo: Todo): Promise<void> {
+	async function handleCheck(event: Event, todo: Todo): Promise<void> {
 		loadingIndicator.start();
 		const checkbox = event.target as HTMLInputElement;
 

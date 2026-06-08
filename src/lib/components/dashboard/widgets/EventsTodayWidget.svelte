@@ -2,10 +2,10 @@
 	import IconCalendarDays from '@lucide/svelte/icons/calendar-days';
 	import { formatTime } from '$lib/helpers/DateHelper';
 	import type { Translation } from '$lib/state/Translation.svelte';
-	import type { Event } from '$lib/types/calendar';
+	import type { CalendarEvent } from '$lib/types/calendar';
 
 	let { todayEvents, ts } = $props<{
-		todayEvents: Event[];
+		todayEvents: CalendarEvent[];
 		ts: Translation
 	}>();
 </script>
