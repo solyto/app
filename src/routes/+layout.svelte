@@ -70,10 +70,6 @@
 		window.addEventListener('resize', updateHeight);
 
 		ts.loadLanguage();
-
-		if (viewPoint.isDesktop && !isAuthRoute()) {
-			keyManager.registerKeyDown('Space', () => commandPalette.openPalette(), { priority: 0, withHelperKey: 'Control', preventOthers: true });
-		}
 	});
 
 	afterNavigate(() => {
