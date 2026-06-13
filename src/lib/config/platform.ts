@@ -10,6 +10,8 @@ export const PLATFORM: Platform = (() => {
 	return 'web';
 })();
 
+export const IS_NATIVE = PLATFORM !== 'web';
+
 export function getApiUrl(): string {
 	return PLATFORM === 'web' ? getPwaApiUrl() : getCustomApiUrl();
 }

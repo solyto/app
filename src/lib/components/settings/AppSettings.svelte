@@ -9,12 +9,16 @@
 	import IconCheckCircle from '@lucide/svelte/icons/check-circle';
 	import IconMapPin from '@lucide/svelte/icons/map-pin';
 	import { themes } from '$lib/config/themes';
+	import { env } from '$env/dynamic/public';
+	import { IS_NATIVE } from '$lib/config/platform';
 
 	const ts = getTranslation();
 	const pwa = getPwaInstall();
 	const tour = getWelcomeTour();
 	const nav = getNavigation();
 	const themeState = getThemeState();
+
+	const version = env.PUBLIC_VERSION;
 </script>
 
 <div class="flex flex-col gap-6 md:p-4">
@@ -82,4 +86,9 @@
 			</p>
 		{/if}
 	</SettingsSection>
+	{#if IS_NATIVE && version}
+		<SettingsSection label="Version">
+			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">v{version}</p>
+		</SettingsSection>
+	{/if}
 </div>
