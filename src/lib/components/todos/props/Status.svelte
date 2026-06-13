@@ -75,35 +75,35 @@
 			>
 				<button
 					type="button"
-					class="cursor-pointer rounded-lg px-2 py-1 text-xs dark:text-white {getColor('backlog')}"
+					class="cursor-pointer text-left rounded-lg px-2 py-1 text-xs dark:text-white {getColor('backlog')}"
 					onclick={() => handleStatusChange(todo, 'backlog')}
 				>
 					{getLabel('backlog')}
 				</button>
 				<button
 					type="button"
-					class="cursor-pointer rounded-lg px-2 py-1 text-xs {getColor('pending')}"
+					class="cursor-pointer text-left rounded-lg px-2 py-1 text-xs {getColor('pending')}"
 					onclick={() => handleStatusChange(todo, 'pending')}
 				>
 					{getLabel('pending')}
 				</button>
 				<button
 					type="button"
-					class="cursor-pointer rounded-lg px-2 py-1 text-xs {getColor('in-progress')}"
+					class="cursor-pointer text-left rounded-lg px-2 py-1 text-xs {getColor('in-progress')}"
 					onclick={() => handleStatusChange(todo, 'in-progress')}
 				>
 					{getLabel('in-progress')}
 				</button>
 				<button
 					type="button"
-					class="cursor-pointer rounded-lg px-2 py-1 text-xs {getColor('waiting')}"
+					class="cursor-pointer text-left rounded-lg px-2 py-1 text-xs {getColor('waiting')}"
 					onclick={() => handleStatusChange(todo, 'waiting')}
 				>
 					{getLabel('waiting')}
 				</button>
 				<button
 					type="button"
-					class="cursor-pointer rounded-lg px-2 py-1 text-xs {getColor('almost-done')}"
+					class="cursor-pointer text-left rounded-lg px-2 py-1 text-xs {getColor('almost-done')}"
 					onclick={() => handleStatusChange(todo, 'almost-done')}
 				>
 					{getLabel('almost-done')}

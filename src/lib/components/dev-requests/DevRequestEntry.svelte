@@ -30,9 +30,12 @@
 
 	const isAdmin = auth.isAdmin();
 
-	let { entry } = $props<{ entry: DevRequest }>();
+	let { entry, active = false } = $props<{
+		entry: DevRequest;
+		active?: boolean;
+	}>();
 
-	let open = $state<boolean>(false);
+	let open = $state<boolean>(active);
 	let titleInput = $state<HTMLInputElement | null>(null);
 	let titleValue = $state<string>(entry.title);
 	let descriptionInput = $state<HTMLTextAreaElement | null>(null);
@@ -189,7 +192,7 @@
 					{:else}
 						<button
 							type="button"
-							class="w-full cursor-pointer pt-4"
+							class="w-full cursor-pointer pt-4 text-left"
 							ondblclick={() => toggleChange('description')}
 						>
 							{@html DOMPurify.sanitize(nl2br(entry.description))}

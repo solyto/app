@@ -88,7 +88,7 @@
 	</SettingsSection>
 	{#if IS_NATIVE && version}
 		<SettingsSection label="Version">
-			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">v{version}</p>
+			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{version}</p>
 		</SettingsSection>
 	{/if}
 </div>

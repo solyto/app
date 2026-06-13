@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import Divider from '$lib/components/ui/Divider.svelte';
@@ -13,6 +14,7 @@
 	const loadingIndicator = getLoadingIndicator();
 
 	let createOpen = $state<boolean>(false);
+	let openedEntry = $derived<number | null>(page.params.id ? parseInt(page.params.id) : null);
 
 	onMount(async () => {
 		loadingIndicator.start();
@@ -38,7 +40,7 @@
 	</div>
 	<div class="flex flex-col gap-2 px-2">
 		{#each devRequests.entries.filter((e) => e.status !== 'completed' && e.status !== 'cancelled') as entry (entry.id)}
-			<DevRequestEntry {entry} />
+			<DevRequestEntry {entry} active={openedEntry === entry.id} />
 		{/each}
 	</div>
 	<Divider />

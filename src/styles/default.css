@@ -25,7 +25,3 @@ html.dark {
 	--color-c-neutral: var(--color-s-dark-3);
 	--color-c-border: var(--color-s-dark-3);
 }
-
-button {
-	text-align: left;
-}

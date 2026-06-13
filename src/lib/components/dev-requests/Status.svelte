@@ -24,7 +24,7 @@
 
 <button
 	onclick={changeStatus}
-	class="w-36 rounded-full px-4 py-1 text-sm text-black md:py-2 md:text-base"
+	class="w-36 rounded-full px-4 py-1 text-sm text-black md:py-2 md:text-base text-center"
 	class:cursor-pointer={editable}
 	class:bg-c-neutral-2={entry.status === 'backlog'}
 	class:bg-c-action={entry.status === 'pending'}

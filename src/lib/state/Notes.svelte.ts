@@ -15,7 +15,6 @@ import { resolve } from '$app/paths';
 import ApiService from '$lib/services/ApiService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import { browser } from '$app/environment';
 import { SvelteDate } from 'svelte/reactivity';
 
 export class NotesSvelte {

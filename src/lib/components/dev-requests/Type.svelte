@@ -8,7 +8,7 @@
 </script>
 
 <button
-	class="w-24 rounded-full px-4 py-1 text-sm text-white md:py-2 md:text-base"
+	class="w-24 rounded-full px-4 py-1 text-sm text-white md:py-2 md:text-base text-center"
 	class:bg-c-primary={entry.type === 'feature'}
 	class:bg-c-danger-hover={entry.type === 'bug'}
 >

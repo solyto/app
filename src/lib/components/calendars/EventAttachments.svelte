@@ -136,7 +136,7 @@
 				</button>
 				<button
 					type="button"
-					class="w-full cursor-pointer rounded px-4 py-2 text-left text-sm hover:bg-c-neutral-1 dark:text-white dark:hover:bg-s-dark-3"
+					class="w-full cursor-pointer text-left rounded px-4 py-2 text-left text-sm hover:bg-c-neutral-1 dark:text-white dark:hover:bg-s-dark-3"
 					onclick={pickNote}
 				>
 					{ts.get.calendar.attachment_note}
