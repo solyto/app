@@ -11,7 +11,7 @@
 	width="100%"
 	height="300"
 	frameborder="0"
-	allowtransparency="true"
+	allowtransparency={true}
 	allow="encrypted-media; clipboard-write"
 	class="rounded-lg shadow-sm"
 	in:scale

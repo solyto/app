@@ -20,7 +20,7 @@
 		modalOpen = true;
 	}
 
-	async function onConfirm(): void {
+	async function onConfirm(): Promise<void> {
 		loadingIndicator.start();
 		await todos.delete(todo);
 		notifications.success(ts.get.todos.delete_success);

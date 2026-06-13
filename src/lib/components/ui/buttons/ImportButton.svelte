@@ -1,9 +1,9 @@
 <script lang="ts">
 	import IconImport from '@lucide/svelte/icons/import';
 
-	let { onClick, title } = $props<{
+	let { onClick, title = '' } = $props<{
 		onClick: Function;
-		title: string;
+		title?: string;
 	}>();
 </script>
 

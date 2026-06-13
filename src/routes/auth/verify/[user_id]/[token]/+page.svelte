@@ -22,6 +22,7 @@
 	onMount(async () => {
 		if (!userId || !token) {
 			await goto(resolve(urls.login));
+			return;
 		}
 
 		const verification = await auth.verify({
@@ -29,7 +30,7 @@
 			token: token
 		});
 		status = verification.success;
-		errors = verification.errors || [];
+		errors = verification.errors ?? [];
 		loaded = true;
 	});
 </script>

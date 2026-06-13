@@ -162,14 +162,14 @@ export class NotesSvelte {
 		this.modalOpen = false;
 	}
 
-	openRightClickMenu(event: MouseEvent, type: 'note' | 'category', id: number): void {
+	openRightClickMenu(event: MouseEvent, type: 'note' | 'category', id: number | string): void {
 		event.preventDefault();
 
 		this.rightClickType = type;
 		this.rightClickMenuX = event.clientX;
 		this.rightClickMenuY = event.clientY;
 		this.rightClickId = id;
-		this.createParent = id;
+		this.createParent = type === 'category' ? id as number : null;
 		this.rightClickMenuOpen = true;
 	}
 

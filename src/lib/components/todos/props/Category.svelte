@@ -111,12 +111,13 @@
 	<div class="flex flex-row gap-1">
 		{#if todo.category}
 			<div class="group relative">
-				<div
+				<button
+					type="button"
 					class="cursor-pointer bg-c-neutral-1 px-2 py-1 text-xs font-semibold dark:bg-c-neutral-7 dark:text-white"
 					onclick={toggleAddCategories}
 				>
 					/{todo.category.title}
-				</div>
+				</button>
 				<button
 					class="absolute top-[-14px] right-[-14px] z-40 hidden size-[20px] cursor-pointer items-center justify-center rounded-full bg-c-danger text-white drop-shadow-md transition-all group-hover:flex hover:text-c-heading hover:drop-shadow-xl"
 					onclick={onRemove}

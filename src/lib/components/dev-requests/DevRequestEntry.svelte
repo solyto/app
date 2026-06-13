@@ -136,9 +136,9 @@
 						bind:value={titleValue}
 					/>
 				{:else}
-					<span ondblclick={() => toggleChange('title')} class="cursor-pointer text-lg font-bold md:text-base"
-						>{entry.title}</span
-					>
+					<button type="button" ondblclick={() => toggleChange('title')} class="cursor-pointer text-lg font-bold md:text-base">
+						{entry.title}
+					</button>
 				{/if}
 			{:else}
 				<span class="text-lg font-bold md:text-base">{entry.title}</span>
@@ -181,19 +181,19 @@
 				{#if isAdmin}
 					{#if changeDescription}
 						<textarea
-							type="text"
 							class="w-full dark:bg-s-dark-3 dark:text-white"
 							{onblur}
 							bind:this={descriptionInput}
 							bind:value={descriptionValue}
 						></textarea>
 					{:else}
-						<div
+						<button
+							type="button"
 							class="w-full cursor-pointer pt-4"
 							ondblclick={() => toggleChange('description')}
 						>
 							{@html DOMPurify.sanitize(nl2br(entry.description))}
-						</div>
+						</button>
 					{/if}
 				{:else}
 					<div class="w-full pt-4">

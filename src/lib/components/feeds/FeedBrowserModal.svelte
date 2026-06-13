@@ -107,7 +107,7 @@
 	}
 </script>
 
-<ContentModal title={ts.get.feeds.browse_feeds} onClose={() => (feeds.browseOpen = false)} rounded="2xl" p="8" width="3xl">
+<ContentModal title={ts.get.feeds.browse_feeds} onClose={() => { feeds.browseOpen = false; }} rounded="2xl" p="8" width="3xl">
 	<div class="flex flex-col gap-6">
 		<TextInput
 			bind:value={query}

@@ -14,7 +14,7 @@
 
 	let hex = $state<string>(tag.color !== null ? tag.color : 'var(--color-c-neutral-2)');
 
-	async function onColorChange(): void {
+	async function onColorChange(): Promise<void> {
 		if (hex === tag.color) return;
 
 		loadingIndicator.start();

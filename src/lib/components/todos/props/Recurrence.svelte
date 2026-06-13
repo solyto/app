@@ -127,8 +127,9 @@
 		</div>
 
 		<div class="flex flex-col gap-1 text-xs">
-			<label class="text-c-neutral-5 dark:text-c-neutral-4">{ts.get.todos.recurrence_ends_at}</label>
+			<label for="recurrence-ends-at" class="text-c-neutral-5 dark:text-c-neutral-4">{ts.get.todos.recurrence_ends_at}</label>
 			<input
+				id="recurrence-ends-at"
 				type="date"
 				bind:value={selectedEndsAt}
 				class="rounded border border-c-neutral-2 bg-transparent px-2 py-1 dark:border-s-dark"

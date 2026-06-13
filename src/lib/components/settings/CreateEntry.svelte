@@ -16,7 +16,7 @@
 		useAddButton = false
 	} = $props<{
 		label: string;
-		create: (title: string) => void | Promise<void> | Promise<boolean>;
+		create: (title: string) => unknown;
 		buttonType?: 'plain' | 'slight' | 'btn';
 		useAddButton?: boolean;
 	}>();

@@ -40,38 +40,40 @@
 	</div>
 
 	<div class="p-4 lg:p-0">
-		<a
-			href="#"
+		<button
+			type="button"
+			class="w-full cursor-pointer text-left"
 			onclick={() => {
 				feeds.selectFeed(null);
 				handleNavigation();
 			}}
 		>
 			<div
-				class="cursor-pointer rounded-lg p-2 hover:bg-c-neutral-1 dark:hover:bg-s-dark-3 {feeds.activeFeed ===
-				null
-					? 'bg-c-neutral-1 dark:bg-s-dark-3'
-					: ''}"
+				class="
+					rounded-lg p-2 hover:bg-c-neutral-1 dark:hover:bg-s-dark-3
+					{feeds.activeFeed === null ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}
+				"
 			>
 				{ts.get.feeds.all_feeds}
 			</div>
-		</a>
+		</button>
 		<div class="mt-2 p-2 text-base font-bold 2xl:text-2xl 2xl:font-normal">
 			{ts.get.feeds.feeds}
 		</div>
 		{#each feeds.feeds as feed (feed.id)}
-			<a
-				href="#"
+			<button
+				type="button"
+				class="w-full cursor-pointer text-left"
 				onclick={() => {
 					feeds.selectFeed(feed);
 					handleNavigation();
 				}}
 			>
 				<div
-					class="relative mr-1 max-md:mr-4 cursor-pointer rounded-lg p-2 hover:bg-c-neutral-1 dark:hover:bg-s-dark-3 {feeds.activeFeed !==
-						null && feeds.activeFeed.id === feed.id
-						? 'bg-c-neutral-1 dark:bg-s-dark-3'
-						: ''}"
+					class="
+						relative mr-1 max-md:mr-4 rounded-lg p-2 hover:bg-c-neutral-1 dark:hover:bg-s-dark-3
+						{feeds.activeFeed !== null && feeds.activeFeed.id === feed.id ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}
+					"
 				>
 					<Badge
 						i={feeds.getFeedCount(feed)}
@@ -81,7 +83,7 @@
 					/>
 					{feed.title}
 				</div>
-			</a>
+			</button>
 		{/each}
 		<Divider />
 		<div class="flex flex-col gap-1 text-sm">

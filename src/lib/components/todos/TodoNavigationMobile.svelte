@@ -184,7 +184,7 @@
 							{/if}
 						</div>
 					{:else}
-						{@const section = sections.find((s) => s.header === sectionHeaders.find((h) => h.key === current)?.label)}
+						{@const section = sections.find((s: TodoNavigationSection) => s.header === sectionHeaders.find((h) => h.key === current)?.label)}
 						<div class="flex shrink-0 items-center justify-between border-b border-c-neutral-2 p-4 dark:border-s-dark-3">
 							<div class="flex items-center gap-3">
 								<button

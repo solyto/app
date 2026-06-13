@@ -1,6 +1,12 @@
 <script lang="ts">
+	interface Tab {
+		id: number;
+		title: string;
+		component: any;
+	}
+
 	let { tabs } = $props<{
-		tabs: { id: number; title: string; component: any }[];
+		tabs: Tab[];
 		defaultTab?: string;
 	}>();
 
@@ -26,6 +32,6 @@
 		{/each}
 	</div>
 	<div class="min-h-72 rounded-b-lg py-4">
-		{@render tabs.find((tab) => tab.id === selected)?.component?.()}
+		{@render tabs.find((tab: Tab) => tab.id === selected)?.component?.()}
 	</div>
 </div>

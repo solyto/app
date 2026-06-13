@@ -62,7 +62,7 @@
 			<InlineEditButton onClick={() => onEdit?.(entry)} />
 		{/if}
 		{#if showDelete}
-			<InlineDeleteButton onClick={() => tt.deleteEntry(entry.id)} />
+			<InlineDeleteButton onClick={() => { tt.deleteEntry(entry.id); }} />
 		{/if}
 	</div>
 </div>

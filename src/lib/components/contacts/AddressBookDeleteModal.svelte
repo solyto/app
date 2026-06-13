@@ -13,7 +13,7 @@
 		description={ts.get.calendar.delete_description}
 		type="confirm-delete"
 		onConfirm={() => {
-			contacts.deleteAddressBook(contacts.activeAddressBook);
+			contacts.deleteAddressBook(contacts.activeAddressBook!);
 		}}
 		onCancel={() => {
 			contacts.deleteModal = false;

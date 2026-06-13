@@ -34,7 +34,7 @@
 				<div class="text-sm break-all">
 					{ts.get.settings.telegram_bot_integration_success.replace(
 						'%s',
-						request.chat_id
+						request.chat_id ?? ''
 					)}
 				</div>
 			{:else}

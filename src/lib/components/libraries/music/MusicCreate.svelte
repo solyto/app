@@ -31,16 +31,16 @@
 
 	let titleValue = $state<string>(activeEntry ? activeEntry.title : '');
 	let artistValue = $state<string>(activeEntry ? activeEntry.artist : '');
-	let publicationYearValue = $state<string>(activeEntry ? activeEntry.publication_year : '');
-	let acquiredWhereValue = $state<string>(activeEntry ? activeEntry.acquired_where : '');
-	let additionalInfoValue = $state<string>(activeEntry ? activeEntry.additional_info : '');
+	let publicationYearValue = $state<number | null>(activeEntry?.publication_year ?? null);
+	let acquiredWhereValue = $state<string>(activeEntry?.acquired_where ?? '');
+	let additionalInfoValue = $state<string>(activeEntry?.additional_info ?? '');
 	let coverValue = $state<string>('');
-	let linkValue = $state<string>(activeEntry ? activeEntry.link : '');
-	let typeValue = $state<string>(activeEntry ? activeEntry.type : '');
-	let formatValue = $state<string>(activeEntry ? activeEntry.format : '');
-	let conditionValue = $state<string>(activeEntry ? activeEntry.condition : '');
-	let selectedGenres = $state(activeEntry ? activeEntry.genres.map((genre) => ({ label: genre.title, value: genre.id })) : []);
-	let selectedRating = $state(activeEntry ? activeEntry.rating : 0);
+	let linkValue = $state<string>(activeEntry?.link ?? '');
+	let typeValue = $state<string>(activeEntry?.type ?? '');
+	let formatValue = $state<string>(activeEntry?.format ?? '');
+	let conditionValue = $state<string>(activeEntry?.condition ?? '');
+	let selectedGenres = $state<string[]>(activeEntry ? activeEntry.genres.map((g) => g.id.toString()) : []);
+	let selectedRating = $state(activeEntry?.rating ?? 0);
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
 	let linkInput = $state<HTMLInputElement | null>(null);
 	let importLoading = $state<boolean>(false);
@@ -68,7 +68,7 @@
 
 	const genreOptions: { label: string; value: string }[] = library.genres.map((genre) => ({
 		label: genre.title,
-		value: genre.id
+		value: genre.id.toString()
 	}));
 
 	async function onsubmit(): Promise<void> {
@@ -85,14 +85,14 @@
 		const request: CreateMusicRequest = {
 			title: titleValue,
 			artist: artistValue,
-			genres: selectedGenres.length > 0 ? selectedGenres.map((genre) => genre.value) : null,
+			genres: selectedGenres.map((v) => parseInt(v)),
 			type: typeValue !== '' ? typeValue : null,
 			format: formatValue !== '' ? formatValue : null,
 			condition: conditionValue != '' ? conditionValue : null,
-			publication_year: publicationYearValue !== '' ? parseInt(publicationYearValue) : null,
+			publication_year: publicationYearValue,
 			acquired_where: acquiredWhereValue != '' ? acquiredWhereValue : null,
 			additional_info: additionalInfoValue != '' ? additionalInfoValue : null,
-			wishlist: isWishlist ? isWishlist : false,
+			wishlist: isWishlist,
 			rating: selectedRating > 0 ? selectedRating : null,
 			cover_path: coverValue != '' ? coverValue : null,
 			link: linkValue != '' ? linkValue : null
@@ -125,19 +125,19 @@
 		const request: UpdateMusicRequest = {
 			title: titleValue,
 			artist: artistValue,
-			genres: selectedGenres.length > 0 ? selectedGenres.map((genre) => genre.value) : null,
+			genres: selectedGenres.map((v) => parseInt(v)),
 			type: typeValue !== '' ? typeValue : null,
 			format: formatValue !== '' ? formatValue : null,
 			condition: conditionValue != '' ? conditionValue : null,
-			publication_year: publicationYearValue !== '' ? parseInt(publicationYearValue) : null,
+			publication_year: publicationYearValue,
 			acquired_where: acquiredWhereValue != '' ? acquiredWhereValue : null,
 			additional_info: additionalInfoValue != '' ? additionalInfoValue : null,
-			wishlist: isWishlist ? isWishlist : false,
+			wishlist: isWishlist,
 			rating: selectedRating > 0 ? selectedRating : null,
 			...(coverValue !== '' ? { cover_path: coverValue } : {}),
 			link: linkValue != '' ? linkValue : null
 		};
-		const ok = await library.update(activeEntry, request);
+		const ok = await library.update(activeEntry!, request);
 		if (ok) {
 			library.closeCreateModal();
 			await library.load();
@@ -173,7 +173,7 @@
 		artistValue = album.artist;
 		titleValue = album.title;
 		coverValue = album.cover;
-		publicationYearValue = album.release_date.slice(0, 4);
+		publicationYearValue = parseInt(album.release_date.slice(0, 4));
 		formatValue = album.record_type;
 
 		if (album.genres.length > 0) {
@@ -184,7 +184,7 @@
 					continue;
 				}
 
-				selectedGenres.push({ label: genre, value: existing.id });
+				selectedGenres.push(existing.id.toString());
 			}
 		}
 
@@ -219,7 +219,7 @@
 		coverValue = album.cover;
 
 		if (album.release_date) {
-			publicationYearValue = album.release_date.slice(0, 4);
+			publicationYearValue = parseInt(album.release_date.slice(0, 4));
 		}
 
 		if (album.genres.length > 0) {
@@ -230,7 +230,7 @@
 					continue;
 				}
 
-				selectedGenres.push({ label: genre, value: existing.id });
+				selectedGenres.push(existing.id.toString());
 			}
 		}
 
@@ -245,7 +245,7 @@
 		: ts.get.libraries.music.add_album}
 	{library}
 	existingCover={activeEntry && activeEntry.cover
-		? `${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${activeEntry.cover}`
+		? `${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${activeEntry.cover}`
 		: null}
 	newCover={coverValue}
 	bind:selectedRating

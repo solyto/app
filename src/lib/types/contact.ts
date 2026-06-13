@@ -17,7 +17,7 @@ export interface ContactEmail {
 }
 
 export interface Contact {
-	uid: number;
+	uid: string;
 	uri: string;
 	full_name: string;
 	first_name: string;
@@ -43,22 +43,22 @@ export interface Contact {
 
 export interface CreateContactForm {
 	address_book_id: number;
-	first_name: string | null;
-	last_name: string | null;
-	middle_name: string | null;
-	prefix: string | null;
-	suffix: string | null;
-	email: ContactEmail[] | null;
-	phone: ContactPhone[] | null;
-	groups: string | null;
-	organization: string | null;
-	title: string | null;
-	note: string | null;
-	street: string | null;
-	city: string | null;
-	state: string | null;
-	postal_code: string | null;
-	country: string | null;
+	first_name: string;
+	last_name: string;
+	middle_name: string;
+	prefix: string;
+	suffix: string;
+	email: ContactEmail[];
+	phone: ContactPhone[];
+	groups: string;
+	organization: string;
+	title: string;
+	note: string;
+	street: string;
+	city: string;
+	state: string;
+	postal_code: string;
+	country: string;
 }
 
 export interface CreateContactRequest {

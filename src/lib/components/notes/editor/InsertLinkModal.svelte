@@ -25,15 +25,15 @@
 <Modal title={ts.get.notes.insert_link} onConfirm={confirm} onCancel={onCancel} width="w-112">
 	<div class="flex flex-col gap-3">
 		<div>
-			<label class="mb-1 block text-sm text-c-neutral-5 dark:text-c-neutral-4">
+			<span class="mb-1 block text-sm text-c-neutral-5 dark:text-c-neutral-4">
 				{ts.get.notes.insert_link_url}
-			</label>
+			</span>
 			<TextInput bind:value={urlValue} placeholder="https://" onblur={() => {}} />
 		</div>
 		<div>
-			<label class="mb-1 block text-sm text-c-neutral-5 dark:text-c-neutral-4">
+			<span class="mb-1 block text-sm text-c-neutral-5 dark:text-c-neutral-4">
 				{ts.get.notes.insert_link_name}
-			</label>
+			</span>
 			<TextInput bind:value={nameValue} placeholder={ts.get.notes.insert_link_name} onblur={() => {}} />
 		</div>
 	</div>

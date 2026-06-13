@@ -88,13 +88,13 @@
 							<MissingCover {library} />
 							{#if entry.cover}
 								<CoverImage
-									src={`${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${previewFilename(entry.cover)}`}
+									src={`${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${previewFilename(entry.cover)}`}
 									alt=""
 									class="pointer-events-none absolute inset-0 top-0 left-0 h-full w-full object-cover opacity-10 blur-xs"
 								/>
 								<CoverImage
-									src={`${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${entry.cover}`}
-									previewSrc={`${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${previewFilename(entry.cover)}`}
+									src={`${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${entry.cover}`}
+									previewSrc={`${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${previewFilename(entry.cover)}`}
 									alt="Cover"
 									class="z-30 max-h-full max-w-full rounded-sm object-contain"
 								/>

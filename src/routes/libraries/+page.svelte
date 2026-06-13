@@ -3,7 +3,6 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { LibraryType } from '$lib/types/library';
 	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
 	import { getLibraryNavigation, navigationItems } from '$lib/state/LibraryNavigation.svelte';
 
 	const ts = getTranslation();
@@ -17,7 +16,7 @@
 			class="w-44 cursor-pointer max-sm:w-full"
 			onclick={() => {
 				setActiveLibrary(item.type);
-				goto(resolve(item.url));
+				goto(item.url);
 			}}
 		>
 			<Card

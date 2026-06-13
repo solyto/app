@@ -14,7 +14,7 @@
 	const linkLibrary = getLinkLibrary();
 	const feeds = getFeeds();
 
-	async function saveToLibrary(e): Promise<void> {
+	async function saveToLibrary(e: Event): Promise<void> {
 		e.preventDefault();
 
 		if (feeds.isInLibrary(item.id)) {

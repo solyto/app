@@ -30,7 +30,7 @@
 			library.config.type === 'plants'}
 	>
 		<img
-			src={`${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${entry.cover}`}
+			src={`${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${entry.cover}`}
 			alt={`${entry.artist} - ${entry.title} cover`}
 			class="max-h-full max-w-full rounded-lg object-contain transition-all duration-300"
 		/>

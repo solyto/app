@@ -63,9 +63,9 @@
 
 	<div class="space-y-5">
 		<div>
-			<label class="mb-2 block text-sm font-medium text-c-neutral-7 dark:text-c-neutral-3">
+			<span class="mb-2 block text-sm font-medium text-c-neutral-7 dark:text-c-neutral-3">
 				{ts.get.settings.language}
-			</label>
+			</span>
 			<div class="grid grid-cols-4 gap-2">
 				{#each languages as lang}
 					<button
@@ -81,9 +81,9 @@
 			</div>
 		</div>
 		<div>
-			<label class="mb-2 block text-sm font-medium text-c-neutral-7 dark:text-c-neutral-3">
+			<span class="mb-2 block text-sm font-medium text-c-neutral-7 dark:text-c-neutral-3">
 				{ts.get.settings.date_format}
-			</label>
+			</span>
 			<div class="grid grid-cols-2 gap-2">
 				{#each dateFormats as format}
 					<button
@@ -99,9 +99,9 @@
 			</div>
 		</div>
 		<div>
-			<label class="mb-2 block text-sm font-medium text-c-neutral-7 dark:text-c-neutral-3">
+			<span class="mb-2 block text-sm font-medium text-c-neutral-7 dark:text-c-neutral-3">
 				{ts.get.settings.time_format}
-			</label>
+			</span>
 			<div class="grid grid-cols-3 gap-2">
 				{#each timeFormats as format}
 					<button

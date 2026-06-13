@@ -41,7 +41,7 @@
 		</div>
 	{/if}
 	<div class:hidden={entry.acquired_at === null} class="text-sm text-c-neutral-6">
-		{formatDate(entry.acquired_at)}
+		{entry.acquired_at ? formatDate(entry.acquired_at) : ''}
 	</div>
 	{#if entry.instructions}
 		<Divider />

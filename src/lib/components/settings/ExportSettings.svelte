@@ -64,10 +64,10 @@
 		}
 
 		loading = true;
-		const res: any = await apiService.postRaw(apiRoutes.export.start, { features });
+		const res = await apiService.postRaw<{ success: boolean; message?: string }>(apiRoutes.export.start, { features });
 
 		if (res.success) {
-			uiNotifications.success(res.message);
+			uiNotifications.success(res.message ?? '');
 			await loadStatus();
 		} else if (res.message) {
 			uiNotifications.error(res.message);

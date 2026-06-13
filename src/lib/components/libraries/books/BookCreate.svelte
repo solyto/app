@@ -29,38 +29,32 @@
 	let titleInput = $state<HTMLInputElement | null>(null);
 	let titleValue = $state<string>(activeEntry ? activeEntry.title : '');
 	let authorValue = $state<string>(activeEntry ? activeEntry.author : '');
-	let seriesValue = $state<string>(activeEntry ? activeEntry.series : '');
-	let volumeValue = $state<string>(activeEntry ? activeEntry.volume : '');
+	let seriesValue = $state<string>(activeEntry?.series ?? '');
+	let volumeValue = $state<number | null>(activeEntry?.volume ?? null);
 	let coverValue = $state<string>('');
-	let linkValue = $state<string>(activeEntry ? activeEntry.link : '');
-	let publicationYearValue = $state<string>(activeEntry ? activeEntry.publication_year : '');
-	let pagesValue = $state<string>(activeEntry ? activeEntry.pages : '');
-	let currentPageValue = $state<string>(activeEntry ? activeEntry.current_page : '');
-	let lentToValue = $state<string>(activeEntry ? activeEntry.lent_to : '');
-	let isWhereValue = $state<string>(activeEntry ? activeEntry.is_where : '');
-	let startedAtValue = $state<string>(
-		activeEntry ? activeEntry.started_at?.substring(0, 10) : ''
+	let linkValue = $state<string>(activeEntry?.link ?? '');
+	let publicationYearValue = $state<number | null>(activeEntry?.publication_year ?? null);
+	let pagesValue = $state<string>(activeEntry?.pages?.toString() ?? '');
+	let currentPageValue = $state<string>(activeEntry?.current_page?.toString() ?? '');
+	let lentToValue = $state<string>(activeEntry?.lent_to ?? '');
+	let isWhereValue = $state<string>(activeEntry?.is_where ?? '');
+	let startedAtValue = $state<string>(activeEntry?.started_at?.substring(0, 10) ?? '');
+	let finishedAtValue = $state<string>(activeEntry?.finished_at?.substring(0, 10) ?? '');
+	let selectedGenres = $state<string[]>(
+		activeEntry ? activeEntry.genres.map((g) => g.id.toString()) : []
 	);
-	let finishedAtValue = $state<string>(
-		activeEntry ? activeEntry.finished_at?.substring(0, 10) : ''
+	let selectedTags = $state<string[]>(
+		activeEntry ? activeEntry.tags.map((t) => t.id.toString()) : []
 	);
-	let selectedGenres = $state(
-		activeEntry
-			? activeEntry.genres.map((genre) => ({ label: genre.title, value: genre.id }))
-			: []
-	);
-	let selectedTags = $state(
-		activeEntry ? activeEntry.tags.map((tag) => ({ label: tag.name, value: tag.id })) : []
-	);
-	let selectedRating = $state(activeEntry ? activeEntry.rating : 0);
+	let selectedRating = $state(activeEntry?.rating ?? 0);
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
-	let summaryValue = $state<string>(activeEntry ? activeEntry.summary : '');
+	let summaryValue = $state<string>(activeEntry?.summary ?? '');
 	let linkInput = $state<HTMLInputElement | null>(null);
 	let importLoading = $state<boolean>(false);
 
 	const genreOptions: { label: string; value: string }[] = library.genres.map((genre) => ({
 		label: genre.title,
-		value: genre.id
+		value: genre.id.toString()
 	}));
 
 	const tagOptions: { label: string; value: string }[] = tags.tags.map((tag) => ({
@@ -73,18 +67,18 @@
 			title: titleValue,
 			author: authorValue,
 			series: seriesValue !== '' ? seriesValue : null,
-			volume: volumeValue !== '' ? parseInt(volumeValue) : null,
+			volume: volumeValue,
 			pages: pagesValue !== '' ? parseInt(pagesValue) : null,
 			current_page: currentPageValue !== '' ? parseInt(currentPageValue) : null,
-			publication_year: publicationYearValue !== '' ? parseInt(publicationYearValue) : null,
+			publication_year: publicationYearValue,
 			lent_to: lentToValue !== '' ? lentToValue : null,
 			is_where: isWhereValue !== '' ? isWhereValue : null,
 			started_at: startedAtValue !== '' ? startedAtValue : null,
 			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
-			wishlist: isWishlist || false,
+			wishlist: isWishlist,
 			summary: summaryValue !== '' ? summaryValue : null,
-			genres: selectedGenres.length > 0 ? selectedGenres.map((genre) => genre.value) : null,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null,
+			genres: selectedGenres.map((v) => parseInt(v)),
+			tags: selectedTags.map((v) => parseInt(v)),
 			rating: selectedRating > 0 ? selectedRating : null,
 			link: linkValue !== '' ? linkValue : null
 		};
@@ -115,7 +109,7 @@
 				titleValue = '';
 				authorValue = '';
 				seriesValue = '';
-				volumeValue = '';
+				volumeValue = null;
 				pagesValue = '';
 				currentPageValue = '';
 				lentToValue = '';
@@ -167,9 +161,9 @@
 
 		authorValue = book.author;
 		titleValue = book.title;
-		coverValue = book.cover;
-		publicationYearValue = book.release_date.slice(0, 4);
-		pagesValue = book.page_count;
+		coverValue = book.cover ?? '';
+		publicationYearValue = parseInt(book.release_date.slice(0, 4));
+		pagesValue = book.page_count?.toString() ?? '';
 
 		importLoading = false;
 		loadingIndicator.stop();
@@ -182,7 +176,7 @@
 		: ts.get.libraries.books.add_book}
 	{library}
 	existingCover={activeEntry
-		? `${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${activeEntry.cover}`
+		? `${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${activeEntry.cover}`
 		: null}
 	newCover={coverValue}
 	bind:selectedRating
@@ -197,7 +191,7 @@
 	<ModalFormRow label={ts.get.libraries.books.series}>
 		<div class="flex w-full gap-2">
 			<TextInput bind:value={seriesValue} />
-			<NumberInput bind:value={volumeValue} width={20} />
+			<NumberInput bind:value={volumeValue} />
 		</div>
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.genres}>

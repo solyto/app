@@ -95,9 +95,13 @@
 		<TextInput bind:input={titleInput} bind:value={titleValue} {onblur} />
 	{:else}
 		<div
+			role="button"
+			tabindex="0"
 			ondblclick={toggleChangeTitle}
 			onmouseover={() => (showExplanationBox = true)}
 			onmouseout={() => (showExplanationBox = false)}
+			onfocus={() => (showExplanationBox = true)}
+			onblur={() => (showExplanationBox = false)}
 			onmousemove={(e) => setExplanationBoxPosition(e)}
 		>
 			{subtask.title}

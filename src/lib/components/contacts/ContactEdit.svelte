@@ -48,30 +48,31 @@
 	let form = $state<CreateContactForm>(emptyForm);
 
 	$effect(() => {
-		if (contacts.activeContact && loadedContactId !== contacts.activeContact.id) {
+		if (contacts.activeContact && loadedContactId !== contacts.activeContact.uid) {
 			loadFormFromEntry();
-			loadedContactId = contacts.activeContact.id;
+			loadedContactId = contacts.activeContact.uid;
 		}
 	});
 
 	function loadFormFromEntry(): void {
-		form.address_book_id = contacts.activeContact.address_book_id;
-		form.first_name = contacts.activeContact.first_name;
-		form.last_name = contacts.activeContact.last_name;
-		form.middle_name = contacts.activeContact.middle_name;
-		form.prefix = contacts.activeContact.prefix;
-		form.suffix = contacts.activeContact.suffix;
-		form.groups = contacts.activeContact.groups?.join(', ') || '';
-		form.organization = contacts.activeContact.organization;
-		form.title = contacts.activeContact.title;
-		form.note = contacts.activeContact.note;
-		form.street = contacts.activeContact.street;
-		form.city = contacts.activeContact.city;
-		form.state = contacts.activeContact.state;
-		form.postal_code = contacts.activeContact.postal_code;
-		form.country = contacts.activeContact.country;
-		form.phone = contacts.activeContact.phone ? [...contacts.activeContact.phone] : [];
-		form.email = contacts.activeContact.email ? [...contacts.activeContact.email] : [];
+		const c = contacts.activeContact!;
+		form.address_book_id = c.address_book_id;
+		form.first_name = c.first_name;
+		form.last_name = c.last_name;
+		form.middle_name = c.middle_name;
+		form.prefix = c.prefix;
+		form.suffix = c.suffix;
+		form.groups = c.groups?.join(', ') || '';
+		form.organization = c.organization;
+		form.title = c.title;
+		form.note = c.note;
+		form.street = c.street;
+		form.city = c.city;
+		form.state = c.state;
+		form.postal_code = c.postal_code;
+		form.country = c.country;
+		form.phone = c.phone ? [...c.phone] : [];
+		form.email = c.email ? [...c.email] : [];
 	}
 
 	async function onsubmit(): Promise<void> {
@@ -86,9 +87,13 @@
 					? JSON.stringify(form.groups.split(',').map((g) => g.trim()))
 					: null
 		};
-		const res = contacts.activeContact
-			? await contacts.update(contacts.activeContact, request)
-			: await contacts.create(request);
+
+		if (contacts.activeContact) {
+			await contacts.update(contacts.activeContact, request);
+		} else {
+			await contacts.create(request);
+		}
+
 		loadingIndicator.stop();
 		form = structuredClone(emptyForm);
 		contacts.closeCreateModal();
@@ -129,7 +134,7 @@
 				{#each form.phone as phone, index (index)}
 					<div class="flex gap-2">
 						<PhoneEdit bind:value={phone.value} bind:type={phone.type} />
-						<InlineDeleteButton onClick={() => form.phone.splice(index, 1)} />
+						<InlineDeleteButton onClick={() => { form.phone.splice(index, 1); }} />
 					</div>
 				{/each}
 			</div>
@@ -144,7 +149,7 @@
 				{#each form.email as email, index (index)}
 					<div class="flex gap-2">
 						<EmailEdit bind:value={email.value} bind:type={email.type} />
-						<InlineDeleteButton onClick={() => form.email.splice(index, 1)} />
+						<InlineDeleteButton onClick={() => { form.email.splice(index, 1); }} />
 					</div>
 				{/each}
 			</div>

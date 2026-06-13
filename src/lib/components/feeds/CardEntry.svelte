@@ -27,7 +27,7 @@
 		{#if item.image_url}
 			<div class="relative h-40 w-full overflow-hidden">
 				{#if !imageLoaded}
-					<div class="absolute inset-0 animate-pulse bg-c-neutral-1 dark:bg-s-dark-3" />
+					<div class="absolute inset-0 animate-pulse bg-c-neutral-1 dark:bg-s-dark-3"></div>
 				{/if}
 				<img
 					src={item.image_url}

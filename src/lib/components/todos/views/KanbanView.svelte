@@ -5,7 +5,7 @@
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import Card from '$lib/components/todos/views/Card.svelte';
 	import type { GroupedTodos, Todo, TodoStatus } from '$lib/types/todo';
-	import { dndzone } from 'svelte-dnd-action';
+	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 
 	const todos = getTodos();
@@ -26,14 +26,16 @@
 
 	function getStatusLabel(status: TodoStatus): string {
 		switch (status) {
-			case 'pending':
-				return 'Pending';
+			case 'backlog':
+				return 'Backlog';
 			case 'in-progress':
 				return 'In Progress';
 			case 'waiting':
 				return 'Waiting';
 			case 'almost-done':
 				return 'Almost done';
+			default:
+				return 'Pending';
 		}
 	}
 
@@ -51,19 +53,20 @@
 		}
 	}
 
-	function handleDndConsiderCards(cid, e) {
+	function handleDndConsiderCards(cid: number, e: CustomEvent<DndEvent<Todo>>) {
 		const colIdx = groups.findIndex((c) => c.id === cid);
 		groups[colIdx].todos = e.detail.items;
 		groups = [...groups];
 	}
 
-	async function handleDndFinalizeCards(cid, e) {
+	async function handleDndFinalizeCards(cid: number, e: CustomEvent<DndEvent<Todo>>) {
 		const colIdx = groups.findIndex((c) => c.id === cid);
 		groups[colIdx].todos = e.detail.items;
 		groups = [...groups];
 
 		if (firstTick) {
-			await handleStatusChange(e.detail.info.id, e.target.dataset.status);
+			const status = (e.target as HTMLElement | null)?.dataset.status as TodoStatus;
+			await handleStatusChange(e.detail.info.id, status);
 		}
 
 		firstTick = !firstTick;

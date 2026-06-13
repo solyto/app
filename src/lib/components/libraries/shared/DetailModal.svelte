@@ -7,17 +7,29 @@
 	import type { Movie } from '$lib/types/library_movie';
 	import type { Recipe } from '$lib/types/library_recipe';
 	import type { Quote } from '$lib/types/library_quote';
+	import type { Game } from '$lib/types/library_game';
+	import type { Plant } from '$lib/types/library_plant';
 	import type { BookLibrary } from '$lib/state/BookLibrary.svelte';
 	import type { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
 	import type { RecipeLibrary } from '$lib/state/RecipeLibrary.svelte';
 	import type { MovieLibrary } from '$lib/state/MovieLibrary.svelte';
+	import type { GameLibrary } from '$lib/state/GameLibrary.svelte';
+	import type { PlantLibrary } from '$lib/state/PlantLibrary.svelte';
+	import type { QuoteLibrary } from '$lib/state/QuoteLibrary.svelte';
 	import ExternalLink from '$lib/components/libraries/shared/ExternalLink.svelte';
 	import Cover from '$lib/components/libraries/shared/Cover.svelte';
 
 	const loadingIndicator = getLoadingIndicator();
 	let { entry, library, children } = $props<{
-		entry: Book | Music | Recipe | Movie | Quote;
-		library: BookLibrary | MusicLibrary | RecipeLibrary | MovieLibrary;
+		entry: Book | Music | Recipe | Movie | Quote | Game | Plant;
+		library:
+			| BookLibrary
+			| MusicLibrary
+			| RecipeLibrary
+			| MovieLibrary
+			| GameLibrary
+			| PlantLibrary
+			| QuoteLibrary;
 		children: any;
 	}>();
 

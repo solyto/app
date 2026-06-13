@@ -20,15 +20,14 @@
 	const contacts = getContacts();
 	const loadingIndicator = getLoadingIndicator();
 
-	let contact = $derived(contacts.activeContact);
+	let contact = $derived(contacts.activeContact as Contact);
 	let addressBookName = $derived(contacts.addressBooks.find((ab) => ab.id === contact?.address_book_id)?.name ?? '');
 	let fileInput = $state<HTMLInputElement | null>(null);
-	let selectedFileName = $state<string>('');
 	let selectedFileUrl = $state<string>('');
 
 	async function onDelete(): Promise<void> {
 		loadingIndicator.start();
-		const res = await contacts.delete(contact as Contact);
+		await contacts.delete(contact as Contact);
 		loadingIndicator.stop();
 		contacts.closeDetailModal();
 	}
@@ -36,7 +35,6 @@
 	function handleFileSelect(event: Event) {
 		const input = event.target as HTMLInputElement;
 		if (input.files && input.files.length > 0) {
-			selectedFileName = input.files[0].name;
 			selectedFileUrl = URL.createObjectURL(input.files[0]);
 			onUpload(input.files[0]);
 		}
@@ -77,6 +75,8 @@
 			<div
 				class="absolute z-30 flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-transparent opacity-0 backdrop-blur-xs transition-all group-hover:opacity-100 dark:bg-s-dark-2/20"
 				onclick={() => fileInput?.click()}
+				role="button"
+				tabindex="0"
 			>
 				<input
 					type="file"
@@ -116,7 +116,7 @@
 	</div>
 	<div class="mt-8 flex flex-col justify-between gap-8 md:flex-row">
 		<div class="flex flex-col gap-1">
-			{#each contact.phone as phone (phone.value)}
+			{#each contact.phone ?? [] as phone (phone.value)}
 				<a
 					href="tel:{phone.value}"
 					class="flex min-h-[44px] items-center gap-3 rounded-lg px-1 py-1 transition-colors hover:bg-c-neutral active:bg-c-neutral-2"
@@ -133,7 +133,7 @@
 					<span class="text-base font-medium">{phone.value}</span>
 				</a>
 			{/each}
-			{#each contact.email as email (email.value)}
+			{#each contact.email ?? [] as email (email.value)}
 				<a
 					href="mailto:{email.value}"
 					class="flex min-h-[44px] items-center gap-3 rounded-lg px-1 py-1 transition-colors hover:bg-c-neutral active:bg-c-neutral-2"

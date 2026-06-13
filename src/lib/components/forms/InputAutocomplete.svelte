@@ -32,7 +32,7 @@
 			return;
 		}
 
-		const matches = items.filter((item) => item.label.toLowerCase().includes(query));
+		const matches = items.filter((item: Item) => item.label.toLowerCase().includes(query));
 		if (matches.length > 0) {
 			suggestions = matches;
 			selectedIndex = 0;

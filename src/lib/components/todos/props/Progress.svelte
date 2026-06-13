@@ -54,8 +54,9 @@
 	}
 
 	function updateFromClientX(clientX: number): void {
-		const rect = div?.getBoundingClientRect(),
-			pct = ((clientX - rect.left) / rect.width) * 100;
+		const rect = div?.getBoundingClientRect();
+		if (!rect) return;
+		const pct = ((clientX - rect.left) / rect.width) * 100;
 		hoverValue = Math.round(clampPct(pct));
 	}
 
@@ -81,7 +82,7 @@
 	tabindex="0"
 	aria-valuemin="0"
 	aria-valuemax="100"
-	aria-valuenow={getProgress}
+	aria-valuenow={getProgress()}
 >
 	<div class="h-full rounded-full bg-c-primary" style="width: {getProgress()}%"></div>
 </div>

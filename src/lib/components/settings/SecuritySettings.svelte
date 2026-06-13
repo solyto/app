@@ -206,6 +206,6 @@
 		type="confirm-delete"
 		description={ts.get.settings.passkey_delete_confirm}
 		onConfirm={deletePasskey}
-		onCancel={() => (confirmDeletePasskey = null)}
+		onCancel={() => { confirmDeletePasskey = null; }}
 	/>
 {/if}

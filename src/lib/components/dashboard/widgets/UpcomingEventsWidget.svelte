@@ -3,10 +3,10 @@
 	import IconCalendarDays from '@lucide/svelte/icons/calendar-days';
 	import { Translation } from '$lib/state/Translation.svelte';
 	import { Auth } from '$lib/state/Auth.svelte';
-	import type { Event } from '$lib/types/calendar';
+	import type { CalendarEvent } from '$lib/types/calendar';
 
 	let { upcomingEvents, ts, auth, mt = false } = $props<{
-		upcomingEvents: Event[];
+		upcomingEvents: CalendarEvent[];
 		ts: Translation;
 		auth: Auth;
 		mt: boolean;

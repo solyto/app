@@ -5,14 +5,19 @@ import type {
 	LoginResponse,
 	RegisterRequest,
 	VerifyRequest,
+	AuthActionResponse,
+	VerifyActionResponse,
+	PasskeyActionResponse,
+	PasskeyAuthenticationOptions,
+	PasskeyRegistrationOptions,
 	Passkey
 } from '$lib/types/auth';
-import { PLATFORM } from '$lib/config/platform';
+import { IS_NATIVE, PLATFORM } from '$lib/config/platform';
 import { setContext, getContext } from 'svelte';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import ApiService from '$lib/services/ApiService';
 import LocalStorageService from '$lib/services/LocalStorageService';
-import { SvelteDate } from 'svelte/reactivity';
+import { SvelteDate, SvelteMap } from 'svelte/reactivity';
 import {
 	formatDate,
 	formatDateTime,
@@ -30,7 +35,7 @@ export class Auth {
 	user = $state<User | null>(null);
 	apiService: ApiService;
 	localStorage = new LocalStorageService();
-	profileCache = new Map<string, User>();
+	profileCache = new SvelteMap<string, User>();
 
 	constructor() {
 		this.apiService = new ApiService(null);
@@ -110,7 +115,7 @@ export class Auth {
 	}
 
 	private shouldRefresh(expiresAt: number): boolean {
-		const thresholdDays = PLATFORM === 'web' ? 5 : 14;
+		const thresholdDays = IS_NATIVE ? 14 : 5;
 		return expiresAt < Date.now() + thresholdDays * 24 * 60 * 60 * 1000;
 	}
 
@@ -142,39 +147,36 @@ export class Auth {
 		return this.user?.role === 'admin' || this.user?.role === 'super_admin';
 	}
 
-	async register(request: RegisterRequest): Promise<{ success: boolean; errors?: Record<string, string[]> }> {
-		const res: any = await this.apiService.postRaw(apiRoutes.auth.register, request);
-		return { success: res?.success === true, errors: res?.errors };
+	async register(request: RegisterRequest): Promise<AuthActionResponse> {
+		return this.apiService.postRaw<AuthActionResponse>(apiRoutes.auth.register, request);
 	}
 
-	async verify(request: VerifyRequest): Promise<object> {
-		const res = await this.apiService.postRaw(apiRoutes.auth.verify, request);
-		return Promise.resolve(res);
+	async verify(request: VerifyRequest): Promise<VerifyActionResponse> {
+		return this.apiService.postRaw<VerifyActionResponse>(apiRoutes.auth.verify, request);
 	}
 
 	async forgotPassword(email: string, platform: string): Promise<void> {
 		await this.apiService.post(apiRoutes.auth.forgotPassword, { email, platform });
 	}
 
-	async resetPassword(token: string, email: string, password: string, passwordConfirmation: string): Promise<{ success: boolean; errors?: Record<string, string[]> }> {
-		const res: any = await this.apiService.postRaw(apiRoutes.auth.resetPassword, {
+	async resetPassword(token: string, email: string, password: string, passwordConfirmation: string): Promise<AuthActionResponse> {
+		return this.apiService.postRaw<AuthActionResponse>(apiRoutes.auth.resetPassword, {
 			token,
 			email,
 			password,
 			password_confirmation: passwordConfirmation
 		});
-		return { success: res?.success === true, errors: res?.errors };
 	}
 
-	async passkeyAuthenticationOptions(): Promise<any> {
+	async passkeyAuthenticationOptions(): Promise<PasskeyAuthenticationOptions | null> {
 		const res = await this.apiService.post(apiRoutes.auth.passkeys.authenticateOptions, {});
-		return res?.data ?? null;
+		return (res?.data ?? null) as PasskeyAuthenticationOptions | null;
 	}
 
-	async passkeyAuthenticate(response: any): Promise<void> {
-		const res: any = await this.apiService.postRaw(apiRoutes.auth.passkeys.authenticate, { response, platform: PLATFORM });
-		if (!res?.success) {
-			throw new Error(res?.message ?? 'Passkey authentication failed');
+	async passkeyAuthenticate(response: object): Promise<void> {
+		const res = await this.apiService.postRaw<PasskeyActionResponse>(apiRoutes.auth.passkeys.authenticate, { response, platform: PLATFORM });
+		if (!res.success) {
+			throw new Error(res.message ?? 'Passkey authentication failed');
 		}
 		const data = res.data as LoginResponse;
 		this.user = data.user;
@@ -189,15 +191,15 @@ export class Auth {
 		await this.loadAdditionalData();
 	}
 
-	async passkeyRegistrationOptions(): Promise<any> {
+	async passkeyRegistrationOptions(): Promise<PasskeyRegistrationOptions | null> {
 		const res = await this.apiService.post(apiRoutes.auth.passkeys.registerOptions, {});
-		return res?.data ?? null;
+		return (res?.data ?? null) as PasskeyRegistrationOptions | null;
 	}
 
-	async passkeyRegister(response: any, name: string): Promise<void> {
-		const res: any = await this.apiService.postRaw(apiRoutes.auth.passkeys.register, { response, name });
-		if (!res?.success) {
-			throw new Error(res?.message ?? 'Registration failed');
+	async passkeyRegister(response: object, name: string): Promise<void> {
+		const res = await this.apiService.postRaw<PasskeyActionResponse>(apiRoutes.auth.passkeys.register, { response, name });
+		if (!res.success) {
+			throw new Error(res.message ?? 'Registration failed');
 		}
 	}
 

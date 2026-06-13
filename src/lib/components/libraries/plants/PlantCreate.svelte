@@ -23,7 +23,7 @@
 
 	let activeEntry = $state<Plant | null>(library.activeEntry);
 
-	let nameValue = $state<string>(activeEntry ? activeEntry.name : '');
+	let nameValue = $state<string>(activeEntry?.name ?? '');
 	let latinNameValue = $state<string>(activeEntry?.latin_name ?? '');
 	let locationValue = $state<string>(activeEntry?.location ?? '');
 	let sunlightValue = $state<string>(activeEntry?.sunlight ?? '');
@@ -178,7 +178,7 @@
 		: ts.get.libraries.plants.add_plant}
 	{library}
 	existingCover={activeEntry && activeEntry.cover && !coverFile && !coverValue && !coverRemoved
-		? `${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${activeEntry.cover}`
+		? `${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${activeEntry.cover}`
 		: null}
 	newCover={coverPreviewUrl ?? (coverValue || undefined)}
 	onCoverClick={() => fileInput?.click()}

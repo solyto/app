@@ -13,12 +13,18 @@
 	import IconRss from '@lucide/svelte/icons/rss';
 	import IconClipboard from '@lucide/svelte/icons/clipboard';
 	import type { FeatureType } from '$lib/config/navigation';
+	import type { WelcomeTourRecords } from '$lib/types/translation';
 	import { getNavigation } from '$lib/state/Navigation.svelte';
 
 	const ts = getTranslation();
 	const nav = getNavigation();
 
-	const featureConfig = [
+	const featureConfig: {
+		key: FeatureType;
+		icon: typeof IconCalendar;
+		labelKey: keyof WelcomeTourRecords;
+		descKey: keyof WelcomeTourRecords;
+	}[] = [
 		{ key: 'calendar' as FeatureType, icon: IconCalendar, labelKey: 'feature_calendar', descKey: 'feature_calendar_desc' },
 		{ key: 'todos' as FeatureType, icon: IconCheckSquare, labelKey: 'feature_todos', descKey: 'feature_todos_desc' },
 		{ key: 'notes' as FeatureType, icon: IconNotebook, labelKey: 'feature_notes', descKey: 'feature_notes_desc' },

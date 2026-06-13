@@ -87,9 +87,13 @@
 		/>
 	{:else}
 		<div
+			role="button"
+			tabindex="0"
 			ondblclick={toggleEdit}
 			onmouseover={() => (showExplanationBox = true)}
 			onmouseout={() => (showExplanationBox = false)}
+			onfocus={() => (showExplanationBox = true)}
+			onblur={() => (showExplanationBox = false)}
 			onmousemove={(e) => setExplanationBoxPosition(e)}
 		>
 			{#if todo.link}

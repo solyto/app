@@ -34,9 +34,9 @@
 	aria-label="Change Status"
 >
 	<span class="md:hidden">
-		{entry.status === 'in-progress' ? 'PROGRESS' : ts.get.dev.requests['status_' + entry.status.replace('-', '_')].toUpperCase()}
+		{entry.status === 'in-progress' ? 'PROGRESS' : ts.get.dev.requests[('status_' + entry.status.replace('-', '_')) as keyof typeof ts.get.dev.requests].toUpperCase()}
 	</span>
 	<span class="hidden md:inline">
-		{ts.get.dev.requests['status_' + entry.status.replace('-', '_')].toUpperCase()}
+		{ts.get.dev.requests[('status_' + entry.status.replace('-', '_')) as keyof typeof ts.get.dev.requests].toUpperCase()}
 	</span>
 </button>

@@ -10,8 +10,9 @@
 </script>
 
 <div class="flex w-full items-center gap-4 overflow-x-auto p-2 pt-3 pb-4 max-md:hidden">
-	<a
-		href="#"
+	<div
+		role="button"
+		tabindex="0"
 		class="relative cursor-pointer touch-manipulation gap-2 rounded-sm bg-c-bg-surface p-8 font-bold drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral max-md:w-full dark:hover:bg-s-dark-2"
 		onclick={() => library.filterByCategory(null)}
 	>
@@ -21,9 +22,10 @@
 			class="absolute bottom-0 left-0 h-1 w-full rounded-lg bg-[var(--color-c-btn-hover)] opacity-0 transition-all"
 			class:opacity-100={library.activeFilter === null}
 		></div>
-	</a>
-	<a
-		href="#"
+	</div>
+	<div
+		role="button"
+		tabindex="0"
 		class="relative cursor-pointer touch-manipulation gap-2 rounded-sm bg-c-bg-surface p-8 font-bold drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral max-md:w-full dark:hover:bg-s-dark-2"
 		onclick={() => library.filterByFavorite()}
 	>
@@ -33,9 +35,10 @@
 			class="absolute bottom-0 left-0 h-1 w-full rounded-lg bg-[var(--color-c-warning)] opacity-0 transition-all"
 			class:opacity-100={library.activeFilter === 'favorite'}
 		></div>
-	</a>
-	<a
-		href="#"
+	</div>
+	<div
+		role="button"
+		tabindex="0"
 		class="relative cursor-pointer touch-manipulation gap-2 rounded-sm bg-c-bg-surface p-8 font-bold drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral max-md:w-full dark:hover:bg-s-dark-2"
 		class:ring-2={library.dragTarget === 0}
 		style={library.dragTarget === 0 ? `--tw-ring-color: var(--color-c-btn);` : ''}
@@ -58,11 +61,12 @@
 			class="absolute bottom-0 left-0 h-1 w-full rounded-lg bg-[var(--color-c-btn)] opacity-0 transition-all"
 			class:opacity-100={library.activeFilter === 0}
 		></div>
-	</a>
+	</div>
 	{#each library.categories as category, i (category.id)}
-		<a
-			href="#"
-			class="relative] group cursor-pointer touch-manipulation gap-2 rounded-sm bg-c-bg-surface p-8 font-bold drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral max-md:w-full dark:hover:bg-s-dark-2"
+		<div
+			role="button"
+			tabindex="0"
+			class="relative group cursor-pointer touch-manipulation gap-2 rounded-sm bg-c-bg-surface p-8 font-bold drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral max-md:w-full dark:hover:bg-s-dark-2"
 			class:ring-2={library.dragTarget === category.id}
 			style={library.dragTarget === category.id
 				? `--tw-ring-color: ${category.color ?? 'var(--color-c-primary)'};`
@@ -94,13 +98,14 @@
 				class="absolute right-[-9px] bottom-[-4px] opacity-0 transition-all group-hover:opacity-100"
 			>
 				<button
+					type="button"
 					class="z-40 flex size-[24px] cursor-pointer items-center justify-center rounded-full bg-c-danger text-white drop-shadow-md transition-all hover:text-c-heading hover:drop-shadow-xl"
 					onclick={() => library.deleteCategory(category)}
 				>
 					<IconTrash class="size-4" />
 				</button>
 			</div>
-		</a>
+		</div>
 	{/each}
 	<CategoryCreate />
 </div>

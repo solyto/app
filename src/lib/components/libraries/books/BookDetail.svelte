@@ -32,11 +32,11 @@
 	</div>
 	<div class:hidden={entry.started_at === null}>
 		{ts.get.libraries.books.started_at}
-		{formatDate(entry.started_at)}
+		{entry.started_at ? formatDate(entry.started_at) : ''}
 	</div>
 	<div class:hidden={entry.finished_at === null}>
 		{ts.get.libraries.books.finished_at}
-		{formatDate(entry.finished_at)}
+		{entry.finished_at ? formatDate(entry.finished_at) : ''}
 	</div>
 	<div class:hidden={entry.is_where === null}>
 		{entry.is_where}

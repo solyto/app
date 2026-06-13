@@ -20,10 +20,10 @@
 
 	let changeDescription = $state<boolean>(false);
 	let descriptionInput = $state<HTMLTextAreaElement | null>(null);
-	let descriptionValue = $state<string | null>(todo.description);
+	let descriptionValue = $state<string>(todo.description ?? '');
 	let addSubtaskVisible = $state<boolean>(false);
 	let subtaskInput = $state<HTMLInputElement | null>(null);
-	let subtaskValue = $state<string | null>('');
+	let subtaskValue = $state<string>('');
 	let showExplanationBox = $state<boolean>(false);
 	let explanationBoxX = $state<number>(0);
 	let explanationBoxY = $state<number>(0);
@@ -148,9 +148,13 @@
 		/>
 	{:else}
 		<div
+			role="button"
+			tabindex="0"
 			ondblclick={toggleChangeDescription}
 			onmouseover={() => (showExplanationBox = true)}
 			onmouseout={() => (showExplanationBox = false)}
+			onfocus={() => (showExplanationBox = true)}
+			onblur={() => (showExplanationBox = false)}
 			onmousemove={(e) => setExplanationBoxPosition(e)}
 		>
 			{#if todo.description}

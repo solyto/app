@@ -4,6 +4,8 @@
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getNavigation } from '$lib/state/Navigation.svelte';
+	import type { FeatureType } from '$lib/config/navigation';
+	import type { NavigationRecords } from '$lib/types/translation';
 
 	const ts = getTranslation();
 	const nav = getNavigation();
@@ -21,8 +23,8 @@
 		<div class="flex w-full flex-col gap-2">
 			{#each Object.keys(nav.features) as featureType (featureType)}
 				<div class="flex w-full justify-between">
-					<span>{ts.get.nav[featureType]}</span>
-					<Toggle bind:checked={nav.features[featureType]} onchange={onChange} />
+					<span>{ts.get.nav[featureType as keyof NavigationRecords]}</span>
+					<Toggle bind:checked={nav.features[featureType as FeatureType]} onchange={onChange} />
 				</div>
 			{/each}
 		</div>

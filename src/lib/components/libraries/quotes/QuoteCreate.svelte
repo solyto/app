@@ -19,12 +19,12 @@
 
 	let activeEntry = $state<Quote | null>(library.activeEntry);
 
-	let summaryValue = $state<string>(activeEntry ? activeEntry.summary : '');
-	let authorValue = $state<string>(activeEntry ? activeEntry.author : '');
-	let sourceValue = $state<string>(activeEntry ? activeEntry.source : '');
+	let summaryValue = $state<string>(activeEntry?.summary ?? '');
+	let authorValue = $state<string>(activeEntry?.author ?? '');
+	let sourceValue = $state<string>(activeEntry?.source ?? '');
 	let quoteValue = $state<string>(activeEntry ? activeEntry.quote : '');
-	let selectedTags = $state(
-		activeEntry ? activeEntry.tags.map((tag) => ({ label: tag.name, value: tag.id })) : []
+	let selectedTags = $state<string[]>(
+		activeEntry ? activeEntry.tags.map((t) => t.id.toString()) : []
 	);
 
 	const tagOptions: { label: string; value: string }[] = tags.tags.map((tag) => ({
@@ -48,7 +48,7 @@
 			summary: summaryValue !== '' ? summaryValue : null,
 			source: sourceValue !== '' ? sourceValue : null,
 			quote: quoteValue,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null
+			tags: selectedTags.map((v) => parseInt(v))
 		};
 		const ok = await library.create(request);
 		if (ok) {
@@ -73,9 +73,9 @@
 			summary: summaryValue !== '' ? summaryValue : null,
 			source: sourceValue !== '' ? sourceValue : null,
 			quote: quoteValue !== '' ? quoteValue : null,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null
+			tags: selectedTags.map((v) => parseInt(v))
 		};
-		const ok = await library.update(activeEntry, request);
+		const ok = await library.update(activeEntry!, request);
 		if (ok) {
 			library.closeCreateModal();
 			await library.load();

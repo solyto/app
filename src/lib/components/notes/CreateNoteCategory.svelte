@@ -48,7 +48,8 @@
 		loadingIndicator.start();
 
 		if (userInput.trim() !== '') {
-			const res = await notes.createCategory(userInput);
+			notes.inputValue = userInput;
+			const res = await notes.createCategory();
 
 			if (res) {
 				userInput = '';

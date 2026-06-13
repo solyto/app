@@ -28,31 +28,25 @@
 
 	let titleValue = $state<string>(activeEntry ? activeEntry.title : '');
 	let coverValue = $state<string>('');
-	let linkValue = $state<string>(activeEntry ? activeEntry.link : '');
-	let publicationYearValue = $state<string>(activeEntry ? activeEntry.publication_year : '');
-	let startedAtValue = $state<string>(
-		activeEntry ? activeEntry.started_at?.substring(0, 10) : ''
-	);
-	let finishedAtValue = $state<string>(
-		activeEntry ? activeEntry.finished_at?.substring(0, 10) : ''
-	);
+	let linkValue = $state<string>(activeEntry?.link ?? '');
+	let publicationYearValue = $state<number | null>(activeEntry?.publication_year ?? null);
+	let startedAtValue = $state<string>(activeEntry?.started_at?.substring(0, 10) ?? '');
+	let finishedAtValue = $state<string>(activeEntry?.finished_at?.substring(0, 10) ?? '');
 	let categoryValue = $state<string>(activeEntry ? activeEntry.category : 'movie');
-	let selectedGenres = $state(
-		activeEntry
-			? activeEntry.genres.map((genre) => ({ label: genre.title, value: genre.id }))
-			: []
+	let selectedGenres = $state<string[]>(
+		activeEntry ? activeEntry.genres.map((g) => g.id.toString()) : []
 	);
-	let selectedTags = $state(
-		activeEntry ? activeEntry.tags.map((tag) => ({ label: tag.name, value: tag.id })) : []
+	let selectedTags = $state<string[]>(
+		activeEntry ? activeEntry.tags.map((t) => t.id.toString()) : []
 	);
-	let selectedRating = $state(activeEntry ? activeEntry.rating : 0);
+	let selectedRating = $state(activeEntry?.rating ?? 0);
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
 	let linkInput = $state<HTMLInputElement | null>(null);
 	let importLoading = $state<boolean>(false);
 
 	const genreOptions: { label: string; value: string }[] = library.genres.map((genre) => ({
 		label: genre.title,
-		value: genre.id
+		value: genre.id.toString()
 	}));
 
 	const tagOptions: { label: string; value: string }[] = tags.tags.map((tag) => ({
@@ -79,12 +73,12 @@
 		const request: CreateMovieRequest = {
 			title: titleValue,
 			category: categoryValue,
-			publication_year: publicationYearValue !== '' ? parseInt(publicationYearValue) : null,
+			publication_year: publicationYearValue,
 			started_at: startedAtValue !== '' ? startedAtValue : null,
 			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
-			wishlist: isWishlist ? isWishlist : false,
-			genres: selectedGenres.length > 0 ? selectedGenres.map((genre) => genre.value) : null,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null,
+			wishlist: isWishlist,
+			genres: selectedGenres.map((v) => parseInt(v)),
+			tags: selectedTags.map((v) => parseInt(v)),
 			rating: selectedRating > 0 ? selectedRating : null,
 			cover_path: coverValue != '' ? coverValue : null,
 			link: linkValue != '' ? linkValue : null
@@ -114,17 +108,17 @@
 		const request: UpdateMovieRequest = {
 			title: titleValue,
 			category: categoryValue,
-			publication_year: publicationYearValue !== '' ? parseInt(publicationYearValue) : null,
+			publication_year: publicationYearValue,
 			started_at: startedAtValue !== '' ? startedAtValue : null,
 			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
-			wishlist: isWishlist ? isWishlist : false,
-			genres: selectedGenres.length > 0 ? selectedGenres.map((genre) => genre.value) : null,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => tag.value) : null,
+			wishlist: isWishlist,
+			genres: selectedGenres.map((v) => parseInt(v)),
+			tags: selectedTags.map((v) => parseInt(v)),
 			rating: selectedRating > 0 ? selectedRating : null,
 			...(coverValue !== '' ? { cover_path: coverValue } : {}),
 			link: linkValue != '' ? linkValue : null
 		};
-		const ok = await library.update(activeEntry, request);
+		const ok = await library.update(activeEntry!, request);
 		if (ok) {
 			library.closeCreateModal();
 			await library.load();
@@ -159,7 +153,7 @@
 
 		titleValue = movie.title;
 		coverValue = movie.cover;
-		publicationYearValue = movie.release_year.toString();
+		publicationYearValue = movie.release_year;
 
 		if (movie.type === 'tvSeries') {
 			categoryValue = 'series';
@@ -175,7 +169,7 @@
 					continue;
 				}
 
-				selectedGenres.push({ label: genre, value: existing.id });
+				selectedGenres.push(existing.id.toString());
 			}
 		}
 
@@ -190,7 +184,7 @@
 		: ts.get.libraries.movies.add_movie}
 	{library}
 	existingCover={activeEntry
-		? `${API_USER_STORAGE_URL}/${auth?.user.id}/${library.config.type}/${activeEntry.cover}`
+		? `${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${activeEntry.cover}`
 		: null}
 	newCover={coverValue}
 	bind:selectedRating

@@ -9,7 +9,6 @@
 	import { getFriends } from '$lib/state/Friends.svelte';
 	import Friends from '$lib/components/users/Friends.svelte';
 	import FriendRequests from '$lib/components/users/FriendRequests.svelte';
-	import { goto } from '$app/navigation';
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
 
@@ -18,7 +17,6 @@
 	const friends = getFriends();
 
 	let fileInput = $state<HTMLInputElement | null>(null);
-	let selectedFileName = $state<string>('');
 	let selectedFileUrl = $state<string>('');
 
 	onMount(async () => {
@@ -31,7 +29,6 @@
 	function handleFileSelect(event: Event) {
 		const input = event.target as HTMLInputElement;
 		if (input.files && input.files.length > 0) {
-			selectedFileName = input.files[0].name;
 			selectedFileUrl = URL.createObjectURL(input.files[0]);
 			onUpload(input.files[0]);
 		}
@@ -54,7 +51,7 @@
 				<IconShieldUser class="size-6" />
 			</a>
 		{/if}
-		<a href={urls.logout} class="rounded-full bg-c-action p-2 text-white hover:text-black">
+		<a href={resolve(urls.logout)} class="rounded-full bg-c-action p-2 text-white hover:text-black">
 			<IconLogout class="size-6" />
 		</a>
 	</div>
@@ -79,13 +76,13 @@
 				{#if selectedFileUrl}
 					<img
 						src={selectedFileUrl}
-						alt="Profile Image"
+						alt="Profile"
 						class="h-full w-full rounded-full object-cover"
 					/>
 				{:else if auth.user?.profile?.profile_image_path}
 					<img
 						src={API_USER_STORAGE_URL + '/' + auth.user.profile.profile_image_path}
-						alt="Profile Image"
+						alt="Profile"
 						class="h-full w-full rounded-full object-cover"
 					/>
 				{/if}

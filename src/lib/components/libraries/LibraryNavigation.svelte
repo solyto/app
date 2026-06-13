@@ -3,7 +3,6 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLibraryNavigation, navigationItems } from '$lib/state/LibraryNavigation.svelte';
 	import type { LibraryType } from '$lib/types/library.js';
-	import { resolve } from '$app/paths';
 	import LibraryNavigationEntry from '$lib/components/libraries/LibraryNavigationEntry.svelte';
 
 	const ts = getTranslation();
@@ -19,7 +18,7 @@
 		<LibraryNavigationEntry
 			type={item.type}
 			title={ts.get.libraries.navigation[item.type]}
-			url={resolve(item.url)}
+			url={item.url}
 			icon={item.icon}
 			isActive={navigation.activeLibrary === item.type}
 			setActive={(type: LibraryType) => setActiveLibrary(type)}

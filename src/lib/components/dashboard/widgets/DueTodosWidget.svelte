@@ -6,7 +6,7 @@
 
 	let { dueTodos, handleCheck, ts, mt = false } = $props<{
 		dueTodos: Todo[];
-		handleCheck: (event: MouseEvent, todo: Todo) => Promise<void>;
+		handleCheck: (event: Event, todo: Todo) => Promise<void>;
 		ts: Translation;
 		mt: boolean;
 	}>();
