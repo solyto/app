@@ -286,7 +286,7 @@
 		<NumberInput bind:value={playtimeHoursValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.games.completed}>
-		<Checkbox bind:isChecked={completedValue} class="pt-[9px]" />
+		<Checkbox isChecked={completedValue} onchange={() => (completedValue = !completedValue)} class="pt-[9px]" />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.games.started_at}>
 		<DateInput bind:value={startedAtValue} />

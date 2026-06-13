@@ -89,6 +89,7 @@
 	}
 
 	function startAddCategory(): void {
+		if (addingCategory) return;
 		addingCategory = true;
 		addKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => addCategory(), { priority: 2 });
 		addKeyHandlers.Escape = keyManager.registerKeyDown('Escape', () => {
@@ -99,6 +100,7 @@
 	}
 
 	async function startEditCategory(id: number, title: string): Promise<void> {
+		keyManager.unregisterAll(editKeyHandlers);
 		editingCategoryId = id;
 		editingCategoryTitle = title;
 		editKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => saveEditCategory(), { priority: 2 });
