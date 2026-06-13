@@ -25,11 +25,6 @@
 	>
 		<div class="relative mb-auto flex flex-col items-center">
 			<img src={logo} class="logo" alt="logo" />
-			<div
-				class="absolute bottom-[-24px] rounded-full bg-c-btn-hover px-2 py-1 text-xs text-white shadow-sm"
-			>
-				Beta
-			</div>
 		</div>
 
 		<div class="flex flex-1 flex-col items-center justify-center">
