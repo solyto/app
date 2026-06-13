@@ -61,6 +61,41 @@ export interface VerifyRequest {
 	token: string;
 }
 
+export interface AuthActionResponse {
+	success: boolean;
+	errors?: Record<string, string[]>;
+}
+
+export interface VerifyActionResponse {
+	success: boolean;
+	errors?: string[];
+}
+
+export interface PasskeyActionResponse {
+	success: boolean;
+	message?: string;
+	data?: LoginResponse;
+}
+
+export interface PasskeyAuthenticationOptions {
+	challenge: string;
+	rpId: string;
+	allowCredentials: { type: 'public-key'; id: string }[];
+	userVerification: 'required' | 'preferred' | 'discouraged';
+	timeout: number;
+}
+
+export interface PasskeyRegistrationOptions {
+	rp: { name: string; id: string };
+	user: { id: string; name: string; displayName: string };
+	challenge: string;
+	pubKeyCredParams: { type: 'public-key'; alg: number }[];
+	authenticatorSelection: { residentKey: 'required' | 'preferred' | 'discouraged'; userVerification: 'required' | 'preferred' | 'discouraged' };
+	attestation: 'none' | 'indirect' | 'direct' | 'enterprise';
+	timeout: number;
+	excludeCredentials: { type: 'public-key'; id: string }[];
+}
+
 export interface Passkey {
 	id: string;
 	name: string;

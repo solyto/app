@@ -61,47 +61,53 @@
 
 <div class="relative">
 	{#if changeStatus}
-		<div
+		<button
+			type="button"
 			class="cursor-pointer rounded-lg px-2 py-1 text-xs font-bold text-c-neutral-7 dark:text-white {getColor(todo.status)}"
 			onclick={toggleStatusMenu}
 		>
 			{getLabel(todo.status)}
-		</div>
+		</button>
 		{#if statusMenuVisible}
 			<QuickSelectOverlay
 				onClose={() => (statusMenuVisible = false)}
 				class="w-48 font-bold text-c-neutral-7 dark:text-white"
 			>
-				<div
+				<button
+					type="button"
 					class="cursor-pointer rounded-lg px-2 py-1 text-xs dark:text-white {getColor('backlog')}"
 					onclick={() => handleStatusChange(todo, 'backlog')}
 				>
 					{getLabel('backlog')}
-				</div>
-				<div
+				</button>
+				<button
+					type="button"
 					class="cursor-pointer rounded-lg px-2 py-1 text-xs {getColor('pending')}"
 					onclick={() => handleStatusChange(todo, 'pending')}
 				>
 					{getLabel('pending')}
-				</div>
-				<div
+				</button>
+				<button
+					type="button"
 					class="cursor-pointer rounded-lg px-2 py-1 text-xs {getColor('in-progress')}"
 					onclick={() => handleStatusChange(todo, 'in-progress')}
 				>
 					{getLabel('in-progress')}
-				</div>
-				<div
+				</button>
+				<button
+					type="button"
 					class="cursor-pointer rounded-lg px-2 py-1 text-xs {getColor('waiting')}"
 					onclick={() => handleStatusChange(todo, 'waiting')}
 				>
 					{getLabel('waiting')}
-				</div>
-				<div
+				</button>
+				<button
+					type="button"
 					class="cursor-pointer rounded-lg px-2 py-1 text-xs {getColor('almost-done')}"
 					onclick={() => handleStatusChange(todo, 'almost-done')}
 				>
 					{getLabel('almost-done')}
-				</div>
+				</button>
 			</QuickSelectOverlay>
 		{/if}
 	{:else}

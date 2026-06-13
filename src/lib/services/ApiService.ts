@@ -79,14 +79,14 @@ export default class ApiService {
 		return res.ok ? await res.json() : null;
 	}
 
-	async postRaw(endpoint: string, body: FormData | object): Promise<object> {
+	async postRaw<T = object>(endpoint: string, body: FormData | object): Promise<T> {
 		const res = await fetch(endpoint, {
 			method: 'POST',
 			headers: typeof body === 'object' ? this.getApiHeaderWithBody() : this.getApiHeader(),
 			body: typeof body === 'object' ? JSON.stringify(body) : body
 		});
 
-		return res.json();
+		return await res.json() as Promise<T>;
 	}
 
 	async put(endpoint: string, body: FormData | object): Promise<boolean> {

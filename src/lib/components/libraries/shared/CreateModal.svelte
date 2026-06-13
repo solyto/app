@@ -39,8 +39,9 @@
 				{#if library.config.hasCovers}
 					<div class="aspect-ratio max-w-48">
 						{#if existingCover}
-							<button
-								type="button"
+							<div
+								role="button"
+								tabindex="0"
 								onclick={onCoverClick}
 								class="group relative flex size-48 items-center justify-center rounded-lg bg-c-neutral-2 dark:bg-c-neutral-5 {onCoverClick ? 'cursor-pointer' : 'cursor-default'}"
 							>
@@ -60,6 +61,7 @@
 								{#if onCoverRemove}
 									<button
 										type="button"
+										aria-label="Remove cover"
 										onclick={(e) => { e.stopPropagation(); onCoverRemove!(); }}
 										class="absolute right-1 top-1 flex size-6 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/70"
 									>
@@ -68,10 +70,11 @@
 										</svg>
 									</button>
 								{/if}
-							</button>
+							</div>
 						{:else if newCover}
-							<button
-								type="button"
+							<div
+								role="button"
+								tabindex="0"
 								onclick={onCoverClick}
 								class="group relative flex size-48 items-center justify-center rounded-lg {onCoverClick ? 'cursor-pointer' : 'cursor-default'}"
 							>
@@ -91,6 +94,7 @@
 								{#if onCoverRemove}
 									<button
 										type="button"
+										aria-label="Remove cover"
 										onclick={(e) => { e.stopPropagation(); onCoverRemove!(); }}
 										class="absolute right-1 top-1 flex size-6 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/70"
 									>
@@ -99,7 +103,7 @@
 										</svg>
 									</button>
 								{/if}
-							</button>
+							</div>
 						{:else}
 							<button
 								type="button"

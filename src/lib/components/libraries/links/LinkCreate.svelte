@@ -32,7 +32,8 @@
 		const request: CreateLinkRequest = {
 			title: titleValue || null,
 			url: urlValue,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => Number(tag)) : undefined
+			tags: selectedTags.length > 0 ? selectedTags.map((tag) => Number(tag)) : undefined,
+			category_id: null
 		};
 		const ok = await library.create(request);
 		if (ok) {

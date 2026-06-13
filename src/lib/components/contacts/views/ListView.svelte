@@ -34,7 +34,8 @@
 				</div>
 				<div class="flex w-full flex-wrap gap-4">
 					{#each entries as contact (contact.address_book_id + '-' + contact.uid)}
-						<div
+						<button
+							type="button"
 							class="cursor-pointer transition-all max-md:w-full"
 							onclick={() => contacts.openDetailModal(contact)}
 						>
@@ -72,7 +73,7 @@
 									</div>
 								</div>
 							</div>
-						</div>
+						</button>
 					{/each}
 				</div>
 			{/if}

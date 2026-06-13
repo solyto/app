@@ -48,9 +48,9 @@
 	{#if finances.wealthLoaded && finances.budgetLoaded}
 		<div in:fade>
 			<div class="flex w-full flex-row items-start gap-4 max-md:flex-col">
-				<a
-					href="#"
-					class="relative w-full rounded-md p-4 shadow-sm transition-all hover:bg-d-lighterblue dark:shadow-s-dark-shadow dark:hover:bg-s-dark-3 md:dark:bg-s-dark-2"
+				<button
+					type="button"
+					class="relative w-full cursor-pointer rounded-md p-4 shadow-sm transition-all hover:bg-d-lighterblue dark:shadow-s-dark-shadow dark:hover:bg-s-dark-3 md:dark:bg-s-dark-2"
 					onclick={() => {
 						setActivePage('budget');
 						goto(resolve(urls.budget));
@@ -68,10 +68,10 @@
 							>{europeanFormat(finances.getBudgetTotal())}</span
 						>
 					</div>
-				</a>
-				<a
-					href="#"
-					class="relative w-full rounded-md p-4 shadow-sm transition-all hover:bg-d-lighterblue dark:shadow-s-dark-shadow dark:hover:bg-s-dark-3 md:dark:bg-s-dark-2"
+				</button>
+				<button
+					type="button"
+					class="relative w-full cursor-pointer rounded-md p-4 shadow-sm transition-all hover:bg-d-lighterblue dark:shadow-s-dark-shadow dark:hover:bg-s-dark-3 md:dark:bg-s-dark-2"
 					class:border-c-success={colorLoaded && finances.getWealthSum() > 0}
 					class:border-c-danger={colorLoaded && finances.getWealthSum() < 0}
 					onclick={() => {
@@ -91,7 +91,7 @@
 							>{europeanFormat(finances.getWealthSum())}</span
 						>
 					</div>
-				</a>
+				</button>
 			</div>
 		</div>
 

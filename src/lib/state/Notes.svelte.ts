@@ -169,7 +169,7 @@ export class NotesSvelte {
 		this.rightClickMenuX = event.clientX;
 		this.rightClickMenuY = event.clientY;
 		this.rightClickId = id;
-		this.createParent = id;
+		this.createParent = type === 'category' ? id as number : null;
 		this.rightClickMenuOpen = true;
 	}
 

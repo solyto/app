@@ -122,9 +122,9 @@
 						bind:value={titleValue}
 					/>
 				{:else}
-					<span class="text-3xl font-bold leading-tight" ondblclick={toggleChangeTitle}>
+					<button type="button" class="text-3xl font-bold leading-tight" ondblclick={toggleChangeTitle}>
 						{notes.activeNote.title}
-					</span>
+					</button>
 				{/if}
 				{#if lastSaved}
 					<span class="text-xs text-c-neutral-5 dark:text-c-neutral-4">

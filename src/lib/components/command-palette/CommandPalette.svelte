@@ -63,6 +63,7 @@
 	in:blur={{ duration: 200 }}
 	role="dialog"
 	aria-modal="true"
+	tabindex="-1"
 	onmousedown={(e) => { if (e.target === e.currentTarget) palette.closePalette(); }}
 >
 	<div

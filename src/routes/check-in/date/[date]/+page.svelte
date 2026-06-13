@@ -35,7 +35,7 @@
 
 	async function onChange(type: CheckInType, value: number): Promise<void> {
 		if (save === null) {
-			save = { date: checkInData.selectedDate, [type]: value };
+			save = { date: checkInData.selectedDate!, [type]: value };
 		} else {
 			save[type] = value;
 		}
@@ -58,7 +58,7 @@
 			{:else if isYesterday}
 				{ts.get.checkInSummary.day_yesterday}
 			{:else}
-				{formatDate(date)}
+				{formatDate(date!)}
 			{/if}
 		</h2>
 	</div>

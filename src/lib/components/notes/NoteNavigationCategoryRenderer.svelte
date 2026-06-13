@@ -31,13 +31,11 @@
 	role="region"
 	aria-label="Category {category.title}"
 >
-	<a
-		href="#"
-		onclick={() => {
-			notes.toggleCollapseCategory(category.id);
-		}}
-		oncontextmenu={(event: MouseEvent) =>
-			notes.openRightClickMenu(event, 'category', category.id)}
+	<div
+		role="button"
+		tabindex="0"
+		onclick={() => {notes.toggleCollapseCategory(category.id);}}
+		oncontextmenu={(event: MouseEvent) => notes.openRightClickMenu(event, 'category', category.id)}
 	>
 		<div
 			class="flex cursor-pointer items-center space-x-2 rounded-lg px-2 py-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
@@ -53,7 +51,7 @@
 			/>
 			<span class="text-base">{category.title}</span>
 		</div>
-	</a>
+	</div>
 	{#if notes.isCategoryCollapsed(category.id)}
 		<div class="relative" transition:slide={{ duration: 100 }}>
 			<div

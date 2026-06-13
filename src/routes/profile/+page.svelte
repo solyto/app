@@ -76,13 +76,13 @@
 				{#if selectedFileUrl}
 					<img
 						src={selectedFileUrl}
-						alt="Profile Image"
+						alt="Profile"
 						class="h-full w-full rounded-full object-cover"
 					/>
 				{:else if auth.user?.profile?.profile_image_path}
 					<img
 						src={API_USER_STORAGE_URL + '/' + auth.user.profile.profile_image_path}
-						alt="Profile Image"
+						alt="Profile"
 						class="h-full w-full rounded-full object-cover"
 					/>
 				{/if}

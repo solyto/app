@@ -38,12 +38,15 @@
 	]);
 
 	let selected = $state<number>(1);
+	const SelectedComponent = $derived(sections.find((s) => s.id === selected)?.component);
 </script>
 
 <div class="relative flex h-full w-full flex-row">
 	<SettingsNavigationMobile {sections} {selected} onselect={(id) => (selected = id)} />
 	<SettingsNavigationDesktop {sections} {selected} onselect={(id) => (selected = id)} />
 	<div class="min-h-0 flex-1 overflow-auto px-4 py-2 max-md:pt-20">
-		{@render sections.find((s) => s.id === selected)?.component?.()}
+		{#if SelectedComponent}
+			<SelectedComponent />
+		{/if}
 	</div>
 </div>

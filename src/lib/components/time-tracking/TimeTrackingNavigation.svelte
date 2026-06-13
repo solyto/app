@@ -12,6 +12,8 @@
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { onDestroy } from 'svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import { urls } from '$lib/config/urls';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
@@ -22,6 +24,7 @@
 	const tt = getTimeTracking();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
+	const keyManager = getKeyManager();
 
 	let {
 		onCreateProject,
@@ -50,6 +53,9 @@
 	let addCategoryInput = $state<HTMLInputElement | null>(null);
 	let editingCategoryId = $state<number | null>(null);
 	let editingCategoryTitle = $state<string>('');
+	let editingInput = $state<HTMLInputElement | null>(null);
+	let addKeyHandlers = $state<Record<string, string | null>>({ Enter: null, Escape: null });
+	let editKeyHandlers = $state<Record<string, string | null>>({ Enter: null, Escape: null });
 	let categoryColors = $state<Record<number, string>>({});
 
 	function getCategoryHex(id: number, fallback: string | null): string {
@@ -74,6 +80,7 @@
 
 	async function addCategory(): Promise<void> {
 		if (!newCategoryTitle.trim()) return;
+		keyManager.unregisterAll(addKeyHandlers);
 		loadingIndicator.start();
 		await tt.createCategory({ title: newCategoryTitle.trim(), color: '#1dbda5' });
 		newCategoryTitle = '';
@@ -81,13 +88,28 @@
 		loadingIndicator.stop();
 	}
 
-	function startEditCategory(id: number, title: string): void {
+	function startAddCategory(): void {
+		addingCategory = true;
+		addKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => addCategory(), { priority: 2 });
+		addKeyHandlers.Escape = keyManager.registerKeyDown('Escape', () => {
+			keyManager.unregisterAll(addKeyHandlers);
+			addingCategory = false;
+			newCategoryTitle = '';
+		});
+	}
+
+	async function startEditCategory(id: number, title: string): Promise<void> {
 		editingCategoryId = id;
 		editingCategoryTitle = title;
+		editKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => saveEditCategory(), { priority: 2 });
+		editKeyHandlers.Escape = keyManager.registerKeyDown('Escape', () => cancelEditCategory());
+		await tick();
+		editingInput?.focus();
 	}
 
 	async function saveEditCategory(): Promise<void> {
 		if (editingCategoryId === null || !editingCategoryTitle.trim()) return;
+		keyManager.unregisterAll(editKeyHandlers);
 		loadingIndicator.start();
 		await tt.updateCategory(editingCategoryId, { title: editingCategoryTitle.trim() });
 		editingCategoryId = null;
@@ -96,6 +118,7 @@
 	}
 
 	function cancelEditCategory(): void {
+		keyManager.unregisterAll(editKeyHandlers);
 		editingCategoryId = null;
 		editingCategoryTitle = '';
 	}
@@ -107,19 +130,10 @@
 		await tt.updateCategory(id, { color: newColor });
 	}
 
-	function handleCategoryKeydown(e: KeyboardEvent, action: 'add' | 'edit'): void {
-		if (e.key === 'Enter') {
-			if (action === 'add') addCategory();
-			else saveEditCategory();
-		} else if (e.key === 'Escape') {
-			if (action === 'add') {
-				addingCategory = false;
-				newCategoryTitle = '';
-			} else {
-				cancelEditCategory();
-			}
-		}
-	}
+	onDestroy(() => {
+		keyManager.unregisterAll(addKeyHandlers);
+		keyManager.unregisterAll(editKeyHandlers);
+	});
 </script>
 
 <FunnelButton onclick={toggleMobile} />
@@ -234,7 +248,7 @@
 			<button
 				class="cursor-pointer rounded-full p-1.5 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-primary dark:hover:bg-s-dark-3"
 				onclick={async () => {
-					addingCategory = true;
+					startAddCategory();
 					await tick();
 					addCategoryInput?.focus();
 				}}
@@ -243,14 +257,12 @@
 			</button>
 		</div>
 		{#if addingCategory}
-			<div
-				class="flex flex-row items-center space-x-2"
-				onkeydown={(e) => handleCategoryKeydown(e, 'add')}
-			>
+			<div class="flex flex-row items-center space-x-2">
 				<TextInput
 					bind:input={addCategoryInput}
 					bind:value={newCategoryTitle}
 					onblur={() => {
+						keyManager.unregisterAll(addKeyHandlers);
 						addingCategory = false;
 						newCategoryTitle = '';
 					}}
@@ -276,11 +288,10 @@
 					{#if editingCategoryId === category.id}
 						<input
 							type="text"
+							bind:this={editingInput}
 							bind:value={editingCategoryTitle}
-							onkeydown={(e) => handleCategoryKeydown(e, 'edit')}
 							onblur={saveEditCategory}
 							class="w-full rounded-md border-1 border-c-neutral-2 px-2 py-0.5 text-sm shadow-xs focus:ring-2 focus:ring-c-primary focus:outline-none dark:border-s-dark-3 dark:bg-inherit dark:text-white"
-							autofocus
 						/>
 					{:else}
 						<button

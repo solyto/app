@@ -136,9 +136,9 @@
 						bind:value={titleValue}
 					/>
 				{:else}
-					<span ondblclick={() => toggleChange('title')} class="cursor-pointer text-lg font-bold md:text-base"
-						>{entry.title}</span
-					>
+					<button type="button" ondblclick={() => toggleChange('title')} class="cursor-pointer text-lg font-bold md:text-base">
+						{entry.title}
+					</button>
 				{/if}
 			{:else}
 				<span class="text-lg font-bold md:text-base">{entry.title}</span>
@@ -187,12 +187,13 @@
 							bind:value={descriptionValue}
 						></textarea>
 					{:else}
-						<div
+						<button
+							type="button"
 							class="w-full cursor-pointer pt-4"
 							ondblclick={() => toggleChange('description')}
 						>
 							{@html DOMPurify.sanitize(nl2br(entry.description))}
-						</div>
+						</button>
 					{/if}
 				{:else}
 					<div class="w-full pt-4">

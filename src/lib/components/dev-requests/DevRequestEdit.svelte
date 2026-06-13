@@ -14,11 +14,13 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import FileUpload from '$lib/components/forms/FileUpload.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import { getAuth } from '$lib/state/Auth.svelte';
 
 	const ts = getTranslation();
 	const devRequests = getDevRequests();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
+	const auth = getAuth();
 
 	let { onClose } = $props<{
 		onClose: () => void;
@@ -70,7 +72,8 @@
 			screenshot_name: form.screenshot_name != '' ? form.screenshot_name : null,
 			priority: parseInt(form.priority) as DevRequestPriority,
 			url: form.url,
-			type: form.type as DevRequestType
+			type: form.type as DevRequestType,
+			created_by_user_id: auth.user?.id ?? null,
 		});
 		form = { ...emptyForm };
 		if (res) await devRequests.load();

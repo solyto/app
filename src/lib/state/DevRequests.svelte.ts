@@ -57,7 +57,6 @@ export class DevRequests {
 	}
 
 	async create(request: CreateDevRequestRequest): Promise<boolean> {
-		request.created_by_user_id = this.auth.user?.id ?? null;
 		const res = await this.apiService.create(apiRoutes.dev.requests.create, request);
 		if (res) {
 			const devRequest = res.data as DevRequest;

@@ -97,7 +97,7 @@
 							<span
 								>{ts.get.notes.updated_days_ago.replace(
 									'%d',
-									daysSince(note.updated_at)
+									daysSince(note.updated_at).toString()
 								)}</span
 							>
 						</div>
