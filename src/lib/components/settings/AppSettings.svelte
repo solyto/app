@@ -10,7 +10,8 @@
 	import IconMapPin from '@lucide/svelte/icons/map-pin';
 	import { themes } from '$lib/config/themes';
 	import { env } from '$env/dynamic/public';
-	import { IS_NATIVE } from '$lib/config/platform';
+	import { IS_NATIVE, PLATFORM } from '$lib/config/platform';
+	import UpdateChecker from '$lib/components/settings/UpdateChecker.svelte';
 
 	const ts = getTranslation();
 	const pwa = getPwaInstall();
@@ -89,6 +90,9 @@
 	{#if IS_NATIVE && version}
 		<SettingsSection label="Version">
 			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{version}</p>
+			{#if PLATFORM === 'desktop'}
+				<UpdateChecker />
+			{/if}
 		</SettingsSection>
 	{/if}
 </div>
