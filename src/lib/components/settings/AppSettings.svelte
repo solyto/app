@@ -12,6 +12,7 @@
 	import { env } from '$env/dynamic/public';
 	import { IS_NATIVE, PLATFORM } from '$lib/config/platform';
 	import UpdateChecker from '$lib/components/settings/UpdateChecker.svelte';
+	import Toggle from '$lib/components/forms/Toggle.svelte';
 
 	const ts = getTranslation();
 	const pwa = getPwaInstall();
@@ -23,7 +24,7 @@
 </script>
 
 <div class="flex flex-col gap-6 md:p-4">
-	<SettingsSection label="Theme">
+	<SettingsSection label={ts.get.settings.theme}>
 		<div class="mt-2 flex flex-wrap items-stretch gap-3">
 			{#each themes as t (t.id)}
 				{@const active = themeState.theme.id === t.id}
@@ -49,6 +50,15 @@
 					</div>
 				</button>
 			{/each}
+		</div>
+	</SettingsSection>
+	<SettingsSection label={ts.get.settings.animations}>
+		<div class="mt-2">
+			<Toggle
+				checked={themeState.animations}
+				label={ts.get.settings.animations_label}
+				onchange={(v) => themeState.setAnimations(v)}
+			/>
 		</div>
 	</SettingsSection>
 	<SettingsSection label={ts.get.welcome_tour.tour_start}>

@@ -4,6 +4,11 @@ html {
     @apply dark:text-white;
 }
 
+html.no-animations *, html.no-animations *::before, html.no-animations *::after {
+    animation: none !important;
+    transition: none !important;
+}
+
 .gradient-down {
     background: linear-gradient(to bottom, var(--t-gradient-colors));
 }

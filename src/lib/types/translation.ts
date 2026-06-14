@@ -127,6 +127,9 @@ export interface SettingsRecords {
 	passkey_last_used: string;
 	passkey_never_used: string;
 	passkey_no_passkeys: string;
+	theme: string;
+	animations: string;
+	animations_label: string;
 }
 
 export interface AuthRecords {

@@ -211,7 +211,10 @@ const settings: SettingsRecords = {
 	passkey_rename_error: 'Passkey konnte nicht umbenannt werden.',
 	passkey_last_used: 'Zuletzt verwendet',
 	passkey_never_used: 'Noch nie verwendet',
-	passkey_no_passkeys: 'Noch keine Passkeys registriert.'
+	passkey_no_passkeys: 'Noch keine Passkeys registriert.',
+	theme: 'Design',
+	animations: 'Animationen',
+	animations_label: 'Animationen und Übergänge aktivieren'
 };
 
 const todos: TodoRecords = {

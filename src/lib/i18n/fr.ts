@@ -209,7 +209,10 @@ const settings: SettingsRecords = {
 	passkey_rename_error: 'Impossible de renommer la clé d\'accès.',
 	passkey_last_used: 'Dernière utilisation',
 	passkey_never_used: 'Jamais utilisée',
-	passkey_no_passkeys: 'Aucune clé d\'accès enregistrée pour l\'instant.'
+	passkey_no_passkeys: 'Aucune clé d\'accès enregistrée pour l\'instant.',
+	theme: 'Thème',
+	animations: 'Animations',
+	animations_label: 'Activer les animations et transitions'
 };
 
 const todos: TodoRecords = {
