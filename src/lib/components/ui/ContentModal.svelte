@@ -14,7 +14,8 @@
 		p = '8',
 		width = null,
 		title = null,
-		transparent = false
+		transparent = false,
+		higherZIndex = false
 	} = $props<{
 		onClose?: () => void | Promise<void>;
 		onEdit?: () => void | Promise<void>;
@@ -26,18 +27,23 @@
 		width?: string | null;
 		title?: string | null;
 		transparent?: boolean;
+		higherZIndex?: boolean;
 	}>();
 </script>
 
 <div
-	class="fixed top-0 left-0 z-40 flex h-dvh w-screen justify-center bg-transparent backdrop-blur-xs transition-all modal-blur max-md:h-[calc(100dvh-4rem)]"
+	class="fixed top-0 left-0 flex h-dvh w-screen justify-center bg-transparent backdrop-blur-xs transition-all modal-blur max-md:h-[calc(100dvh-4rem)]"
+	class:z-40={!higherZIndex}
+	class:z-50={higherZIndex}
 	out:fade
 	in:blur={{ duration: 300 }}
 >
 	<div class="relative my-auto p-8 max-md:p-0 modal-container" in:scale={{ start: 0.75 }}>
 		{#if title}
 			<div
-				class="absolute z-40 text-2xl font-bold tracking-wide text-c-heading max-md:hidden dark:text-c-primary"
+				class="absolute text-2xl font-bold tracking-wide text-c-heading max-md:hidden dark:text-c-primary"
+				class:z-40={!higherZIndex}
+				class:z-50={higherZIndex}
 				class:top-[-20px]={!transparent}
 				class:left-12={!transparent}
 				class:top-3={transparent}
@@ -59,11 +65,13 @@
 		{/if}
 		<div
 			class="
-				relative z-30 max-h-dvh w-full max-w-screen overflow-y-auto p-4 not-dark:border-c-neutral-2 max-md:w-screen max-md:max-h-[calc(100dvh-4rem)]
+				relative max-h-dvh w-full max-w-screen overflow-y-auto p-4 not-dark:border-c-neutral-2 max-md:w-screen max-md:max-h-[calc(100dvh-4rem)]
 				{rounded ? 'md:rounded-' + rounded : ''}
 				{p ? 'md:p-' + p : 'md:p-4'}
 				{width ? 'md:w-' + width : ''}
 			"
+			class:z-30={!higherZIndex}
+			class:z-40={higherZIndex}
 			class:md:min-w-120={!small && !width}
 			class:bg-c-bg-modal={!transparent}
 			class:not-dark:border-1={!transparent}

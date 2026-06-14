@@ -434,7 +434,9 @@ const libraries: LibraryRecords = {
 		discogs_import: 'Import from Discogs',
 		discogs_import_validation_error: 'Please specify a valid Discogs link.',
 		create_error: 'Failed to create album.',
-		update_error: 'Failed to update album.'
+		update_error: 'Failed to update album.',
+		search_placeholder: 'Artist, album title...',
+		no_results: 'No results found.'
 	},
 	books: {
 		title: 'Title',
@@ -457,7 +459,8 @@ const libraries: LibraryRecords = {
 		goodreads_import: 'Import from goodreads',
 		goodreads_import_validation_error: 'Please specify a valid goodreads link.',
 		create_error: 'Failed to create book.',
-		update_error: 'Failed to update book.'
+		update_error: 'Failed to update book.',
+		search_placeholder: 'Book title...'
 	},
 	movies: {
 		title: 'Title',
@@ -473,8 +476,11 @@ const libraries: LibraryRecords = {
 		import_error: 'Movie could not be imported.',
 		imdb_import: 'Import from IMDb',
 		imdb_import_validation_error: 'Please specify a valid IMDb link.',
+		tmdb_import: 'Import from TMDB',
+		tmdb_import_validation_error: 'Please specify a valid TMDB link.',
 		create_error: 'Failed to create movie.',
-		update_error: 'Failed to update movie.'
+		update_error: 'Failed to update movie.',
+		search_placeholder: 'Movie or series title...'
 	},
 	games: {
 		title: 'Title',
@@ -500,7 +506,8 @@ const libraries: LibraryRecords = {
 		steam_import: 'Import from Steam',
 		steam_import_validation_error: 'Please specify a valid Steam store link.',
 		bgg_import: 'Import from BGG',
-		bgg_import_validation_error: 'Please specify a valid BGG link.'
+		bgg_import_validation_error: 'Please specify a valid BGG link.',
+		search_placeholder: 'Game title...'
 	},
 	links: {
 		title: 'Title',
@@ -614,7 +621,10 @@ const libraries: LibraryRecords = {
 	added_to_wishlist: 'Added to Wishlist',
 	add_to_wishlist_error: 'Could not add to wishlist',
 	search_on: 'Search on %s',
-	show_on: 'Show on %s'
+	show_on: 'Show on %s',
+	search: 'Search',
+	import: 'Import',
+	no_results: 'No results found.'
 };
 
 const dev: DevRecords = {

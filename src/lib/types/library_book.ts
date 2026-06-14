@@ -82,34 +82,24 @@ export interface UpdateBookGenreRequest {
 }
 
 export interface BookRelease {
-	id: number;
+	id: number | null;
 	author: string;
 	author_id: number | null;
 	title: string;
 	description: string | null;
+	page_count: number | null;
 	url: string;
 	cover: string | null;
-	release_date: string;
-	page_count: number | null;
+	provider: string;
+	release_date: string | null;
 }
 
-export interface HardcoverImport {
+export interface BookSearchResult {
 	id: number;
-	author: string;
-	author_id: number | null;
 	title: string;
-	description: string | null;
-	url: string;
+	author: string | null;
 	cover: string | null;
-	release_date: string;
-	page_count: number | null;
-}
-
-export interface GoodreadsImport {
-	author: string;
-	title: string;
+	release_year: number | null;
+	provider: string;
 	url: string;
-	cover: string | null;
-	release_date: string;
-	page_count: number | null;
 }

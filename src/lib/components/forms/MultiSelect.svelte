@@ -2,14 +2,19 @@
 <script lang="ts">
 	import MultiSelect from 'svelte-multiselect';
 
+	export interface MultiSelectEntry {
+		label: string;
+		value: string;
+	}
+
 	let {
 		value = $bindable(),
 		options,
 		allowUserOptions = false,
 		placeholder = ''
 	} = $props<{
-		value: string[];
-		options: { label: string; value: string }[];
+		value: MultiSelectEntry[];
+		options: MultiSelectEntry[];
 		allowUserOptions?: boolean;
 		placeholder?: string;
 	}>();

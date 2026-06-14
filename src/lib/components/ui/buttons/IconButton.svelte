@@ -3,12 +3,14 @@
 		onclick = () => {},
 		type = 'btn',
 		disabled = false,
+		pulse = false,
 		class: customClass = '',
 		children
 	} = $props<{
 		onclick?: () => void;
 		type?: 'btn' | 'action' | 'danger' | 'success' | 'primary' | 'warning' | 'plain' | 'slight';
 		disabled?: boolean;
+		pulse?: boolean;
 		class?: string;
 		children: any;
 	}>();
@@ -40,6 +42,7 @@
 	class:hover:text-white={type !== 'plain' && type !== 'slight' && type !== 'warning' && type !== 'action' && !disabled}
 	class:px-4={type !== 'plain'}
 	class:py-2={type !== 'plain'}
+	class:animate-pulse={pulse}
 	{disabled}
 	{onclick}
 >

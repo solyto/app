@@ -7,7 +7,7 @@
 		UpdateFeedSubscriptionRequest
 	} from '$lib/types/feed';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
-	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
+	import MultiSelect, { type MultiSelectEntry } from '$lib/components/forms/MultiSelect.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
@@ -26,21 +26,15 @@
 	let titleValue = $state<string>(feeds.activeFeed ? feeds.activeFeed.title : '');
 	let urlInput = $state<HTMLInputElement | null>(null);
 	let urlValue = $state<string>(feeds.activeFeed ? feeds.activeFeed.url : '');
-	let keywordsValue = $state<string[]>(
-		feeds.activeFeed && feeds.activeFeed.whitelist
-			? feeds.activeFeed.whitelist
-					.split(',')
-					.map((k) => k.trim())
-					.filter((k) => k !== '')
-			: []
+	let keywordsValue = $state<MultiSelectEntry[]>(
+		feeds.activeFeed && feeds.activeFeed.whitelist ?
+			feeds.activeFeed.whitelist.split(',').map((k) => k.trim()).filter((k) => k !== '').map((k) => ({ label: k, value: k })) :
+			[]
 	);
-	let blacklistValue = $state<string[]>(
-		feeds.activeFeed && feeds.activeFeed.blacklist
-			? feeds.activeFeed.blacklist
-					.split(',')
-					.map((k) => k.trim())
-					.filter((k) => k !== '')
-			: []
+	let blacklistValue = $state<MultiSelectEntry[]>(
+		feeds.activeFeed && feeds.activeFeed.blacklist ?
+			feeds.activeFeed.blacklist.split(',').map((k) => k.trim()).filter((k) => k !== '').map((k) => ({ label: k, value: k })) :
+			[]
 	);
 	let feedTestItems = $state<FeedTestItem[]>([]);
 	let feedTested = $state<boolean>(false);
@@ -49,8 +43,8 @@
 		loadingIndicator.start();
 		let res = null;
 
-		const keywordsString = keywordsValue.join(',');
-		const blacklistString = blacklistValue.join(',');
+		const keywordsString = keywordsValue.map((k) => k.value).join(',');
+		const blacklistString = blacklistValue.map((k) => k.value).join(',');
 
 		if (feeds.activeFeed) {
 			const request: UpdateFeedSubscriptionRequest = {

@@ -61,13 +61,16 @@ export interface UpdateMovieGenreRequest {
 }
 
 export interface MovieRelease {
-	id: number;
+	id: string;
+	type: string | null;
 	title: string;
-	overview: string | null;
-	poster: string | null;
-	release_date: string;
-	type: 'movie' | 'tv';
+	description: string | null;
 	url: string;
+	cover: string | null;
+	provider: string;
+	release_year: number | null;
+	runtime: number | null;
+	genres: string[];
 }
 
 export interface MovieTrailer {
@@ -75,12 +78,11 @@ export interface MovieTrailer {
 	name: string;
 }
 
-export interface ImdbImport {
+export interface MovieSearchResult {
 	id: number;
-	type: string;
 	title: string;
+	cover: string | null;
+	release_year: number | null;
+	provider: string;
 	url: string;
-	cover: string;
-	release_year: number;
-	genres: string[];
 }

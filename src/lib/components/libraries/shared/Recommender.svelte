@@ -57,16 +57,12 @@
 
 		if (recommendation.id === null) {
 			const apiService = new ApiService(auth.getToken());
-			const res = await apiService.list(
-				apiRoutes.libraries.music.searchAlbumOnDeezer.replace(
-					'%s',
-					recommendation.creator + '/' + recommendation.title
-				)
-			);
+			const query = encodeURIComponent(`${recommendation.creator} ${recommendation.title}`);
+			const res = await apiService.list(`${apiRoutes.libraries.music.search}/deezer/${query}`);
 			if (res !== null && res.data.length > 0) {
-				const item = (res.data as Array<{ link: string; cover_big: string }>)[0];
-				recommendation.link = item.link;
-				recommendation.cover = item.cover_big;
+				const item = (res.data as Array<{ url: string; cover: string | null }>)[0];
+				recommendation.link = item.url;
+				recommendation.cover = item.cover;
 			}
 		}
 	}

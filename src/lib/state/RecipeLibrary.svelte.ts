@@ -3,7 +3,7 @@ import type {
 	RecipeType,
 	CreateRecipeRequest,
 	UpdateRecipeRequest,
-	ChefkochImport
+	RecipeRelease
 } from '$lib/types/library_recipe';
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
@@ -148,11 +148,9 @@ export class RecipeLibrary {
 		return Promise.resolve(res !== null);
 	}
 
-	async importFromChefkoch(url: string): Promise<ChefkochImport | null> {
-		const res = await this.apiService.post(apiRoutes.libraries.recipes.importFromChefkoch, {
-			url
-		});
-		if (res) return res.data as ChefkochImport;
+	async importFrom(provider: string, url: string): Promise<RecipeRelease | null> {
+		const res = await this.apiService.post(`${apiRoutes.libraries.recipes.import}/${provider}`, { url });
+		if (res) return res.data as RecipeRelease;
 		return null;
 	}
 }

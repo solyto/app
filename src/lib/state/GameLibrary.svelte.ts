@@ -4,8 +4,8 @@ import type {
 	CreateGameRequest,
 	UpdateGameRequest,
 	CreateGameGenreRequest,
-	SteamImport,
-	BggImport
+	GameRelease,
+	GameSearchResult
 } from '$lib/types/library_game';
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
@@ -37,6 +37,7 @@ export class GameLibrary {
 	detailModalVisible = $state<boolean>(false);
 	genreModalVisible = $state<boolean>(false);
 	searchVisible = $state<boolean>(false);
+	externalSearchModalVisible = $state<boolean>(false);
 	activeEntry = $state<Game | null>(null);
 	ratingFilter = $state<number | null>(null);
 	genreFilter = $state<GameGenre | null>(null);
@@ -140,6 +141,14 @@ export class GameLibrary {
 		this.genreModalVisible = false;
 	}
 
+	openExternalSearchModal(): void {
+		this.externalSearchModalVisible = true;
+	}
+
+	closeExternalSearchModal(): void {
+		this.externalSearchModalVisible = false;
+	}
+
 	switchView(): void {
 		this.view = this.view === 'list' ? 'cards' : 'list';
 	}
@@ -190,15 +199,20 @@ export class GameLibrary {
 		return Promise.resolve(res !== null);
 	}
 
-	async importFromSteam(url: string): Promise<SteamImport | null> {
-		const res = await this.apiService.post(apiRoutes.libraries.games.importFromSteam, { url });
-		if (res) return res.data as SteamImport;
+	async searchAt(provider: string, query: string): Promise<GameSearchResult[] | null> {
+		const res = await this.apiService.list(
+			`${apiRoutes.libraries.games.search}/${provider}/${encodeURIComponent(query)}`
+		);
+		if (res) return res.data as GameSearchResult[];
 		return null;
 	}
 
-	async importFromBgg(url: string): Promise<BggImport | null> {
-		const res = await this.apiService.post(apiRoutes.libraries.games.importFromBgg, { url });
-		if (res) return res.data as BggImport;
+	async importFrom(provider: string, url: string): Promise<GameRelease | null> {
+		const res = await this.apiService.post(
+			`${apiRoutes.libraries.games.import}/${provider}`,
+			{ url }
+		);
+		if (res) return res.data as GameRelease;
 		return null;
 	}
 }

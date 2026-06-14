@@ -11,11 +11,15 @@
 	import NumberInput from '$lib/components/forms/NumberInput.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
-	import type { CreateMovieRequest, Movie, UpdateMovieRequest } from '$lib/types/library_movie';
+	import type { CreateMovieRequest, Movie, MovieRelease, UpdateMovieRequest } from '$lib/types/library_movie';
 	import CreateModal from '$lib/components/libraries/shared/CreateModal.svelte';
 	import { getMovieLibrary } from '$lib/state/MovieLibrary.svelte';
-	import ImdbImportButton from '$lib/components/ui/buttons/ImdbImportButton.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import CreateModalSearchButton from '$lib/components/libraries/shared/CreateModalSearchButton.svelte';
+	import CreateModalImport from '$lib/components/libraries/shared/CreateModalImport.svelte';
+	import MovieSearch from '$lib/components/libraries/movies/MovieSearch.svelte';
+	import ImdbIcon from '$lib/assets/services/imdb_icon.svg';
+	import TmdbIcon from '$lib/assets/services/tmdb_icon.svg';
 
 	const ts = getTranslation();
 	const notifications = getUiNotifications();
@@ -43,6 +47,12 @@
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
 	let linkInput = $state<HTMLInputElement | null>(null);
 	let importLoading = $state<boolean>(false);
+	let importDropdownOpen = $state<boolean>(false);
+
+	const importOptions = [
+		{ label: 'IMDb', icon: ImdbIcon, onClick: () => importFrom('imdb', 'imdb.com', ts.get.libraries.movies.imdb_import_validation_error) },
+		{ label: 'TMDB', icon: TmdbIcon, onClick: () => importFrom('tmdb', 'themoviedb.org', ts.get.libraries.movies.tmdb_import_validation_error) }
+	];
 
 	const genreOptions: { label: string; value: string }[] = library.genres.map((genre) => ({
 		label: genre.title,
@@ -129,20 +139,26 @@
 		loadingIndicator.stop();
 	}
 
-	async function importFromImdb(): Promise<void> {
+	function onSearchSelect(movie: MovieRelease): void {
+		titleValue = movie.title;
+		if (movie.release_year) publicationYearValue = movie.release_year;
+		if (movie.cover) coverValue = movie.cover;
+	}
+
+	async function importFrom(provider: string, domain: string, validationError: string): Promise<void> {
 		if (linkValue === '') {
 			linkInput?.focus();
 			return;
 		}
 
-		if (!linkValue.includes('imdb.com')) {
-			notifications.error(ts.get.libraries.movies.imdb_import_validation_error);
+		if (!linkValue.includes(domain)) {
+			notifications.error(validationError);
 			return;
 		}
 
 		importLoading = true;
 		loadingIndicator.start();
-		const movie = await library.importFromImdb(linkValue);
+		const movie = await library.importFrom(provider, linkValue);
 
 		if (!movie) {
 			notifications.error(ts.get.libraries.movies.import_error);
@@ -152,29 +168,20 @@
 		}
 
 		titleValue = movie.title;
-		coverValue = movie.cover;
+		coverValue = movie.cover ?? '';
 		publicationYearValue = movie.release_year;
 
-		if (movie.type === 'tvSeries') {
-			categoryValue = 'series';
-		} else if (movie.type === 'movie') {
-			categoryValue = 'movie';
-		}
+		if (movie.type === 'tv' || movie.type === 'tvSeries') categoryValue = 'series';
+		else if (movie.type === 'movie') categoryValue = 'movie';
 
-		if (movie.genres.length > 0) {
-			for (const genre of movie.genres) {
-				const existing = library.genres.find((g) => g.title === genre);
-
-				if (!existing) {
-					continue;
-				}
-
-				selectedGenres.push({ label: existing.title, value: existing.id.toString() });
-			}
+		for (const genre of movie.genres) {
+			const existing = library.genres.find((g) => g.title === genre);
+			if (existing) selectedGenres.push({ label: existing.title, value: existing.id.toString() });
 		}
 
 		loadingIndicator.stop();
 		importLoading = false;
+		importDropdownOpen = false;
 	}
 </script>
 
@@ -217,8 +224,15 @@
 	<ModalFormRow label={ts.get.libraries.movies.link}>
 		<TextInput bind:value={linkValue} bind:input={linkInput} placeholder="https://" />
 	</ModalFormRow>
-	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
-		<ImdbImportButton loading={importLoading} onClick={importFromImdb} />
+	<div class="mt-8 flex w-full flex-row items-center justify-end gap-3">
+		{#if !activeEntry}
+			<CreateModalSearchButton {library} {ts} />
+			<CreateModalImport options={importOptions} {ts} loading={importLoading} bind:open={importDropdownOpen} />
+		{/if}
 		<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 	</div>
 </CreateModal>
+
+{#if library.externalSearchModalVisible}
+	<MovieSearch {library} {ts} onSelect={onSearchSelect} />
+{/if}

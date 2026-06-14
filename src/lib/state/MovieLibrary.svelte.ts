@@ -6,7 +6,7 @@ import type {
 	CreateMovieRequest,
 	UpdateMovieRequest,
 	CreateMovieGenreRequest,
-	ImdbImport
+	MovieSearchResult
 } from '$lib/types/library_movie';
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
@@ -14,7 +14,6 @@ import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
 import type { LibraryConfig } from '$lib/types/library';
-import type { DeezerImport } from '$lib/types/library_music';
 import type { Book } from '$lib/types/library_book';
 
 export class MovieLibrary {
@@ -40,6 +39,7 @@ export class MovieLibrary {
 	detailModalVisible = $state<boolean>(false);
 	genreModalVisible = $state<boolean>(false);
 	searchVisible = $state<boolean>(false);
+	externalSearchModalVisible = $state<boolean>(false);
 	activeEntry = $state<Movie | null>(null);
 	ratingFilter = $state<number | null>(null);
 	genreFilter = $state<MovieGenre | null>(null);
@@ -141,6 +141,14 @@ export class MovieLibrary {
 		this.genreModalVisible = false;
 	}
 
+	openExternalSearchModal(): void {
+		this.externalSearchModalVisible = true;
+	}
+
+	closeExternalSearchModal(): void {
+		this.externalSearchModalVisible = false;
+	}
+
 	switchView(): void {
 		this.view = this.view === 'list' ? 'cards' : 'list';
 	}
@@ -206,9 +214,20 @@ export class MovieLibrary {
 		return [];
 	}
 
-	async importFromImdb(url: string): Promise<ImdbImport | null> {
-		const res = await this.apiService.post(apiRoutes.libraries.movies.importFromImdb, { url });
-		if (res) return res.data as ImdbImport;
+	async searchAt(provider: string, query: string): Promise<MovieSearchResult[] | null> {
+		const res = await this.apiService.list(
+			`${apiRoutes.libraries.movies.search}/${provider}/${encodeURIComponent(query)}`
+		);
+		if (res) return res.data as MovieSearchResult[];
+		return null;
+	}
+
+	async importFrom(provider: string, url: string): Promise<MovieRelease | null> {
+		const res = await this.apiService.post(
+			`${apiRoutes.libraries.movies.import}/${provider}`,
+			{ url }
+		);
+		if (res) return res.data as MovieRelease;
 		return null;
 	}
 }

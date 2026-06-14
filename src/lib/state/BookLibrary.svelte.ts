@@ -5,8 +5,7 @@ import type {
 	UpdateBookRequest,
 	CreateBookGenreRequest,
 	BookRelease,
-	HardcoverImport,
-	GoodreadsImport
+	BookSearchResult
 } from '$lib/types/library_book';
 import type {
 	LibraryRecommendationType,
@@ -45,6 +44,7 @@ export class BookLibrary {
 	detailModalVisible = $state<boolean>(false);
 	genreModalVisible = $state<boolean>(false);
 	searchVisible = $state<boolean>(false);
+	externalSearchModalVisible = $state<boolean>(false);
 	activeEntry = $state<Book | null>(null);
 	ratingFilter = $state<number | null>(null);
 	genreFilter = $state<BookGenre | null>(null);
@@ -166,6 +166,14 @@ export class BookLibrary {
 		this.genreModalVisible = false;
 	}
 
+	openExternalSearchModal(): void {
+		this.externalSearchModalVisible = true;
+	}
+
+	closeExternalSearchModal(): void {
+		this.externalSearchModalVisible = false;
+	}
+
 	switchView(): void {
 		if (this.view === 'list') this.view = 'cards';
 		else if (this.view === 'cards') this.view = 'shelf';
@@ -218,19 +226,20 @@ export class BookLibrary {
 		return Promise.resolve(res !== null);
 	}
 
-	async importFromHardcover(url: string): Promise<HardcoverImport | null> {
-		const res = await this.apiService.post(apiRoutes.libraries.books.importFromHardcover, {
-			url
-		});
-		if (res) return res.data as HardcoverImport;
+	async searchAt(provider: string, query: string): Promise<BookSearchResult[] | null> {
+		const res = await this.apiService.list(
+			`${apiRoutes.libraries.books.search}/${provider}/${encodeURIComponent(query)}`
+		);
+		if (res) return res.data as BookSearchResult[];
 		return null;
 	}
 
-	async importFromGoodreads(url: string): Promise<GoodreadsImport | null> {
-		const res = await this.apiService.post(apiRoutes.libraries.books.importFromGoodreads, {
-			url
-		});
-		if (res) return res.data as GoodreadsImport;
+	async importFrom(provider: string, url: string): Promise<BookRelease | null> {
+		const res = await this.apiService.post(
+			`${apiRoutes.libraries.books.import}/${provider}`,
+			{ url }
+		);
+		if (res) return res.data as BookRelease;
 		return null;
 	}
 }

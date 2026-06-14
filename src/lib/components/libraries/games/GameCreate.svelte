@@ -12,12 +12,20 @@
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
-	import type { CreateGameRequest, Game, UpdateGameRequest } from '$lib/types/library_game';
+	import type {
+		CreateGameRequest,
+		Game,
+		GameRelease,
+		UpdateGameRequest
+	} from '$lib/types/library_game';
 	import CreateModal from '$lib/components/libraries/shared/CreateModal.svelte';
 	import { getGameLibrary } from '$lib/state/GameLibrary.svelte';
-	import SteamImportButton from '$lib/components/ui/buttons/SteamImportButton.svelte';
-	import BggImportButton from '$lib/components/ui/buttons/BggImportButton.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import CreateModalSearchButton from '$lib/components/libraries/shared/CreateModalSearchButton.svelte';
+	import CreateModalImport from '$lib/components/libraries/shared/CreateModalImport.svelte';
+	import GameSearch from '$lib/components/libraries/games/GameSearch.svelte';
+	import SteamIcon from '$lib/assets/services/steam_icon.svg';
+	import Dices from '@lucide/svelte/icons/dices';
 
 	const ts = getTranslation();
 	const library = getGameLibrary();
@@ -49,6 +57,12 @@
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
 	let linkInput = $state<HTMLInputElement | null>(null);
 	let importLoading = $state<boolean>(false);
+	let importDropdownOpen = $state<boolean>(false);
+
+	const importOptions = [
+		{ label: 'Steam', icon: SteamIcon, onClick: () => importFrom('steam', 'store.steampowered.com', ts.get.libraries.games.steam_import_validation_error) },
+		{ label: 'BGG', icon: Dices, onClick: () => importFrom('bgg', 'boardgamegeek.com', ts.get.libraries.games.bgg_import_validation_error, 'boardgame') }
+	];
 
 	const genreOptions: { label: string; value: string }[] = library.genres.map((genre) => ({
 		label: genre.title,
@@ -150,20 +164,41 @@
 		loadingIndicator.stop();
 	}
 
-	async function importFromSteam(): Promise<void> {
+	function onSearchSelect(game: GameRelease): void {
+		titleValue = game.title;
+		coverValue = game.cover ?? '';
+		linkValue = game.url ?? '';
+		developerValue = game.developer ?? '';
+		publisherValue = game.publisher ?? '';
+
+		if (game.provider === 'bgg') {
+			platformValue = 'boardgame';
+		}
+
+		if (game.publication_year) publicationYearValue = game.publication_year;
+
+		for (const genre of game.genres ?? []) {
+			const existing = library.genres.find((g) => g.title === genre);
+			if (existing) selectedGenres.push({ label: existing.title, value: existing.id.toString() });
+		}
+
+		library.closeExternalSearchModal();
+	}
+
+	async function importFrom(provider: string, domain: string, validationError: string, platform?: string): Promise<void> {
 		if (linkValue === '') {
 			linkInput?.focus();
 			return;
 		}
 
-		if (!linkValue.includes('store.steampowered.com')) {
-			notifications.error(ts.get.libraries.games.steam_import_validation_error);
+		if (!linkValue.includes(domain)) {
+			notifications.error(validationError);
 			return;
 		}
 
 		importLoading = true;
 		loadingIndicator.start();
-		const game = await library.importFromSteam(linkValue);
+		const game = await library.importFrom(provider, linkValue);
 
 		if (!game) {
 			notifications.error(ts.get.libraries.games.import_error);
@@ -176,76 +211,17 @@
 		coverValue = game.cover ?? '';
 		developerValue = game.developer ?? '';
 		publisherValue = game.publisher ?? '';
+		if (platform) platformValue = platform;
+		if (game.publication_year) publicationYearValue = game.publication_year;
 
-		if (game.release_date) {
-			const year = game.release_date.match(/\d{4}/);
-			if (year) {
-				publicationYearValue = parseInt(year[0]);
-			}
-		}
-
-		if (game.genres.length > 0) {
-			for (const genre of game.genres) {
-				const existing = library.genres.find((g) => g.title === genre);
-
-				if (!existing) {
-					continue;
-				}
-
-				selectedGenres.push({ label: existing.title, value: existing.id.toString() });
-			}
+		for (const genre of game.genres) {
+			const existing = library.genres.find((g) => g.title === genre);
+			if (existing) selectedGenres.push({ label: existing.title, value: existing.id.toString() });
 		}
 
 		loadingIndicator.stop();
 		importLoading = false;
-	}
-
-	async function importFromBgg(): Promise<void> {
-		if (linkValue === '') {
-			linkInput?.focus();
-			return;
-		}
-
-		if (!linkValue.includes('boardgamegeek.com')) {
-			notifications.error(ts.get.libraries.games.bgg_import_validation_error);
-			return;
-		}
-
-		importLoading = true;
-		loadingIndicator.start();
-		const game = await library.importFromBgg(linkValue);
-
-		if (!game) {
-			notifications.error(ts.get.libraries.games.import_error);
-			loadingIndicator.stop();
-			importLoading = false;
-			return;
-		}
-
-		titleValue = game.title;
-		coverValue = game.cover ?? '';
-		developerValue = game.designer ?? '';
-		publisherValue = game.publisher ?? '';
-		platformValue = 'boardgame';
-
-		if (game.publication_year) {
-			publicationYearValue = game.publication_year;
-		}
-
-		if (game.genres.length > 0) {
-			for (const genre of game.genres) {
-				const existing = library.genres.find((g) => g.title === genre);
-
-				if (!existing) {
-					continue;
-				}
-
-				selectedGenres.push({ label: existing.title, value: existing.id.toString() });
-			}
-		}
-
-		loadingIndicator.stop();
-		importLoading = false;
+		importDropdownOpen = false;
 	}
 </script>
 
@@ -300,9 +276,15 @@
 	<ModalFormRow label={ts.get.libraries.games.link}>
 		<TextInput bind:value={linkValue} bind:input={linkInput} placeholder="https://" />
 	</ModalFormRow>
-	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
-		<BggImportButton loading={importLoading} onClick={importFromBgg} />
-		<SteamImportButton loading={importLoading} onClick={importFromSteam} />
+	<div class="mt-8 flex w-full flex-row items-center justify-end gap-3">
+		{#if !activeEntry}
+			<CreateModalSearchButton {library} {ts} />
+			<CreateModalImport options={importOptions} {ts} loading={importLoading} bind:open={importDropdownOpen} />
+		{/if}
 		<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 	</div>
 </CreateModal>
+
+{#if library.externalSearchModalVisible}
+	<GameSearch {library} {ts} onSelect={onSearchSelect} />
+{/if}

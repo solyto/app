@@ -4,9 +4,11 @@
 	import Select from '$lib/components/forms/Select.svelte';
 	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import DeezerIcon from '$lib/assets/services/deezer_icon.svg';
+	import DiscogsIcon from '$lib/assets/services/discogs_icon.png';
 	import type {
 		CreateMusicRequest,
-		DeezerImport,
+		MusicRelease,
 		Music,
 		UpdateMusicRequest
 	} from '$lib/types/library_music';
@@ -17,9 +19,10 @@
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import { getMusicLibrary } from '$lib/state/MusicLibrary.svelte';
 	import CreateModal from '$lib/components/libraries/shared/CreateModal.svelte';
-	import DeezerImportButton from '$lib/components/ui/buttons/DeezerImportButton.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
-	import DiscogsImportButton from '$lib/components/ui/buttons/DiscogsImportButton.svelte';
+	import CreateModalImport from '$lib/components/libraries/shared/CreateModalImport.svelte';
+	import CreateModalSearchButton from '$lib/components/libraries/shared/CreateModalSearchButton.svelte';
+	import MusicSearch from '$lib/components/libraries/music/MusicSearch.svelte';
 
 	const ts = getTranslation();
 	const library = getMusicLibrary();
@@ -46,6 +49,7 @@
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
 	let linkInput = $state<HTMLInputElement | null>(null);
 	let importLoading = $state<boolean>(false);
+	let importDropdownOpen = $state<boolean>(false);
 
 	const typeOptions: { label: string; value: string }[] = [
 		{ label: 'CD', value: 'cd' },
@@ -72,6 +76,11 @@
 		label: genre.title,
 		value: genre.id.toString()
 	}));
+
+	const importOptions: { label: string; icon: any; onClick: () => void; }[] = [
+		{ label: 'Deezer', icon: DeezerIcon, onClick: () => importFrom('deezer', 'deezer.com', ts.get.libraries.music.deezer_import_validation_error) },
+		{ label: 'Discogs', icon: DiscogsIcon, onClick: () => importFrom('discogs', 'discogs.com', ts.get.libraries.music.discogs_import_validation_error) }
+	];
 
 	async function onsubmit(): Promise<void> {
 		if (activeEntry) {
@@ -150,105 +159,58 @@
 		loadingIndicator.stop();
 	}
 
-	async function importFromDeezer(): Promise<void> {
-		if (linkValue === '') {
-			linkInput?.focus();
-			return;
-		}
+	async function importFrom(provider: string, domain: string, validationError: string): Promise<void> {
+		if (!linkValue) { linkInput?.focus(); return; }
 
-		if (!linkValue.includes('deezer.com')) {
-			notifications.error(ts.get.libraries.music.deezer_import_validation_error);
+		if (!linkValue.includes(domain)) {
+			notifications.error(validationError);
 			return;
 		}
 
 		importLoading = true;
 		loadingIndicator.start();
-		const album = await library.importFromDeezer(linkValue);
+
+		const album = await library.importFrom(provider, linkValue);
 
 		if (!album) {
 			notifications.error(ts.get.libraries.music.import_error);
-			loadingIndicator.stop();
-			importLoading = false;
-			return;
-		}
-
-		artistValue = album.artist;
-		titleValue = album.title;
-		coverValue = album.cover;
-		publicationYearValue = parseInt(album.release_date.slice(0, 4));
-		formatValue = album.record_type;
-
-		if (album.genres.length > 0) {
-			for (const genre of album.genres) {
+		} else {
+			artistValue = album.artist;
+			titleValue = album.title;
+			coverValue = album.cover;
+			linkValue = album.url;
+			if (album.release_date) publicationYearValue = parseInt(album.release_date.slice(0, 4));
+			if (album.record_type) formatValue = album.record_type;
+			for (const genre of album.genres ?? []) {
 				const existing = library.genres.find((g) => g.title === genre);
-
-				if (!existing) {
-					continue;
-				}
-
-				selectedGenres.push({ label: existing.title, value: existing.id.toString() });
+				if (existing) selectedGenres.push({ label: existing.title, value: existing.id.toString() });
 			}
 		}
 
 		loadingIndicator.stop();
 		importLoading = false;
+		importDropdownOpen = false;
 	}
 
-	async function importFromDiscogs(): Promise<void> {
-		if (linkValue === '') {
-			linkInput?.focus();
-			return;
+	function onSearchSelect(entry: MusicRelease): void {
+		artistValue = entry.artist;
+		titleValue = entry.title;
+		coverValue = entry.cover;
+		linkValue = entry.url;
+		if (entry.release_date) publicationYearValue = parseInt(entry.release_date.slice(0, 4));
+		if (entry.record_type) formatValue = entry.record_type;
+		for (const genre of entry.genres ?? []) {
+			const existing = library.genres.find((g) => g.title === genre);
+			if (existing) selectedGenres.push({ label: existing.title, value: existing.id.toString() });
 		}
-
-		if (!linkValue.includes('discogs.com')) {
-			notifications.error(ts.get.libraries.music.discogs_import_validation_error);
-			return;
-		}
-
-		importLoading = true;
-		loadingIndicator.start();
-		const album = await library.importFromDiscogs(linkValue);
-
-		if (!album) {
-			notifications.error(ts.get.libraries.music.import_error);
-			loadingIndicator.stop();
-			importLoading = false;
-			return;
-		}
-
-		artistValue = album.artist;
-		titleValue = album.title;
-		coverValue = album.cover;
-
-		if (album.release_date) {
-			publicationYearValue = parseInt(album.release_date.slice(0, 4));
-		}
-
-		if (album.genres.length > 0) {
-			for (const genre of album.genres) {
-				const existing = library.genres.find((g) => g.title === genre);
-
-				if (!existing) {
-					continue;
-				}
-
-				selectedGenres.push({ label: existing.title, value: existing.id.toString() });
-			}
-		}
-
-		loadingIndicator.stop();
-		importLoading = false;
+		library.closeExternalSearchModal();
 	}
 </script>
 
 <CreateModal
-	title={activeEntry !== null
-		? ts.get.libraries.music.edit_album
-		: ts.get.libraries.music.add_album}
+	title={activeEntry !== null ? ts.get.libraries.music.edit_album : ts.get.libraries.music.add_album}
 	{library}
-	existingCover={activeEntry && activeEntry.cover
-		? `${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${activeEntry.cover}`
-		: null}
+	existingCover={activeEntry && activeEntry.cover ? `${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${activeEntry.cover}` : null}
 	newCover={coverValue}
 	bind:selectedRating
 	bind:isWishlist
@@ -286,9 +248,15 @@
 	<ModalFormRow label={ts.get.libraries.music.link}>
 		<TextInput bind:value={linkValue} bind:input={linkInput} placeholder="https://" />
 	</ModalFormRow>
-	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
-		<DiscogsImportButton loading={importLoading} onClick={importFromDiscogs} />
-		<DeezerImportButton loading={importLoading} onClick={importFromDeezer} />
+	<div class="mt-8 flex w-full flex-row items-center justify-end gap-3">
+		{#if !activeEntry}
+			<CreateModalSearchButton {library} {ts} />
+			<CreateModalImport options={importOptions} {ts} loading={importLoading} bind:open={importDropdownOpen} />
+		{/if}
 		<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 	</div>
 </CreateModal>
+
+{#if library.externalSearchModalVisible}
+	<MusicSearch {library} {ts} onSelect={onSearchSelect} />
+{/if}

@@ -11,10 +11,12 @@
 		| { type: 'ready' }
 		| { type: 'error' };
 
+	const electronAPI = (window as any).electronAPI;
+
 	let status: UpdaterStatus = $state({ type: 'idle' });
 
 	$effect(() => {
-		return window.electronAPI?.onUpdaterStatus((s) => {
+		return electronAPI.onUpdaterStatus((s: UpdaterStatus) => {
 			status = s;
 		});
 	});
@@ -22,7 +24,7 @@
 	async function check() {
 		status = { type: 'checking' };
 		try {
-			await window.electronAPI?.checkForUpdates();
+			await electronAPI.checkForUpdates();
 		} catch {
 			status = { type: 'error' };
 		}
@@ -42,7 +44,7 @@
 		{#if status.type === 'ready'}
 			<button
 				class="flex cursor-pointer items-center gap-2 rounded-lg bg-c-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-c-primary/80"
-				onclick={() => window.electronAPI?.installUpdate()}
+				onclick={() => electronAPI.installUpdate()}
 			>
 				<IconDownload size={14} />
 				Install & Restart

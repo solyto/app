@@ -5,7 +5,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import type { CreateLinkRequest } from '$lib/types/library_link';
 	import { getTags } from '$lib/state/Tags.svelte';
-	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
+	import MultiSelect, { type MultiSelectEntry } from '$lib/components/forms/MultiSelect.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import CreateModal from '$lib/components/libraries/shared/CreateModal.svelte';
 	import { getLinkLibrary } from '$lib/state/LinkLibrary.svelte';
@@ -19,9 +19,9 @@
 
 	let titleValue = $state<string>('');
 	let urlValue = $state<string>('');
-	let selectedTags = $state<string[]>([]);
+	let selectedTags = $state<MultiSelectEntry[]>([]);
 
-	const tagOptions: { label: string; value: string }[] = tags.tags.map((tag) => ({
+	const tagOptions: MultiSelectEntry[] = tags.tags.map((tag) => ({
 		label: tag.name,
 		value: tag.id.toString()
 	}));
@@ -32,7 +32,7 @@
 		const request: CreateLinkRequest = {
 			title: titleValue || null,
 			url: urlValue,
-			tags: selectedTags.length > 0 ? selectedTags.map((tag) => Number(tag)) : undefined,
+			tags: selectedTags.length > 0 ? selectedTags.map((tag) => Number(tag.value)) : undefined,
 			category_id: null
 		};
 		const ok = await library.create(request);

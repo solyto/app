@@ -435,7 +435,9 @@ const libraries: LibraryRecords = {
 		discogs_import: 'Von Discogs importieren',
 		discogs_import_validation_error: 'Bitte gib einen gültigen Discogs Link ein.',
 		create_error: 'Album konnte nicht erstellt werden.',
-		update_error: 'Album konnte nicht aktualisiert werden.'
+		update_error: 'Album konnte nicht aktualisiert werden.',
+		search_placeholder: 'Künstler, Albumtitel...',
+		no_results: 'Keine Ergebnisse gefunden.'
 	},
 	books: {
 		title: 'Titel',
@@ -458,7 +460,8 @@ const libraries: LibraryRecords = {
 		goodreads_import: 'Von goodreads importieren',
 		goodreads_import_validation_error: 'Bitte gib einen gültigen goodreads Link ein.',
 		create_error: 'Buch konnte nicht erstellt werden.',
-		update_error: 'Buch konnte nicht aktualisiert werden.'
+		update_error: 'Buch konnte nicht aktualisiert werden.',
+		search_placeholder: 'Buchtitel...'
 	},
 	movies: {
 		title: 'Titel',
@@ -474,8 +477,11 @@ const libraries: LibraryRecords = {
 		import_error: 'Film konnte nicht importiert werden.',
 		imdb_import: 'Von IMDb importieren',
 		imdb_import_validation_error: 'Bitte gib einen gültigen IMDb Link ein.',
+		tmdb_import: 'Von TMDB importieren',
+		tmdb_import_validation_error: 'Bitte gib einen gültigen TMDB Link ein.',
 		create_error: 'Film konnte nicht erstellt werden.',
-		update_error: 'Film konnte nicht aktualisiert werden.'
+		update_error: 'Film konnte nicht aktualisiert werden.',
+		search_placeholder: 'Film- oder Serientitel...'
 	},
 	games: {
 		title: 'Titel',
@@ -501,7 +507,8 @@ const libraries: LibraryRecords = {
 		steam_import: 'Von Steam importieren',
 		steam_import_validation_error: 'Bitte gib einen gültigen Steam Store Link an.',
 		bgg_import: 'Von BGG importieren',
-		bgg_import_validation_error: 'Bitte gib einen gültigen BGG Link an.'
+		bgg_import_validation_error: 'Bitte gib einen gültigen BGG Link an.',
+		search_placeholder: 'Spieltitel...'
 	},
 	links: {
 		title: 'Titel',
@@ -615,7 +622,10 @@ const libraries: LibraryRecords = {
 	added_to_wishlist: 'Zur Wunschliste hinzugefügt',
 	add_to_wishlist_error: 'Konnte nicht zur Wunschliste hinzugefügt werden',
 	search_on: 'Auf %s suchen',
-	show_on: 'Auf %s anzeigen'
+	show_on: 'Auf %s anzeigen',
+	search: 'Suchen',
+	import: 'Importieren',
+	no_results: 'Keine Ergebnisse gefunden.'
 };
 
 const dev: DevRecords = {

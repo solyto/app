@@ -12,14 +12,14 @@
 >
 	<div class="flex flex-col gap-4 md:flex-row">
 		<div class="flex justify-center">
-			{#if !release.poster}
-				<div
-					class="relative flex size-48 items-center justify-center rounded-lg bg-c-neutral text-xs text-c-neutral-5"
-				>
-					<MissingCover {library} />
-				</div>
-			{:else}
-				<img src={release.poster} loading="lazy" alt="Poster" class="rounded-lg md:size-48 object-cover" />
+		{#if !release.cover}
+			<div
+				class="relative flex size-48 items-center justify-center rounded-lg bg-c-neutral text-xs text-c-neutral-5"
+			>
+				<MissingCover {library} />
+			</div>
+		{:else}
+			<img src={release.cover} loading="lazy" alt="Poster" class="rounded-lg md:size-48 object-cover" />
 			{/if}
 		</div>
 		<div class="flex flex-col items-start justify-between gap-2 md:max-w-96 md:min-w-60">
@@ -34,15 +34,17 @@
 				>
 					{release.type === 'tv' ? 'Series' : 'Movie'}
 				</span>
-				{#if release.overview}
-					<p class="mt-1 text-left line-clamp-3 text-sm text-c-neutral-6 dark:text-c-neutral-4">
-						{release.overview}
-					</p>
-				{/if}
+			{#if release.description}
+				<p class="mt-1 text-left line-clamp-3 text-sm text-c-neutral-6 dark:text-c-neutral-4">
+					{release.description}
+				</p>
+			{/if}
+			{#if release.release_year}
 				<div class="mt-2 text-sm">
-					<span class="font-bold">Release date:</span>
-					{formatDate(release.release_date)}
+					<span class="font-bold">Release year:</span>
+					{release.release_year}
 				</div>
+			{/if}
 			</div>
 		</div>
 	</div>

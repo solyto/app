@@ -415,6 +415,8 @@ export interface LibraryRecords {
 		discogs_import_validation_error: string;
 		create_error: string;
 		update_error: string;
+		search_placeholder: string;
+		no_results: string;
 	};
 	books: {
 		title: string;
@@ -438,6 +440,7 @@ export interface LibraryRecords {
 		goodreads_import_validation_error: string;
 		create_error: string;
 		update_error: string;
+		search_placeholder: string;
 	};
 	movies: {
 		title: string;
@@ -453,8 +456,11 @@ export interface LibraryRecords {
 		import_error: string;
 		imdb_import: string;
 		imdb_import_validation_error: string;
+		tmdb_import: string;
+		tmdb_import_validation_error: string;
 		create_error: string;
 		update_error: string;
+		search_placeholder: string;
 	};
 	games: {
 		title: string;
@@ -481,6 +487,7 @@ export interface LibraryRecords {
 		steam_import_validation_error: string;
 		bgg_import: string;
 		bgg_import_validation_error: string;
+		search_placeholder: string;
 	};
 	links: {
 		title: string;
@@ -596,6 +603,9 @@ export interface LibraryRecords {
 	add_to_wishlist_error: string;
 	search_on: string;
 	show_on: string;
+	search: string;
+	import: string;
+	no_results: string;
 }
 
 export interface DevRecords {

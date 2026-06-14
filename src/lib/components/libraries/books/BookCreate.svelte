@@ -4,7 +4,12 @@
 	import DateInput from '$lib/components/forms/DateInput.svelte';
 	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import type { Book, CreateBookRequest, UpdateBookRequest } from '$lib/types/library_book';
+	import type {
+		Book,
+		BookRelease,
+		CreateBookRequest,
+		UpdateBookRequest
+	} from '$lib/types/library_book';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -13,9 +18,12 @@
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import { getBookLibrary } from '$lib/state/BookLibrary.svelte';
 	import CreateModal from '$lib/components/libraries/shared/CreateModal.svelte';
-	import HardcoverImportButton from '$lib/components/ui/buttons/HardcoverImportButton.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
-	import GoodreadsImportButton from '$lib/components/ui/buttons/GoodreadsImportButton.svelte';
+	import CreateModalSearchButton from '$lib/components/libraries/shared/CreateModalSearchButton.svelte';
+	import CreateModalImport from '$lib/components/libraries/shared/CreateModalImport.svelte';
+	import BookSearch from '$lib/components/libraries/books/BookSearch.svelte';
+	import IconHardcover from '$lib/components/ui/icons/IconHardcover.svelte';
+	import GoodreadsIcon from '$lib/assets/services/goodreads_icon.png';
 
 	const ts = getTranslation();
 	const library = getBookLibrary();
@@ -51,6 +59,12 @@
 	let summaryValue = $state<string>(activeEntry?.summary ?? '');
 	let linkInput = $state<HTMLInputElement | null>(null);
 	let importLoading = $state<boolean>(false);
+	let importDropdownOpen = $state<boolean>(false);
+
+	const importOptions = [
+		{ label: 'Hardcover', icon: IconHardcover, onClick: () => importFrom('hardcover', 'hardcover.app', ts.get.libraries.books.hardcover_import_validation_error) },
+		{ label: 'Goodreads', icon: GoodreadsIcon, onClick: () => importFrom('goodreads', 'goodreads.com', ts.get.libraries.books.goodreads_import_validation_error) }
+	];
 
 	const genreOptions: { label: string; value: string }[] = library.genres.map((genre) => ({
 		label: genre.title,
@@ -131,26 +145,31 @@
 		loadingIndicator.stop();
 	}
 
-	async function importFrom(from: 'hardcover' | 'goodreads'): Promise<void> {
+	function onSearchSelect(book: BookRelease): void {
+		authorValue = book.author;
+		titleValue = book.title;
+		coverValue = book.cover ?? '';
+		linkValue = book.url ?? '';
+		if (book.release_date) publicationYearValue = parseInt(book.release_date.slice(0, 4));
+		if (book.page_count) pagesValue = book.page_count.toString();
+		library.closeExternalSearchModal();
+	}
+
+	async function importFrom(provider: string, domain: string, validationError: string): Promise<void> {
 		if (linkValue === '') {
 			linkInput?.focus();
 			return;
 		}
 
-		if (from === 'hardcover' && !linkValue.includes('hardcover.app')) {
-			notifications.error(ts.get.libraries.books.hardcover_import_validation_error);
-			return;
-		} else if (from === 'goodreads' && !linkValue.includes('goodreads.com')) {
-			notifications.error(ts.get.libraries.books.goodreads_import_validation_error);
+		if (!linkValue.includes(domain)) {
+			notifications.error(validationError);
 			return;
 		}
 
 		importLoading = true;
 		loadingIndicator.start();
 
-		const book = from === 'hardcover' ?
-			await library.importFromHardcover(linkValue) :
-			await library.importFromGoodreads(linkValue);
+		const book = await library.importFrom(provider, linkValue);
 
 		if (!book) {
 			notifications.error(ts.get.libraries.books.import_error);
@@ -162,10 +181,11 @@
 		authorValue = book.author;
 		titleValue = book.title;
 		coverValue = book.cover ?? '';
-		publicationYearValue = parseInt(book.release_date.slice(0, 4));
+		publicationYearValue = book.release_date ? parseInt(book.release_date.slice(0, 4)) : null;
 		pagesValue = book.page_count?.toString() ?? '';
 
 		importLoading = false;
+		importDropdownOpen = false;
 		loadingIndicator.stop();
 	}
 </script>
@@ -230,9 +250,15 @@
 	<ModalFormRow label={ts.get.libraries.books.summary}>
 		<TextInput multiLine={true} height={80} bind:value={summaryValue} />
 	</ModalFormRow>
-	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
-		<HardcoverImportButton loading={importLoading} onClick={() => importFrom('hardcover')} />
-		<GoodreadsImportButton loading={importLoading} onClick={() => importFrom('goodreads')} />
+	<div class="mt-8 flex w-full flex-row items-center justify-end gap-3">
+		{#if !activeEntry}
+			<CreateModalSearchButton {library} {ts} />
+			<CreateModalImport options={importOptions} {ts} loading={importLoading} bind:open={importDropdownOpen} />
+		{/if}
 		<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 	</div>
 </CreateModal>
+
+{#if library.externalSearchModalVisible}
+	<BookSearch {library} {ts} onSelect={onSearchSelect} />
+{/if}

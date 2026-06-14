@@ -5,8 +5,7 @@ import type {
 	UpdateMusicRequest,
 	CreateMusicGenreRequest,
 	MusicRelease,
-	DeezerImport,
-	DiscogsImport
+	MusicSearchResult
 } from '$lib/types/library_music';
 import type {
 	LibraryRecommendation,
@@ -45,6 +44,7 @@ export class MusicLibrary {
 	createModalVisible = $state<boolean>(false);
 	detailModalVisible = $state<boolean>(false);
 	genreModalVisible = $state<boolean>(false);
+	externalSearchModalVisible = $state<boolean>(false);
 	searchVisible = $state<boolean>(false);
 	activeEntry = $state<Music | null>(null);
 	ratingFilter = $state<number | null>(null);
@@ -147,6 +147,14 @@ export class MusicLibrary {
 		this.createModalVisible = false;
 	}
 
+	openExternalSearchModal(): void {
+		this.externalSearchModalVisible = true;
+	}
+
+	closeExternalSearchModal(): void {
+		this.externalSearchModalVisible = false;
+	}
+
 	openDetailModal(entry: Music) {
 		this.activeEntry = entry;
 		this.detailModalVisible = true;
@@ -219,17 +227,20 @@ export class MusicLibrary {
 		return Promise.resolve(res !== null);
 	}
 
-	async importFromDeezer(url: string): Promise<DeezerImport | null> {
-		const res = await this.apiService.post(apiRoutes.libraries.music.importFromDeezer, { url });
-		if (res) return res.data as DeezerImport;
+	async searchAt(provider: string, query: string): Promise<MusicSearchResult[] | null> {
+		const res = await this.apiService.list(
+			`${apiRoutes.libraries.music.search}/${provider}/${encodeURIComponent(query)}`
+		);
+		if (res) return res.data as MusicSearchResult[];
 		return null;
 	}
 
-	async importFromDiscogs(url: string): Promise<DiscogsImport | null> {
-		const res = await this.apiService.post(apiRoutes.libraries.music.importFromDiscogs, {
-			url
-		});
-		if (res) return res.data as DiscogsImport;
+	async importFrom(provider: string, url: string): Promise<MusicRelease | null> {
+		const res = await this.apiService.post(
+			`${apiRoutes.libraries.music.import}/${provider}`,
+			{ url }
+		);
+		if (res) return res.data as MusicRelease;
 		return null;
 	}
 }

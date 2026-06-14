@@ -5,7 +5,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
 	import type { CreateQuoteRequest, Quote, UpdateQuoteRequest } from '$lib/types/library_quote';
-	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
+	import MultiSelect, { type MultiSelectEntry } from '$lib/components/forms/MultiSelect.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import CreateModal from '$lib/components/libraries/shared/CreateModal.svelte';
 	import { getQuoteLibrary } from '$lib/state/QuoteLibrary.svelte';
@@ -23,11 +23,11 @@
 	let authorValue = $state<string>(activeEntry?.author ?? '');
 	let sourceValue = $state<string>(activeEntry?.source ?? '');
 	let quoteValue = $state<string>(activeEntry ? activeEntry.quote : '');
-	let selectedTags = $state<string[]>(
-		activeEntry ? activeEntry.tags.map((t) => t.id.toString()) : []
+	let selectedTags = $state<MultiSelectEntry[]>(
+		activeEntry ? activeEntry.tags.map((t) => ({ label: t.name, value: t.id.toString() })) : []
 	);
 
-	const tagOptions: { label: string; value: string }[] = tags.tags.map((tag) => ({
+	const tagOptions: MultiSelectEntry[] = tags.tags.map((tag) => ({
 		label: tag.name,
 		value: tag.id.toString()
 	}));
@@ -48,7 +48,7 @@
 			summary: summaryValue !== '' ? summaryValue : null,
 			source: sourceValue !== '' ? sourceValue : null,
 			quote: quoteValue,
-			tags: selectedTags.map((v) => parseInt(v))
+			tags: selectedTags.map((v) => parseInt(v.value))
 		};
 		const ok = await library.create(request);
 		if (ok) {
@@ -73,7 +73,7 @@
 			summary: summaryValue !== '' ? summaryValue : null,
 			source: sourceValue !== '' ? sourceValue : null,
 			quote: quoteValue !== '' ? quoteValue : null,
-			tags: selectedTags.map((v) => parseInt(v))
+			tags: selectedTags.map((v) => parseInt(v.value))
 		};
 		const ok = await library.update(activeEntry!, request);
 		if (ok) {

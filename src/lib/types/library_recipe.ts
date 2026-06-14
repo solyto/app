@@ -36,13 +36,17 @@ export interface UpdateRecipeRequest {
 	type?: RecipeType | null;
 }
 
-export interface ChefkochImport {
+export interface RecipeRelease {
 	id: number;
 	title: string;
 	url: string;
+	provider: string;
 	cover: string | null;
 	description: string | null;
-	ingredients: string | null;
 	time_to_make: number | null;
-	tags: string[] | null;
+	rating: number | null;
+	ingredients: string | null;
+	instructions: string | null;
+	servings: number | null;
+	tags: string[];
 }

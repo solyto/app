@@ -101,9 +101,8 @@ export const apiRoutes = {
 			listGenres: API_URL + '/libraries/music/genres',
 			createGenre: API_URL + '/libraries/music/genres',
 			deleteGenre: API_URL + '/libraries/music/genres/%d',
-			searchAlbumOnDeezer: API_URL + '/libraries/music/search/deezer/%s',
-			importFromDeezer: API_URL + '/libraries/music/import/deezer',
-			importFromDiscogs: API_URL + '/libraries/music/import/discogs'
+			search: API_URL + '/libraries/music/search',
+			import: API_URL + '/libraries/music/import'
 		},
 		books: {
 			list: API_URL + '/libraries/books',
@@ -116,8 +115,8 @@ export const apiRoutes = {
 			listGenres: API_URL + '/libraries/books/genres',
 			createGenre: API_URL + '/libraries/books/genres',
 			deleteGenre: API_URL + '/libraries/books/genres/%d',
-			importFromHardcover: API_URL + '/libraries/books/import/hardcover',
-			importFromGoodreads: API_URL + '/libraries/books/import/goodreads'
+			search: API_URL + '/libraries/books/search',
+			import: API_URL + '/libraries/books/import'
 		},
 		movies: {
 			list: API_URL + '/libraries/movies',
@@ -128,9 +127,10 @@ export const apiRoutes = {
 			listGenres: API_URL + '/libraries/movies/genres',
 			createGenre: API_URL + '/libraries/movies/genres',
 			deleteGenre: API_URL + '/libraries/movies/genres/%d',
-			importFromImdb: API_URL + '/libraries/movies/import/imdb',
 			releases: API_URL + '/libraries/movies/releases',
-			trailers: API_URL + '/libraries/movies/%s/trailers'
+			trailers: API_URL + '/libraries/movies/%s/trailers',
+			search: API_URL + '/libraries/movies/search',
+			import: API_URL + '/libraries/movies/import'
 		},
 		games: {
 			list: API_URL + '/libraries/games',
@@ -141,8 +141,8 @@ export const apiRoutes = {
 			listGenres: API_URL + '/libraries/games/genres',
 			createGenre: API_URL + '/libraries/games/genres',
 			deleteGenre: API_URL + '/libraries/games/genres/%d',
-			importFromSteam: API_URL + '/libraries/games/import/steam',
-			importFromBgg: API_URL + '/libraries/games/import/bgg'
+			search: API_URL + '/libraries/games/search',
+			import: API_URL + '/libraries/games/import'
 		},
 		links: {
 			list: API_URL + '/libraries/links',
@@ -167,7 +167,7 @@ export const apiRoutes = {
 			create: API_URL + '/libraries/recipes',
 			update: API_URL + '/libraries/recipes/%s',
 			delete: API_URL + '/libraries/recipes/%s',
-			importFromChefkoch: API_URL + '/libraries/recipes/import/chefkoch'
+			import: API_URL + '/libraries/recipes/import'
 		},
 		plants: {
 			list: API_URL + '/libraries/plants',

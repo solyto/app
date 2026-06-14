@@ -72,26 +72,24 @@ export interface UpdateGameGenreRequest {
 	title: string;
 }
 
-export interface SteamImport {
+export interface GameRelease {
 	id: number;
 	title: string;
 	url: string;
+	provider: string;
 	cover: string | null;
 	description: string | null;
-	release_date: string | null;
+	publication_year: number | null;
 	developer: string | null;
 	publisher: string | null;
 	genres: string[];
 }
 
-export interface BggImport {
+export interface GameSearchResult {
 	id: number;
 	title: string;
-	url: string;
 	cover: string | null;
-	description: string | null;
-	publication_year: number | null;
-	designer: string | null;
-	publisher: string | null;
-	genres: string[];
+	release_year: number | null;
+	provider: string;
+	url: string;
 }

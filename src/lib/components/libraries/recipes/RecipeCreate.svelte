@@ -16,8 +16,9 @@
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import CreateModal from '$lib/components/libraries/shared/CreateModal.svelte';
 	import { getRecipeLibrary } from '$lib/state/RecipeLibrary.svelte';
-	import ChefkochImportButton from '$lib/components/ui/buttons/ChefkochImportButton.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import CreateModalImport from '$lib/components/libraries/shared/CreateModalImport.svelte';
+	import ChefkochIcon from '$lib/assets/services/chefkoch_icon.png';
 
 	const ts = getTranslation();
 	const library = getRecipeLibrary();
@@ -37,6 +38,11 @@
 	let selectedRating = $state(activeEntry?.rating ?? 0);
 	let linkInput = $state<HTMLInputElement | null>(null);
 	let importLoading = $state<boolean>(false);
+	let importDropdownOpen = $state<boolean>(false);
+
+	const importOptions = [
+		{ label: 'Chefkoch', icon: ChefkochIcon, onClick: () => importFrom('chefkoch', 'chefkoch.de', ts.get.libraries.recipes.chefkoch_import_validation_error) }
+	];
 
 	const typeOptions: { label: string; value: string }[] = [
 		{ label: ts.get.libraries.recipes.type_breakfast, value: 'breakfast' },
@@ -111,20 +117,20 @@
 		loadingIndicator.stop();
 	}
 
-	async function importFromChefkoch(): Promise<void> {
+	async function importFrom(provider: string, domain: string, validationError: string): Promise<void> {
 		if (linkValue === '') {
 			linkInput?.focus();
 			return;
 		}
 
-		if (!linkValue.includes('chefkoch.de')) {
-			notifications.error(ts.get.libraries.recipes.chefkoch_import_validation_error);
+		if (!linkValue.includes(domain)) {
+			notifications.error(validationError);
 			return;
 		}
 
 		importLoading = true;
 		loadingIndicator.start();
-		const recipe = await library.importFromChefkoch(linkValue);
+		const recipe = await library.importFrom(provider, linkValue);
 
 		if (!recipe) {
 			notifications.error(ts.get.libraries.recipes.import_error);
@@ -141,6 +147,7 @@
 
 		loadingIndicator.stop();
 		importLoading = false;
+		importDropdownOpen = false;
 	}
 </script>
 
@@ -176,8 +183,10 @@
 	<ModalFormRow label={ts.get.libraries.recipes.description}>
 		<TextInput bind:value={descriptionValue} multiLine={true} height={150} />
 	</ModalFormRow>
-	<div class="mt-8 flex w-full flex-row items-center justify-end gap-6">
-		<ChefkochImportButton loading={importLoading} onClick={importFromChefkoch} />
+	<div class="mt-8 flex w-full flex-row items-center justify-end gap-3">
+		{#if !activeEntry}
+			<CreateModalImport options={importOptions} {ts} loading={importLoading} bind:open={importDropdownOpen} />
+		{/if}
 		<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 	</div>
 </CreateModal>

@@ -434,7 +434,9 @@ const libraries: LibraryRecords = {
 		discogs_import: 'Importar desde Discogs',
 		discogs_import_validation_error: 'Por favor ingrese un enlace válido de Discogs.',
 		create_error: 'No se pudo crear el álbum.',
-		update_error: 'No se pudo actualizar el álbum.'
+		update_error: 'No se pudo actualizar el álbum.',
+		search_placeholder: 'Artista, título del álbum...',
+		no_results: 'No se encontraron resultados.'
 	},
 	books: {
 		title: 'Título',
@@ -457,7 +459,8 @@ const libraries: LibraryRecords = {
 		goodreads_import: 'Importar desde Goodreads',
 		goodreads_import_validation_error: 'Por favor ingrese un enlace válido de Goodreads.',
 		create_error: 'No se pudo crear el libro.',
-		update_error: 'No se pudo actualizar el libro.'
+		update_error: 'No se pudo actualizar el libro.',
+		search_placeholder: 'Título del libro...'
 	},
 	movies: {
 		title: 'Título',
@@ -474,7 +477,8 @@ const libraries: LibraryRecords = {
 		imdb_import: 'Importar desde IMDb',
 		imdb_import_validation_error: 'Por favor ingrese un enlace válido de IMDb.',
 		create_error: 'No se pudo crear la película.',
-		update_error: 'No se pudo actualizar la película.'
+		update_error: 'No se pudo actualizar la película.',
+		search_placeholder: 'Título de película o serie...'
 	},
 	games: {
 		title: 'Título',
@@ -500,7 +504,8 @@ const libraries: LibraryRecords = {
 		steam_import: 'Importar desde Steam',
 		steam_import_validation_error: 'Por favor ingrese un enlace válido de Steam Store.',
 		bgg_import: 'Importar desde BGG',
-		bgg_import_validation_error: 'Por favor ingrese un enlace válido de BGG.'
+		bgg_import_validation_error: 'Por favor ingrese un enlace válido de BGG.',
+		search_placeholder: 'Título del juego...'
 	},
 	links: {
 		title: 'Título',
@@ -614,7 +619,10 @@ const libraries: LibraryRecords = {
 	added_to_wishlist: 'Añadido a la lista de deseos',
 	add_to_wishlist_error: 'No se pudo añadir a la lista de deseos',
 	search_on: 'Buscar en %s',
-	show_on: 'Ver en %s'
+	show_on: 'Ver en %s',
+	search: 'Buscar',
+	import: 'Importar',
+	no_results: 'No se encontraron resultados.'
 };
 
 const dev: DevRecords = {

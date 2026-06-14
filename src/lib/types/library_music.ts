@@ -87,28 +87,18 @@ export interface MusicRelease {
 	title: string;
 	url: string;
 	cover: string;
-	release_date: string;
+	provider: string;
+	release_date: string | null;
+	genres: string[];
+	record_type: string | null;
 }
 
-export interface DeezerImport {
+export interface MusicSearchResult {
 	id: number;
-	artist: string;
-	artist_id: number;
 	title: string;
+	artist: string | null;
+	cover: string | null;
+	release_year: number | null;
+	provider: string;
 	url: string;
-	cover: string;
-	release_date: string;
-	genres: string[];
-	record_type: string;
-}
-
-export interface DiscogsImport {
-	id: number;
-	artist: string;
-	artist_id: number;
-	title: string;
-	url: string;
-	cover: string;
-	release_date: string;
-	genres: string[];
 }

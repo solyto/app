@@ -433,7 +433,9 @@ const libraries: LibraryRecords = {
 		discogs_import: 'Importer depuis Discogs',
 		discogs_import_validation_error: 'Veuillez fournir un lien Discogs valide.',
 		create_error: 'Impossible de créer l\'album.',
-		update_error: 'Impossible de modifier l\'album.'
+		update_error: 'Impossible de modifier l\'album.',
+		search_placeholder: 'Artiste, titre de l\'album...',
+		no_results: 'Aucun résultat trouvé.'
 	},
 	books: {
 		title: 'Titre',
@@ -456,7 +458,8 @@ const libraries: LibraryRecords = {
 		goodreads_import: 'Importer depuis Goodreads',
 		goodreads_import_validation_error: 'Veuillez fournir un lien Goodreads valide.',
 		create_error: 'Impossible de créer le livre.',
-		update_error: 'Impossible de modifier le livre.'
+		update_error: 'Impossible de modifier le livre.',
+		search_placeholder: 'Titre du livre...'
 	},
 	movies: {
 		title: 'Titre',
@@ -473,7 +476,8 @@ const libraries: LibraryRecords = {
 		imdb_import: 'Importer depuis IMDb',
 		imdb_import_validation_error: 'Veuillez fournir un lien IMDb valide.',
 		create_error: 'Impossible de créer le film.',
-		update_error: 'Impossible de modifier le film.'
+		update_error: 'Impossible de modifier le film.',
+		search_placeholder: 'Titre du film ou de la série...'
 	},
 	games: {
 		title: 'Titre',
@@ -499,7 +503,8 @@ const libraries: LibraryRecords = {
 		steam_import: 'Importer depuis Steam',
 		steam_import_validation_error: 'Veuillez fournir un lien Steam Store valide.',
 		bgg_import: 'Importer depuis BGG',
-		bgg_import_validation_error: 'Veuillez fournir un lien BGG valide.'
+		bgg_import_validation_error: 'Veuillez fournir un lien BGG valide.',
+		search_placeholder: 'Titre du jeu...'
 	},
 	links: {
 		title: 'Titre',
@@ -613,7 +618,10 @@ const libraries: LibraryRecords = {
 	added_to_wishlist: 'Ajouté à la liste de souhaits',
 	add_to_wishlist_error: 'Impossible d\'ajouter à la liste de souhaits',
 	search_on: 'Rechercher sur %s',
-	show_on: 'Afficher sur %s'
+	show_on: 'Afficher sur %s',
+	search: 'Rechercher',
+	import: 'Importer',
+	no_results: 'Aucun résultat trouvé.'
 };
 
 const dev: DevRecords = {
