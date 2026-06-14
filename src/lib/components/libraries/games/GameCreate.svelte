@@ -39,11 +39,11 @@
 	let publisherValue = $state<string>(activeEntry?.publisher ?? '');
 	let playtimeHoursValue = $state<number | null>(activeEntry?.playtime_hours ?? null);
 	let completedValue = $state<boolean>(activeEntry ? activeEntry.completed : false);
-	let selectedGenres = $state<string[]>(
-		activeEntry ? activeEntry.genres.map((g) => g.id.toString()) : []
+	let selectedGenres = $state<{ label: string; value: string }[]>(
+		activeEntry ? activeEntry.genres.map((g) => ({ label: g.title, value: g.id.toString() })) : []
 	);
-	let selectedTags = $state<string[]>(
-		activeEntry ? activeEntry.tags.map((t) => t.id.toString()) : []
+	let selectedTags = $state<{ label: string; value: string }[]>(
+		activeEntry ? activeEntry.tags.map((t) => ({ label: t.name, value: t.id.toString() })) : []
 	);
 	let selectedRating = $state(activeEntry?.rating ?? 0);
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
@@ -92,8 +92,8 @@
 			started_at: startedAtValue !== '' ? startedAtValue : null,
 			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
 			wishlist: isWishlist,
-			genres: selectedGenres.map((v) => parseInt(v)),
-			tags: selectedTags.map((v) => parseInt(v)),
+			genres: selectedGenres.map((g) => parseInt(g.value)),
+			tags: selectedTags.map((t) => parseInt(t.value)),
 			rating: selectedRating > 0 ? selectedRating : null,
 			cover_path: coverValue != '' ? coverValue : null,
 			link: linkValue != '' ? linkValue : null
@@ -135,8 +135,8 @@
 			started_at: startedAtValue !== '' ? startedAtValue : null,
 			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
 			wishlist: isWishlist,
-			genres: selectedGenres.map((v) => parseInt(v)),
-			tags: selectedTags.map((v) => parseInt(v)),
+			genres: selectedGenres.map((g) => parseInt(g.value)),
+			tags: selectedTags.map((t) => parseInt(t.value)),
 			rating: selectedRating > 0 ? selectedRating : null,
 			...(coverValue !== '' ? { cover_path: coverValue } : {}),
 			link: linkValue != '' ? linkValue : null
@@ -192,7 +192,7 @@
 					continue;
 				}
 
-				selectedGenres.push(existing.id.toString());
+				selectedGenres.push({ label: existing.title, value: existing.id.toString() });
 			}
 		}
 
@@ -240,7 +240,7 @@
 					continue;
 				}
 
-				selectedGenres.push(existing.id.toString());
+				selectedGenres.push({ label: existing.title, value: existing.id.toString() });
 			}
 		}
 

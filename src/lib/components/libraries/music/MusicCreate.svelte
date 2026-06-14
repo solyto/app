@@ -39,7 +39,9 @@
 	let typeValue = $state<string>(activeEntry?.type ?? '');
 	let formatValue = $state<string>(activeEntry?.format ?? '');
 	let conditionValue = $state<string>(activeEntry?.condition ?? '');
-	let selectedGenres = $state<string[]>(activeEntry ? activeEntry.genres.map((g) => g.id.toString()) : []);
+	let selectedGenres = $state<{ label: string; value: string }[]>(
+		activeEntry ? activeEntry.genres.map((g) => ({ label: g.title, value: g.id.toString() })) : []
+	);
 	let selectedRating = $state(activeEntry?.rating ?? 0);
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
 	let linkInput = $state<HTMLInputElement | null>(null);
@@ -85,7 +87,7 @@
 		const request: CreateMusicRequest = {
 			title: titleValue,
 			artist: artistValue,
-			genres: selectedGenres.map((v) => parseInt(v)),
+			genres: selectedGenres.map((g) => parseInt(g.value)),
 			type: typeValue !== '' ? typeValue : null,
 			format: formatValue !== '' ? formatValue : null,
 			condition: conditionValue != '' ? conditionValue : null,
@@ -125,7 +127,7 @@
 		const request: UpdateMusicRequest = {
 			title: titleValue,
 			artist: artistValue,
-			genres: selectedGenres.map((v) => parseInt(v)),
+			genres: selectedGenres.map((g) => parseInt(g.value)),
 			type: typeValue !== '' ? typeValue : null,
 			format: formatValue !== '' ? formatValue : null,
 			condition: conditionValue != '' ? conditionValue : null,
@@ -184,7 +186,7 @@
 					continue;
 				}
 
-				selectedGenres.push(existing.id.toString());
+				selectedGenres.push({ label: existing.title, value: existing.id.toString() });
 			}
 		}
 
@@ -230,7 +232,7 @@
 					continue;
 				}
 
-				selectedGenres.push(existing.id.toString());
+				selectedGenres.push({ label: existing.title, value: existing.id.toString() });
 			}
 		}
 

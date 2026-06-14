@@ -40,11 +40,11 @@
 	let isWhereValue = $state<string>(activeEntry?.is_where ?? '');
 	let startedAtValue = $state<string>(activeEntry?.started_at?.substring(0, 10) ?? '');
 	let finishedAtValue = $state<string>(activeEntry?.finished_at?.substring(0, 10) ?? '');
-	let selectedGenres = $state<string[]>(
-		activeEntry ? activeEntry.genres.map((g) => g.id.toString()) : []
+	let selectedGenres = $state<{ label: string; value: string }[]>(
+		activeEntry ? activeEntry.genres.map((g) => ({ label: g.title, value: g.id.toString() })) : []
 	);
-	let selectedTags = $state<string[]>(
-		activeEntry ? activeEntry.tags.map((t) => t.id.toString()) : []
+	let selectedTags = $state<{ label: string; value: string }[]>(
+		activeEntry ? activeEntry.tags.map((t) => ({ label: t.name, value: t.id.toString() })) : []
 	);
 	let selectedRating = $state(activeEntry?.rating ?? 0);
 	let isWishlist = $state<boolean>(activeEntry ? activeEntry.wishlist : false);
@@ -77,8 +77,8 @@
 			finished_at: finishedAtValue !== '' ? finishedAtValue : null,
 			wishlist: isWishlist,
 			summary: summaryValue !== '' ? summaryValue : null,
-			genres: selectedGenres.map((v) => parseInt(v)),
-			tags: selectedTags.map((v) => parseInt(v)),
+			genres: selectedGenres.map((g) => parseInt(g.value)),
+			tags: selectedTags.map((t) => parseInt(t.value)),
 			rating: selectedRating > 0 ? selectedRating : null,
 			link: linkValue !== '' ? linkValue : null
 		};
