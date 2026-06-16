@@ -23,8 +23,7 @@
 	class="hidden h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg p-2 drop-shadow-xl lg:relative lg:flex lg:w-32 2xl:w-60 2xl:p-4 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 	in:fade
 >
-	<button
-		type="button"
+	<a href="?filterType="
 		onclick={() => todos.useFilters([])}
 		class="
 		    w-full cursor-pointer rounded-lg p-2 text-left hover:bg-c-neutral-1 dark:hover:bg-s-dark-3
@@ -32,7 +31,7 @@
 		"
 	>
 		{ts.get.todos.all_todos}
-	</button>
+	</a>
 	{#if todos.workspaces.length > 0}
 		<div class="mt-2 p-2 text-base font-bold 2xl:text-2xl 2xl:font-normal">
 			{ts.get.todos.workspaces}

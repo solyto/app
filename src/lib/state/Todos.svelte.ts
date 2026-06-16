@@ -29,6 +29,7 @@ import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import TodoRelevanceService from '$lib/services/TodoRelevanceService';
 import LocalStorageService from '$lib/services/LocalStorageService';
+import { SvelteDate } from 'svelte/reactivity';
 
 export class Todos {
 	static readonly LS_HIDE_IT_KEY: string = 'todos_hideit';
@@ -141,12 +142,9 @@ export class Todos {
 	useFilters(filters: TodoFilter[]): void {
 		this.filteredTodos = this.todos;
 
-		const visibilityThreshold = new Date();
+		const visibilityThreshold = new SvelteDate();
 		visibilityThreshold.setDate(visibilityThreshold.getDate() + 3);
-		this.filteredTodos = this.filteredTodos.filter(
-			(t) =>
-				!t.auto_generated || t.due_at === null || new Date(t.due_at) <= visibilityThreshold
-		);
+		this.filteredTodos = this.filteredTodos.filter((t) => !t.auto_generated || t.due_at === null || new SvelteDate(t.due_at) <= visibilityThreshold);
 
 		if (!filters.some((f) => f.type === 'status' && f.value === 'backlog')) {
 			this.filteredTodos = this.filterService.filterOutBacklog(this.filteredTodos);
