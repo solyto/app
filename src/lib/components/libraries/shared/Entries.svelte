@@ -96,7 +96,7 @@
 									src={`${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${entry.cover}`}
 									previewSrc={`${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${previewFilename(entry.cover)}`}
 									alt="Cover"
-									class="z-30 max-h-full max-w-full rounded-sm object-contain"
+									class="z-30 h-full w-full rounded-sm object-contain"
 								/>
 							{/if}
 						</div>
