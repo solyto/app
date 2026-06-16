@@ -2,7 +2,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import DateInput from '$lib/components/forms/DateInput.svelte';
-	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
+	import MultiSelect, { type MultiSelectEntry } from '$lib/components/forms/MultiSelect.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { getAuth } from '$lib/state/Auth.svelte';
@@ -64,15 +64,31 @@
 		{ label: 'BGG', icon: Dices, onClick: () => importFrom('bgg', 'boardgamegeek.com', ts.get.libraries.games.bgg_import_validation_error, 'boardgame') }
 	];
 
-	const genreOptions: { label: string; value: string }[] = library.genres.map((genre) => ({
-		label: genre.title,
-		value: genre.id.toString()
-	}));
+	let genreOptions: { label: string; value: string }[] = $derived(
+		library.genres.map((genre) => ({ label: genre.title, value: genre.id.toString() }))
+	);
 
-	const tagOptions: { label: string; value: string }[] = tags.tags.map((tag) => ({
-		label: tag.name,
-		value: tag.id.toString()
-	}));
+	let tagOptions: { label: string; value: string }[] = $derived(
+		tags.tags.map((tag) => ({ label: tag.name, value: tag.id.toString() }))
+	);
+
+	async function onCreateGenre(data: { option: MultiSelectEntry }): Promise<void> {
+		const created = await library.createGenre(data.option.label.toString());
+		if (!created) {
+			notifications.error(ts.get.libraries.genre_error);
+			return;
+		}
+		data.option.value = created.id.toString();
+	}
+
+	async function onCreateTag(data: { option: MultiSelectEntry }): Promise<void> {
+		const created = await tags.create(data.option.label.toString());
+		if (!created) {
+			notifications.error(ts.get.libraries.tag_error);
+			return;
+		}
+		data.option.value = created.id.toString();
+	}
 
 	const platformOptions: { label: string; value: string }[] = [
 		{ label: ts.get.libraries.games.platform_pc, value: 'pc' },
@@ -250,10 +266,10 @@
 		<TextInput bind:value={publisherValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.genres}>
-		<MultiSelect bind:value={selectedGenres} options={genreOptions} />
+		<MultiSelect bind:value={selectedGenres} options={genreOptions} allowUserOptions oncreate={onCreateGenre} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.tags}>
-		<MultiSelect bind:value={selectedTags} options={tagOptions} />
+		<MultiSelect bind:value={selectedTags} options={tagOptions} allowUserOptions oncreate={onCreateTag} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.publication_year}>
 		<NumberInput bind:value={publicationYearValue} />

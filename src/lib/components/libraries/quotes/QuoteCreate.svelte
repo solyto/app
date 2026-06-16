@@ -27,10 +27,18 @@
 		activeEntry ? activeEntry.tags.map((t) => ({ label: t.name, value: t.id.toString() })) : []
 	);
 
-	const tagOptions: MultiSelectEntry[] = tags.tags.map((tag) => ({
-		label: tag.name,
-		value: tag.id.toString()
-	}));
+	let tagOptions: MultiSelectEntry[] = $derived(
+		tags.tags.map((tag) => ({ label: tag.name, value: tag.id.toString() }))
+	);
+
+	async function onCreateTag(data: { option: MultiSelectEntry }): Promise<void> {
+		const created = await tags.create(data.option.label.toString());
+		if (!created) {
+			notifications.error(ts.get.libraries.tag_error);
+			return;
+		}
+		data.option.value = created.id.toString();
+	}
 
 	async function onsubmit(): Promise<void> {
 		if (activeEntry) {
@@ -100,7 +108,7 @@
 		<TextInput bind:value={quoteValue} multiLine={true} height={150} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.tags}>
-		<MultiSelect bind:value={selectedTags} options={tagOptions} />
+		<MultiSelect bind:value={selectedTags} options={tagOptions} allowUserOptions oncreate={onCreateTag} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.quotes.summary}>
 		<TextInput bind:value={summaryValue} multiLine={true} height={80} />

@@ -213,11 +213,11 @@ export class BookLibrary {
 		return Promise.resolve(res !== null);
 	}
 
-	async createGenre(title: string): Promise<boolean> {
+	async createGenre(title: string): Promise<BookGenre | null> {
 		const request: CreateBookGenreRequest = { title };
 		const res = await this.apiService.create(apiRoutes.libraries.books.createGenre, request);
 		if (res) await this.loadGenres();
-		return Promise.resolve(res !== null);
+		return res ? (res.data as BookGenre) : null;
 	}
 
 	async deleteGenre(genre: BookGenre): Promise<boolean> {

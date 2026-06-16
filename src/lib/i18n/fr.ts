@@ -475,6 +475,8 @@ const libraries: LibraryRecords = {
 		import_error: 'Le film n\'a pas pu être importé.',
 		imdb_import: 'Importer depuis IMDb',
 		imdb_import_validation_error: 'Veuillez fournir un lien IMDb valide.',
+		tmdb_import: 'Importer depuis TMDB',
+		tmdb_import_validation_error: 'Veuillez fournir un lien TMDB valide.',
 		create_error: 'Impossible de créer le film.',
 		update_error: 'Impossible de modifier le film.',
 		search_placeholder: 'Titre du film ou de la série...'
@@ -601,8 +603,10 @@ const libraries: LibraryRecords = {
 		plants: 'Plantes'
 	},
 	genres: 'Genres',
+	genre_error: "Le genre n'a pas pu être créé",
 	rating: 'Note',
 	tags: 'Tags',
+	tag_error: "Le tag n'a pas pu être créé",
 	edit_genres: 'Genres',
 	create: 'Nouveau',
 	clear_filter: 'Effacer le filtre',

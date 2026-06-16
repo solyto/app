@@ -11,12 +11,14 @@
 		value = $bindable(),
 		options,
 		allowUserOptions = false,
-		placeholder = ''
+		placeholder = '',
+		oncreate
 	} = $props<{
 		value: MultiSelectEntry[];
 		options: MultiSelectEntry[];
 		allowUserOptions?: boolean;
 		placeholder?: string;
+		oncreate?: (data: { option: MultiSelectEntry }) => unknown;
 	}>();
 </script>
 
@@ -26,6 +28,7 @@
 		{options}
 		{allowUserOptions}
 		{placeholder}
+		{oncreate}
 		--sms-active-color="#eaf2fc"
 	/>
 </div>

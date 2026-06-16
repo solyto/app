@@ -585,8 +585,10 @@ export interface LibraryRecords {
 		plants: string;
 	};
 	genres: string;
+	genre_error: string;
 	rating: string;
 	tags: string;
+	tag_error: string;
 	edit_genres: string;
 	create: string;
 	clear_filter: string;

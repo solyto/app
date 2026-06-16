@@ -2,7 +2,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
-	import MultiSelect from '$lib/components/forms/MultiSelect.svelte';
+	import MultiSelect, { type MultiSelectEntry } from '$lib/components/forms/MultiSelect.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import DeezerIcon from '$lib/assets/services/deezer_icon.svg';
 	import DiscogsIcon from '$lib/assets/services/discogs_icon.png';
@@ -72,10 +72,18 @@
 		{ label: 'Very Poor', value: 'very-poor' }
 	];
 
-	const genreOptions: { label: string; value: string }[] = library.genres.map((genre) => ({
-		label: genre.title,
-		value: genre.id.toString()
-	}));
+	let genreOptions: { label: string; value: string }[] = $derived(
+		library.genres.map((genre) => ({ label: genre.title, value: genre.id.toString() }))
+	);
+
+	async function onCreateGenre(data: { option: MultiSelectEntry }): Promise<void> {
+		const created = await library.createGenre(data.option.label.toString());
+		if (!created) {
+			notifications.error(ts.get.libraries.genre_error);
+			return;
+		}
+		data.option.value = created.id.toString();
+	}
 
 	const importOptions: { label: string; icon: any; onClick: () => void; }[] = [
 		{ label: 'Deezer', icon: DeezerIcon, onClick: () => importFrom('deezer', 'deezer.com', ts.get.libraries.music.deezer_import_validation_error) },
@@ -222,7 +230,7 @@
 		<TextInput bind:value={artistValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.genres}>
-		<MultiSelect bind:value={selectedGenres} options={genreOptions} />
+		<MultiSelect bind:value={selectedGenres} options={genreOptions} allowUserOptions oncreate={onCreateGenre} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.music.type}>
 		<Select bind:value={typeValue} options={typeOptions} />

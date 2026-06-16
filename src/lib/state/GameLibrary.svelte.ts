@@ -186,11 +186,11 @@ export class GameLibrary {
 		return Promise.resolve(res !== null);
 	}
 
-	async createGenre(title: string): Promise<boolean> {
+	async createGenre(title: string): Promise<GameGenre | null> {
 		const request: CreateGameGenreRequest = { title };
 		const res = await this.apiService.create(apiRoutes.libraries.games.createGenre, request);
 		if (res) await this.loadGenres();
-		return Promise.resolve(res !== null);
+		return res ? (res.data as GameGenre) : null;
 	}
 
 	async deleteGenre(genre: GameGenre): Promise<boolean> {

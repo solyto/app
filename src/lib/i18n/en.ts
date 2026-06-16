@@ -604,8 +604,10 @@ const libraries: LibraryRecords = {
 		plants: 'Plants'
 	},
 	genres: 'Genres',
+	genre_error: 'Genre could not be created',
 	rating: 'Rating',
 	tags: 'Tags',
+	tag_error: 'Tag could not be created',
 	edit_genres: 'Genres',
 	create: 'New',
 	clear_filter: 'Clear Filter',

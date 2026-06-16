@@ -214,11 +214,11 @@ export class MusicLibrary {
 		return Promise.resolve(res !== null);
 	}
 
-	async createGenre(title: string): Promise<boolean> {
+	async createGenre(title: string): Promise<MusicGenre | null> {
 		const request: CreateMusicGenreRequest = { title };
 		const res = await this.apiService.create(apiRoutes.libraries.music.createGenre, request);
 		if (res) await this.loadGenres();
-		return Promise.resolve(res !== null);
+		return res ? (res.data as MusicGenre) : null;
 	}
 
 	async deleteGenre(genre: MusicGenre): Promise<boolean> {
