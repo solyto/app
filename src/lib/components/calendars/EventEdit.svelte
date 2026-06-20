@@ -66,8 +66,9 @@
 
 	function isRecurring(): boolean {
 		return (
-			calendars.activeEvent!.is_recurring &&
-			calendars.activeEvent!.original_start_date !== null
+			calendars.activeEvent !== null &&
+			calendars.activeEvent.is_recurring &&
+			calendars.activeEvent.original_start_date !== null
 		);
 	}
 
