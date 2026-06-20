@@ -17,17 +17,17 @@
 		addressBook = selectedAddressBook.id;
 	});
 
-	function getSelected(name: string): AddressBook | null {
-		if (name === '') return null;
+	function getSelected(id: number): AddressBook | null {
+		if (!id) return null;
 
-		return availableAddressBooks.find((c: AddressBook) => c.name === name) || null;
+		return availableAddressBooks.find((c: AddressBook) => c.id === id) || null;
 	}
 </script>
 
 <div
 	role="button"
 	tabindex="0"
-	class="relative flex h-10 w-full cursor-pointer items-center justify-start rounded-lg border-1 border-c-neutral-2 px-3 text-sm text-c-neutral-5 shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-2 dark:bg-s-dark-3 dark:focus:ring-c-primary"
+	class="relative z-50 flex h-10 w-full cursor-pointer items-center justify-start rounded-lg border-1 border-c-neutral-2 px-3 text-sm text-c-neutral-5 shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-2 dark:bg-s-dark-3 dark:focus:ring-c-primary"
 	onclick={() => {
 		menuOpen = !menuOpen;
 	}}
