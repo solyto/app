@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { onDestroy } from 'svelte';
+
+	const keyManager = getKeyManager();
 
 	let {
 		hours = $bindable(),
@@ -18,7 +22,22 @@
 	const minuteOptions = Array.from({ length: 12 }, (_, i) => i).map((i) =>
 		(i * 5).toString().padStart(2, '0')
 	);
+
 	let menu = $state<boolean>(false);
+	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null });
+
+	function onOpen(): void {
+		menu = true;
+		keyHandlers.Enter = keyManager.registerKeyDown('Enter', onFinish, { priority: 3 });
+	}
+
+	function onFinish(): void {
+		menu = false;
+		keyManager.unregisterAll(keyHandlers);
+		if (oninput) oninput();
+	}
+
+	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 </script>
 
 <div
@@ -28,18 +47,14 @@
 		type="number"
 		class="w-full rounded-lg border-1 border-c-neutral-2 text-sm shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-3 dark:bg-inherit dark:text-white dark:focus:ring-c-primary"
 		bind:value={hours}
-		onclick={() => {
-			menu = true;
-		}}
+		onclick={onOpen}
 	/>
 	<span>:</span>
 	<input
 		type="number"
 		class="w-full rounded-lg border-1 border-c-neutral-2 text-sm shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-3 dark:bg-inherit dark:text-white dark:focus:ring-c-primary"
 		bind:value={minutes}
-		onclick={() => {
-			menu = true;
-		}}
+		onclick={onOpen}
 	/>
 	{#if menu}
 		<div
@@ -72,10 +87,7 @@
 				<div class="absolute right-4 bottom-4 cursor-pointer">
 					<TextButton
 						title="Set"
-						onclick={() => {
-							menu = false;
-							if (oninput) {oninput()}
-						}}
+						onclick={onFinish}
 					/>
 				</div>
 			</div>
