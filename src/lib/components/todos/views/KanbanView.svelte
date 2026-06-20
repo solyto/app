@@ -64,12 +64,13 @@
 		groups[colIdx].todos = e.detail.items;
 		groups = [...groups];
 
-		if (firstTick) {
+		const shouldProcess = firstTick;
+		firstTick = !firstTick;
+
+		if (shouldProcess) {
 			const status = (e.target as HTMLElement | null)?.dataset.status as TodoStatus;
 			await handleStatusChange(e.detail.info.id, status);
 		}
-
-		firstTick = !firstTick;
 	}
 
 	async function handleStatusChange(todoId: string, status: TodoStatus): Promise<void> {
@@ -93,7 +94,7 @@
 				{getStatusLabel(group.status)}
 			</span>
 			<div
-				class="flex min-h-96 flex-col space-y-4 rounded-lg !outline-0 transition-all"
+				class="flex flex-1 flex-col space-y-4 rounded-lg !outline-0 transition-all"
 				data-status={group.status}
 				use:dndzone={{
 					items: group.todos,
