@@ -306,7 +306,9 @@ const checkIn: CheckInRecords = {
 	sport_walking: 'Walking',
 	sport_swimming: 'Swimming',
 	sport_yoga: 'Yoga',
-	sport_replace_with: 'Replace with...'
+	sport_replace_with: 'Replace with...',
+	score: 'Score',
+	score_description: 'Build an average score for this type (also counts towards the total score)'
 };
 
 const checkInSummary: CheckInSummaryRecords = {

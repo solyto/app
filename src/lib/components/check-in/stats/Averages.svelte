@@ -15,9 +15,9 @@
 	import IconPizza from '@lucide/svelte/icons/pizza';
 	const ts = getTranslation();
 
-	let { data, activeTrackers } = $props<{ data: CheckIn[]; activeTrackers: CheckInType[] }>();
+	let { data, activeTrackers, scoredTrackers } = $props<{ data: CheckIn[]; activeTrackers: CheckInType[]; scoredTrackers: CheckInType[] }>();
 
-	const entries = $derived(activeTrackers.filter((t: CheckInType) => t !== 'sports'));
+	const entries = $derived(activeTrackers.filter((t: CheckInType) => t !== 'sports' && scoredTrackers.includes(t)));
 	const totalMean = $derived(getTotalMeanValue(data, entries));
 
 

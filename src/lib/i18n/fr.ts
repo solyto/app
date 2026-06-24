@@ -305,7 +305,9 @@ const checkIn: CheckInRecords = {
 	sport_walking: 'Marche',
 	sport_swimming: 'Natation',
 	sport_yoga: 'Yoga',
-	sport_replace_with: 'Remplacer par...'
+	sport_replace_with: 'Remplacer par...',
+	score: 'Score',
+	score_description: 'Calculer un score moyen pour ce type (compte également dans le score total)'
 };
 
 const checkInSummary: CheckInSummaryRecords = {

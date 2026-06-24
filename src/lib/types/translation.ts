@@ -278,6 +278,8 @@ export interface CheckInRecords {
 	sport_swimming: string;
 	sport_yoga: string;
 	sport_replace_with: string;
+	score: string;
+	score_description: string;
 }
 
 export interface CheckInSummaryRecords {

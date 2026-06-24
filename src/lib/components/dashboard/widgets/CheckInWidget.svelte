@@ -17,7 +17,7 @@
 	import { onMount, tick } from 'svelte';
 
 	const checkInData = getCheckInData();
-	const entries = $derived(checkInData.activeTrackers.filter((t) => t !== 'sports'));
+	const entries = $derived(checkInData.activeTrackers.filter((t) => t !== 'sports' && checkInData.scoredTrackers.includes(t)));
 	const totalMean = $derived(getTotalMeanValue(checkInData.data, entries));
 
 	let { ts } = $props();

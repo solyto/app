@@ -7,6 +7,7 @@ import { apiRoutes } from '$lib/config/apiRoutes';
 import { getUrlFormat } from '$lib/helpers/DateHelper';
 import { page } from '$app/state';
 import { SvelteDate } from 'svelte/reactivity';
+import LocalStorageService from '$lib/services/LocalStorageService';
 
 export interface HistoryMonth {
 	year: number;
@@ -14,10 +15,14 @@ export interface HistoryMonth {
 }
 
 export class CheckInData {
+	static readonly LS_SCORED_TRACKERS_KEY: string = 'check_in_scored_trackers';
+
 	loaded = $state<boolean>(false);
 	data = $state<CheckIn[]>([]);
 	settings = $state<CheckInSettings>({ enabledTrackers: [...ALL_CHECK_IN_TRACKERS], selectedSports: [...DEFAULT_SPORTS] });
 	historyMonth = $state<HistoryMonth>({ year: new SvelteDate().getFullYear(), month: new SvelteDate().getMonth() });
+	localStorage = new LocalStorageService();
+	scoredTrackers = $state<CheckInType[]>(this.loadScoredTrackers());
 	activeTrackers = $derived(ALL_CHECK_IN_TRACKERS.filter((t) => this.settings.enabledTrackers.includes(t)));
 	selectedDate = $derived(page.params.date);
 	auth = getAuth();
@@ -25,6 +30,17 @@ export class CheckInData {
 
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
+	}
+
+	private loadScoredTrackers(): CheckInType[] {
+		const stored = this.localStorage.getJson(CheckInData.LS_SCORED_TRACKERS_KEY);
+		if (Array.isArray(stored)) return stored as CheckInType[];
+		return [...ALL_CHECK_IN_TRACKERS];
+	}
+
+	saveScoredTrackers(trackers: CheckInType[]): void {
+		this.localStorage.setJson(CheckInData.LS_SCORED_TRACKERS_KEY, trackers);
+		this.scoredTrackers = trackers;
 	}
 
 	async load(): Promise<void> {

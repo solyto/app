@@ -8,12 +8,14 @@
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
+	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 	import IconDumbbell from '@lucide/svelte/icons/dumbbell';
 	import IconBike from '@lucide/svelte/icons/bike';
 	import IconMountain from '@lucide/svelte/icons/mountain';
 	import IconWavesLadder from '@lucide/svelte/icons/waves-ladder';
 	import IconFootprints from '@lucide/svelte/icons/footprints';
 	import IconYoga from '$lib/components/ui/icons/IconYoga.svelte';
+	import HelpTooltip from '$lib/components/ui/HelpTooltip.svelte';
 
 	let { onClose } = $props<{ onClose: () => void }>();
 
@@ -24,6 +26,11 @@
 	let enabledMap = $state<Record<string, boolean>>(
 		Object.fromEntries(
 			ALL_CHECK_IN_TRACKERS.map((t) => [t, checkInData.settings.enabledTrackers.includes(t)])
+		)
+	);
+	let scoredMap = $state<Record<string, boolean>>(
+		Object.fromEntries(
+			ALL_CHECK_IN_TRACKERS.map((t) => [t, checkInData.scoredTrackers.includes(t)])
 		)
 	);
 	let selectedSports = $state<SportId[]>([...checkInData.settings.selectedSports]);
@@ -38,6 +45,11 @@
 		loadingIndicator.start();
 		await checkInData.saveSettings({ enabledTrackers: enabled, selectedSports });
 		loadingIndicator.stop();
+	}
+
+	function onScoredToggle(tracker: CheckInType): void {
+		const scored = ALL_CHECK_IN_TRACKERS.filter((t) => scoredMap[t]);
+		checkInData.saveScoredTrackers(scored);
 	}
 
 	async function onSportClick(sportId: SportId): Promise<void> {
@@ -86,13 +98,35 @@
 			<span class="text-lg font-bold text-c-heading dark:text-c-primary">{ts.get.checkIn.settings}</span>
 			<CloseButton onClick={close} inModal={false} />
 		</div>
+		<div class="w-full flex items-center justify-between gap-2">
+			<div></div>
+			<div class="flex w-full items-center justify-between gap-4">
+				<span class="ml-auto text-xs">
+					<HelpTooltip label={ts.get.checkIn.score} description={ts.get.checkIn.score_description} />
+				</span>
+				<div class="w-9"></div>
+			</div>
+		</div>
 		{#each ALL_CHECK_IN_TRACKERS as tracker (tracker)}
-			<div class="flex w-full justify-between">
+			<div class="flex w-full items-center justify-between gap-4">
 				<span>{ts.get.checkIn[tracker]}</span>
-				<Toggle
-					bind:checked={enabledMap[tracker]}
-					onchange={() => onToggle(tracker)}
-				/>
+				<div class="flex items-center gap-2">
+					{#if tracker !== 'sports'}
+						<div class="pt-2 mr-4" class:opacity-30={!enabledMap[tracker]} class:pointer-events-none={!enabledMap[tracker]}>
+							<Checkbox
+								isChecked={scoredMap[tracker]}
+								onchange={() => {
+									scoredMap[tracker] = !scoredMap[tracker];
+									onScoredToggle(tracker);
+								}}
+							/>
+						</div>
+					{/if}
+					<Toggle
+						bind:checked={enabledMap[tracker]}
+						onchange={() => onToggle(tracker)}
+					/>
+				</div>
 			</div>
 		{/each}
 		{#if enabledMap['sports']}
