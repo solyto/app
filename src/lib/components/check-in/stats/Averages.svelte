@@ -68,7 +68,7 @@
 
 </script>
 
-<div class="max-2xl:px-4 border-t-2 pt-6 border-c-neutral-1 dark:border-s-dark">
+<div class="max-2xl:px-4 pb-8 border-c-neutral-1 dark:border-s-dark">
 	<div class="flex flex-col gap-3">
 		{#each entries as entry (entry)}
 			{@const value = getMeanValue(data, entry)}

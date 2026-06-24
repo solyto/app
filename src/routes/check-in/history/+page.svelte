@@ -58,8 +58,8 @@
 			<div class="w-1/4 2xl:w-[30%] flex flex-col 2xl:border-l-2 border-c-neutral-1 dark:border-s-dark 2xl:pl-6">
 				{#if checkInData.loaded}
 					<div transition:fade={{ duration: 150 }}>
-						<CheckInSummaries {dates} trackers={checkInData.activeTrackers} />
 						<Averages data={monthData} activeTrackers={checkInData.activeTrackers} />
+						<CheckInSummaries {dates} trackers={checkInData.activeTrackers} />
 					</div>
 				{/if}
 			</div>
@@ -69,8 +69,8 @@
 			<OverviewMobile {dates} trackers={checkInData.activeTrackers} />
 			{#if checkInData.loaded}
 				<div transition:fade={{ duration: 150 }}>
-					<CheckInSummaries {dates} trackers={checkInData.activeTrackers} />
 					<Averages data={monthData} activeTrackers={checkInData.activeTrackers} />
+					<CheckInSummaries {dates} trackers={checkInData.activeTrackers} />
 				</div>
 			{/if}
 		</div>
