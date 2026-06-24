@@ -70,33 +70,35 @@
 			{ts.get.welcome_tour.tour_start}
 		</button>
 	</SettingsSection>
-	<SettingsSection label={ts.get.welcome_tour.pwa_title}>
-		<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">
-			{ts.get.welcome_tour.pwa_description}
-		</p>
-		{#if pwa.installed}
-			<div class="mt-4 flex items-center gap-2 text-sm text-c-primary">
-				<IconCheckCircle size={15} />
-				<span>{ts.get.welcome_tour.pwa_installed}</span>
-			</div>
-		{:else if pwa.canInstall}
-			<button
-				class="mt-4 flex cursor-pointer items-center gap-2 rounded-lg bg-c-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-c-primary/80"
-				onclick={() => pwa.install()}
-			>
-				<IconSmartphone size={15} />
-				{ts.get.welcome_tour.pwa_install_button}
-			</button>
-		{:else if pwa.isIos}
-			<p class="mt-4 text-sm text-c-neutral-5 dark:text-c-neutral-4">
-				{ts.get.welcome_tour.pwa_ios_instruction}
+	{#if !IS_NATIVE}
+		<SettingsSection label={ts.get.welcome_tour.pwa_title}>
+			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">
+				{ts.get.welcome_tour.pwa_description}
 			</p>
-		{:else}
-			<p class="mt-4 text-sm text-c-neutral-5 dark:text-c-neutral-4">
-				{ts.get.welcome_tour.pwa_browser_hint}
-			</p>
-		{/if}
-	</SettingsSection>
+			{#if pwa.installed}
+				<div class="mt-4 flex items-center gap-2 text-sm text-c-primary">
+					<IconCheckCircle size={15} />
+					<span>{ts.get.welcome_tour.pwa_installed}</span>
+				</div>
+			{:else if pwa.canInstall}
+				<button
+					class="mt-4 flex cursor-pointer items-center gap-2 rounded-lg bg-c-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-c-primary/80"
+					onclick={() => pwa.install()}
+				>
+					<IconSmartphone size={15} />
+					{ts.get.welcome_tour.pwa_install_button}
+				</button>
+			{:else if pwa.isIos}
+				<p class="mt-4 text-sm text-c-neutral-5 dark:text-c-neutral-4">
+					{ts.get.welcome_tour.pwa_ios_instruction}
+				</p>
+			{:else}
+				<p class="mt-4 text-sm text-c-neutral-5 dark:text-c-neutral-4">
+					{ts.get.welcome_tour.pwa_browser_hint}
+				</p>
+			{/if}
+		</SettingsSection>
+	{/if}
 	{#if IS_NATIVE && version}
 		<SettingsSection label="Version">
 			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{version}</p>
