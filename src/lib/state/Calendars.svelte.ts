@@ -557,7 +557,10 @@ export class Calendars {
 			apiRoutes.calendars.acceptInvite.replace('%s', token),
 			{}
 		);
-		if (res) await this.loadCalendars();
+		if (res) {
+			await this.loadCalendars();
+			await this.loadEvents();
+		}
 		return res;
 	}
 

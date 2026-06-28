@@ -12,7 +12,7 @@
 </script>
 
 <div
-	class="group relative flex w-1/7 flex-col border-1 border-c-neutral-1 dark:border-s-dark"
+	class="group relative flex w-1/7 flex-col border-1 border-c-neutral-1 dark:border-s-dark overflow-y-auto"
 	class:bg-c-neutral={day.is_grayed_out}
 	class:bg-c-bg-surface={!day.is_grayed_out}
 	class:dark:bg-s-dark={day.is_grayed_out}

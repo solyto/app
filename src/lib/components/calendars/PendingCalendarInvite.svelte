@@ -6,7 +6,6 @@
 	import type { Calendar } from '$lib/types/calendar.js';
 	import IconCheck from '@lucide/svelte/icons/check';
 	import IconX from '@lucide/svelte/icons/x';
-	import IconCalendar from '@lucide/svelte/icons/calendar';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
@@ -56,39 +55,35 @@
 	}
 </script>
 
-<div
-	class="flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20"
->
+<div class="flex w-full items-center gap-3 rounded-lg p-2">
 	<div
-		class="flex size-8 items-center justify-center rounded-full"
-		style="background-color: {calendar.color}20"
-	>
-		<IconCalendar class="size-4" style="color: {calendar.color}" />
-	</div>
+		class="size-3 shrink-0 rounded-full"
+		style="background-color: {calendar.color}"
+	></div>
 	<div class="min-w-0 flex-1">
 		<p class="truncate text-sm font-medium">{calendar.name}</p>
 		{#if calendar.share_owner}
-			<p class="text-xs text-c-neutral-5 dark:text-c-neutral-4">
+			<p class="truncate text-xs text-c-neutral-5">
 				{ts.get.calendar.shared_by.replace('%s', calendar.share_owner)}
 			</p>
 		{/if}
 	</div>
-	<div class="flex gap-2">
+	<div class="flex shrink-0 items-center gap-1">
 		<button
-			class="rounded-full bg-green-100 p-2 text-green-600 transition-colors hover:bg-green-200 disabled:opacity-50 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50"
+			class="cursor-pointer rounded-full p-1.5 text-c-neutral-4 transition-colors hover:bg-c-neutral-2 hover:text-c-primary disabled:opacity-50 dark:hover:bg-s-dark-2"
 			onclick={accept}
 			disabled={processing}
 			title={ts.get.calendar.accept_invite}
 		>
-			<IconCheck class="size-4" />
+			<IconCheck class="size-3.5" />
 		</button>
 		<button
-			class="rounded-full bg-red-100 p-2 text-red-600 transition-colors hover:bg-red-200 disabled:opacity-50 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+			class="cursor-pointer rounded-full p-1.5 text-c-neutral-4 transition-colors hover:bg-c-neutral-2 hover:text-c-danger disabled:opacity-50 dark:hover:bg-s-dark-2"
 			onclick={decline}
 			disabled={processing}
 			title={ts.get.calendar.decline_invite}
 		>
-			<IconX class="size-4" />
+			<IconX class="size-3.5" />
 		</button>
 	</div>
 </div>

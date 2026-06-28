@@ -4,7 +4,6 @@
 	import Divider from '$lib/components/ui/Divider.svelte';
 	import ManageCalendars from '$lib/components/calendars/ManageCalendars.svelte';
 	import NavigationEntry from '$lib/components/calendars/NavigationEntry.svelte';
-	import PendingCalendarInvite from '$lib/components/calendars/PendingCalendarInvite.svelte';
 	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import IconMonth from '$lib/components/ui/icons/IconMonth.svelte';
 	import IconWeek from '$lib/components/ui/icons/IconWeek.svelte';
@@ -17,8 +16,9 @@
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import ImportButton from '$lib/components/ui/buttons/ImportButton.svelte';
 	import CloudButton from '$lib/components/ui/buttons/CloudButton.svelte';
+	import { page } from '$app/state';
 
-	let editMode = $state<boolean>(false);
+	let editMode = $state<boolean>(page.url.searchParams.has('invitations'));
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
@@ -98,14 +98,6 @@
 				</div>
 			</div>
 			<Divider />
-			{#if calendars.pendingInvites.length > 0}
-				<div class="flex w-full flex-col gap-2 px-2 py-2 2xl:px-4">
-					{#each calendars.pendingInvites as calendar (calendar.id)}
-						<PendingCalendarInvite {calendar} />
-					{/each}
-				</div>
-				<Divider />
-			{/if}
 			<div class="flex w-full flex-col justify-center px-2 2xl:px-4">
 				{#each activeCalendars as calendar (calendar.id)}
 					<NavigationEntry {calendar} />

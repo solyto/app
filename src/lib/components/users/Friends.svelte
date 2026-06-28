@@ -85,7 +85,7 @@
 			<AddButton onClick={toggleAddFriend} />
 		{/if}
 	</div>
-	{#each friends.friends as friend (friend.user_id)}
+	{#each friends.friends as friend (friend.id)}
 		<div class="flex items-center gap-4" transition:fade>
 			<div class="size-8">
 				<img

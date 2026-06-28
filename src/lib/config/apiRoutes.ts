@@ -311,6 +311,7 @@ export const apiRoutes = {
 		startImport: API_URL + '/calendars/import',
 		selectImportCalendars: API_URL + '/calendars/import/select',
 		getImportState: API_URL + '/calendars/import/state',
+		listSharees: API_URL + '/calendars/%d/share',
 		shareCalendar: API_URL + '/calendars/%d/share',
 		revokeShare: API_URL + '/calendars/%d/share/%s',
 		unsubscribe: API_URL + '/calendars/%d/unsubscribe',

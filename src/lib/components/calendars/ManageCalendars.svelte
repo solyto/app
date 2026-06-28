@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import CalendarEdit from '$lib/components/calendars/CalendarEdit.svelte';
+	import PendingCalendarInvite from '$lib/components/calendars/PendingCalendarInvite.svelte';
 	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import CalendarCreate from '$lib/components/calendars/CalendarCreate.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import Divider from '$lib/components/ui/Divider.svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import IconGripVertical from '@lucide/svelte/icons/grip-vertical';
@@ -11,6 +14,7 @@
 	let { onClose } = $props<{ onClose: () => void }>();
 
 	const calendars = getCalendars();
+	const ts = getTranslation();
 
 	const flipDurationMs = 200;
 	let items = $state<Calendar[]>([]);
@@ -38,6 +42,17 @@
 	>
 		<IconChevronLeft class="h-6 w-6" />
 	</button>
+	{#if calendars.pendingInvites.length > 0}
+		<p class="px-1 text-xs font-semibold uppercase tracking-wider text-c-neutral-4">
+			{ts.get.calendar.pending_invites}
+		</p>
+		<div class="flex flex-col gap-2">
+			{#each calendars.pendingInvites as calendar (calendar.id)}
+				<PendingCalendarInvite {calendar} />
+			{/each}
+		</div>
+		<Divider />
+	{/if}
 	<div
 		class="flex flex-col gap-2 !outline-0"
 		use:dndzone={{

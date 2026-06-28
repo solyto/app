@@ -8,7 +8,6 @@
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 	import IconShare2 from '@lucide/svelte/icons/share-2';
-	import IconLogOut from '@lucide/svelte/icons/log-out';
 
 	const calendars = getCalendars();
 	const loadingIndicator = getLoadingIndicator();
@@ -52,8 +51,6 @@
 		loadingIndicator.stop();
 	}
 
-	const getDisplayName = () =>
-		calendar.is_shared ? calendar.name + ' (' + calendar.share_owner + ')' : calendar.name;
 </script>
 
 <div class="flex w-full items-center gap-4">
@@ -67,7 +64,12 @@
 			--cp-border-color="var(--color-c-neutral-2)"
 		/>
 	</div>
-	<span class="flex-1 text-md">{getDisplayName()}</span>
+	<div class="flex flex-1 flex-col min-w-0">
+		<span class="truncate text-md">{calendar.name}</span>
+		{#if calendar.is_shared && calendar.share_owner}
+			<span class="truncate text-xs text-c-neutral-4">{ts.get.calendar.shared_by.toLowerCase().replace('%s', calendar.share_owner)}</span>
+		{/if}
+	</div>
 	<div class="flex items-center">
 		{#if isOwned}
 			<button
@@ -79,13 +81,7 @@
 			</button>
 			<InlineDeleteButton onClick={onDelete} />
 		{:else if calendar.is_shared}
-			<button
-				class="cursor-pointer rounded-full p-2 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-danger dark:hover:bg-s-dark-3"
-				onclick={onUnsubscribe}
-				title={ts.get.calendar.unsubscribe}
-			>
-				<IconLogOut class="size-4" />
-			</button>
+			<InlineDeleteButton onClick={onUnsubscribe} />
 		{/if}
 	</div>
 </div>

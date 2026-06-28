@@ -777,8 +777,11 @@ export interface CalendarRecords {
 	no_friends_to_share: string;
 	share_success: string;
 	share_error: string;
+	invite_pending: string;
 	invite_accepted: string;
 	invite_declined: string;
+	shared_with: string;
+	revoke_share: string;
 	unsubscribed: string;
 	synchronize: string;
 	attachments: string;

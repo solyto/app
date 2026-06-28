@@ -2,7 +2,7 @@ export type FriendRequestStatus = 'pending' | 'accepted' | 'rejected';
 export type FrienRequestDirection = 'sent' | 'received';
 
 export interface Friend {
-	user_id: string;
+	id: string;
 	name: string;
 	profile_image_path: string | null;
 }
