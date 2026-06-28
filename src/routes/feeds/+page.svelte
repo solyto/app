@@ -27,6 +27,7 @@
 		<EntryEdit
 			onClose={() => {
 				feeds.modalOpen = false;
+				feeds.activeFeed = null;
 			}}
 		/>
 	</ContentModal>
