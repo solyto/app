@@ -22,6 +22,7 @@
 		title={feeds.activeFeed ? ts.get.feeds.edit_feed : ts.get.feeds.add_feed}
 		onClose={() => {
 			feeds.modalOpen = false;
+			feeds.activeFeed = null;
 		}}
 	>
 		<EntryEdit
