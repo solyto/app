@@ -258,6 +258,7 @@ const todos: TodoRecords = {
 	view_list: 'Liste',
 	view_kanban: 'Kanban',
 	view_overview: 'Aperçu',
+	view_card: 'Carte',
 	uncategorized: 'Sans catégorie',
 	delete_confirm_label: 'Supprimer la tâche',
 	delete_confirm_message: 'Es-tu sûr de vouloir supprimer cette tâche?',

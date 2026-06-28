@@ -230,6 +230,7 @@ export interface TodoRecords {
 	view_list: string;
 	view_kanban: string;
 	view_overview: string;
+	view_card: string;
 	uncategorized: string;
 	delete_confirm_label: string;
 	delete_confirm_message: string;

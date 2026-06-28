@@ -1,11 +1,12 @@
 <script lang="ts">
 	import IconAlignJustify from '@lucide/svelte/icons/align-justify';
 	import IconList from '@lucide/svelte/icons/list';
-	import IconGrid2x2 from '@lucide/svelte/icons/grid-2x2';
 	import IconSquareKanban from '@lucide/svelte/icons/square-kanban';
 	import IconLayoutGrid from '@lucide/svelte/icons/layout-grid';
 	import IconGalleryHorizontal from '@lucide/svelte/icons/gallery-horizontal';
 	import IconLibrary from '@lucide/svelte/icons/library';
+	import IconSquare from '@lucide/svelte/icons/square';
+	import IconRectangleHorizontal from '@lucide/svelte/icons/rectangle-horizontal';
 
 	let {
 		views,
@@ -37,13 +38,13 @@
 			{:else if view.type === 'comfortable'}
 				<IconList class="size-4" />
 			{:else if view.type === 'card'}
-				<IconGrid2x2 class="size-4" />
+				<IconRectangleHorizontal class="size-4" />
 			{:else if view.type === 'list'}
 				<IconAlignJustify class="size-4" />
 			{:else if view.type === 'kanban'}
 				<IconSquareKanban class="size-4" />
 			{:else if view.type === 'cards'}
-				<IconGrid2x2 class="size-4" />
+				<IconSquare class="size-4" />
 			{:else if view.type === 'overview'}
 				<IconLayoutGrid class="size-4" />
 			{:else if view.type === 'shelf'}

@@ -260,6 +260,7 @@ const todos: TodoRecords = {
 	view_list: 'Liste',
 	view_kanban: 'Kanban',
 	view_overview: 'Übersicht',
+	view_card: 'Karte',
 	uncategorized: 'Unkategorisiert',
 	delete_confirm_label: 'Todo löschen',
 	delete_confirm_message: 'Bist du sicher, dass du dieses Todo löschen möchtest?',

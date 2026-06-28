@@ -75,7 +75,11 @@
 				<OverviewView {handleCheck} />
 			{/if}
 		{:else}
-			<CardView {handleCheck} />
+			{#if view === 'overview'}
+				<OverviewView {handleCheck} />
+			{:else if view === 'card'}
+				<CardView {handleCheck} />
+			{/if}
 		{/if}
 	</div>
 </div>

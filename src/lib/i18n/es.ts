@@ -259,6 +259,7 @@ const todos: TodoRecords = {
 	view_list: 'Lista',
 	view_kanban: 'Kanban',
 	view_overview: 'Resumen',
+	view_card: 'Tarjeta',
 	uncategorized: 'Sin categoría',
 	delete_confirm_label: 'Eliminar tarea',
 	delete_confirm_message: '¿Está seguro de que desea eliminar esta tarea?',
