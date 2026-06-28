@@ -6,6 +6,8 @@
 	import RecipeFilter from '$lib/components/libraries/filters/RecipeFilter.svelte';
 	import RatingFilter from '$lib/components/libraries/filters/RatingFilter.svelte';
 	import GenreFilter from '$lib/components/libraries/filters/GenreFilter.svelte';
+	import LentBookFilter from '$lib/components/libraries/filters/LentBookFilter.svelte';
+	import PlantLocationFilter from '$lib/components/libraries/filters/PlantLocationFilter.svelte';
 
 	const ts = getTranslation();
 
@@ -91,31 +93,14 @@
 					{ts.get.libraries.wishlist}
 				</button>
 			{/if}
+			{#if library.config.type === 'books'}
+				<LentBookFilter {toggleMenu} />
+			{/if}
 			{#if library.config.type === 'recipes'}
 				<RecipeFilter {toggleMenu} />
 			{/if}
 			{#if library.config.type === 'plants'}
-				<button
-					class="flex cursor-pointer p-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
-					class:bg-c-neutral-1={library.locationFilter === 'indoor'}
-					onclick={() => { toggleMenu(); library.addLocationFilter('indoor'); }}
-				>
-					{ts.get.libraries.plants.location_indoor}
-				</button>
-				<button
-					class="flex cursor-pointer p-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
-					class:bg-c-neutral-1={library.locationFilter === 'outdoor'}
-					onclick={() => { toggleMenu(); library.addLocationFilter('outdoor'); }}
-				>
-					{ts.get.libraries.plants.location_outdoor}
-				</button>
-				<button
-					class="flex cursor-pointer p-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
-					class:bg-c-neutral-1={library.unidentifiedFilter}
-					onclick={() => { toggleMenu(); library.filterByUnidentified(); }}
-				>
-					{ts.get.libraries.plants.unidentified}
-				</button>
+				<PlantLocationFilter {toggleMenu} />
 			{/if}
 			<button
 				class="flex cursor-pointer p-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"

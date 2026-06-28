@@ -49,6 +49,7 @@ export class BookLibrary {
 	ratingFilter = $state<number | null>(null);
 	genreFilter = $state<BookGenre | null>(null);
 	wishlistFilter = $state<boolean>(false);
+	lentFilter = $state<boolean>(false);
 	searchTerm = $state<string>('');
 	releases = $state<BookRelease[]>([]);
 	releasesLoaded = $state<boolean>(false);
@@ -107,14 +108,22 @@ export class BookLibrary {
 	}
 
 	filterByWishlist(): void {
+		this.lentFilter = false;
 		this.wishlistFilter = true;
 		this.filteredEntries = this.filterService.byWishlist(this.entries);
+	}
+
+	filterByLent(): void {
+		this.wishlistFilter = false;
+		this.lentFilter = true;
+		this.filteredEntries = this.filterService.byLent(this.entries);
 	}
 
 	clearFilters(): void {
 		this.genreFilter = null;
 		this.ratingFilter = null;
 		this.wishlistFilter = false;
+		this.lentFilter = false;
 		this.filteredEntries = this.entries;
 	}
 

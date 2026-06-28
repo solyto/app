@@ -463,7 +463,8 @@ const libraries: LibraryRecords = {
 		goodreads_import_validation_error: 'Por favor ingrese un enlace válido de Goodreads.',
 		create_error: 'No se pudo crear el libro.',
 		update_error: 'No se pudo actualizar el libro.',
-		search_placeholder: 'Título del libro...'
+		search_placeholder: 'Título del libro...',
+		filter_lent: 'Prestado'
 	},
 	movies: {
 		title: 'Título',

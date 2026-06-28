@@ -444,6 +444,7 @@ export interface LibraryRecords {
 		create_error: string;
 		update_error: string;
 		search_placeholder: string;
+		filter_lent: string;
 	};
 	movies: {
 		title: string;

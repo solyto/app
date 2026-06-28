@@ -56,3 +56,10 @@
 		</button>
 	</div>
 {/if}
+<button
+	class="flex cursor-pointer p-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
+	class:bg-c-neutral-1={library.unidentifiedFilter}
+	onclick={() => { toggleMenu(); library.filterByUnidentified(); }}
+>
+	{ts.get.libraries.plants.unidentified}
+</button>

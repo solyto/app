@@ -64,4 +64,8 @@ export default class LibraryFilterService {
 	byWishlist<T extends Music | Book | Movie | Game>(entries: T[]): T[] {
 		return entries.filter((entry) => entry.wishlist);
 	}
+
+	byLent<T extends Book>(entries: T[]): T[] {
+		return entries.filter((entry) => entry.lent_to !== null);
+	}
 }
