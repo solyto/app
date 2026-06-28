@@ -15,7 +15,8 @@
 		width = null,
 		title = null,
 		transparent = false,
-		higherZIndex = false
+		higherZIndex = false,
+		showTitleOnMobile = false
 	} = $props<{
 		onClose?: () => void | Promise<void>;
 		onEdit?: () => void | Promise<void>;
@@ -28,6 +29,7 @@
 		title?: string | null;
 		transparent?: boolean;
 		higherZIndex?: boolean;
+		showTitleOnMobile?: boolean;
 	}>();
 </script>
 
@@ -79,6 +81,11 @@
 			class:dark:shadow-s-dark-shadow={!transparent}
 			in:scale={{ start: 0.75 }}
 		>
+			{#if showTitleOnMobile}
+				<div class="text-2xl font-bold tracking-wide text-c-heading dark:text-c-primary md:hidden mb-6">
+					{title}
+				</div>
+			{/if}
 			{@render children?.()}
 		</div>
 	</div>
