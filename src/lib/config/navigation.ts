@@ -51,7 +51,7 @@ export const desktopOrder: string[] = [
 ];
 
 export const mobileDefaultOrder: string[] = [
-	'home', 'todos', 'notes', 'check-in', 'libraries', 'calendar', 'contacts', 'finances', 'time-tracking', 'feeds', 'clipboard', 'dev-requests',
+	'home', 'todos', 'calendar', 'check-in', 'libraries', 'notes', 'contacts', 'finances', 'time-tracking', 'feeds', 'clipboard', 'dev-requests',
 ];
 
 export const mobileVisibleCount = 5;
