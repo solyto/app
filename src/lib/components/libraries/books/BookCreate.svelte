@@ -42,14 +42,16 @@
 	let coverValue = $state<string>('');
 	let linkValue = $state<string>(activeEntry?.link ?? '');
 	let publicationYearValue = $state<number | null>(activeEntry?.publication_year ?? null);
-	let pagesValue = $state<string>(activeEntry?.pages?.toString() ?? '');
-	let currentPageValue = $state<string>(activeEntry?.current_page?.toString() ?? '');
+	let pagesValue = $state<number | null>(activeEntry?.pages ?? null);
+	let currentPageValue = $state<number | null>(activeEntry?.current_page ?? null);
 	let lentToValue = $state<string>(activeEntry?.lent_to ?? '');
 	let isWhereValue = $state<string>(activeEntry?.is_where ?? '');
 	let startedAtValue = $state<string>(activeEntry?.started_at?.substring(0, 10) ?? '');
 	let finishedAtValue = $state<string>(activeEntry?.finished_at?.substring(0, 10) ?? '');
 	let selectedGenres = $state<{ label: string; value: string }[]>(
-		activeEntry ? activeEntry.genres.map((g) => ({ label: g.title, value: g.id.toString() })) : []
+		activeEntry
+			? activeEntry.genres.map((g) => ({ label: g.title, value: g.id.toString() }))
+			: []
 	);
 	let selectedTags = $state<{ label: string; value: string }[]>(
 		activeEntry ? activeEntry.tags.map((t) => ({ label: t.name, value: t.id.toString() })) : []
@@ -62,8 +64,26 @@
 	let importDropdownOpen = $state<boolean>(false);
 
 	const importOptions = [
-		{ label: 'Hardcover', icon: IconHardcover, onClick: () => importFrom('hardcover', 'hardcover.app', ts.get.libraries.books.hardcover_import_validation_error) },
-		{ label: 'Goodreads', icon: GoodreadsIcon, onClick: () => importFrom('goodreads', 'goodreads.com', ts.get.libraries.books.goodreads_import_validation_error) }
+		{
+			label: 'Hardcover',
+			icon: IconHardcover,
+			onClick: () =>
+				importFrom(
+					'hardcover',
+					'hardcover.app',
+					ts.get.libraries.books.hardcover_import_validation_error
+				)
+		},
+		{
+			label: 'Goodreads',
+			icon: GoodreadsIcon,
+			onClick: () =>
+				importFrom(
+					'goodreads',
+					'goodreads.com',
+					ts.get.libraries.books.goodreads_import_validation_error
+				)
+		}
 	];
 
 	let genreOptions: { label: string; value: string }[] = $derived(
@@ -98,8 +118,8 @@
 			author: authorValue,
 			series: seriesValue !== '' ? seriesValue : null,
 			volume: volumeValue,
-			pages: pagesValue !== '' ? parseInt(pagesValue) : null,
-			current_page: currentPageValue !== '' ? parseInt(currentPageValue) : null,
+			pages: pagesValue,
+			current_page: currentPageValue,
 			publication_year: publicationYearValue,
 			lent_to: lentToValue !== '' ? lentToValue : null,
 			is_where: isWhereValue !== '' ? isWhereValue : null,
@@ -140,8 +160,8 @@
 				authorValue = '';
 				seriesValue = '';
 				volumeValue = null;
-				pagesValue = '';
-				currentPageValue = '';
+				pagesValue = null;
+				currentPageValue = null;
 				lentToValue = '';
 				isWhereValue = '';
 				startedAtValue = '';
@@ -167,11 +187,15 @@
 		coverValue = book.cover ?? '';
 		linkValue = book.url ?? '';
 		if (book.release_date) publicationYearValue = parseInt(book.release_date.slice(0, 4));
-		if (book.page_count) pagesValue = book.page_count.toString();
+		if (book.page_count) pagesValue = book.page_count;
 		library.closeExternalSearchModal();
 	}
 
-	async function importFrom(provider: string, domain: string, validationError: string): Promise<void> {
+	async function importFrom(
+		provider: string,
+		domain: string,
+		validationError: string
+	): Promise<void> {
 		if (linkValue === '') {
 			linkInput?.focus();
 			return;
@@ -198,7 +222,7 @@
 		titleValue = book.title;
 		coverValue = book.cover ?? '';
 		publicationYearValue = book.release_date ? parseInt(book.release_date.slice(0, 4)) : null;
-		pagesValue = book.page_count?.toString() ?? '';
+		pagesValue = book.page_count ?? null;
 
 		importLoading = false;
 		importDropdownOpen = false;
@@ -231,19 +255,29 @@
 		</div>
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.genres}>
-		<MultiSelect bind:value={selectedGenres} options={genreOptions} allowUserOptions oncreate={onCreateGenre} />
+		<MultiSelect
+			bind:value={selectedGenres}
+			options={genreOptions}
+			allowUserOptions
+			oncreate={onCreateGenre}
+		/>
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.tags}>
-		<MultiSelect bind:value={selectedTags} options={tagOptions} allowUserOptions oncreate={onCreateTag} />
+		<MultiSelect
+			bind:value={selectedTags}
+			options={tagOptions}
+			allowUserOptions
+			oncreate={onCreateTag}
+		/>
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.publication_year}>
 		<NumberInput bind:value={publicationYearValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.books.pages}>
-		<TextInput bind:value={pagesValue} />
+		<NumberInput bind:value={pagesValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.books.current_page}>
-		<TextInput bind:value={currentPageValue} />
+		<NumberInput bind:value={currentPageValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.books.lent_to}>
 		<TextInput bind:value={lentToValue} />
@@ -269,7 +303,12 @@
 	<div class="mt-8 flex w-full flex-row items-center justify-end gap-3">
 		{#if !activeEntry}
 			<CreateModalSearchButton {library} {ts} />
-			<CreateModalImport options={importOptions} {ts} loading={importLoading} bind:open={importDropdownOpen} />
+			<CreateModalImport
+				options={importOptions}
+				{ts}
+				loading={importLoading}
+				bind:open={importDropdownOpen}
+			/>
 		{/if}
 		<TextButton title={ts.get.layout.save} onclick={onsubmit} />
 	</div>
