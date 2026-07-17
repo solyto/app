@@ -18,7 +18,7 @@
 
 <div
 	in:fade
-	class="hidden h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg p-2 text-sm drop-shadow-xl sm:relative sm:flex sm:w-96 sm:p-4 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
+	class="hidden h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg p-2 text-sm drop-shadow-xl sm:relative sm:flex sm:min-w-72 sm:p-4 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 >
 	<div class="absolute top-2 right-2 flex gap-1">
 		<AddNoteButton onClick={() => notes.openModal('note')} />

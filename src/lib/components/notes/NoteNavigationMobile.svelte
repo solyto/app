@@ -5,7 +5,6 @@
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import IconFunnel from '@lucide/svelte/icons/funnel';
 	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
 	import IconArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import AddNoteButton from '$lib/components/notes/AddNoteButton.svelte';
