@@ -55,7 +55,7 @@
 
 {#if visible}
 	<div
-		class="fixed top-0 left-0 z-40 flex h-dvh w-screen justify-center bg-transparent backdrop-blur-xs transition-all modal-blur"
+		class="fixed top-0 left-0 z-[60] flex h-dvh w-screen justify-center bg-transparent backdrop-blur-xs transition-all modal-blur"
 		out:fade
 		in:blur={{ duration: 300 }}
 	>
