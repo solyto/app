@@ -11,7 +11,7 @@
 {#if !consent.acknowledged}
 	<div
 		transition:slide={{ duration: 250 }}
-		class="fixed inset-x-0 bottom-0 z-[110] border-t border-c-neutral-1/60 bg-c-bg-modal shadow-xl backdrop-blur-md dark:border-s-dark/60 dark:bg-s-dark-2/70"
+		class="fixed inset-x-0 bottom-0 z-[110] border-c-neutral-2 bg-c-bg-modal/60 border-t-1 shadow-xl backdrop-blur-md dark:border-s-dark/60 dark:bg-s-dark-2/70"
 	>
 		<div class="mx-auto flex max-w-4xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center">
 			<div class="grow text-sm text-c-neutral-7 dark:text-c-neutral-3">
