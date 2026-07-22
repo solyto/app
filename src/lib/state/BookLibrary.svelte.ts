@@ -94,7 +94,7 @@ export class BookLibrary {
 		this.ratingFilter = null;
 		this.filteredEntries = this.filterService.search(this.entries, this.searchTerm, [
 			'title',
-			'artist',
+			'author',
 			'series'
 		]);
 	}

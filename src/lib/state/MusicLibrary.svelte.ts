@@ -17,7 +17,6 @@ import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
-import { browser } from '$app/environment';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class MusicLibrary {
