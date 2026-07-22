@@ -19,7 +19,7 @@
 			return;
 		}
 
-		quickAdd.url = q;
+		quickAdd.content = q;
 		await quickAdd.detect();
 
 		if (quickAdd.needsConfirmation) {

@@ -9,7 +9,7 @@ import { apiRoutes } from '$lib/config/apiRoutes';
 export class QuickAdd {
 	open = $state<boolean>(false);
 	loading = $state<boolean>(false);
-	url = $state<string>('');
+	content = $state<string>('');
 	detectedType = $state<QuickAddContentType | null>(null);
 	confidence = $state<number>(0);
 	metadata = $state<Record<string, unknown> | null>(null);
@@ -36,7 +36,7 @@ export class QuickAdd {
 	}
 
 	reset(): void {
-		this.url = '';
+		this.content = '';
 		this.loading = false;
 		this.detectedType = null;
 		this.confidence = 0;
@@ -47,7 +47,7 @@ export class QuickAdd {
 	}
 
 	async detect(): Promise<void> {
-		if (!this.url.trim()) return;
+		if (!this.content.trim()) return;
 
 		this.loading = true;
 		this.error = null;
@@ -55,7 +55,7 @@ export class QuickAdd {
 		this.needsConfirmation = false;
 		this.showTypeSelector = false;
 
-		const res = await this.apiService.create(apiRoutes.dashboard.quickAddDetect, { url: this.url });
+		const res = await this.apiService.create(apiRoutes.dashboard.quickAddDetect, { content: this.content });
 
 		this.loading = false;
 
@@ -94,7 +94,7 @@ export class QuickAdd {
 		this.error = null;
 
 		const res = await this.apiService.create(apiRoutes.dashboard.quickAddCommit, {
-			url: this.url,
+			content: this.content,
 			content_type: type,
 			metadata: this.metadata
 		});
@@ -123,7 +123,7 @@ export class QuickAdd {
 
 	get isUrl(): boolean {
 		try {
-			new URL(this.url);
+			new URL(this.content);
 			return true;
 		} catch {
 			return false;

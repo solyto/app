@@ -30,7 +30,7 @@
 	const viewPoint = getViewPoint();
 
 	let keyHandlers = $state<{ [key: string]: string | null }>({ Escape: null, Enter: null });
-	let urlInput: HTMLInputElement | null = $state(null);
+	let contentInput: HTMLInputElement | null = $state(null);
 	let isMobile = $state<boolean | null>(null);
 
 	const TYPE_ICONS = {
@@ -75,14 +75,14 @@
 		keyHandlers.Enter = keyManager.registerKeyDown('Enter', handleEnter, { priority: 0 });
 		setTimeout(async () => {
 			await tick();
-			urlInput?.focus();
+			contentInput?.focus();
 		}, 350);
 	});
 
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 
 	function handleSubmit(): void {
-		if (!quickAdd.url.trim() || quickAdd.loading) return;
+		if (!quickAdd.content.trim() || quickAdd.loading) return;
 		quickAdd.detect();
 	}
 
@@ -177,14 +177,14 @@
 		<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="flex items-center gap-3">
 			<div class="flex-1">
 				<TextInput
-					bind:input={urlInput}
-					bind:value={quickAdd.url}
+					bind:input={contentInput}
+					bind:value={quickAdd.content}
 					placeholder={ts.get.quick_add.placeholder}
 				/>
 			</div>
 			<TextButton
 				title={quickAdd.loading ? ts.get.quick_add.adding : ts.get.quick_add.add}
-				disabled={quickAdd.loading || !quickAdd.url.trim()}
+				disabled={quickAdd.loading || !quickAdd.content.trim()}
 				onclick={handleSubmit}
 			/>
 		</form>
