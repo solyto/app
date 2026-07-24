@@ -131,12 +131,6 @@
 
 	{#if calendarsExpanded}
 		<div class="flex flex-col" transition:slide>
-			<div class="flex flex-wrap gap-2 px-2 pb-1 mt-4">
-				{#each calendars.calendars as calendar (calendar.id)}
-					<NavigationEntry {calendar} />
-				{/each}
-			</div>
-			<Divider />
 			<div class="flex items-start justify-center gap-8 px-2 pt-1 pb-2">
 				<div class="flex flex-col items-center gap-2">
 					<EditButton
