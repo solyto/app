@@ -51,7 +51,7 @@
 	{/if}
 
 	<div class="flex flex-col gap-6 mt-2">
-		{#if entry.ingredients?.length > 0}
+		{#if entry.ingredients.length > 0}
 			<div class="flex flex-col gap-2">
 				<div class="flex items-center justify-between gap-4">
 					<h3 class="font-bold">{ts.get.libraries.recipes.ingredients}</h3>
@@ -81,7 +81,7 @@
 			</div>
 		{/if}
 
-		{#if entry.steps?.length > 0}
+		{#if entry.steps.length > 0}
 			<div class="flex flex-col gap-4">
 				<h3 class="font-bold">{ts.get.libraries.recipes.steps}</h3>
 				{#each entry.steps as step, i}
