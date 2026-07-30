@@ -177,6 +177,18 @@ export const apiRoutes = {
 			delete: API_URL + '/libraries/plants/%s',
 			uploadCover: API_URL + '/libraries/plants/%s/cover'
 		},
+		youtube: {
+			list: API_URL + '/libraries/youtube',
+			create: API_URL + '/libraries/youtube',
+			update: API_URL + '/libraries/youtube/%s',
+			delete: API_URL + '/libraries/youtube/%s',
+			reorder: API_URL + '/libraries/youtube/reorder',
+			listCategories: API_URL + '/libraries/youtube/categories',
+			createCategory: API_URL + '/libraries/youtube/categories',
+			updateCategory: API_URL + '/libraries/youtube/categories/%d',
+			deleteCategory: API_URL + '/libraries/youtube/categories/%d',
+			reorderCategories: API_URL + '/libraries/youtube/categories/reorder'
+		},
 		getCover: API_URL + '/libraries/covers/'
 	},
 	dev: {

@@ -10,6 +10,7 @@ import IconLink from '@lucide/svelte/icons/link';
 import IconQuote from '@lucide/svelte/icons/quote';
 import IconCookingPot from '@lucide/svelte/icons/cooking-pot';
 import IconLeaf from '@lucide/svelte/icons/leaf';
+import IconVideo from '@lucide/svelte/icons/video';
 
 export const navigationItems: { type: LibraryType; url: string; icon: any }[] = [
 	{ type: 'music', url: urls.musicLibrary, icon: IconMusic },
@@ -19,7 +20,8 @@ export const navigationItems: { type: LibraryType; url: string; icon: any }[] = 
 	{ type: 'links', url: urls.linkLibrary, icon: IconLink },
 	{ type: 'quotes', url: urls.quoteLibrary, icon: IconQuote },
 	{ type: 'recipes', url: urls.recipeLibrary, icon: IconCookingPot },
-	{ type: 'plants', url: urls.plantLibrary, icon: IconLeaf }
+	{ type: 'plants', url: urls.plantLibrary, icon: IconLeaf },
+	{ type: 'youtube', url: urls.youtubeLibrary, icon: IconVideo }
 ];
 
 export class LibraryNavigation {
@@ -38,6 +40,7 @@ export class LibraryNavigation {
 		if (page.url.pathname.includes('movies')) return 'movies';
 		if (page.url.pathname.includes('games')) return 'games';
 		if (page.url.pathname.includes('plants')) return 'plants';
+		if (page.url.pathname.includes('youtube')) return 'youtube';
 		return null;
 	}
 }

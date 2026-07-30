@@ -508,6 +508,20 @@ export interface LibraryRecords {
 		create_category: string;
 		create_error: string;
 	};
+	youtube: {
+		title: string;
+		url: string;
+		is_favorite: string;
+		cover: string;
+		add_video: string;
+		all: string;
+		favorites: string;
+		uncategorized: string;
+		category_title: string;
+		category_color: string;
+		create_category: string;
+		create_error: string;
+	};
 	quotes: {
 		summary: string;
 		author: string;
@@ -596,6 +610,7 @@ export interface LibraryRecords {
 		quotes: string;
 		links: string;
 		plants: string;
+		youtube: string;
 	};
 	genres: string;
 	genre_error: string;

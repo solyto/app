@@ -527,6 +527,20 @@ const libraries: LibraryRecords = {
 		create_category: 'Ajouter une catégorie',
 		create_error: 'Impossible de créer le lien'
 	},
+	youtube: {
+		title: 'Titre',
+		url: 'URL YouTube',
+		is_favorite: 'Favori',
+		cover: "URL de la miniature",
+		add_video: 'Ajouter une vidéo',
+		all: 'Tous',
+		favorites: 'Favoris',
+		uncategorized: 'Sans catégorie',
+		category_title: 'Titre',
+		category_color: 'Couleur',
+		create_category: 'Ajouter une catégorie',
+		create_error: "Impossible de créer la vidéo."
+	},
 	quotes: {
 		summary: 'Résumé',
 		author: 'Auteur',
@@ -613,7 +627,8 @@ const libraries: LibraryRecords = {
 		recipes: 'Recettes',
 		quotes: 'Citations',
 		links: 'Liens',
-		plants: 'Plantes'
+		plants: 'Plantes',
+		youtube: 'YouTube'
 	},
 	genres: 'Genres',
 	genre_error: "Le genre n'a pas pu être créé",

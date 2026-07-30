@@ -4,6 +4,7 @@
 	import IconCookingPot from '@lucide/svelte/icons/cooking-pot';
 	import IconClapperboard from '@lucide/svelte/icons/clapperboard';
 	import IconLeaf from '@lucide/svelte/icons/leaf';
+	import IconVideo from '@lucide/svelte/icons/video';
 	import type { Library } from '$lib/types/library';
 
 	let { library } = $props<{ library: Library }>();
@@ -20,5 +21,7 @@
 		<IconClapperboard class="size-20 text-c-neutral-3" />
 	{:else if library.config.type === 'plants'}
 		<IconLeaf class="size-20 text-c-neutral-3" />
+	{:else if library.config.type === 'youtube'}
+		<IconVideo class="size-20 text-c-neutral-3" />
 	{/if}
 </div>
