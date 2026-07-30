@@ -5,19 +5,19 @@
 	import IconGripVertical from '@lucide/svelte/icons/grip-vertical';
 	import MissingCover from '$lib/components/libraries/shared/MissingCover.svelte';
 	import CoverImage from '$lib/components/libraries/shared/CoverImage.svelte';
-	import YoutubeEntry from '$lib/components/libraries/youtube/YoutubeEntry.svelte';
+	import VideoEntry from '$lib/components/libraries/videos/VideoEntry.svelte';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import type { YoutubeLibrary } from '$lib/state/YoutubeLibrary.svelte';
-	import type { YoutubeVideo } from '$lib/types/library_youtube';
+	import type { VideoLibrary } from '$lib/state/VideoLibrary.svelte';
+	import type { Video } from '$lib/types/library_video';
 
-	let { library } = $props<{ library: YoutubeLibrary }>();
+	let { library } = $props<{ library: VideoLibrary }>();
 
 	const auth = getAuth();
 	const flipDurationMs = 200;
 
 	let view = $derived(library.view);
-	let items = $state<YoutubeVideo[]>([]);
+	let items = $state<Video[]>([]);
 	let dragDisabled = $state(true);
 
 	$effect(() => {
@@ -36,7 +36,7 @@
 	async function handleFinalize(e: CustomEvent) {
 		items = e.detail.items;
 		dragDisabled = true;
-		await library.reorder(items.map((entry: YoutubeVideo) => entry.id));
+		await library.reorder(items.map((entry: Video) => entry.id));
 	}
 </script>
 
@@ -119,7 +119,7 @@
 					class:max-md:flex-col={view === 'list'}
 					class:w-full={view === 'list'}
 				>
-					<YoutubeEntry {entry} {library} />
+					<VideoEntry {entry} {library} />
 				</div>
 				<div
 					role="button"

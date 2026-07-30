@@ -36,7 +36,7 @@ export const urls = {
 	movieLibrary: '/libraries/movies',
 	gameLibrary: '/libraries/games',
 	plantLibrary: '/libraries/plants',
-	youtubeLibrary: '/libraries/youtube',
+	videoLibrary: '/libraries/videos',
 	devRequests: '/dev-requests',
 	devRequest: '/dev-requests/[id]',
 	finances: '/finances',

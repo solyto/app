@@ -21,7 +21,7 @@
 		<IconClapperboard class="size-20 text-c-neutral-3" />
 	{:else if library.config.type === 'plants'}
 		<IconLeaf class="size-20 text-c-neutral-3" />
-	{:else if library.config.type === 'youtube'}
+	{:else if library.config.type === 'videos'}
 		<IconVideo class="size-20 text-c-neutral-3" />
 	{/if}
 </div>

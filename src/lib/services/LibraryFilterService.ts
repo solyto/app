@@ -7,9 +7,10 @@ import type { Recipe, RecipeType } from '$lib/types/library_recipe';
 import type { Movie, MovieGenre } from '$lib/types/library_movie';
 import type { Game } from '$lib/types/library_game';
 import type { Plant, PlantLocation } from '$lib/types/library_plant';
+import type { Video } from '$lib/types/library_video';
 
 export default class LibraryFilterService {
-	search<T extends Music | Book | Quote | Link | Recipe | Movie | Game | Plant>(
+	search<T extends Music | Book | Quote | Link | Recipe | Movie | Game | Plant | Video>(
 		entries: T[],
 		searchTerm: string,
 		fields: string[]

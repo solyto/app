@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { YoutubeVideo } from '$lib/types/library_youtube';
-	import { YoutubeLibrary } from '$lib/state/YoutubeLibrary.svelte';
+	import type { Video } from '$lib/types/library_video';
+	import { VideoLibrary } from '$lib/state/VideoLibrary.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import StarButton from '$lib/components/ui/buttons/StarButton.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 
 	let { entry, library } = $props<{
-		entry: YoutubeVideo;
-		library: YoutubeLibrary;
+		entry: Video;
+		library: VideoLibrary;
 	}>();
 
 	const loadingIndicator = getLoadingIndicator();

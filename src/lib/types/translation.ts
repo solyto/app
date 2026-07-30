@@ -508,7 +508,7 @@ export interface LibraryRecords {
 		create_category: string;
 		create_error: string;
 	};
-	youtube: {
+	videos: {
 		title: string;
 		url: string;
 		is_favorite: string;
@@ -610,7 +610,7 @@ export interface LibraryRecords {
 		quotes: string;
 		links: string;
 		plants: string;
-		youtube: string;
+		videos: string;
 	};
 	genres: string;
 	genre_error: string;

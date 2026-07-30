@@ -4,7 +4,7 @@
 	import { onDestroy, tick } from 'svelte';
 	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getYoutubeLibrary } from '$lib/state/YoutubeLibrary.svelte';
+	import { getVideoLibrary } from '$lib/state/VideoLibrary.svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import ColorPicker from 'svelte-awesome-color-picker';
@@ -13,7 +13,7 @@
 
 	const keyManager = getKeyManager();
 	const loadingIndicator = getLoadingIndicator();
-	const library = getYoutubeLibrary();
+	const library = getVideoLibrary();
 	const ts = getTranslation();
 
 	let addCategory = $state<boolean>(false);
@@ -73,7 +73,7 @@
 </div>
 
 {#if addCategory}
-	<ContentModal title={ts.get.libraries.youtube.create_category} onClose={toggleAddCategory}>
+	<ContentModal title={ts.get.libraries.videos.create_category} onClose={toggleAddCategory}>
 		<div class="flex w-full items-center gap-4">
 			<div class="fixed" use:clickOutside={() => {}}>
 				<ColorPicker
@@ -89,7 +89,7 @@
 			<TextInput
 				bind:value={title}
 				bind:input
-				placeholder={ts.get.libraries.youtube.category_title}
+				placeholder={ts.get.libraries.videos.category_title}
 			/>
 		</div>
 		<div class="mt-8 flex w-full flex-row items-center justify-end">

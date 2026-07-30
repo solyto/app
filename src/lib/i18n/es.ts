@@ -528,7 +528,7 @@ const libraries: LibraryRecords = {
 		create_category: 'Agregar categoría',
 		create_error: 'No se pudo crear el enlace'
 	},
-	youtube: {
+	videos: {
 		title: 'Título',
 		url: 'URL de YouTube',
 		is_favorite: 'Favorito',
@@ -629,7 +629,7 @@ const libraries: LibraryRecords = {
 		quotes: 'Citas',
 		links: 'Enlaces',
 		plants: 'Plantas',
-		youtube: 'YouTube'
+		videos: 'Vídeos'
 	},
 	genres: 'Géneros',
 	genre_error: 'No se pudo crear el género',

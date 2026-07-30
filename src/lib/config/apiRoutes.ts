@@ -177,17 +177,17 @@ export const apiRoutes = {
 			delete: API_URL + '/libraries/plants/%s',
 			uploadCover: API_URL + '/libraries/plants/%s/cover'
 		},
-		youtube: {
-			list: API_URL + '/libraries/youtube',
-			create: API_URL + '/libraries/youtube',
-			update: API_URL + '/libraries/youtube/%s',
-			delete: API_URL + '/libraries/youtube/%s',
-			reorder: API_URL + '/libraries/youtube/reorder',
-			listCategories: API_URL + '/libraries/youtube/categories',
-			createCategory: API_URL + '/libraries/youtube/categories',
-			updateCategory: API_URL + '/libraries/youtube/categories/%d',
-			deleteCategory: API_URL + '/libraries/youtube/categories/%d',
-			reorderCategories: API_URL + '/libraries/youtube/categories/reorder'
+		videos: {
+			list: API_URL + '/libraries/videos',
+			create: API_URL + '/libraries/videos',
+			update: API_URL + '/libraries/videos/%s',
+			delete: API_URL + '/libraries/videos/%s',
+			reorder: API_URL + '/libraries/videos/reorder',
+			listCategories: API_URL + '/libraries/videos/categories',
+			createCategory: API_URL + '/libraries/videos/categories',
+			updateCategory: API_URL + '/libraries/videos/categories/%d',
+			deleteCategory: API_URL + '/libraries/videos/categories/%d',
+			reorderCategories: API_URL + '/libraries/videos/categories/reorder'
 		},
 		getCover: API_URL + '/libraries/covers/'
 	},

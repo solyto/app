@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { getYoutubeLibrary } from '$lib/state/YoutubeLibrary.svelte';
+	import { getVideoLibrary } from '$lib/state/VideoLibrary.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
-	import CategoryCreate from '$lib/components/libraries/youtube/CategoryCreate.svelte';
+	import CategoryCreate from '$lib/components/libraries/videos/CategoryCreate.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconTrash from '@lucide/svelte/icons/trash-2';
 
-	const library = getYoutubeLibrary();
+	const library = getVideoLibrary();
 	const ts = getTranslation();
 </script>
 
@@ -16,7 +16,7 @@
 		class="relative cursor-pointer touch-manipulation gap-2 rounded-sm bg-c-bg-surface p-8 font-bold drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral max-md:w-full dark:hover:bg-s-dark-2"
 		onclick={() => library.filterByCategory(null)}
 	>
-		{ts.get.libraries.youtube.all}
+		{ts.get.libraries.videos.all}
 		<Badge i={library.getCategoryCount()} color="var(--color-c-btn-hover)" />
 		<div
 			class="absolute bottom-0 left-0 h-1 w-full rounded-lg bg-[var(--color-c-btn-hover)] opacity-0 transition-all"
@@ -29,7 +29,7 @@
 		class="relative cursor-pointer touch-manipulation gap-2 rounded-sm bg-c-bg-surface p-8 font-bold drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral max-md:w-full dark:hover:bg-s-dark-2"
 		onclick={() => library.filterByFavorite()}
 	>
-		{ts.get.libraries.youtube.favorites}
+		{ts.get.libraries.videos.favorites}
 		<Badge i={library.getFavoriteCount()} color="var(--color-c-warning)" />
 		<div
 			class="absolute bottom-0 left-0 h-1 w-full rounded-lg bg-[var(--color-c-warning)] opacity-0 transition-all"
@@ -55,7 +55,7 @@
 		}}
 		onclick={() => library.filterByCategory(0)}
 	>
-		{ts.get.libraries.youtube.uncategorized}
+		{ts.get.libraries.videos.uncategorized}
 		<Badge i={library.getCategoryCount(null)} color="var(--color-c-btn)" />
 		<div
 			class="absolute bottom-0 left-0 h-1 w-full rounded-lg bg-[var(--color-c-btn)] opacity-0 transition-all"

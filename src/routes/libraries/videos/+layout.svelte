@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getYoutubeLibrary, setYoutubeLibrary } from '$lib/state/YoutubeLibrary.svelte';
+	import { getVideoLibrary, setVideoLibrary } from '$lib/state/VideoLibrary.svelte';
 
-	setYoutubeLibrary();
+	setVideoLibrary();
 
 	const loadingIndicator = getLoadingIndicator();
-	const library = getYoutubeLibrary();
+	const library = getVideoLibrary();
 
 	onMount(async () => {
 		loadingIndicator.start();

@@ -1,9 +1,9 @@
 import type {
-	YoutubeVideo,
-	CreateYoutubeVideoRequest,
-	UpdateYoutubeVideoRequest,
-	YoutubeCategory
-} from '$lib/types/library_youtube';
+	Video,
+	CreateVideoRequest,
+	UpdateVideoRequest,
+	VideoCategory
+} from '$lib/types/library_video';
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
@@ -12,11 +12,11 @@ import LibraryFilterService from '$lib/services/LibraryFilterService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import type { LibraryConfig } from '$lib/types/library';
 
-export class YoutubeLibrary {
-	static readonly LS_VIEW_KEY: string = 'youtube_view';
+export class VideoLibrary {
+	static readonly LS_VIEW_KEY: string = 'videos_view';
 
 	config: LibraryConfig = {
-		type: 'youtube',
+		type: 'videos',
 		hasCovers: true,
 		hasRatings: false,
 		hasViewSwitcher: true,
@@ -30,14 +30,14 @@ export class YoutubeLibrary {
 		entriesAreLinks: true
 	};
 	loaded = $state<boolean>(false);
-	entries = $state<YoutubeVideo[]>([]);
-	filteredEntries = $state<YoutubeVideo[]>([]);
-	categories = $state<YoutubeCategory[]>([]);
+	entries = $state<Video[]>([]);
+	filteredEntries = $state<Video[]>([]);
+	categories = $state<VideoCategory[]>([]);
 	categoriesCount = $state<{ id: number; count: number }[]>([]);
 	activeFilter = $state<null | number | 'favorite'>(null);
 	searchVisible = $state<boolean>(false);
 	searchTerm = $state<string>('');
-	draggedEntry = $state<YoutubeVideo | null>(null);
+	draggedEntry = $state<Video | null>(null);
 	dragTarget = $state<number | null>(null);
 	view = $state<'list' | 'cards'>('cards');
 	createModalVisible = $state<boolean>(false);
@@ -49,15 +49,15 @@ export class YoutubeLibrary {
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
 
-		const saved = this.localStorage.get(YoutubeLibrary.LS_VIEW_KEY);
+		const saved = this.localStorage.get(VideoLibrary.LS_VIEW_KEY);
 		this.view = (saved as 'list' | 'cards' | null) ?? 'cards';
 	}
 
 	async load(): Promise<void> {
-		const res = await this.apiService.list(apiRoutes.libraries.youtube.list);
+		const res = await this.apiService.list(apiRoutes.libraries.videos.list);
 
 		if (res) {
-			this.entries = res.data as YoutubeVideo[];
+			this.entries = res.data as Video[];
 			await this.loadCategories();
 			this.reapplyFilter();
 			this.loaded = true;
@@ -65,10 +65,10 @@ export class YoutubeLibrary {
 	}
 
 	async loadCategories(): Promise<void> {
-		const res = await this.apiService.list(apiRoutes.libraries.youtube.listCategories);
+		const res = await this.apiService.list(apiRoutes.libraries.videos.listCategories);
 
 		if (res) {
-			this.categories = res.data as YoutubeCategory[];
+			this.categories = res.data as VideoCategory[];
 
 			if (this.categoriesCount.length > 0) {
 				this.categoriesCount = [];
@@ -139,11 +139,11 @@ export class YoutubeLibrary {
 	async dragToCategory(): Promise<void> {
 		if (this.draggedEntry === null) return;
 
-		const request: UpdateYoutubeVideoRequest = {
+		const request: UpdateVideoRequest = {
 			category_id: this.dragTarget ? this.dragTarget : null
 		};
 		const ok = await this.apiService.update(
-			apiRoutes.libraries.youtube.update,
+			apiRoutes.libraries.videos.update,
 			this.draggedEntry.id,
 			request
 		);
@@ -151,15 +151,15 @@ export class YoutubeLibrary {
 		return Promise.resolve();
 	}
 
-	async create(request: CreateYoutubeVideoRequest): Promise<boolean> {
-		const res = await this.apiService.create(apiRoutes.libraries.youtube.create, request);
+	async create(request: CreateVideoRequest): Promise<boolean> {
+		const res = await this.apiService.create(apiRoutes.libraries.videos.create, request);
 		if (res) await this.load();
 		return Promise.resolve(res !== null);
 	}
 
-	async update(entry: YoutubeVideo, request: UpdateYoutubeVideoRequest): Promise<boolean> {
+	async update(entry: Video, request: UpdateVideoRequest): Promise<boolean> {
 		const res = await this.apiService.update(
-			apiRoutes.libraries.youtube.update,
+			apiRoutes.libraries.videos.update,
 			entry.id,
 			request
 		);
@@ -167,19 +167,19 @@ export class YoutubeLibrary {
 		return Promise.resolve(res !== null);
 	}
 
-	async delete(entry: YoutubeVideo): Promise<boolean> {
-		const res = await this.apiService.delete(apiRoutes.libraries.youtube.delete, entry.id);
+	async delete(entry: Video): Promise<boolean> {
+		const res = await this.apiService.delete(apiRoutes.libraries.videos.delete, entry.id);
 		if (res) await this.load();
 		return Promise.resolve(res !== null);
 	}
 
 	async reorder(ids: string[]): Promise<void> {
-		await this.apiService.put(apiRoutes.libraries.youtube.reorder, { videos: ids });
+		await this.apiService.put(apiRoutes.libraries.videos.reorder, { videos: ids });
 		await this.load();
 	}
 
 	async createCategory(title: string, color?: string): Promise<boolean> {
-		const res = await this.apiService.create(apiRoutes.libraries.youtube.createCategory, {
+		const res = await this.apiService.create(apiRoutes.libraries.videos.createCategory, {
 			title,
 			color
 		});
@@ -187,9 +187,9 @@ export class YoutubeLibrary {
 		return Promise.resolve(res !== null);
 	}
 
-	async deleteCategory(category: YoutubeCategory): Promise<boolean> {
+	async deleteCategory(category: VideoCategory): Promise<boolean> {
 		const res = await this.apiService.delete(
-			apiRoutes.libraries.youtube.deleteCategory,
+			apiRoutes.libraries.videos.deleteCategory,
 			category.id
 		);
 		if (res) await this.loadCategories();
@@ -197,17 +197,17 @@ export class YoutubeLibrary {
 	}
 
 	async reorderCategories(ids: number[]): Promise<void> {
-		await this.apiService.put(apiRoutes.libraries.youtube.reorderCategories, { categories: ids });
+		await this.apiService.put(apiRoutes.libraries.videos.reorderCategories, { categories: ids });
 		await this.loadCategories();
 	}
 }
 
-const YOUTUBE_LIBRARY_KEY = Symbol('SOLYTO_YOUTUBE_LIBRARY');
+const VIDEO_LIBRARY_KEY = Symbol('SOLYTO_VIDEO_LIBRARY');
 
-export function setYoutubeLibrary(): YoutubeLibrary {
-	return setContext(YOUTUBE_LIBRARY_KEY, new YoutubeLibrary());
+export function setVideoLibrary(): VideoLibrary {
+	return setContext(VIDEO_LIBRARY_KEY, new VideoLibrary());
 }
 
-export function getYoutubeLibrary(): YoutubeLibrary {
-	return getContext<YoutubeLibrary>(YOUTUBE_LIBRARY_KEY);
+export function getVideoLibrary(): VideoLibrary {
+	return getContext<VideoLibrary>(VIDEO_LIBRARY_KEY);
 }

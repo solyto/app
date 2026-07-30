@@ -1,11 +1,11 @@
-export interface YoutubeCategory {
+export interface VideoCategory {
 	id: number;
 	title: string;
 	color: string | null;
 	sort_order: number;
 }
 
-export interface YoutubeVideo {
+export interface Video {
 	id: string;
 	title: string;
 	video_id: string | null;
@@ -13,12 +13,12 @@ export interface YoutubeVideo {
 	cover: string | null;
 	is_favorite: boolean;
 	sort_order: number;
-	category: YoutubeCategory | null;
+	category: VideoCategory | null;
 	created_at: string;
 	updated_at: string;
 }
 
-export interface CreateYoutubeVideoRequest {
+export interface CreateVideoRequest {
 	title?: string | null;
 	url: string;
 	cover_path?: string | null;
@@ -26,19 +26,19 @@ export interface CreateYoutubeVideoRequest {
 	category_id?: number | null;
 }
 
-export interface UpdateYoutubeVideoRequest {
+export interface UpdateVideoRequest {
 	title?: string;
 	url?: string;
 	is_favorite?: boolean;
 	category_id?: number | null;
 }
 
-export interface CreateYoutubeCategoryRequest {
+export interface CreateVideoCategoryRequest {
 	title: string;
 	color?: string | null;
 }
 
-export interface UpdateYoutubeCategoryRequest {
+export interface UpdateVideoCategoryRequest {
 	title?: string;
 	color?: string | null;
 }

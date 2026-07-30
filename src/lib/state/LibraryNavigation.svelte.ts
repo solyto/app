@@ -21,7 +21,7 @@ export const navigationItems: { type: LibraryType; url: string; icon: any }[] = 
 	{ type: 'quotes', url: urls.quoteLibrary, icon: IconQuote },
 	{ type: 'recipes', url: urls.recipeLibrary, icon: IconCookingPot },
 	{ type: 'plants', url: urls.plantLibrary, icon: IconLeaf },
-	{ type: 'youtube', url: urls.youtubeLibrary, icon: IconVideo }
+	{ type: 'videos', url: urls.videoLibrary, icon: IconVideo }
 ];
 
 export class LibraryNavigation {
@@ -40,7 +40,7 @@ export class LibraryNavigation {
 		if (page.url.pathname.includes('movies')) return 'movies';
 		if (page.url.pathname.includes('games')) return 'games';
 		if (page.url.pathname.includes('plants')) return 'plants';
-		if (page.url.pathname.includes('youtube')) return 'youtube';
+		if (page.url.pathname.includes('videos')) return 'videos';
 		return null;
 	}
 }
