@@ -69,6 +69,7 @@ export interface SettingsRecords {
 	new_tag: string;
 	categories: string;
 	new_category: string;
+	rename_category: string;
 	workspaces: string;
 	new_workspace: string;
 	localization: string;

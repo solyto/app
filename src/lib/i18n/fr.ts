@@ -152,6 +152,7 @@ const settings: SettingsRecords = {
 	new_tag: 'Nouveau tag',
 	categories: 'Catégories',
 	new_category: 'Nouvelle catégorie',
+	rename_category: 'Renommer la catégorie',
 	workspaces: 'Espaces de travail',
 	new_workspace: 'Nouvel espace',
 	localization: 'Localisation',
