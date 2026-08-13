@@ -11,6 +11,7 @@ import type {
 	TodoFilterType,
 	TodoWorkspace,
 	CreateTodoCategoryRequest,
+	UpdateTodoCategoryRequest,
 	CreateTodoWorkspaceRequest,
 	UpdateTodoWorkspaceRequest,
 	UpdateTodoRequest,
@@ -263,6 +264,15 @@ export class Todos {
 		const res = await this.apiService.create(apiRoutes.todos.createCategory, request);
 		if (res) await this.loadCategories();
 		return res ? (res.data as TodoCategory) : null;
+	}
+
+	async updateCategory(
+		category: TodoCategory,
+		request: UpdateTodoCategoryRequest
+	): Promise<boolean> {
+		const res = await this.apiService.update(apiRoutes.todos.updateCategory, category.id, request);
+		if (res) await Promise.all([this.loadCategories(), this.loadWorkspaces()]);
+		return res;
 	}
 
 	async deleteCategory(category: TodoCategory): Promise<boolean> {

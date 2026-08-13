@@ -49,6 +49,7 @@ export const apiRoutes = {
 		delete: API_URL + '/todos/%s',
 		listCategories: API_URL + '/todos/categories',
 		createCategory: API_URL + '/todos/categories',
+		updateCategory: API_URL + '/todos/categories/%d',
 		deleteCategory: API_URL + '/todos/categories/%d',
 		listWorkspaces: API_URL + '/todos/workspaces',
 		createWorkspace: API_URL + '/todos/workspaces',
