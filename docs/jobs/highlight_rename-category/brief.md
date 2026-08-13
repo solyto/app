@@ -9,11 +9,14 @@ author: Leander Muskalla
 
 ## What
 
-<!-- What needs to be done? Be specific. -->
+Editability of category names.
+We should find a way to offer the user a way to edit the name of a category. Probably, as it is now, in the settings todo section.
+Stay in the design language we use elsewhere.
+The API endpoint is PUT /api/v1/todos/categories/{category} with title in the body.
 
 ## Why
 
-<!-- Why does this need to exist? What problem does it solve for the user? -->
+Currently users cannot edit any categories. They can delete and recreate ones, but that also gets rid of all todo associations.
 
 ## Out of scope
 
