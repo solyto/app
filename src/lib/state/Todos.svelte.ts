@@ -20,6 +20,7 @@ import type {
 	UpdateTodoSubtaskRequest
 } from '$lib/types/todo';
 import type { Tag } from '$lib/types/tag';
+import type { Auth } from '$lib/state/Auth.svelte';
 import { setContext, getContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import { page } from '$app/state';
@@ -50,16 +51,22 @@ export class Todos {
 	hideItActive = $state<boolean>(false);
 	recentlyCreated = $state<string | null>(null);
 	quickCreateOpen = $state<boolean>(false);
-	auth = getAuth();
+	auth: Auth;
 	apiService: ApiService;
-	localStorage = new LocalStorageService();
+	localStorage: LocalStorageService;
 	filterService = new TodoFilterService();
 	sortingService = new TodoSortingService();
 	groupingService = new TodoGroupingService();
 	relevanceService = new TodoRelevanceService();
 
-	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = new ApiService(auth.getToken()),
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
+		this.auth = auth;
+		this.apiService = apiService;
+		this.localStorage = localStorage;
 	}
 
 	async load(): Promise<void> {

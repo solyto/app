@@ -23,5 +23,8 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
+# Test coverage
+/coverage
+
 # Manigot
 .manigot
