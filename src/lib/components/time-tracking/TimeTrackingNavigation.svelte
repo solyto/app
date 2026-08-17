@@ -140,7 +140,7 @@
 <HamburgerButton onclick={toggleMobile} />
 
 <div
-	class="absolute z-50 hidden h-full max-h-screen w-full flex-col gap-4 overflow-y-auto bg-c-bg drop-shadow-xl lg:relative lg:flex lg:w-64 lg:shrink-0 lg:p-4 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
+	class="secondary-nav-mobile-container absolute z-50 hidden h-full max-h-screen w-full flex-col gap-4 overflow-y-auto bg-c-bg drop-shadow-xl lg:relative lg:flex lg:w-64 lg:shrink-0 lg:p-4 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 	in:fade
 	bind:this={navigation}
 >
