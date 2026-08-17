@@ -8,9 +8,8 @@
 	import ManageAddressBooks from '$lib/components/contacts/ManageAddressBooks.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import CloudButton from '$lib/components/ui/buttons/CloudButton.svelte';
-	import IconFunnel from '@lucide/svelte/icons/funnel';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
-	import FunnelButton from '$lib/components/ui/buttons/FunnelButton.svelte';
+	import HamburgerButton from '$lib/components/ui/buttons/HamburgerButton.svelte';
 
 	let editMode = $state<boolean>(false);
 	let navigation = $state<HTMLDivElement | null>(null);
@@ -31,7 +30,7 @@
 	}
 </script>
 
-<FunnelButton onclick={toggleMobile} />
+<HamburgerButton onclick={toggleMobile} />
 
 <div
 	bind:this={navigation}

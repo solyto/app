@@ -4,12 +4,11 @@
 	import { getTags } from '$lib/state/Tags.svelte';
 	import { Translation } from '$lib/state/Translation.svelte';
 	import type { TodoFilter, TodoNavigationSection } from '$lib/types/todo';
-	import IconFunnel from '@lucide/svelte/icons/funnel';
 	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
 	import IconArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import IconSub from '$lib/components/ui/icons/IconSub.svelte';
-	import FunnelButton from '$lib/components/ui/buttons/FunnelButton.svelte';
+	import HamburgerButton from '$lib/components/ui/buttons/HamburgerButton.svelte';
 
 	const todos = getTodos();
 	const tags = getTags();
@@ -61,7 +60,7 @@
 	}
 </script>
 
-<FunnelButton onclick={() => (open = true)} top={6} />
+<HamburgerButton onclick={() => (open = true)} top={6} />
 
 {#if open}
 	<div
