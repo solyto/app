@@ -67,6 +67,11 @@ export class Todos {
 		this.auth = auth;
 		this.apiService = apiService;
 		this.localStorage = localStorage;
+
+		// Restore synchronously so every filter pass (including the ones run by
+		// load() before the workspaces request resolves) already sees the
+		// persisted value instead of the default false.
+		this.hideItActive = this.localStorage.getBool(Todos.LS_HIDE_IT_KEY) ?? false;
 	}
 
 	async load(): Promise<void> {
@@ -86,8 +91,14 @@ export class Todos {
 		}
 
 		this.groupByStatus();
-		await Promise.all([this.loadCategories(), this.loadWorkspaces()]);
-		this.loadHideIt();
+
+		try {
+			await Promise.all([this.loadCategories(), this.loadWorkspaces()]);
+		} finally {
+			// Always re-apply hide-it once the parallel loads settled: a failed
+			// or rejected workspaces/categories request must not skip this.
+			this.loadHideIt();
+		}
 	}
 
 	async loadCategories(): Promise<void> {
@@ -98,11 +109,19 @@ export class Todos {
 		this.filteredCategories = this.categories;
 	}
 
-	async loadWorkspaces(): Promise<void> {
-		const res = await this.apiService.list(apiRoutes.todos.listWorkspaces);
+	async loadWorkspaces(retries: number = 1): Promise<void> {
+		// Treated like a failed request (null) so a network error gets the same
+		// single retry as a non-ok response. An empty workspaces list would
+		// silently disable hide-it filtering for the whole page lifetime.
+		const res = await this.apiService.list(apiRoutes.todos.listWorkspaces).catch(() => null);
 
 		if (res) {
 			this.workspaces = res.data as TodoWorkspace[];
+			return;
+		}
+
+		if (retries > 0) {
+			await this.loadWorkspaces(retries - 1);
 		}
 	}
 
@@ -152,7 +171,12 @@ export class Todos {
 
 		const visibilityThreshold = new SvelteDate();
 		visibilityThreshold.setDate(visibilityThreshold.getDate() + 3);
-		this.filteredTodos = this.filteredTodos.filter((t) => !t.auto_generated || t.due_at === null || new SvelteDate(t.due_at) <= visibilityThreshold);
+		this.filteredTodos = this.filteredTodos.filter(
+			(t) =>
+				!t.auto_generated ||
+				t.due_at === null ||
+				new SvelteDate(t.due_at) <= visibilityThreshold
+		);
 
 		if (!filters.some((f) => f.type === 'status' && f.value === 'backlog')) {
 			this.filteredTodos = this.filterService.filterOutBacklog(this.filteredTodos);
@@ -223,6 +247,9 @@ export class Todos {
 	}
 
 	loadHideIt(): void {
+		// Re-reads storage so a toggle issued while load() was still in flight
+		// wins over the constructor restore, then re-applies the filters now
+		// that workspaces (which decide what hide-it removes) are loaded.
 		this.hideItActive = this.localStorage.getBool(Todos.LS_HIDE_IT_KEY) ?? false;
 		if (this.hideItActive) {
 			this.filterCategories();
@@ -240,7 +267,8 @@ export class Todos {
 		}
 
 		if (this.activeFilters.some((f) => f.type === 'category')) {
-			request.category_id = this.activeFilters.find((f) => f.type === 'category')?.value as number;
+			request.category_id = this.activeFilters.find((f) => f.type === 'category')
+				?.value as number;
 		}
 
 		const res = await this.apiService.create(apiRoutes.todos.create, request);
@@ -277,7 +305,11 @@ export class Todos {
 		category: TodoCategory,
 		request: UpdateTodoCategoryRequest
 	): Promise<boolean> {
-		const res = await this.apiService.update(apiRoutes.todos.updateCategory, category.id, request);
+		const res = await this.apiService.update(
+			apiRoutes.todos.updateCategory,
+			category.id,
+			request
+		);
 		if (res) await Promise.all([this.loadCategories(), this.loadWorkspaces()]);
 		return res;
 	}

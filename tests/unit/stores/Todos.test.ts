@@ -207,4 +207,109 @@ describe('Todos store', () => {
 			expect(storage.setBool).toHaveBeenCalledWith(Todos.LS_HIDE_IT_KEY, true);
 		});
 	});
+
+	describe('hide-it restore on load', () => {
+		const hideableWorkspace = (cat: ReturnType<typeof category>) => ({
+			id: 1,
+			title: 'Hidden',
+			is_hideable: true,
+			categories: [cat],
+			created_at: '',
+			updated_at: ''
+		});
+
+		it('restores the flag at construction and hides after load()', async () => {
+			storage.getBool.mockReturnValue(true);
+			const cat = category(1, 'Chores');
+			api.list.mockImplementation(async (endpoint: string) => {
+				if (endpoint.includes('categories')) return { data: [cat] };
+				if (endpoint.includes('workspaces')) return { data: [hideableWorkspace(cat)] };
+				return { data: [todo({ id: '1', category: cat }), todo({ id: '2' })] };
+			});
+
+			const t = new Todos();
+			// flag already restored before any request resolved
+			expect(t.hideItActive).toBe(true);
+
+			await t.load();
+
+			expect(t.filteredTodos.map((x) => x.id)).toEqual(['2']);
+			expect(t.filteredCategories.map((c) => c.id)).toEqual([]);
+		});
+
+		it('retries a failed workspaces fetch and still hides', async () => {
+			storage.getBool.mockReturnValue(true);
+			const cat = category(1);
+			let workspaceCalls = 0;
+			api.list.mockImplementation(async (endpoint: string) => {
+				if (endpoint.includes('categories')) return { data: [cat] };
+				if (endpoint.includes('workspaces')) {
+					workspaceCalls++;
+					return workspaceCalls === 1 ? null : { data: [hideableWorkspace(cat)] };
+				}
+				return { data: [todo({ id: '1', category: cat })] };
+			});
+
+			const t = new Todos();
+			await t.load();
+
+			expect(workspaceCalls).toBe(2);
+			expect(t.filteredTodos.map((x) => x.id)).toEqual([]);
+			expect(t.filteredCategories.map((c) => c.id)).toEqual([]);
+		});
+
+		it('still completes load() when the workspaces fetch fails for good', async () => {
+			storage.getBool.mockReturnValue(true);
+			api.list.mockImplementation(async (endpoint: string) => {
+				if (endpoint.includes('workspaces')) return null;
+				if (endpoint.includes('categories')) return { data: [category(1)] };
+				return { data: [todo({ id: '1' })] };
+			});
+
+			const t = new Todos();
+			await t.load();
+
+			// graceful degradation: the flag is still restored (toggle shows the
+			// correct state) even though hiding cannot apply without workspaces
+			expect(t.loaded).toBe(true);
+			expect(t.hideItActive).toBe(true);
+		});
+
+		it('respects a toggle issued while load() is in flight', async () => {
+			let stored = true;
+			storage.getBool.mockImplementation(() => stored);
+			storage.setBool.mockImplementation((_key: string, value: boolean) => {
+				stored = value;
+			});
+
+			const cat = category(1);
+			let resolveTodos: (value: { data: unknown[] }) => void = () => {};
+			const todosResponse = new Promise<{ data: unknown[] }>((resolve) => {
+				resolveTodos = resolve;
+			});
+			api.list.mockImplementation(async (endpoint: string) => {
+				if (endpoint.includes('categories')) return { data: [cat] };
+				if (endpoint.includes('workspaces')) return { data: [hideableWorkspace(cat)] };
+				return todosResponse;
+			});
+
+			const t = new Todos();
+			expect(t.hideItActive).toBe(true);
+
+			const loading = t.load();
+			t.toggleHideIt(); // user turns it off before any data arrived
+			resolveTodos({ data: [todo({ id: '1', category: cat }), todo({ id: '2' })] });
+			await loading;
+
+			// the toggle wins over the constructor restore, nothing is hidden
+			expect(t.hideItActive).toBe(false);
+			expect(t.filteredTodos.map((x) => x.id)).toEqual(['1', '2']);
+			expect(t.filteredCategories.map((c) => c.id)).toEqual([1]);
+
+			// one toggle is enough to re-hide now that workspaces are loaded
+			t.toggleHideIt();
+			expect(t.filteredTodos.map((x) => x.id)).toEqual(['2']);
+			expect(t.filteredCategories.map((c) => c.id)).toEqual([]);
+		});
+	});
 });
