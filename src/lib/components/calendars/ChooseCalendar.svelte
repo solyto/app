@@ -11,16 +11,19 @@
 	const ts = getTranslation();
 
 	let menuOpen = $state<boolean>(false);
-	let selectedCalendar = $derived(getSelected(calendar) ?? availableCalendars[0]);
+	let selectedCalendar = $derived(
+		getSelected(calendar) ?? (Number(calendar) ? null : availableCalendars[0])
+	);
 
 	$effect(() => {
-		calendar = selectedCalendar.id;
+		if (selectedCalendar) calendar = selectedCalendar.id;
 	});
 
 	function getSelected(id: number): Calendar | null {
-		if (!id) return null;
+		const normalizedId = Number(id);
+		if (!normalizedId) return null;
 
-		return availableCalendars.find((c: Calendar) => c.id === id) || null;
+		return availableCalendars.find((c: Calendar) => Number(c.id) === normalizedId) || null;
 	}
 </script>
 
