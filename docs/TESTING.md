@@ -13,11 +13,14 @@ pinned, `engine-strict=true`).
 
 Most of the plan below is now implemented. Current state (run `npm test`):
 
-- **362 tests** across 3 Vitest projects: `unit` (node), `stores` (node +
-  store-mock setup), `components` (jsdom).
-- Coverage: `src/lib` at **~8.7% statements / ~12.4% functions** (up from 1.3%
-  / 2.2%), against the whole of `src/lib` including the 357 untested
-  components and 37 stores.
+- **678 tests** (53 files) across 3 Vitest projects: `unit` (node), `stores`
+  (node + store-mock setup), `components` (jsdom).
+- Coverage: `src/lib` at **~22.8% statements / ~29.2% functions / ~22.2%
+  lines** (up from 8.7% / 12.4%), against the whole of `src/lib` including
+  the 357 untested components and 37 stores. The remaining uncovered lines
+  cluster in the documented out-of-scope list (§8) — heavy/skip components
+  (echarts, TipTap, DnD, WebAuthn, electronAPI, …) and the boilerplate CRUD
+  stores — which is the intended "complete enough" state.
 - New devDeps (pinned): `@vitest/coverage-v8`, `jsdom`, `@testing-library/svelte`,
   `@testing-library/jest-dom`, `@testing-library/user-event`, `@testing-library/dom`.
 - `vitest.config.ts` now uses `sveltekit()` + three projects; `tests/unit/setup/storeMocks.ts`
@@ -42,7 +45,18 @@ Most of the plan below is now implemented. Current state (run `npm test`):
   replacement, method/body semantics, error paths), `LocalStorageService`,
   `NavHelper`, `platform.ts`, `urls.ts`, `features.ts`.
 - **Stores (Phase 3):** `Todos`, `Finances`, `Tags`, `UserManagement`,
-  `TimeTracking`, `LoadingIndicator`, `CookieConsent`, `UiNotifications`.
+  `TimeTracking`, `LoadingIndicator`, `CookieConsent`, `UiNotifications`,
+  `Calendars` (42-day grid, per-date lookups, month/week/day navigation,
+  view-state persistence), `Auth` (login/register/refresh/passkey,
+  load-from-localStorage, `isAdmin`, `shouldRefresh` threshold, public-profile
+  cache — in `tests/unit/auth/` because the stores project's storeMocks
+  replaces the Auth module), `Notes` (newest/updated/favorites, category
+  lookup/titles, collapsed persistence, `selectNote`, url-active check,
+  create guards), all 8 library stores' **filtering** (search,
+  genre/rating/type/location, wishlist/lent/unidentified flags,
+  view-pref persistence, LinkLibrary category counts), `CheckInData`
+  (month navigation with year wrap, `isCurrentMonth`, date-derived
+  `selectedDate`, scored-trackers persistence, settings merge).
 - **Auth-token workflow regression:** `tests/unit/auth/AuthTokenFlow.test.ts`
   pins the token snapshot semantics — `new Todos()`/`new Finances()` capture
   `auth.getToken()` into their `ApiService` at construction (and send it as a
@@ -52,13 +66,48 @@ Most of the plan below is now implemented. Current state (run `npm test`):
   ui primitives (`Heading`, `Badge`, `CloseButton`, `DeleteButton`, `AddButton`,
   `ViewSwitcher`), `todos/Counter`, and logic leaves (`AverageNumber`, `Rating`,
   `StatisticWidget`).
+- **Context harness (§4.3):** `tests/components/helpers/context.ts` +
+  `ContextHarness.svelte` seed `setTranslation`, `setKeyManager`, `setTodos`,
+  `setAuth`, `setLoadingIndicator`, `setUiNotifications`, `setViewPoint`,
+  `setCookieConsent` before rendering — unlocks the context-coupled component
+  tests below. `tests/setup/component.ts` additionally stubs
+  `Element.prototype.animate` (completing `onfinish`), `matchMedia` and the
+  `$env/dynamic/public` virtual module.
+- **Components (Phase 4b/4c):** dashboard widgets (`DueTodosWidget`,
+  `ScoredTodosWidget`, `EventsTodayWidget`, `UpcomingEventsWidget`,
+  `NewestNotesWidget`, `NewestLinksWidget`, `BookReleasesWidget`,
+  `MovieReleasesWidget`, `MusicReleasesWidget`, `QuoteWidget`), logic-bearing
+  leaves (`forms/InputAutocomplete`, `forms/InlineAutocomplete`, `forms/Slider`,
+  `todos/NoTodos`, `check-in/DailyCheckInIcon` + `check-in/overview/CheckInIcon`,
+  `libraries/shared/GenreFlexList`, `tags/TagFlexList`,
+  `libraries/shared/CoverImage`), and translation-only components
+  (  `PasswordInput`, `PasswordStrengthIndicator`, `PasswordMatchIndicator`,
+  `ui/CookieBanner`, `NavLegalEntry`, `PopupConfirmationModal`,
+  `BottomSheetConfirmationModal`, `ImportButton` + 8 provider variants:
+  Goodreads/Hardcover/Bgg/Steam/Deezer/Discogs/Imdb/Chefkoch).
+- **Secondary stores (TASK-11):** `Feeds` (loadMore pagination/recursion,
+  filter, library flags, subscribe duplicates), `Contacts` (`contactsAZ`
+  grouping/sorting/hidden books, search, photo batching), `Navigation`
+  (usage tracking, `promoteMobileItem` least-used swap), `QuickAdd`
+  (detect/auto-confirm/error branches, `isUrl`), `UserNotifications`
+  (unread, mark-all-read, polling with fake timers), `WelcomeTour` (step
+  building, navigation), `Theme` (load/apply/persist, dark-mode listener,
+  `patchAnimate` — with document/window/Element stubs), `PwaInstall`
+  (capture/install flow, iOS detection).
 
 ### Not yet covered
 
-The refined next-steps roadmap lives in §8. In short: state stores with real
-business logic (`Calendars`, `Auth`, `Notes`, the libraries' filtering),
-logic-bearing presentational components and dashboard widgets, and the §4.3
-context harness. E2E (Phase 5) is deliberately out of scope for now — see §8.
+The refined next-steps roadmap (§8, Priority 1–3 and the execution order) is
+now implemented: state stores with real business logic (including the
+secondary stores `Feeds`, `Contacts`, `Navigation`, `QuickAdd`,
+`UserNotifications`, `WelcomeTour`, `Theme`, `PwaInstall`), the context
+harness, dashboard widgets, logic-bearing leaves and the translation-only
+components. What remains untested is deliberately out of scope (see §8): the
+heavy/skip component list (§4d — echarts, TipTap/ProseMirror, DnD,
+svelte-gestures, WebAuthn, electronAPI, clipboard API, canvas), render-only
+components, and the remaining boilerplate CRUD store wrappers (`Clipboard`,
+`DevRequests`, `Friends`, `LibraryNavigation`, `Shortcuts`, `Statistics`,
+`Weather`). E2E (Phase 5) is deliberately out of scope for now — see §8.
 
 ### Docker decision
 
@@ -524,11 +573,17 @@ test is not worth the effort.
 
 ### Execution order
 
-1. `Calendars` + `Auth` store tests (biggest logic; recipe proven).
-2. `Notes` + library-store filtering tests.
-3. §4.3 context harness.
-4. Dashboard widgets + logic-bearing leaves.
-5. Translation-only components.
-6. Re-run `npm run test:coverage` and inspect the remaining uncovered lines —
-   they should cluster in the "explicitly out of scope" list above. If so, the
-   suite is "complete enough" rather than "maximised", which is the goal.
+1. [x] `Calendars` + `Auth` store tests (biggest logic; recipe proven) — TASK-1/TASK-2.
+2. [x] `Notes` + library-store filtering tests — TASK-3/TASK-4 (+ `CheckInData`, TASK-5).
+3. [x] §4.3 context harness — TASK-6.
+4. [x] Dashboard widgets + logic-bearing leaves — TASK-7/TASK-8.
+5. [x] Translation-only components — TASK-9.
+6. [x] Re-run `npm run test:coverage` and inspect the remaining uncovered lines —
+   they cluster in the "explicitly out of scope" list above (plus the secondary
+   stores named in §0). The suite is "complete enough" rather than "maximised",
+   which is the goal.
+7. [x] Optional follow-up: secondary stores with real non-CRUD logic — `Feeds`,
+   `Contacts`, `Navigation` (+ `PUBLIC_DISABLE_DEV_REQUESTS` env branch),
+   `QuickAdd`, `UserNotifications`, `WelcomeTour`, `Theme` (DOM-stubbed),
+   `PwaInstall`. All landed in `tests/unit/stores/` and brought `lib/state`
+   statement coverage to ~56%.
