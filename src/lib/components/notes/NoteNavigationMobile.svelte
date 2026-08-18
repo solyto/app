@@ -10,7 +10,7 @@
 	import AddNoteButton from '$lib/components/notes/AddNoteButton.svelte';
 	import AddFolderButton from '$lib/components/notes/AddFolderButton.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
-	import FunnelButton from '$lib/components/ui/buttons/FunnelButton.svelte';
+	import HamburgerButton from '$lib/components/ui/buttons/HamburgerButton.svelte';
 
 	const notes = getNotes();
 	const ts = getTranslation();
@@ -41,7 +41,7 @@
 	}
 </script>
 
-<FunnelButton onclick={() => (open = true)} />
+<HamburgerButton onclick={() => (open = true)} />
 
 {#if open}
 	<div
