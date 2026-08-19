@@ -34,6 +34,7 @@ export class MusicLibrary {
 		hasExternalLinks: true,
 		hasReleases: true,
 		hasShelf: true,
+		hasAuthors: false,
 		entriesAreLinks: false
 	};
 	loaded = $state<boolean>(false);

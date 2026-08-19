@@ -9,15 +9,19 @@
 
 	let {
 		value = $bindable(),
+		searchText = $bindable(''),
 		options,
 		allowUserOptions = false,
 		placeholder = '',
+		maxSelect,
 		oncreate
 	} = $props<{
 		value: MultiSelectEntry[];
+		searchText?: string;
 		options: MultiSelectEntry[];
 		allowUserOptions?: boolean;
 		placeholder?: string;
+		maxSelect?: number;
 		oncreate?: (data: { option: MultiSelectEntry }) => unknown;
 	}>();
 </script>
@@ -25,9 +29,11 @@
 <div class="w-full">
 	<MultiSelect
 		bind:selected={value}
+		bind:searchText
 		{options}
 		{allowUserOptions}
 		{placeholder}
+		{maxSelect}
 		{oncreate}
 		--sms-active-color="#eaf2fc"
 	/>

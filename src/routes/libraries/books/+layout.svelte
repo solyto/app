@@ -13,7 +13,7 @@
 
 	onMount(async () => {
 		loadingIndicator.start();
-		await Promise.all([library.load(), tags.load()]);
+		await Promise.all([library.load(), library.loadAuthors(), tags.load()]);
 		loadingIndicator.stop();
 	});
 

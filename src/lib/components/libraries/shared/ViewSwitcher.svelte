@@ -17,7 +17,13 @@
 		{ type: 'shelf' as const, title: 'Browse' }
 	];
 
-	let views = $derived(library.config.hasShelf ? [...baseViews, ...shelfViews] : baseViews);
+	const authorsViews = [{ type: 'authors' as const, title: 'Authors' }];
+
+	let views = $derived([
+		...baseViews,
+		...(library.config.hasShelf ? shelfViews : []),
+		...(library.config.hasAuthors ? authorsViews : [])
+	]);
 
 	function onViewChange(type: string) {
 		library.view = type as typeof library.view;

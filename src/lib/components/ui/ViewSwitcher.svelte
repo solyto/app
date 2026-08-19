@@ -7,6 +7,7 @@
 	import IconLibrary from '@lucide/svelte/icons/library';
 	import IconSquare from '@lucide/svelte/icons/square';
 	import IconRectangleHorizontal from '@lucide/svelte/icons/rectangle-horizontal';
+	import IconUsers from '@lucide/svelte/icons/users';
 
 	let {
 		views,
@@ -15,7 +16,7 @@
 		class: className = ''
 	} = $props<{
 		views: Array<{
-			type: 'compact' | 'comfortable' | 'card' | 'list' | 'kanban' | 'overview' | 'shelf' | 'cards' | 'spine';
+			type: 'compact' | 'comfortable' | 'card' | 'list' | 'kanban' | 'overview' | 'shelf' | 'cards' | 'spine' | 'authors';
 			title: string;
 		}>;
 		currentlySelected: string;
@@ -51,6 +52,8 @@
 				<IconGalleryHorizontal class="size-4" />
 			{:else if view.type === 'spine'}
 				<IconLibrary class="size-4" />
+			{:else if view.type === 'authors'}
+				<IconUsers class="size-4" />
 			{/if}
 		</button>
 	{/each}

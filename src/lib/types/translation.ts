@@ -447,6 +447,25 @@ export interface LibraryRecords {
 		update_error: string;
 		search_placeholder: string;
 		filter_lent: string;
+		add_author: string;
+		author_name: string;
+		author_bio: string;
+		author_hardcover_id: string;
+		author_resync: string;
+		author_resync_success: string;
+		author_resync_error: string;
+		author_books: string;
+		author_no_books: string;
+		author_no_authors: string;
+		author_all: string;
+		author_favorites_only: string;
+		author_unlink: string;
+		author_unlink_error: string;
+		author_create_error: string;
+		author_update_error: string;
+		author_photo_error: string;
+		author_delete_confirm_title: string;
+		author_delete_confirm_description: string;
 	};
 	movies: {
 		title: string;

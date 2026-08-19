@@ -117,7 +117,16 @@ export const apiRoutes = {
 			createGenre: API_URL + '/libraries/books/genres',
 			deleteGenre: API_URL + '/libraries/books/genres/%d',
 			search: API_URL + '/libraries/books/search',
-			import: API_URL + '/libraries/books/import'
+			import: API_URL + '/libraries/books/import',
+			authors: {
+				list: API_URL + '/libraries/books/authors',
+				get: API_URL + '/libraries/books/authors/%d',
+				create: API_URL + '/libraries/books/authors',
+				update: API_URL + '/libraries/books/authors/%d',
+				delete: API_URL + '/libraries/books/authors/%d',
+				uploadPhoto: API_URL + '/libraries/books/authors/%s/photo',
+				resync: API_URL + '/libraries/books/authors/%d/resync'
+			}
 		},
 		movies: {
 			list: API_URL + '/libraries/movies',

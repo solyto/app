@@ -7,10 +7,38 @@ export interface BookGenre {
 	updated_at: string;
 }
 
+export interface Author {
+	id: number;
+	name: string;
+	photo: string | null;
+	bio: string | null;
+	hardcover_id: number | null;
+	is_favorite: boolean;
+	books_count: number | null;
+	books: Book[] | null;
+	created_at: string;
+	updated_at: string;
+}
+
+export interface CreateAuthorRequest {
+	name: string;
+	bio?: string | null;
+	hardcover_id?: number | null;
+	is_favorite?: boolean;
+}
+
+export interface UpdateAuthorRequest {
+	name?: string;
+	bio?: string | null;
+	hardcover_id?: number | null;
+	is_favorite?: boolean;
+}
+
 export interface Book {
 	id: string;
 	title: string;
 	author: string;
+	author_id: number | null;
 	series: string | null;
 	volume: number | null;
 	pages: number | null;
@@ -34,6 +62,7 @@ export interface Book {
 export interface CreateBookRequest {
 	title: string;
 	author: string;
+	author_id?: number | null;
 	series?: string | null;
 	volume?: number | null;
 	pages?: number | null;
@@ -55,6 +84,7 @@ export interface CreateBookRequest {
 export interface UpdateBookRequest {
 	title?: string;
 	author?: string;
+	author_id?: number | null;
 	series?: string | null;
 	volume?: number | null;
 	pages?: number | null;

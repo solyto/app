@@ -2,6 +2,7 @@
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
 	import IconTag from '@lucide/svelte/icons/tag';
+	import IconUsers from '@lucide/svelte/icons/users';
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import ViewSwitcher from '$lib/components/libraries/shared/ViewSwitcher.svelte';
@@ -35,6 +36,12 @@
 			<TextButton title={ts.get.libraries.edit_genres} onclick={() => library.openGenreModal()} type="slight" class="max-md:hidden" />
 			<IconButton type="slight" onclick={() => library.openGenreModal()} class="md:hidden">
 				<IconTag />
+			</IconButton>
+		{/if}
+		{#if library.config.hasAuthors}
+			<TextButton title={ts.get.libraries.books.add_author} onclick={() => library.openAuthorCreatePrompt()} type="slight" class="max-md:hidden" />
+			<IconButton type="slight" onclick={() => library.openAuthorCreatePrompt()} class="md:hidden">
+				<IconUsers />
 			</IconButton>
 		{/if}
 		<TextButton title={ts.get.libraries.create} onclick={() => library.openCreateModal()} class="max-md:hidden" />

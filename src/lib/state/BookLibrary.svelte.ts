@@ -5,7 +5,10 @@ import type {
 	UpdateBookRequest,
 	CreateBookGenreRequest,
 	BookRelease,
-	BookSearchResult
+	BookSearchResult,
+	Author,
+	CreateAuthorRequest,
+	UpdateAuthorRequest
 } from '$lib/types/library_book';
 import type {
 	LibraryRecommendationType,
@@ -13,9 +16,12 @@ import type {
 	LibraryConfig
 } from '$lib/types/library';
 import { getContext, setContext } from 'svelte';
+import { goto } from '$app/navigation';
+import { resolve } from '$app/paths';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
+import { urls } from '$lib/config/urls';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
@@ -34,15 +40,21 @@ export class BookLibrary {
 		hasExternalLinks: true,
 		hasReleases: true,
 		hasShelf: true,
+		hasAuthors: true,
 		entriesAreLinks: false
 	};
 	loaded = $state<boolean>(false);
 	entries = $state<Book[]>([]);
 	filteredEntries = $state<Book[]>([]);
 	genres = $state<BookGenre[]>([]);
+	authors = $state<Author[]>([]);
+	filteredAuthors = $state<Author[]>([]);
+	authorsLoaded = $state<boolean>(false);
+	authorFavoritesFilter = $state<boolean>(false);
 	createModalVisible = $state<boolean>(false);
 	detailModalVisible = $state<boolean>(false);
 	genreModalVisible = $state<boolean>(false);
+	authorCreatePromptVisible = $state<boolean>(false);
 	searchVisible = $state<boolean>(false);
 	externalSearchModalVisible = $state<boolean>(false);
 	activeEntry = $state<Book | null>(null);
@@ -53,7 +65,7 @@ export class BookLibrary {
 	searchTerm = $state<string>('');
 	releases = $state<BookRelease[]>([]);
 	releasesLoaded = $state<boolean>(false);
-	view = $state<'list' | 'cards' | 'shelf' | 'spine'>('cards');
+	view = $state<'list' | 'cards' | 'shelf' | 'spine' | 'authors'>('cards');
 	auth = getAuth();
 	filterService = new LibraryFilterService();
 	apiService: ApiService;
@@ -62,7 +74,7 @@ export class BookLibrary {
 	constructor() {
 		this.apiService = new ApiService(this.auth.getToken());
 		const saved = this.localStorage.get(BookLibrary.LS_VIEW_KEY);
-		this.view = (saved as 'list' | 'cards' | 'shelf' | 'spine' | null) ?? 'cards';
+		this.view = (saved as 'list' | 'cards' | 'shelf' | 'spine' | 'authors' | null) ?? 'cards';
 	}
 
 	async load(): Promise<void> {
@@ -80,6 +92,89 @@ export class BookLibrary {
 		if (res) {
 			this.genres = res.data as BookGenre[];
 		}
+	}
+
+	async loadAuthors(): Promise<void> {
+		const res = await this.apiService.list(apiRoutes.libraries.books.authors.list);
+		if (res) {
+			this.authors = res.data as Author[];
+			this.applyAuthorFavoritesFilter();
+			this.authorsLoaded = true;
+		}
+	}
+
+	async loadAuthor(id: number): Promise<Author | null> {
+		const res = await this.apiService.get(apiRoutes.libraries.books.authors.get, id);
+		return res ? (res.data as Author) : null;
+	}
+
+	applyAuthorFavoritesFilter(): void {
+		this.filteredAuthors = this.authorFavoritesFilter
+			? this.authors.filter((author) => author.is_favorite)
+			: this.authors;
+	}
+
+	toggleAuthorFavoritesFilter(): void {
+		this.authorFavoritesFilter = !this.authorFavoritesFilter;
+		this.applyAuthorFavoritesFilter();
+	}
+
+	async createAuthor(request: CreateAuthorRequest): Promise<Author | null> {
+		const res = await this.apiService.create(apiRoutes.libraries.books.authors.create, request);
+		if (res) await this.loadAuthors();
+		return res ? (res.data as Author) : null;
+	}
+
+	async updateAuthor(author: Author, request: UpdateAuthorRequest): Promise<boolean> {
+		const res = await this.apiService.update(
+			apiRoutes.libraries.books.authors.update,
+			author.id,
+			request
+		);
+		if (res) await this.loadAuthors();
+		return res;
+	}
+
+	async toggleAuthorFavorite(author: Author): Promise<boolean> {
+		return await this.updateAuthor(author, { is_favorite: !author.is_favorite });
+	}
+
+	async deleteAuthor(author: Author): Promise<boolean> {
+		const res = await this.apiService.delete(
+			apiRoutes.libraries.books.authors.delete,
+			author.id
+		);
+		if (res) {
+			await Promise.all([this.loadAuthors(), this.load()]);
+		}
+		return res;
+	}
+
+	async uploadAuthorPhoto(author: Author, file: File): Promise<boolean> {
+		const formData = new FormData();
+		formData.append('file', file);
+		const res = await this.apiService.uploadFile(
+			apiRoutes.libraries.books.authors.uploadPhoto,
+			author.id.toString(),
+			formData
+		);
+		if (res) await this.loadAuthors();
+		return res !== null;
+	}
+
+	async resyncAuthorFromHardcover(author: Author): Promise<Author | null> {
+		const res = await this.apiService.post(
+			apiRoutes.libraries.books.authors.resync.replace('%d', author.id.toString()),
+			{}
+		);
+		if (res) await this.loadAuthors();
+		return res ? (res.data as Author) : null;
+	}
+
+	async unlinkBook(book: Book): Promise<boolean> {
+		const ok = await this.update(book, { author_id: null });
+		if (ok) await this.loadAuthors();
+		return ok;
 	}
 
 	async loadReleases(): Promise<boolean> {
@@ -173,6 +268,25 @@ export class BookLibrary {
 
 	closeGenreModal(): void {
 		this.genreModalVisible = false;
+	}
+
+	openAuthorCreatePrompt(): void {
+		this.authorCreatePromptVisible = true;
+		this.searchVisible = false;
+	}
+
+	closeAuthorCreatePrompt(): void {
+		this.authorCreatePromptVisible = false;
+	}
+
+	async createAuthorAndNavigate(name: string): Promise<Author | null> {
+		const author = await this.createAuthor({ name });
+		if (author) {
+			this.closeAuthorCreatePrompt();
+			await goto(resolve(urls.bookAuthor, { id: author.id.toString() }));
+		}
+
+		return author;
 	}
 
 	openExternalSearchModal(): void {

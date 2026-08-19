@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { BookLibrary } from '$lib/state/BookLibrary.svelte';
 import { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
 import { MovieLibrary } from '$lib/state/MovieLibrary.svelte';
@@ -8,7 +8,7 @@ import { QuoteLibrary } from '$lib/state/QuoteLibrary.svelte';
 import { RecipeLibrary } from '$lib/state/RecipeLibrary.svelte';
 import { LinkLibrary } from '$lib/state/LinkLibrary.svelte';
 import { api, storage, resetStoreMocks } from '../setup/storeMocks';
-import type { Book, BookGenre } from '$lib/types/library_book';
+import type { Book, BookGenre, Author } from '$lib/types/library_book';
 import type { Music, MusicGenre } from '$lib/types/library_music';
 import type { Movie, MovieGenre } from '$lib/types/library_movie';
 import type { Game, GameGenre } from '$lib/types/library_game';
@@ -17,11 +17,22 @@ import type { Quote } from '$lib/types/library_quote';
 import type { Recipe, RecipeType } from '$lib/types/library_recipe';
 import type { Link, LinkCategory } from '$lib/types/library_link';
 
+const { navigation } = vi.hoisted(() => ({
+	navigation: {
+		goto: vi.fn(),
+		resolve: (path: string, params: Record<string, string>) => path.replace('[id]', params.id)
+	}
+}));
+
+vi.mock('$app/navigation', () => ({ goto: navigation.goto }));
+vi.mock('$app/paths', () => ({ resolve: navigation.resolve }));
+
 function book(overrides: Partial<Book> = {}): Book {
 	return {
 		id: 'b1',
 		title: 'Book',
 		author: 'Author',
+		author_id: null,
 		series: null,
 		volume: null,
 		pages: null,
@@ -190,8 +201,25 @@ const genre = (id: number, title: string): BookGenre & MusicGenre & MovieGenre &
 	updated_at: ''
 });
 
+function author(overrides: Partial<Author> = {}): Author {
+	return {
+		id: 1,
+		name: 'Frank Herbert',
+		photo: null,
+		bio: null,
+		hardcover_id: null,
+		is_favorite: false,
+		books_count: 0,
+		books: [],
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
 beforeEach(() => {
 	resetStoreMocks();
+	navigation.goto.mockReset();
 });
 
 describe('BookLibrary', () => {
@@ -275,6 +303,119 @@ describe('BookLibrary', () => {
 		expect(s.view).toBe('shelf');
 		s.switchView();
 		expect(s.view).toBe('list');
+	});
+
+	it('loads authors and applies the favorites filter', async () => {
+		const alice = author({ id: 1, name: 'Alice', is_favorite: true });
+		const bob = author({ id: 2, name: 'Bob', is_favorite: false });
+		api.list.mockResolvedValue({ data: [alice, bob] });
+
+		const s = new BookLibrary();
+		await s.loadAuthors();
+		expect(s.authors).toHaveLength(2);
+		expect(s.filteredAuthors).toHaveLength(2);
+		expect(s.authorsLoaded).toBe(true);
+
+		s.toggleAuthorFavoritesFilter();
+		expect(s.authorFavoritesFilter).toBe(true);
+		expect(s.filteredAuthors.map((a) => a.id)).toEqual([1]);
+
+		s.toggleAuthorFavoritesFilter();
+		expect(s.filteredAuthors).toHaveLength(2);
+	});
+
+	it('creates an author and reloads the author list', async () => {
+		const created = author({ id: 5, name: 'Ursula K. Le Guin' });
+		api.create.mockResolvedValue({ data: created });
+		api.list.mockResolvedValue({ data: [created] });
+
+		const s = new BookLibrary();
+		const result = await s.createAuthor({ name: 'Ursula K. Le Guin' });
+		expect(result).toEqual(created);
+		expect(s.authors).toEqual([created]);
+	});
+
+	it('toggles an author favorite via update', async () => {
+		const alice = author({ id: 1, is_favorite: false });
+		api.update.mockResolvedValue(true);
+		api.list.mockResolvedValue({ data: [{ ...alice, is_favorite: true }] });
+
+		const s = new BookLibrary();
+		const ok = await s.toggleAuthorFavorite(alice);
+		expect(ok).toBe(true);
+		expect(api.update).toHaveBeenCalledWith(expect.any(String), 1, { is_favorite: true });
+	});
+
+	it('deletes an author and reloads authors and books', async () => {
+		api.delete.mockResolvedValue(true);
+		api.list.mockResolvedValue({ data: [] });
+
+		const s = new BookLibrary();
+		const ok = await s.deleteAuthor(author({ id: 1 }));
+		expect(ok).toBe(true);
+		expect(api.delete).toHaveBeenCalled();
+	});
+
+	it('uploads an author photo', async () => {
+		api.uploadFile.mockResolvedValue({ data: author({ id: 1, photo: 'p.jpg' }) });
+		api.list.mockResolvedValue({ data: [author({ id: 1, photo: 'p.jpg' })] });
+
+		const s = new BookLibrary();
+		const file = new File(['x'], 'photo.jpg', { type: 'image/jpeg' });
+		const ok = await s.uploadAuthorPhoto(author({ id: 1 }), file);
+		expect(ok).toBe(true);
+		expect(api.uploadFile).toHaveBeenCalledWith(expect.any(String), '1', expect.any(FormData));
+	});
+
+	it('resyncs an author from hardcover', async () => {
+		const synced = author({ id: 1, bio: 'Synced bio' });
+		api.post.mockResolvedValue({ data: synced });
+		api.list.mockResolvedValue({ data: [synced] });
+
+		const s = new BookLibrary();
+		const result = await s.resyncAuthorFromHardcover(author({ id: 1 }));
+		expect(result).toEqual(synced);
+	});
+
+	it('unlinks a book from its author and reloads authors', async () => {
+		api.update.mockResolvedValue(true);
+		api.list.mockResolvedValue({ data: [] });
+
+		const s = new BookLibrary();
+		const ok = await s.unlinkBook(book({ id: 'b1', author_id: 1 }));
+		expect(ok).toBe(true);
+		expect(api.update).toHaveBeenCalledWith(expect.any(String), 'b1', { author_id: null });
+	});
+
+	it('creates an author and navigates to its detail page', async () => {
+		const created = author({ id: 7, name: 'New Author' });
+		api.create.mockResolvedValue({ data: created });
+		api.list.mockResolvedValue({ data: [created] });
+
+		const s = new BookLibrary();
+		s.authorCreatePromptVisible = true;
+		const result = await s.createAuthorAndNavigate('New Author');
+		expect(result).toEqual(created);
+		expect(s.authorCreatePromptVisible).toBe(false);
+		expect(navigation.goto).toHaveBeenCalledWith('/libraries/books/authors/7');
+	});
+
+	it('loads a single author with its full book list', async () => {
+		const withBooks = author({ id: 3, books: [book({ id: 'b1' })] });
+		api.get.mockResolvedValue({ data: withBooks });
+
+		const s = new BookLibrary();
+		const result = await s.loadAuthor(3);
+		expect(result).toEqual(withBooks);
+		expect(api.get).toHaveBeenCalledWith(expect.any(String), 3);
+	});
+
+	it('returns null when loading a non-existent author', async () => {
+		api.get.mockResolvedValue(null);
+
+		const s = new BookLibrary();
+		const result = await s.loadAuthor(999);
+		expect(result).toBeNull();
 	});
 });
 

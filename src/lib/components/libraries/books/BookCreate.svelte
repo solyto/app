@@ -36,7 +36,14 @@
 
 	let titleInput = $state<HTMLInputElement | null>(null);
 	let titleValue = $state<string>(activeEntry ? activeEntry.title : '');
-	let authorValue = $state<string>(activeEntry ? activeEntry.author : '');
+	let selectedAuthor = $state<MultiSelectEntry[]>(
+		activeEntry?.author_id
+			? [{ label: activeEntry.author, value: activeEntry.author_id.toString() }]
+			: []
+	);
+	let authorSearchText = $state<string>(
+		activeEntry && !activeEntry.author_id ? activeEntry.author : ''
+	);
 	let seriesValue = $state<string>(activeEntry?.series ?? '');
 	let volumeValue = $state<number | null>(activeEntry?.volume ?? null);
 	let coverValue = $state<string>('');
@@ -94,6 +101,10 @@
 		tags.tags.map((tag) => ({ label: tag.name, value: tag.id.toString() }))
 	);
 
+	let authorOptions: { label: string; value: string }[] = $derived(
+		library.authors.map((author) => ({ label: author.name, value: author.id.toString() }))
+	);
+
 	async function onCreateGenre(data: { option: MultiSelectEntry }): Promise<void> {
 		const created = await library.createGenre(data.option.label.toString());
 		if (!created) {
@@ -112,10 +123,34 @@
 		data.option.value = created.id.toString();
 	}
 
+	let pendingAuthorCreate: Promise<unknown> | null = null;
+
+	function onCreateAuthor(data: { option: MultiSelectEntry }): void {
+		pendingAuthorCreate = (async () => {
+			const created = await library.createAuthor({ name: data.option.label.toString() });
+			if (!created) {
+				notifications.error(ts.get.libraries.books.author_create_error);
+				return;
+			}
+			data.option.value = created.id.toString();
+		})();
+	}
+
+	function buildAuthorFields(): { author: string; author_id: number | null } {
+		if (selectedAuthor.length > 0) {
+			return {
+				author: selectedAuthor[0].label,
+				author_id: parseInt(selectedAuthor[0].value)
+			};
+		}
+
+		return { author: authorSearchText.trim(), author_id: null };
+	}
+
 	function buildRequestFields() {
 		return {
 			title: titleValue,
-			author: authorValue,
+			...buildAuthorFields(),
 			series: seriesValue !== '' ? seriesValue : null,
 			volume: volumeValue,
 			pages: pagesValue,
@@ -137,6 +172,8 @@
 	async function onsubmit(): Promise<void> {
 		loadingIndicator.start();
 
+		if (pendingAuthorCreate) await pendingAuthorCreate;
+
 		if (activeEntry) {
 			const request: UpdateBookRequest = {
 				...buildRequestFields(),
@@ -157,7 +194,8 @@
 			const ok = await library.create(request);
 			if (ok) {
 				titleValue = '';
-				authorValue = '';
+				selectedAuthor = [];
+				authorSearchText = '';
 				seriesValue = '';
 				volumeValue = null;
 				pagesValue = null;
@@ -181,8 +219,19 @@
 		loadingIndicator.stop();
 	}
 
-	function onSearchSelect(book: BookRelease): void {
-		authorValue = book.author;
+	function applyImportedAuthor(book: BookRelease): void {
+		if (book.author_id) {
+			selectedAuthor = [{ label: book.author, value: book.author_id.toString() }];
+			authorSearchText = '';
+		} else {
+			selectedAuthor = [];
+			authorSearchText = book.author;
+		}
+	}
+
+	async function onSearchSelect(book: BookRelease): Promise<void> {
+		if (book.author_id) await library.loadAuthors();
+		applyImportedAuthor(book);
 		titleValue = book.title;
 		coverValue = book.cover ?? '';
 		linkValue = book.url ?? '';
@@ -218,7 +267,8 @@
 			return;
 		}
 
-		authorValue = book.author;
+		if (book.author_id) await library.loadAuthors();
+		applyImportedAuthor(book);
 		titleValue = book.title;
 		coverValue = book.cover ?? '';
 		publicationYearValue = book.release_date ? parseInt(book.release_date.slice(0, 4)) : null;
@@ -246,7 +296,14 @@
 		<TextInput bind:input={titleInput} bind:value={titleValue} />
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.books.author}>
-		<TextInput bind:value={authorValue} />
+		<MultiSelect
+			bind:value={selectedAuthor}
+			bind:searchText={authorSearchText}
+			options={authorOptions}
+			maxSelect={1}
+			allowUserOptions
+			oncreate={onCreateAuthor}
+		/>
 	</ModalFormRow>
 	<ModalFormRow label={ts.get.libraries.books.series}>
 		<div class="flex w-full gap-2">

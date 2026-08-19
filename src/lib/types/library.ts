@@ -40,5 +40,6 @@ export interface LibraryConfig {
 	hasExternalLinks: boolean;
 	hasReleases: boolean;
 	hasShelf: boolean;
+	hasAuthors: boolean;
 	entriesAreLinks: boolean;
 }

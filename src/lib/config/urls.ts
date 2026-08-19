@@ -30,6 +30,7 @@ export const urls = {
 	libraries: '/libraries',
 	musicLibrary: '/libraries/music',
 	bookLibrary: '/libraries/books',
+	bookAuthor: '/libraries/books/authors/[id]',
 	linkLibrary: '/libraries/links',
 	quoteLibrary: '/libraries/quotes',
 	recipeLibrary: '/libraries/recipes',

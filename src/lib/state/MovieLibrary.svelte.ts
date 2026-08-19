@@ -29,6 +29,7 @@ export class MovieLibrary {
 		hasExternalLinks: true,
 		hasReleases: false,
 		hasShelf: false,
+		hasAuthors: false,
 		entriesAreLinks: false
 	};
 	loaded = $state<boolean>(false);

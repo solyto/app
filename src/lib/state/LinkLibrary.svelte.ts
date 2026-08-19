@@ -25,6 +25,7 @@ export class LinkLibrary {
 		hasExternalLinks: false,
 		hasReleases: false,
 		hasShelf: false,
+		hasAuthors: false,
 		entriesAreLinks: true
 	};
 	loaded = $state<boolean>(false);

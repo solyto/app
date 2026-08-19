@@ -20,6 +20,7 @@ export class QuoteLibrary {
 		hasExternalLinks: false,
 		hasReleases: false,
 		hasShelf: false,
+		hasAuthors: false,
 		entriesAreLinks: false
 	};
 	loaded = $state<boolean>(false);
