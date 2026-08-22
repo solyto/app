@@ -394,6 +394,7 @@ export interface TableRecords {
 	delete_table_confirm_label: string;
 	delete_table_confirm_message: string;
 	no_tables: string;
+	entries_count: string;
 	list_view: string;
 	card_view: string;
 	add_column: string;
@@ -429,6 +430,7 @@ export interface TableRecords {
 	untitled_row: string;
 	tags_placeholder: string;
 	not_set: string;
+	table_not_found: string;
 }
 
 export interface LibraryRecords {

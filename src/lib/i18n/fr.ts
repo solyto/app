@@ -1180,6 +1180,7 @@ const tables: TableRecords = {
 	delete_table_confirm_label: 'Supprimer le tableau ?',
 	delete_table_confirm_message: 'Le tableau et tout son contenu seront définitivement supprimés.',
 	no_tables: 'Aucun tableau pour le moment.',
+	entries_count: '%s entrées',
 	list_view: 'Vue liste',
 	card_view: 'Vue cartes',
 	add_column: 'Ajouter une colonne',
@@ -1214,7 +1215,8 @@ const tables: TableRecords = {
 	remove_image: 'Retirer l\'image',
 	untitled_row: 'Sans titre',
 	tags_placeholder: 'Tags séparés par des virgules',
-	not_set: '—'
+	not_set: '—',
+	table_not_found: 'Ce tableau est introuvable.'
 };
 
 const setup: SetupRecords = {

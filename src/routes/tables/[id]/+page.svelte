@@ -2,6 +2,9 @@
 	import { getTables } from '$lib/state/Tables.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
+	import { urls } from '$lib/config/urls';
 	import ViewSwitcher from '$lib/components/ui/ViewSwitcher.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import InlineEditButton from '$lib/components/ui/buttons/InlineEditButton.svelte';
@@ -58,6 +61,15 @@
 	async function onChangeView(view: string): Promise<void> {
 		if (!tables.activeTable) return;
 		await tables.update(tables.activeTable, { view: view as TableView });
+	}
+
+	async function onTableDeleted(): Promise<void> {
+		deleteTableModalOpen = false;
+		await goto(resolve(urls.tables));
+	}
+
+	function onDeleteTableCancelled(): void {
+		deleteTableModalOpen = false;
 	}
 </script>
 
@@ -161,7 +173,11 @@
 			<TableModal {table} onClose={() => (editTableModalOpen = false)} />
 		{/if}
 		{#if deleteTableModalOpen}
-			<DeleteTableModal {table} onClose={() => (deleteTableModalOpen = false)} />
+			<DeleteTableModal
+				{table}
+				onDeleted={onTableDeleted}
+				onCancel={onDeleteTableCancelled}
+			/>
 		{/if}
 		{#if columnModalOpen}
 			<ColumnModal {table} column={editingColumn} onClose={() => (columnModalOpen = false)} />
@@ -179,5 +195,7 @@
 		{#if deletingRow}
 			<DeleteRowModal {table} row={deletingRow} onClose={() => (deletingRow = null)} />
 		{/if}
+	{:else if tables.activeTableLoaded}
+		<p class="text-c-neutral-5">{ts.get.tables.table_not_found}</p>
 	{/if}
 </div>

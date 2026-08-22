@@ -50,6 +50,16 @@ describe('Tables store', () => {
 		expect(t.activeTable?.id).toBe('t1');
 	});
 
+	it('still marks the table as loaded (with a null table) when it is missing or forbidden', async () => {
+		api.get.mockResolvedValue(null);
+
+		const t = new Tables();
+		await t.loadTable('missing');
+
+		expect(t.activeTableLoaded).toBe(true);
+		expect(t.activeTable).toBeNull();
+	});
+
 	it('creates a table and reloads the list', async () => {
 		api.create.mockResolvedValue({ data: table('t1') });
 		api.list.mockResolvedValue({ data: [table('t1')] });

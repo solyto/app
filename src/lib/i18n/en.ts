@@ -1179,6 +1179,7 @@ const tables: TableRecords = {
 	delete_table_confirm_message:
 		'This deletes the table and everything in it. This cannot be undone.',
 	no_tables: 'No tables yet.',
+	entries_count: '%s entries',
 	list_view: 'List view',
 	card_view: 'Card view',
 	add_column: 'Add column',
@@ -1213,7 +1214,8 @@ const tables: TableRecords = {
 	remove_image: 'Remove image',
 	untitled_row: 'Untitled',
 	tags_placeholder: 'Comma-separated tags',
-	not_set: '—'
+	not_set: '—',
+	table_not_found: 'This table could not be found.'
 };
 
 const setup: SetupRecords = {

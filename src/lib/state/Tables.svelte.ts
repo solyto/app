@@ -37,10 +37,8 @@ export class Tables {
 	async loadTable(id: string): Promise<void> {
 		this.activeTableLoaded = false;
 		const res = await this.apiService.get(apiRoutes.tables.get, id);
-		if (res) {
-			this.activeTable = res.data as Table;
-			this.activeTableLoaded = true;
-		}
+		this.activeTable = res ? (res.data as Table) : null;
+		this.activeTableLoaded = true;
 	}
 
 	async create(request: CreateTableRequest): Promise<Table | null> {

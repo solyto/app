@@ -8,9 +8,10 @@
 	import { setUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { setViewPoint } from '$lib/state/Viewpoint.svelte';
 	import { setCookieConsent } from '$lib/state/CookieConsent.svelte';
+	import { setTables } from '$lib/state/Tables.svelte';
 
 	// Order matters: Translation reads getAuth() at field initialisation, and
-	// Todos defaults to getAuth() in its constructor, so Auth is seeded first.
+	// Todos/Tables default to getAuth() in their constructor, so Auth is seeded first.
 	const auth = setAuth();
 	const ts = setTranslation();
 	const keyManager = setKeyManager();
@@ -19,6 +20,7 @@
 	const uiNotifications = setUiNotifications();
 	const viewPoint = setViewPoint();
 	const cookieConsent = setCookieConsent();
+	const tables = setTables();
 
 	let {
 		component,
@@ -43,7 +45,8 @@
 		loadingIndicator,
 		uiNotifications,
 		viewPoint,
-		cookieConsent
+		cookieConsent,
+		tables
 	};
 	for (const [name, overrides] of Object.entries(stores)) {
 		const instance = instances[name];

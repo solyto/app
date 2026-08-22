@@ -4,9 +4,10 @@
 	import { getTables } from '$lib/state/Tables.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 
-	let { table, onClose } = $props<{
+	let { table, onDeleted, onCancel } = $props<{
 		table: Table;
-		onClose: () => void;
+		onDeleted: () => void;
+		onCancel: () => void;
 	}>();
 
 	const ts = getTranslation();
@@ -14,7 +15,7 @@
 
 	async function onConfirm(): Promise<void> {
 		await tables.delete(table);
-		onClose();
+		onDeleted();
 	}
 </script>
 
@@ -23,5 +24,5 @@
 	description={ts.get.tables.delete_table_confirm_message}
 	type="confirm-delete"
 	{onConfirm}
-	onCancel={onClose}
+	{onCancel}
 />

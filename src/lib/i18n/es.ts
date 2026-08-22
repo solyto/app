@@ -1179,6 +1179,7 @@ const tables: TableRecords = {
 	delete_table_confirm_message:
 		'Esto elimina la tabla y todo su contenido de forma permanente.',
 	no_tables: 'Aún no hay tablas.',
+	entries_count: '%s entradas',
 	list_view: 'Vista de lista',
 	card_view: 'Vista de tarjetas',
 	add_column: 'Añadir columna',
@@ -1213,7 +1214,8 @@ const tables: TableRecords = {
 	remove_image: 'Quitar imagen',
 	untitled_row: 'Sin título',
 	tags_placeholder: 'Etiquetas separadas por comas',
-	not_set: '—'
+	not_set: '—',
+	table_not_found: 'No se ha podido encontrar esta tabla.'
 };
 
 const setup: SetupRecords = {

@@ -60,5 +60,9 @@
 {/if}
 
 {#if deletingTable}
-	<DeleteTableModal table={deletingTable} onClose={() => (deletingTable = null)} />
+	<DeleteTableModal
+		table={deletingTable}
+		onDeleted={() => (deletingTable = null)}
+		onCancel={() => (deletingTable = null)}
+	/>
 {/if}

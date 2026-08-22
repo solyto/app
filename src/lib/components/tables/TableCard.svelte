@@ -2,6 +2,7 @@
 	import type { Table } from '$lib/types/table';
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconTable from '@lucide/svelte/icons/table';
 	import InlineEditButton from '$lib/components/ui/buttons/InlineEditButton.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
@@ -11,6 +12,8 @@
 		onEdit: () => void;
 		onDelete: () => void;
 	}>();
+
+	const ts = getTranslation();
 </script>
 
 <div
@@ -24,7 +27,7 @@
 		<IconTable class="size-6 text-c-heading dark:text-c-primary" />
 		<span class="text-lg font-bold text-c-heading dark:text-c-primary">{table.name}</span>
 		<span class="text-sm text-c-neutral-5">
-			{table.rows_count ?? 0}
+			{ts.get.tables.entries_count.replace('%s', String(table.rows_count ?? 0))}
 		</span>
 	</a>
 </div>
