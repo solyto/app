@@ -47,6 +47,8 @@ export const urls = {
 	calendar: '/calendar',
 	contacts: '/contacts',
 	clipboard: '/clipboard',
+	tables: '/tables',
+	table: '/tables/[id]',
 	admin: {
 		home: '/admin',
 		users: '/admin/users'

@@ -25,7 +25,8 @@ import type {
 	CookieConsentRecords,
 	TimeTrackingRecords,
 	QuickAddRecords,
-	SetupRecords
+	SetupRecords,
+	TableRecords
 } from '$lib/types/translation';
 
 const layout: LayoutRecords = {
@@ -67,7 +68,8 @@ const nav: NavigationRecords = {
 	calendar: 'Calendar',
 	contacts: 'Contacts',
 	clipboard: 'Clipboard',
-	timeTracking: 'Time Tracking'
+	timeTracking: 'Time Tracking',
+	tables: 'Tables'
 };
 
 const auth: AuthRecords = {
@@ -1166,6 +1168,54 @@ const quick_add: QuickAddRecords = {
 	}
 };
 
+const tables: TableRecords = {
+	welcome: 'Your tables',
+	instruction: 'Create a table, add whatever columns you need, then fill in your entries.',
+	new_table: 'New table',
+	edit_table: 'Edit table',
+	table_name_placeholder: 'Table name',
+	delete_table: 'Delete table',
+	delete_table_confirm_label: 'Delete table?',
+	delete_table_confirm_message:
+		'This deletes the table and everything in it. This cannot be undone.',
+	no_tables: 'No tables yet.',
+	list_view: 'List view',
+	card_view: 'Card view',
+	add_column: 'Add column',
+	edit_column: 'Edit column',
+	delete_column: 'Delete column',
+	delete_column_confirm_label: 'Delete column?',
+	delete_column_confirm_message: 'This removes the column and its values from every row.',
+	column_name: 'Column name',
+	column_name_placeholder: 'e.g. Title',
+	column_type: 'Type',
+	column_type_text: 'Text',
+	column_type_number: 'Number',
+	column_type_date: 'Date',
+	column_type_checkbox: 'Checkbox',
+	column_type_url: 'Link',
+	column_type_select: 'Select',
+	column_type_tags: 'Tags',
+	column_type_picture: 'Picture',
+	select_options: 'Options',
+	select_option_placeholder: 'Option',
+	add_option: 'Add option',
+	no_columns: 'No columns yet.',
+	no_columns_instruction: 'Add a column to start filling in this table.',
+	add_row: 'Add entry',
+	edit_row: 'Edit entry',
+	delete_row: 'Delete entry',
+	delete_row_confirm_label: 'Delete entry?',
+	delete_row_confirm_message: 'This entry will be removed for good.',
+	no_rows: 'No entries yet.',
+	upload_image: 'Upload image',
+	change_image: 'Change image',
+	remove_image: 'Remove image',
+	untitled_row: 'Untitled',
+	tags_placeholder: 'Comma-separated tags',
+	not_set: '—'
+};
+
 const setup: SetupRecords = {
 	hosted_title: 'Use solyto.app',
 	hosted_description: 'Connect to the official hosted service',
@@ -1205,5 +1255,6 @@ export const en: LanguageFile = {
 	cookie_consent,
 	timeTracking,
 	quick_add,
-	setup
+	setup,
+	tables
 };

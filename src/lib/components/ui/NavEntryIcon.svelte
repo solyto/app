@@ -12,6 +12,7 @@
 	import IconCalendar from '@lucide/svelte/icons/calendar';
 	import IconClipboardCopy from '@lucide/svelte/icons/clipboard-copy';
 	import IconContactRound from '@lucide/svelte/icons/contact-round';
+	import IconTable from '@lucide/svelte/icons/table';
 
 	let { type } = $props<{ type: string }>();
 </script>
@@ -42,4 +43,6 @@
 	<IconSettings />
 {:else if type === 'dev_requests'}
 	<IconBug />
+{:else if type === 'tables'}
+	<IconTable />
 {/if}

@@ -15,7 +15,8 @@ function allFeatures(enabled: boolean): Record<FeatureType, boolean> {
 		feeds: enabled,
 		clipboard: enabled,
 		dev_requests: enabled,
-		timeTracking: enabled
+		timeTracking: enabled,
+		tables: enabled
 	};
 }
 

@@ -68,6 +68,23 @@ export const apiRoutes = {
 		update: API_URL + '/tags/%d',
 		delete: API_URL + '/tags/%d'
 	},
+	tables: {
+		list: API_URL + '/tables',
+		get: API_URL + '/tables/%s',
+		create: API_URL + '/tables',
+		update: API_URL + '/tables/%s',
+		delete: API_URL + '/tables/%s',
+		reorder: API_URL + '/tables/reorder',
+		createColumn: API_URL + '/tables/%s/columns',
+		updateColumn: API_URL + '/tables/%s/columns/%s',
+		deleteColumn: API_URL + '/tables/%s/columns/%s',
+		reorderColumns: API_URL + '/tables/%s/columns/reorder',
+		createRow: API_URL + '/tables/%s/rows',
+		updateRow: API_URL + '/tables/%s/rows/%s',
+		deleteRow: API_URL + '/tables/%s/rows/%s',
+		reorderRows: API_URL + '/tables/%s/rows/reorder',
+		uploadImage: API_URL + '/tables/%s/images'
+	},
 	checkIn: {
 		list: API_URL + '/check-in',
 		create: API_URL + '/check-in',

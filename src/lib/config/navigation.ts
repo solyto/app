@@ -12,7 +12,8 @@ export type FeatureType =
 	| 'clipboard'
 	| 'dev_requests'
 	| 'feeds'
-	| 'timeTracking';
+	| 'timeTracking'
+	| 'tables';
 
 export interface Feature {
 	type: FeatureType;
@@ -44,14 +45,15 @@ export const navItems: Record<string, NavItem> = {
 	'feeds':         { slug: 'feeds',         href: urls.feeds,        iconType: 'feeds',        translationKey: 'feeds',        featureFlag: 'feeds',        dataTour: 'feeds' },
 	'clipboard':     { slug: 'clipboard',     href: urls.clipboard,    iconType: 'clipboard',    translationKey: 'clipboard',    featureFlag: 'clipboard',    dataTour: 'clipboard' },
 	'dev-requests':  { slug: 'dev-requests',  href: urls.devRequests,  iconType: 'dev_requests', translationKey: 'dev_requests', featureFlag: 'dev_requests', dataTour: 'dev_requests' },
+	'tables':        { slug: 'tables',        href: urls.tables,       iconType: 'tables',       translationKey: 'tables',       featureFlag: 'tables',       dataTour: 'tables' },
 };
 
 export const desktopOrder: string[] = [
-	'home', 'calendar', 'todos', 'notes', 'libraries', 'contacts', 'check-in', 'finances', 'time-tracking', 'feeds', 'clipboard',
+	'home', 'calendar', 'todos', 'notes', 'libraries', 'tables', 'contacts', 'check-in', 'finances', 'time-tracking', 'feeds', 'clipboard',
 ];
 
 export const mobileDefaultOrder: string[] = [
-	'home', 'todos', 'calendar', 'check-in', 'libraries', 'notes', 'contacts', 'finances', 'time-tracking', 'feeds', 'clipboard', 'dev-requests',
+	'home', 'todos', 'calendar', 'check-in', 'libraries', 'notes', 'contacts', 'finances', 'time-tracking', 'feeds', 'clipboard', 'tables', 'dev-requests',
 ];
 
 export const mobileVisibleCount = 5;

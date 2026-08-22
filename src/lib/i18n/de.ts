@@ -25,7 +25,8 @@ import type {
 	CookieConsentRecords,
 	TimeTrackingRecords,
 	QuickAddRecords,
-	SetupRecords
+	SetupRecords,
+	TableRecords
 } from '$lib/types/translation';
 
 const layout: LayoutRecords = {
@@ -67,7 +68,8 @@ const nav: NavigationRecords = {
 	calendar: 'Kalender',
 	contacts: 'Kontakte',
 	clipboard: 'Zwischenablage',
-	timeTracking: 'Zeiterfassung'
+	timeTracking: 'Zeiterfassung',
+	tables: 'Tabellen'
 };
 
 const auth: AuthRecords = {
@@ -1169,6 +1171,54 @@ const quick_add: QuickAddRecords = {
 	}
 };
 
+const tables: TableRecords = {
+	welcome: 'Deine Tabellen',
+	instruction:
+		'Erstelle eine Tabelle, füge die passenden Spalten hinzu und trage deine Einträge ein.',
+	new_table: 'Neue Tabelle',
+	edit_table: 'Tabelle bearbeiten',
+	table_name_placeholder: 'Name der Tabelle',
+	delete_table: 'Tabelle löschen',
+	delete_table_confirm_label: 'Tabelle löschen?',
+	delete_table_confirm_message: 'Die Tabelle und alle Einträge werden unwiderruflich gelöscht.',
+	no_tables: 'Noch keine Tabellen.',
+	list_view: 'Listenansicht',
+	card_view: 'Kartenansicht',
+	add_column: 'Spalte hinzufügen',
+	edit_column: 'Spalte bearbeiten',
+	delete_column: 'Spalte löschen',
+	delete_column_confirm_label: 'Spalte löschen?',
+	delete_column_confirm_message: 'Die Spalte und ihre Werte werden aus allen Einträgen entfernt.',
+	column_name: 'Spaltenname',
+	column_name_placeholder: 'z. B. Titel',
+	column_type: 'Typ',
+	column_type_text: 'Text',
+	column_type_number: 'Zahl',
+	column_type_date: 'Datum',
+	column_type_checkbox: 'Checkbox',
+	column_type_url: 'Link',
+	column_type_select: 'Auswahl',
+	column_type_tags: 'Tags',
+	column_type_picture: 'Bild',
+	select_options: 'Optionen',
+	select_option_placeholder: 'Option',
+	add_option: 'Option hinzufügen',
+	no_columns: 'Noch keine Spalten.',
+	no_columns_instruction: 'Füge eine Spalte hinzu, um die Tabelle zu befüllen.',
+	add_row: 'Eintrag hinzufügen',
+	edit_row: 'Eintrag bearbeiten',
+	delete_row: 'Eintrag löschen',
+	delete_row_confirm_label: 'Eintrag löschen?',
+	delete_row_confirm_message: 'Dieser Eintrag wird endgültig gelöscht.',
+	no_rows: 'Noch keine Einträge.',
+	upload_image: 'Bild hochladen',
+	change_image: 'Bild ändern',
+	remove_image: 'Bild entfernen',
+	untitled_row: 'Ohne Titel',
+	tags_placeholder: 'Tags, mit Komma getrennt',
+	not_set: '—'
+};
+
 const setup: SetupRecords = {
 	hosted_title: 'solyto.app verwenden',
 	hosted_description: 'Verbinde dich mit dem offiziellen gehosteten Dienst',
@@ -1208,5 +1258,6 @@ export const de: LanguageFile = {
 	cookie_consent,
 	timeTracking,
 	quick_add,
-	setup
+	setup,
+	tables
 };

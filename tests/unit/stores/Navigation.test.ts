@@ -65,6 +65,7 @@ describe('Navigation store', () => {
 				'time-tracking',
 				'feeds',
 				'clipboard',
+				'tables',
 				'dev-requests'
 			]);
 			expect(storage.setJson).toHaveBeenCalledWith(
@@ -96,7 +97,7 @@ describe('Navigation store', () => {
 			storage.getJson.mockReturnValue(null);
 			const s = new Navigation();
 			await s.loadMobileOrder();
-			expect(s.mobileOrder).toHaveLength(12);
+			expect(s.mobileOrder).toHaveLength(13);
 		});
 
 		it('saveMobileOrder persists the current order', () => {

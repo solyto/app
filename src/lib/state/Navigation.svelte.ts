@@ -23,7 +23,8 @@ export class Navigation {
 		feeds: true,
 		clipboard: true,
 		dev_requests: true,
-		timeTracking: true
+		timeTracking: true,
+		tables: true
 	});
 	usage = $state<FeatureUsage>({});
 	mobileOrder = $state<string[]>([...mobileDefaultOrder]);

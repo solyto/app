@@ -40,6 +40,7 @@ export interface NavigationRecords {
 	contacts: string;
 	clipboard: string;
 	timeTracking: string;
+	tables: string;
 }
 
 export interface HomeRecords {
@@ -381,6 +382,53 @@ export interface NoteRecords {
 	delete_confirm_label: string;
 	delete_confirm_message: string;
 	delete_success: string;
+}
+
+export interface TableRecords {
+	welcome: string;
+	instruction: string;
+	new_table: string;
+	edit_table: string;
+	table_name_placeholder: string;
+	delete_table: string;
+	delete_table_confirm_label: string;
+	delete_table_confirm_message: string;
+	no_tables: string;
+	list_view: string;
+	card_view: string;
+	add_column: string;
+	edit_column: string;
+	delete_column: string;
+	delete_column_confirm_label: string;
+	delete_column_confirm_message: string;
+	column_name: string;
+	column_name_placeholder: string;
+	column_type: string;
+	column_type_text: string;
+	column_type_number: string;
+	column_type_date: string;
+	column_type_checkbox: string;
+	column_type_url: string;
+	column_type_select: string;
+	column_type_tags: string;
+	column_type_picture: string;
+	select_options: string;
+	select_option_placeholder: string;
+	add_option: string;
+	no_columns: string;
+	no_columns_instruction: string;
+	add_row: string;
+	edit_row: string;
+	delete_row: string;
+	delete_row_confirm_label: string;
+	delete_row_confirm_message: string;
+	no_rows: string;
+	upload_image: string;
+	change_image: string;
+	remove_image: string;
+	untitled_row: string;
+	tags_placeholder: string;
+	not_set: string;
 }
 
 export interface LibraryRecords {
@@ -1091,4 +1139,5 @@ export interface LanguageFile {
 	cookie_consent: CookieConsentRecords;
 	timeTracking: TimeTrackingRecords;
 	quick_add: QuickAddRecords;
+	tables: TableRecords;
 }

@@ -25,7 +25,8 @@ import type {
 	CookieConsentRecords,
 	TimeTrackingRecords,
 	QuickAddRecords,
-	SetupRecords
+	SetupRecords,
+	TableRecords
 } from '$lib/types/translation';
 
 const layout: LayoutRecords = {
@@ -67,7 +68,8 @@ const nav: NavigationRecords = {
 	calendar: 'Calendario',
 	contacts: 'Contactos',
 	clipboard: 'Portapapeles',
-	timeTracking: 'Control de tiempo'
+	timeTracking: 'Control de tiempo',
+	tables: 'Tablas'
 };
 
 const auth: AuthRecords = {
@@ -1166,6 +1168,54 @@ const quick_add: QuickAddRecords = {
 	}
 };
 
+const tables: TableRecords = {
+	welcome: 'Tus tablas',
+	instruction: 'Crea una tabla, añade las columnas que necesites y rellena tus entradas.',
+	new_table: 'Nueva tabla',
+	edit_table: 'Editar tabla',
+	table_name_placeholder: 'Nombre de la tabla',
+	delete_table: 'Eliminar tabla',
+	delete_table_confirm_label: '¿Eliminar tabla?',
+	delete_table_confirm_message:
+		'Esto elimina la tabla y todo su contenido de forma permanente.',
+	no_tables: 'Aún no hay tablas.',
+	list_view: 'Vista de lista',
+	card_view: 'Vista de tarjetas',
+	add_column: 'Añadir columna',
+	edit_column: 'Editar columna',
+	delete_column: 'Eliminar columna',
+	delete_column_confirm_label: '¿Eliminar columna?',
+	delete_column_confirm_message: 'Esto elimina la columna y sus valores de todas las entradas.',
+	column_name: 'Nombre de la columna',
+	column_name_placeholder: 'p. ej. Título',
+	column_type: 'Tipo',
+	column_type_text: 'Texto',
+	column_type_number: 'Número',
+	column_type_date: 'Fecha',
+	column_type_checkbox: 'Casilla',
+	column_type_url: 'Enlace',
+	column_type_select: 'Selección',
+	column_type_tags: 'Etiquetas',
+	column_type_picture: 'Imagen',
+	select_options: 'Opciones',
+	select_option_placeholder: 'Opción',
+	add_option: 'Añadir opción',
+	no_columns: 'Aún no hay columnas.',
+	no_columns_instruction: 'Añade una columna para empezar a rellenar esta tabla.',
+	add_row: 'Añadir entrada',
+	edit_row: 'Editar entrada',
+	delete_row: 'Eliminar entrada',
+	delete_row_confirm_label: '¿Eliminar entrada?',
+	delete_row_confirm_message: 'Esta entrada se eliminará de forma permanente.',
+	no_rows: 'Aún no hay entradas.',
+	upload_image: 'Subir imagen',
+	change_image: 'Cambiar imagen',
+	remove_image: 'Quitar imagen',
+	untitled_row: 'Sin título',
+	tags_placeholder: 'Etiquetas separadas por comas',
+	not_set: '—'
+};
+
 const setup: SetupRecords = {
 	hosted_title: 'Usar solyto.app',
 	hosted_description: 'Conectarse al servicio oficial alojado',
@@ -1205,5 +1255,6 @@ export const es: LanguageFile = {
 	cookie_consent,
 	timeTracking,
 	quick_add,
-	setup
+	setup,
+	tables
 };

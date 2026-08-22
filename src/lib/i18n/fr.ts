@@ -25,7 +25,8 @@ import type {
 	CookieConsentRecords,
 	TimeTrackingRecords,
 	QuickAddRecords,
-	SetupRecords
+	SetupRecords,
+	TableRecords
 } from '$lib/types/translation';
 
 const layout: LayoutRecords = {
@@ -67,7 +68,8 @@ const nav: NavigationRecords = {
 	calendar: 'Calendrier',
 	contacts: 'Contacts',
 	clipboard: 'Presse-papiers',
-	timeTracking: 'Suivi du temps'
+	timeTracking: 'Suivi du temps',
+	tables: 'Tableaux'
 };
 
 const auth: AuthRecords = {
@@ -1167,6 +1169,54 @@ const quick_add: QuickAddRecords = {
 	}
 };
 
+const tables: TableRecords = {
+	welcome: 'Vos tableaux',
+	instruction:
+		'Créez un tableau, ajoutez les colonnes dont vous avez besoin, puis remplissez vos entrées.',
+	new_table: 'Nouveau tableau',
+	edit_table: 'Modifier le tableau',
+	table_name_placeholder: 'Nom du tableau',
+	delete_table: 'Supprimer le tableau',
+	delete_table_confirm_label: 'Supprimer le tableau ?',
+	delete_table_confirm_message: 'Le tableau et tout son contenu seront définitivement supprimés.',
+	no_tables: 'Aucun tableau pour le moment.',
+	list_view: 'Vue liste',
+	card_view: 'Vue cartes',
+	add_column: 'Ajouter une colonne',
+	edit_column: 'Modifier la colonne',
+	delete_column: 'Supprimer la colonne',
+	delete_column_confirm_label: 'Supprimer la colonne ?',
+	delete_column_confirm_message: 'La colonne et ses valeurs seront retirées de toutes les entrées.',
+	column_name: 'Nom de la colonne',
+	column_name_placeholder: 'p. ex. Titre',
+	column_type: 'Type',
+	column_type_text: 'Texte',
+	column_type_number: 'Nombre',
+	column_type_date: 'Date',
+	column_type_checkbox: 'Case à cocher',
+	column_type_url: 'Lien',
+	column_type_select: 'Sélection',
+	column_type_tags: 'Tags',
+	column_type_picture: 'Image',
+	select_options: 'Options',
+	select_option_placeholder: 'Option',
+	add_option: 'Ajouter une option',
+	no_columns: 'Aucune colonne pour le moment.',
+	no_columns_instruction: 'Ajoutez une colonne pour commencer à remplir ce tableau.',
+	add_row: 'Ajouter une entrée',
+	edit_row: 'Modifier l\'entrée',
+	delete_row: 'Supprimer l\'entrée',
+	delete_row_confirm_label: 'Supprimer l\'entrée ?',
+	delete_row_confirm_message: 'Cette entrée sera définitivement supprimée.',
+	no_rows: 'Aucune entrée pour le moment.',
+	upload_image: 'Importer une image',
+	change_image: 'Changer l\'image',
+	remove_image: 'Retirer l\'image',
+	untitled_row: 'Sans titre',
+	tags_placeholder: 'Tags séparés par des virgules',
+	not_set: '—'
+};
+
 const setup: SetupRecords = {
 	hosted_title: 'Utiliser solyto.app',
 	hosted_description: 'Se connecter au service officiel hébergé',
@@ -1206,5 +1256,6 @@ export const fr: LanguageFile = {
 	cookie_consent,
 	timeTracking,
 	quick_add,
-	setup
+	setup,
+	tables
 };
