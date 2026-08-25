@@ -30,7 +30,7 @@
 </script>
 
 <div
-	class="flex items-center gap-4 rounded-xl border border-c-neutral-1 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-s-dark-3 dark:bg-s-dark-2"
+	class="flex items-center gap-4 rounded-xl border border-c-neutral-1 bg-c-bg-surface p-4 shadow-sm transition-shadow hover:shadow-md dark:border-s-dark-3"
 	in:scale={{ delay: loadDelay ?? 0, duration: 200 }}
 >
 	<div class="rounded-lg p-3 {colors.bg} dark:bg-opacity-20">

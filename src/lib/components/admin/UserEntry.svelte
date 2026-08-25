@@ -76,7 +76,7 @@
 </script>
 
 <div
-	class="flex items-center gap-4 rounded-lg border border-c-neutral-1 bg-white p-4 transition-shadow hover:shadow-sm dark:border-s-dark-3 dark:bg-s-dark-2"
+	class="flex items-center gap-4 rounded-lg border border-c-neutral-1 bg-c-bg-surface p-4 transition-shadow hover:shadow-sm dark:border-s-dark-3"
 >
 	<div class="rounded-full p-2 {getRoleColor(user.role)} dark:bg-opacity-20">
 		<RoleIcon class="h-5 w-5" />
@@ -93,7 +93,7 @@
 		{/if}
 		{#if canEditRole}
 			<select
-				class="rounded-lg border border-c-neutral-2 bg-white px-3 py-1.5 text-sm text-c-neutral-7 focus:border-transparent focus:ring-2 focus:ring-c-btn-hover focus:outline-none dark:border-s-dark-3 dark:bg-s-dark-3 dark:text-c-neutral-2"
+				class="rounded-lg border border-c-neutral-2 bg-c-bg-surface px-3 py-1.5 text-sm text-c-neutral-7 focus:border-transparent focus:ring-2 focus:ring-c-btn-hover focus:outline-none dark:border-s-dark-3 dark:text-c-neutral-2"
 				value={user.role}
 				onchange={handleRoleChange}
 			>

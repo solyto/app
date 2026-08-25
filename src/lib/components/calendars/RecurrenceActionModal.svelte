@@ -52,7 +52,7 @@
 				{ts.get.calendar.recurring_event}
 			</div>
 			<div
-				class="w-96 rounded-2xl border-1 border-c-neutral-2 bg-white p-4 shadow-md dark:border-s-dark dark:bg-s-dark-2"
+				class="w-96 rounded-2xl border-1 border-c-neutral-2 bg-c-bg-modal p-4 shadow-md dark:border-s-dark"
 			>
 				<div class="mb-6 w-full text-sm text-c-neutral-5">
 					{action === 'edit'
