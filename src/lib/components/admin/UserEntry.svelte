@@ -63,9 +63,9 @@
 	function getRoleColor(role: string): string {
 		switch (role) {
 			case 'super_admin':
-				return 'text-purple-600 bg-purple-50';
+				return 'text-c-heading bg-c-heading/10 dark:bg-c-heading/20';
 			case 'admin':
-				return 'text-blue-600 bg-blue-50';
+				return 'text-c-btn bg-c-btn/10 dark:bg-c-btn/20';
 			default:
 				return 'text-c-neutral-6 bg-c-neutral';
 		}
@@ -78,7 +78,7 @@
 <div
 	class="flex items-center gap-4 rounded-lg border border-c-neutral-1 bg-c-bg-surface p-4 transition-shadow hover:shadow-sm dark:border-s-dark-3"
 >
-	<div class="rounded-full p-2 {getRoleColor(user.role)} dark:bg-opacity-20">
+	<div class="rounded-full p-2 {getRoleColor(user.role)}">
 		<RoleIcon class="h-5 w-5" />
 	</div>
 
@@ -89,7 +89,7 @@
 
 	<div class="flex items-center gap-3">
 		{#if user.confirmed}
-			<IconBadgeCheck class="h-4 w-4 text-teal-500" />
+			<IconBadgeCheck class="h-4 w-4 text-c-success" />
 		{/if}
 		{#if canEditRole}
 			<select
@@ -105,7 +105,7 @@
 			<span
 				class="rounded-lg px-3 py-1.5 text-sm {getRoleColor(
 					user.role
-				)} dark:bg-opacity-20 font-medium"
+				)} font-medium"
 			>
 				{user.role === 'super_admin'
 					? 'Super Admin'
