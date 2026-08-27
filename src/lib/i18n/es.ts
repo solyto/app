@@ -438,6 +438,8 @@ const libraries: LibraryRecords = {
 		deezer_import_validation_error: 'Por favor ingrese un enlace válido de Deezer.',
 		discogs_import: 'Importar desde Discogs',
 		discogs_import_validation_error: 'Por favor ingrese un enlace válido de Discogs.',
+		spotify_import: 'Importar desde Spotify',
+		spotify_import_validation_error: 'Por favor ingrese un enlace válido de Spotify.',
 		create_error: 'No se pudo crear el álbum.',
 		update_error: 'No se pudo actualizar el álbum.',
 		search_placeholder: 'Artista, título del álbum...',

@@ -103,7 +103,8 @@ export const apiRoutes = {
 			createGenre: API_URL + '/libraries/music/genres',
 			deleteGenre: API_URL + '/libraries/music/genres/%d',
 			search: API_URL + '/libraries/music/search',
-			import: API_URL + '/libraries/music/import'
+			import: API_URL + '/libraries/music/import',
+			integrations: API_URL + '/libraries/music/integrations'
 		},
 		books: {
 			list: API_URL + '/libraries/books',

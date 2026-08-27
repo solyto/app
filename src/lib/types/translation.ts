@@ -418,6 +418,8 @@ export interface LibraryRecords {
 		deezer_import_validation_error: string;
 		discogs_import: string;
 		discogs_import_validation_error: string;
+		spotify_import: string;
+		spotify_import_validation_error: string;
 		create_error: string;
 		update_error: string;
 		search_placeholder: string;
