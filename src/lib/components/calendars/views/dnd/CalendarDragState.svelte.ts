@@ -1,3 +1,4 @@
+import { SvelteDate } from 'svelte/reactivity';
 import type { CalendarEvent } from '$lib/types/calendar';
 
 export interface CalendarDragGhost {
@@ -106,7 +107,7 @@ export function parseDateSlug(slug: string): Date | null {
 	const month = parseInt(parts[1], 10);
 	const year = parseInt(parts[2], 10);
 	if (!day || !month || !year) return null;
-	return new Date(year, month - 1, day);
+	return new SvelteDate(year, month - 1, day);
 }
 
 export interface CalendarDragControllerOptions {
@@ -135,7 +136,6 @@ export function createCalendarDragController(
 	options: CalendarDragControllerOptions
 ): CalendarDragController {
 	let dragging = false;
-	let dragEl: HTMLElement | null = null;
 	let dragEvent: CalendarEvent | null = null;
 	let dragKey: string | null = null;
 	let startX = 0;
@@ -187,10 +187,9 @@ export function createCalendarDragController(
 			lastY = e.clientY;
 			ghostWidth = rect.width;
 			ghostHeight = rect.height;
-dragEl = el;
-				dragEvent = item;
-				dragKey = getCalendarEventKey(item);
-				dragging = true;
+			dragEvent = item;
+			dragKey = getCalendarEventKey(item);
+			dragging = true;
 			try {
 				el.setPointerCapture(e.pointerId);
 			} catch {
@@ -221,7 +220,6 @@ dragEl = el;
 			if (!dragging) return;
 			flushMove();
 			dragging = false;
-			dragEl = null;
 			if (calendarDrag.active) {
 				const item = calendarDrag.event;
 				const target = calendarDrag.target;
@@ -235,7 +233,6 @@ dragEl = el;
 		onPointerCancel(): void {
 			if (!dragging) return;
 			dragging = false;
-			dragEl = null;
 			if (rafId !== null) {
 				cancelAnimationFrame(rafId);
 				rafId = null;

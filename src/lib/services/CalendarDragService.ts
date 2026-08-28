@@ -30,19 +30,16 @@ export default class CalendarDragService {
 	 * Timed events keep their duration and snap to the target slot; all-day
 	 * events move date-only (start at 00:00, end shifted by the same day delta).
 	 */
-	buildMoveRequest(
-		event: CalendarEvent,
-		target: CalendarDropTarget
-	): UpdateEventRequest | null {
+	buildMoveRequest(event: CalendarEvent, target: CalendarDropTarget): UpdateEventRequest | null {
 		if (this.isSameSlot(event, target)) {
 			return null;
 		}
 
-		const duration = event.end_date
-			? event.end_date.getTime() - event.start_date.getTime()
-			: 0;
+		const duration = event.end_date ? event.end_date.getTime() - event.start_date.getTime() : 0;
 
-		const newStart = event.is_all_day ? this.atStartOfDay(target.date) : this.atSlot(target.date, target.hour, target.minute);
+		const newStart = event.is_all_day
+			? this.atStartOfDay(target.date)
+			: this.atSlot(target.date, target.hour, target.minute);
 		const newEnd =
 			duration > 0
 				? new Date(newStart.getTime() + duration)

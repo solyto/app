@@ -69,7 +69,10 @@
 {#if !calendars.isCalendarHidden(parseInt(item.calendar_id))}
 	<button
 		class="flex w-full cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm transition-all select-none hover:bg-c-neutral max-md:text-xs dark:hover:bg-s-dark-3"
-		style="border-color: {item.calendar_color ?? 'var(--color-c-neutral-2)'}; background-color: {item.calendar_color && item.is_all_day ? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))` : ''};"
+		style="border-color: {item.calendar_color ??
+			'var(--color-c-neutral-2)'}; background-color: {item.calendar_color && item.is_all_day
+			? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))`
+			: ''};"
 		class:!border-l-0={item.is_all_day && item.start_date < date}
 		class:opacity-40={isDragged()}
 		onclick={onEntryClick}

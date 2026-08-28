@@ -111,7 +111,10 @@ describe('CalendarDragService', () => {
 
 		it('keeps the time of day when a timed event is moved date-only (month view)', () => {
 			const request = service.buildMoveRequest(
-				event({ start_date: new Date(2026, 7, 10, 16, 20), end_date: new Date(2026, 7, 10, 17, 20) }),
+				event({
+					start_date: new Date(2026, 7, 10, 16, 20),
+					end_date: new Date(2026, 7, 10, 17, 20)
+				}),
 				{ date: new Date(2026, 7, 18), hour: 16, minute: 20 }
 			) as UpdateEventRequest;
 

@@ -72,7 +72,7 @@
 	const indicatorTop = $derived.by(() => {
 		const target = calendarDrag.target;
 		if (!target) return 0;
-		return ((3 / 30) + (target.hour + target.minute / 60) * (1 / 27)) * 100;
+		return (3 / 30 + (target.hour + target.minute / 60) * (1 / 27)) * 100;
 	});
 	const indicatorHeight = $derived.by(() => {
 		const item = calendarDrag.event;
@@ -132,7 +132,11 @@
 	});
 
 	function isDragged(item: CalendarEvent): boolean {
-		return dragEnabled && calendarDrag.active && calendarDrag.sourceKey === getCalendarEventKey(item);
+		return (
+			dragEnabled &&
+			calendarDrag.active &&
+			calendarDrag.sourceKey === getCalendarEventKey(item)
+		);
 	}
 
 	async function onEventClick(item: CalendarEvent): Promise<void> {
@@ -164,7 +168,10 @@
 					class="flex w-full cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm transition-all select-none hover:bg-c-neutral dark:hover:bg-s-dark-3"
 					class:!border-l-0={item.start_date < date}
 					class:opacity-40={isDragged(item)}
-					style="border-color: {item.calendar_color ?? 'var(--color-c-neutral-2)'}; background-color: {item.calendar_color ? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))` : ''};"
+					style="border-color: {item.calendar_color ??
+						'var(--color-c-neutral-2)'}; background-color: {item.calendar_color
+						? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))`
+						: ''};"
 					onclick={() => onEventClick(item)}
 					onpointerdown={(e) => drag.onPointerDown(e, item)}
 					onpointermove={drag.onPointerMove}
@@ -179,7 +186,13 @@
 	</div>
 	{#each hours as hour (hour)}
 		{@const offHour = fixedHeight && (parseInt(hour) < 6 || parseInt(hour) >= 22)}
-		<div class="group relative border-t-1 border-c-neutral-1 dark:border-s-dark {fixedHeight ? (offHour ? 'h-6 bg-c-neutral dark:bg-s-dark-2' : 'h-14') : 'h-1/27'}">
+		<div
+			class="group relative border-t-1 border-c-neutral-1 dark:border-s-dark {fixedHeight
+				? offHour
+					? 'h-6 bg-c-neutral dark:bg-s-dark-2'
+					: 'h-14'
+				: 'h-1/27'}"
+		>
 			<button
 				onclick={async () => {
 					await calendars.showSidebar(date);
@@ -197,7 +210,10 @@
 							class:left-0={i === 0}
 							class:right-0={i > 0}
 							class:opacity-40={isDragged(item)}
-							style="border-color: {item.calendar_color ?? 'var(--color-c-neutral-2)'}; background-color: {item.calendar_color ? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))` : ''}; top: {getTop(item)}; height: {getHeight(item)};"
+							style="border-color: {item.calendar_color ??
+								'var(--color-c-neutral-2)'}; background-color: {item.calendar_color
+								? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))`
+								: ''}; top: {getTop(item)}; height: {getHeight(item)};"
 							onclick={() => onEventClick(item)}
 							onpointerdown={(e) => drag.onPointerDown(e, item)}
 							onpointermove={drag.onPointerMove}
