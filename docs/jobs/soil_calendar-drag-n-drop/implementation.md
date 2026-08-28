@@ -24,6 +24,20 @@ month view's grayed-out-day rejection — previously such a move succeeded
 server-side but the post-move reload only covers the loaded month, so the moved
 event silently vanished from the view.
 
+Follow-up fixes (same branch, after review):
+
+- Drop-offset bug: in the week/day hour grid the drop time was computed from the
+  raw pointer position, but the drag ghost follows the pointer minus the grab
+  offset (where the event was grabbed). Dropping without moving therefore
+  landed the event `grabOffsetY` lower than it appeared — e.g. half an event
+  height (~30 min for a 1 h event grabbed mid-way) later. `computeTarget` now
+  receives the grab offset and anchors the drop time to the ghost's top edge,
+  so the event lands exactly where the ghost indicates.
+- The shared DnD infrastructure moved from
+  `src/lib/components/calendars/views/dnd/` to
+  `src/lib/components/calendars/dnd/` (it is calendar-level, not a view); all
+  callers updated.
+
 ## Changes
 
 - TASK-1: Researched svelte-dnd-action vs native HTML5 DnD vs pointer events;
@@ -70,6 +84,18 @@ event silently vanished from the view.
   chip drag, click-to-edit still opening the sidebar, recurring modal +
   occurrence PUT, grayed-out-day rejection, and the mobile variants rendering
   unchanged. 21/21 checks pass.
+- Follow-up (drop-offset fix): `CalendarDragControllerOptions.computeTarget`
+  now receives the drag's `grabOffsetY` (4th argument, passed from
+  `onPointerDown`'s captured offset at all three call sites in
+  `CalendarDragState.svelte.ts`), and `views/week/Day.svelte`'s `computeTarget`
+  subtracts it when mapping the pointer to the hour grid (`gridY =
+  y - grabOffsetY - rect.top - allDayHeight`). The column hit-test still uses
+  the real pointer coordinates, so the offset cannot break element lookup near
+  the top of the viewport. Month view's `computeTarget` ignores the extra
+  argument (date-only moves).
+- Follow-up (folder move): `src/lib/components/calendars/views/dnd/` →
+  `src/lib/components/calendars/dnd/`; imports updated in
+  `views/week/Day.svelte`, `views/month/Entry.svelte`, `views/month/Day.svelte`.
 
 ## TASK-1 decision: drag-and-drop approach
 
@@ -137,6 +163,12 @@ Drop-target model:
   fractions (`h-3/30` header, `h-1/27` hour rows); the pre-existing event
   block positioning math (`getTop`/`getHeight` in `views/week/Day.svelte`)
   is left untouched and can misplace events visually — out of scope.
+- The follow-up drop-offset fix was verified via `npm run check` + `npm run
+  build` + unit tests; the backend/stub used for the original end-to-end
+  Playwright pass was no longer available, so no interactive drag re-check
+  was possible in this session. The change is pure offset math (gridY minus
+  the grab offset the ghost already applies) and does not alter hit-testing
+  or snapping.
 - Mobile / tablet views (`MobileMonthView`/`MobileWeekView`/`MobileDayView`)
   intentionally have no drag & drop (fixedHeight gate); the list view is
   untouched. Both are follow-ups.
