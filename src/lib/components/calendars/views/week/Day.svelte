@@ -83,7 +83,12 @@
 		return Math.max((durationMinutes / 60) * (1 / 27) * 100, 2);
 	});
 
-	function computeTarget(x: number, y: number, item: CalendarEvent): CalendarDragTarget | null {
+	function computeTarget(
+		x: number,
+		y: number,
+		item: CalendarEvent,
+		grabOffsetY: number
+	): CalendarDragTarget | null {
 		const column = findCalendarDayElement(x, y);
 		if (!column) return null;
 		const targetDate = parseDateSlug(column.dataset.calendarDay ?? '');
@@ -107,7 +112,11 @@
 		const rect = column.getBoundingClientRect();
 		const allDayHeight = rect.height * (3 / 30);
 		const hourHeight = rect.height * (1 / 27);
-		const gridY = y - rect.top - allDayHeight;
+		// The drop time is anchored to the ghost's top edge (where the event
+		// was grabbed), not the pointer itself: the ghost already follows the
+		// pointer minus the grab offset, so without this the event would land
+		// grabOffsetY (e.g. half an event height) lower than it appears.
+		const gridY = y - grabOffsetY - rect.top - allDayHeight;
 
 		if (gridY < 0) {
 			return { date: targetDate, hour: 0, minute: 0 };

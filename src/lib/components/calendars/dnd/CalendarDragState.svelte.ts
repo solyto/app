@@ -113,7 +113,12 @@ export function parseDateSlug(slug: string): Date | null {
 export interface CalendarDragControllerOptions {
 	enabled: () => boolean;
 	sourceDateSlug: () => string;
-	computeTarget: (x: number, y: number, item: CalendarEvent) => CalendarDragTarget | null;
+	computeTarget: (
+		x: number,
+		y: number,
+		item: CalendarEvent,
+		grabOffsetY: number
+	) => CalendarDragTarget | null;
 	onDrop: (item: CalendarEvent, target: CalendarDragTarget) => void | Promise<void>;
 }
 
@@ -159,7 +164,7 @@ export function createCalendarDragController(
 			if (!dragging || !calendarDrag.active || !dragEvent) return;
 			const x = lastX;
 			const y = lastY;
-			updateCalendarDrag(ghostFor(x, y), options.computeTarget(x, y, dragEvent));
+			updateCalendarDrag(ghostFor(x, y), options.computeTarget(x, y, dragEvent, grabOffsetY));
 		});
 	}
 
@@ -169,7 +174,10 @@ export function createCalendarDragController(
 			rafId = null;
 		}
 		if (!calendarDrag.active || !dragEvent) return;
-		updateCalendarDrag(ghostFor(lastX, lastY), options.computeTarget(lastX, lastY, dragEvent));
+		updateCalendarDrag(
+			ghostFor(lastX, lastY),
+			options.computeTarget(lastX, lastY, dragEvent, grabOffsetY)
+		);
 	}
 
 	return {
@@ -210,7 +218,7 @@ export function createCalendarDragController(
 					options.sourceDateSlug(),
 					dragKey!,
 					ghostFor(lastX, lastY),
-					options.computeTarget(lastX, lastY, dragEvent)
+					options.computeTarget(lastX, lastY, dragEvent, grabOffsetY)
 				);
 			}
 			scheduleProcessMove();
