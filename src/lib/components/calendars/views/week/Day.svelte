@@ -89,6 +89,17 @@
 		const targetDate = parseDateSlug(column.dataset.calendarDay ?? '');
 		if (!targetDate) return null;
 
+		// Days of the adjacent month (first/last week of the loaded month) are
+		// rejected as drop targets: the post-move reload only covers the loaded
+		// month, so a move there would make the event vanish from the view.
+		// Mirrors the month view's grayed-out-day rejection (is_grayed_out).
+		if (
+			targetDate.getFullYear() !== calendars.currentYear ||
+			targetDate.getMonth() + 1 !== calendars.currentMonth
+		) {
+			return null;
+		}
+
 		if (item.is_all_day) {
 			return { date: targetDate, hour: 0, minute: 0 };
 		}
