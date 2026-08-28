@@ -3,17 +3,68 @@
 id: soil
 status: open
 developer:
-date:
+date: 2026-08-28
 
 <!-- Produced by @developer after implementation. -->
 
 ## Summary
 
-<!-- What was implemented, task by task. Reference task IDs. -->
+Implemented drag & drop for the calendar: events can now be dragged between
+days and time slots in the desktop month, week and day views, with a drag
+ghost that follows the pointer and a live drop-target indicator. The approach
+is a custom pointer-events implementation (see TASK-1 decision below); a drop
+moves the event via the existing update API (this-occurrence vs all-occurrences
+for recurring events through the RecurrenceActionModal), preserves duration /
+all-day / recurrence semantics, keeps click-to-edit working, and is gated off
+on the mobile (fixedHeight) view variants. All 21 Playwright end-to-end checks
+pass against a stub backend; unit tests and `npm run check` are green.
 
 ## Changes
 
-<!-- List of files changed and what changed in each. -->
+- TASK-1: Researched svelte-dnd-action vs native HTML5 DnD vs pointer events;
+  chose pointer events and recorded the drop-target model (15-min snapping,
+  ghost behaviour, all-day handling, grayed-out-day rejection) in the
+  "TASK-1 decision" section below.
+- TASK-2: New `src/lib/services/CalendarDragService.ts` — pure, unit-tested
+  helpers: `snapToMinutes`, `buildMoveRequest` (computes new start/end from a
+  drop target, preserving duration, all-day and recurrence semantics, returns
+  null for no-op drops). New `tests/unit/services/CalendarDragService.test.ts`
+  (12 tests).
+- TASK-3: `src/lib/state/Calendars.svelte.ts` — added `moveEvent(target)`
+  (builds the request, defers recurring occurrences into `pendingMove`),
+  `applyEventMove`, `resolvePendingMove(occurrenceOnly)`, `cancelPendingMove`
+  and `pendingMove` state, mirroring the EventEdit etag/`formatFloatingDate`/
+  `original_start_date` contract. Store tests added to
+  `tests/unit/stores/Calendars.test.ts` (8 tests).
+- TASK-4: New shared DnD infrastructure under
+  `src/lib/components/calendars/views/dnd/` — `CalendarDragState.svelte.ts`
+  (module-level reactive drag state + `createCalendarDragController` with
+  5px press-vs-drag threshold, pointer capture, rAF-throttled moves, click
+  suppression) and `CalendarDragGhost.svelte` (fixed-position ghost).
+  `views/week/Day.svelte` (shared by WeekView + DayView) maps the pointer to
+  (day column, hour slot) via `data-calendar-day` + the existing `h-3/30` /
+  `h-1/27` grid fractions, renders the drop indicator (duration bar / all-day
+  strip), dims the source block and gates DnD to `!fixedHeight`.
+- TASK-5: `views/month/Entry.svelte` (drag sources) and `views/month/Day.svelte`
+  (drop zones) — date-only moves (timed events keep their time of day),
+  grayed-out (adjacent-month) cells reject drops.
+- TASK-6: `RecurrenceActionModal.svelte` gained a `'move'` action (new
+  `recurring_move_question`); `src/routes/calendar/+page.svelte` renders the
+  modal when `calendars.pendingMove` is set, resolving this-occurrence via
+  `updateOccurrence` and all-occurrences via `updateEvent`.
+- TASK-7: i18n — added `calendar.entry_move_error` and
+  `calendar.recurring_move_question` to `en`/`de`/`es`/`fr` and
+  `src/lib/types/translation.ts` (pulled forward into TASK-4/TASK-6 since the
+  components need them to compile).
+- TASK-8: Verification — `npm ci` (restored pinned deps; no new packages),
+  `npm run check` (0 errors), `npm test` (708 passed; 1 pre-existing failure
+  in `tests/components/logic-leaves.test.ts`, untouched by this job),
+  `npm run build` (success). End-to-end Playwright verification against a stub
+  backend on localhost:8000 (the real backend was unavailable): month/week/day
+  drags (ghost + indicator + correct PUT payloads), 15-min snapping, all-day
+  chip drag, click-to-edit still opening the sidebar, recurring modal +
+  occurrence PUT, grayed-out-day rejection, and the mobile variants rendering
+  unchanged. 21/21 checks pass.
 
 ## TASK-1 decision: drag-and-drop approach
 
@@ -72,4 +123,19 @@ Drop-target model:
 
 ## Known issues / follow-ups
 
-<!-- Anything that came up during implementation that wasn't in scope but should be tracked. -->
+- The 15-min drop snapping in week/day uses the existing (approximate) grid
+  fractions (`h-3/30` header, `h-1/27` hour rows); the pre-existing event
+  block positioning math (`getTop`/`getHeight` in `views/week/Day.svelte`)
+  is left untouched and can misplace events visually — out of scope.
+- Mobile / tablet views (`MobileMonthView`/`MobileWeekView`/`MobileDayView`)
+  intentionally have no drag & drop (fixedHeight gate); the list view is
+  untouched. Both are follow-ups.
+- Cross-month navigation while dragging and drop-resizing of events are not
+  implemented (out of scope per tasks.md).
+- `npm run lint` reports pre-existing style issues across 335 files (including
+  `viewPoint` unused in `calendar/+page.svelte` and `Promise<any>` in
+  `RecurrenceActionModal.svelte`); only files changed by this job were
+  formatted. The single failing test (`logic-leaves.test.ts`) is pre-existing.
+- The real backend (localhost:8000) was unavailable during verification; the
+  end-to-end checks ran against a throwaway stub API (in /tmp/soilverif,
+  outside the repo).
