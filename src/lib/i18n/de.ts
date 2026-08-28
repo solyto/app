@@ -782,6 +782,8 @@ const calendar: CalendarRecords = {
 	sync_still_running:
 		'Synchronisation ist noch nicht abgeschlossen. Bitte versuche es in einer Minute erneut.',
 	entry_create_error: 'Eintrag konnte nicht erstellt werden. Überprüfe deine Eingaben.',
+	entry_move_error: 'Eintrag konnte nicht verschoben werden. Bitte versuche es erneut.',
+	recurring_move_question: 'Möchtest du nur dieses Vorkommnis oder alle Vorkommnisse verschieben?',
 	create_success: 'Kalender wurde erfolgreich erstellt.',
 	delete_success: 'Kalender wurde erfolgreich gelöscht.',
 	delete_title: 'Kalender löschen?',

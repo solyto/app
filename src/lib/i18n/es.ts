@@ -780,6 +780,8 @@ const calendar: CalendarRecords = {
 	sync_error: 'La sincronización falló.',
 	sync_still_running: 'La sincronización aún está en curso. Intente nuevamente en un minuto.',
 	entry_create_error: 'No se pudo crear el evento. Verifique los datos ingresados.',
+	entry_move_error: 'No se pudo mover el evento. Intente nuevamente.',
+	recurring_move_question: '¿Quieres mover solo esta ocurrencia o todas las ocurrencias?',
 	create_success: 'El calendario se creó correctamente.',
 	delete_success: 'El calendario se eliminó correctamente.',
 	delete_title: '¿Eliminar calendario?',

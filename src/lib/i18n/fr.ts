@@ -779,6 +779,8 @@ const calendar: CalendarRecords = {
 	sync_error: 'La synchronisation a échoué.',
 	sync_still_running: 'La synchronisation est encore en cours. Réessayez dans une minute.',
 	entry_create_error: 'Impossible de créer l\'événement. Vérifiez votre saisie.',
+	entry_move_error: 'Impossible de déplacer l\'événement. Veuillez réessayer.',
+	recurring_move_question: 'Voulez-vous déplacer uniquement cette occurrence ou toutes les occurrences ?',
 	create_success: 'Le calendrier a été créé avec succès.',
 	delete_success: 'Le calendrier a été supprimé avec succès.',
 	delete_title: 'Supprimer le calendrier?',
