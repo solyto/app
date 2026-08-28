@@ -504,6 +504,14 @@ month navigation, a library search. Must block/clear the service-worker cache
 - **Run/effect timing:** stores use `setTimeout`/`tick`/`setInterval`
   (`quickCreate`, `recentlyCreated`, `UserNotifications`, `Calendars`,
   `Notes`). Use `vi.useFakeTimers()` and `flushSync`/`await tick()`.
+- **`SvelteDate` ignores `vi.setSystemTime`:** `svelte/reactivity`'s `SvelteDate`
+  captures the native `Date` at module load (in both the client and server
+  builds), so the fake-timer clock never reaches `new SvelteDate()` — it always
+  returns the real current time. Tests that exercise store code reading "now"
+  via `SvelteDate` (`Calendars` constructor/`goToToday`, `CheckInData`
+  initialisation/`isCurrentMonth`) must therefore assert against the real
+  `new Date()` on real timers, never against a hardcoded date — a hardcoded
+  "today" only passes on the day it was written.
 - **jsdom gaps:** `matchMedia`, `ResizeObserver`, `IntersectionObserver`,
   `navigator.clipboard`, canvas 2D context need small stubs in
   `tests/setup/component.ts`.

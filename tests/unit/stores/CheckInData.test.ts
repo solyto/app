@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { CheckInData } from '$lib/state/CheckInData.svelte';
 import { api, storage, pageState, resetStoreMocks } from '../setup/storeMocks';
 import { ALL_CHECK_IN_TRACKERS, DEFAULT_SPORTS } from '$lib/types/check_in';
@@ -26,25 +26,18 @@ function checkIn(overrides: Partial<CheckIn> = {}): CheckIn {
 	};
 }
 
-const FIXED_DATE = new Date(2026, 7, 14); // 14 August 2026
-
 beforeEach(() => {
 	resetStoreMocks();
-	vi.useFakeTimers();
-	vi.setSystemTime(FIXED_DATE);
 	pageState.pathname = '/check-in';
 	pageState.params = {};
-});
-
-afterEach(() => {
-	vi.useRealTimers();
 });
 
 describe('CheckInData store', () => {
 	it('initialises the history month and all scored trackers', () => {
 		storage.getJson.mockReturnValue(null);
 		const s = new CheckInData();
-		expect(s.historyMonth).toEqual({ year: 2026, month: 7 });
+		const now = new Date();
+		expect(s.historyMonth).toEqual({ year: now.getFullYear(), month: now.getMonth() });
 		expect(s.scoredTrackers).toEqual(ALL_CHECK_IN_TRACKERS);
 		expect(s.settings.enabledTrackers).toEqual(ALL_CHECK_IN_TRACKERS);
 		expect(s.settings.selectedSports).toEqual(DEFAULT_SPORTS);
@@ -107,13 +100,19 @@ describe('CheckInData store', () => {
 	describe('isCurrentMonth', () => {
 		it('is true when the history month matches today', () => {
 			const s = new CheckInData();
-			s.historyMonth = { year: 2026, month: 7 };
+			const now = new Date();
+			s.historyMonth = { year: now.getFullYear(), month: now.getMonth() };
 			expect(s.isCurrentMonth()).toBe(true);
 		});
 
 		it('is false for any other month', () => {
 			const s = new CheckInData();
-			s.historyMonth = { year: 2026, month: 6 };
+			const now = new Date();
+			const otherMonth = (now.getMonth() + 1) % 12;
+			s.historyMonth = {
+				year: otherMonth === 0 ? now.getFullYear() + 1 : now.getFullYear(),
+				month: otherMonth
+			};
 			expect(s.isCurrentMonth()).toBe(false);
 		});
 	});

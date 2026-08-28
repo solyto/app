@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { Calendars } from '$lib/state/Calendars.svelte';
 import { api, storage, resetStoreMocks } from '../setup/storeMocks';
 import { todo } from '../helpers/factories';
 import { SvelteDate } from 'svelte/reactivity';
+import { getWeekNumber } from '$lib/helpers/DateHelper';
 import type { Calendar, CalendarEvent } from '$lib/types/calendar';
 
 function event(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
@@ -29,24 +30,17 @@ function event(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
 	};
 }
 
-const FIXED_DATE = new Date(2026, 7, 14); // 14 August 2026
-
 beforeEach(() => {
 	resetStoreMocks();
-	vi.useFakeTimers();
-	vi.setSystemTime(FIXED_DATE);
-});
-
-afterEach(() => {
-	vi.useRealTimers();
 });
 
 describe('Calendars store', () => {
 	describe('constructor', () => {
 		it('initialises from the current date and loads the persisted view', () => {
 			const c = new Calendars();
-			expect(c.currentYear).toBe(2026);
-			expect(c.currentMonth).toBe(8); // 1-based
+			const now = new Date();
+			expect(c.currentYear).toBe(now.getFullYear());
+			expect(c.currentMonth).toBe(now.getMonth() + 1); // 1-based
 			expect(c.view).toBe('month');
 			expect(c.month.weeks).toHaveLength(6);
 			expect(storage.get).toHaveBeenCalledWith(Calendars.LS_VIEW_KEY);
@@ -336,13 +330,16 @@ describe('Calendars store', () => {
 			c.currentWeek = 1;
 			c.currentMonth = 1;
 			c.currentYear = 2020;
+			const now = new Date();
 			await c.goToToday();
-			expect(c.currentYear).toBe(2026);
-			expect(c.currentMonth).toBe(8);
-			expect(c.currentWeek).toBe(33);
-			expect(c.currentDate.getDate()).toBe(14);
+			expect(c.currentYear).toBe(now.getFullYear());
+			expect(c.currentMonth).toBe(now.getMonth() + 1);
+			expect(c.currentWeek).toBe(getWeekNumber(now));
+			expect(c.currentDate.getDate()).toBe(now.getDate());
 			expect(api.list).toHaveBeenCalledWith(
-				expect.stringContaining('/calendars/events/2026-08')
+				expect.stringContaining(
+					`/calendars/events/${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+				)
 			);
 		});
 	});
