@@ -18,6 +18,11 @@ for recurring events through the RecurrenceActionModal), preserves duration /
 all-day / recurrence semantics, keeps click-to-edit working, and is gated off
 on the mobile (fixedHeight) view variants. All 21 Playwright end-to-end checks
 pass against a stub backend; unit tests and `npm run check` are green.
+Review blocker fixed: week/day view drops onto adjacent-month days (first/last
+week of the loaded month) are now rejected in `computeTarget`, mirroring the
+month view's grayed-out-day rejection — previously such a move succeeded
+server-side but the post-move reload only covers the loaded month, so the moved
+event silently vanished from the view.
 
 ## Changes
 
@@ -123,6 +128,11 @@ Drop-target model:
 
 ## Known issues / follow-ups
 
+- Review blocker (fixed): adjacent-month days shown in the week/day views
+  (first/last week of the loaded month) reject drops, consistent with the
+  month view's grayed-out-day handling; dropping there is not possible until
+  the user navigates to that month. Cross-month navigation while dragging is
+  not implemented (out of scope per tasks.md).
 - The 15-min drop snapping in week/day uses the existing (approximate) grid
   fractions (`h-3/30` header, `h-1/27` hour rows); the pre-existing event
   block positioning math (`getTop`/`getHeight` in `views/week/Day.svelte`)
