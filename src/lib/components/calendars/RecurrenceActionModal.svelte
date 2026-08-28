@@ -9,7 +9,7 @@
 		keyManager = getKeyManager();
 
 	let { action, onThisOccurrence, onAllOccurrences, onCancel } = $props<{
-		action: 'edit' | 'delete';
+		action: 'edit' | 'delete' | 'move';
 		onThisOccurrence: () => void | Promise<any>;
 		onAllOccurrences: () => void | Promise<any>;
 		onCancel: () => any;
@@ -57,7 +57,9 @@
 				<div class="mb-6 w-full text-sm text-c-neutral-5">
 					{action === 'edit'
 						? ts.get.calendar.recurring_edit_question
-						: ts.get.calendar.recurring_delete_question}
+						: action === 'move'
+							? ts.get.calendar.recurring_move_question
+							: ts.get.calendar.recurring_delete_question}
 				</div>
 				<div class="flex w-full flex-col gap-2">
 					<TextButton
