@@ -2,13 +2,22 @@
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import Entry from '$lib/components/calendars/views/month/Entry.svelte';
-	import { isDateToday } from '$lib/helpers/DateHelper';
+	import { formatDate, isDateToday } from '$lib/helpers/DateHelper';
 	import type { CalendarDay } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
+	import CalendarDragGhost from '$lib/components/calendars/views/dnd/CalendarDragGhost.svelte';
+	import { calendarDrag } from '$lib/components/calendars/views/dnd/CalendarDragState.svelte';
 
 	const calendars = getCalendars();
 
 	let { day } = $props<{ day: CalendarDay }>();
+
+	const dateSlug = $derived(formatDate(day.date));
+	const isDropTargetCell = $derived(
+		calendarDrag.active && calendarDrag.target !== null
+			? formatDate(calendarDrag.target.date) === dateSlug
+			: false
+	);
 </script>
 
 <div
@@ -16,6 +25,8 @@
 	class:bg-c-neutral={day.is_grayed_out}
 	class:bg-c-bg-surface={!day.is_grayed_out}
 	class:dark:bg-s-dark={day.is_grayed_out}
+	data-calendar-day={dateSlug}
+	data-grayed={day.is_grayed_out ? 'true' : 'false'}
 >
 	<div class="flex w-full flex-col items-start justify-start">
 		<div class="flex w-full items-start justify-between">
@@ -48,4 +59,10 @@
 			{/each}
 		</div>
 	</div>
+	{#if isDropTargetCell}
+		<div
+			class="pointer-events-none absolute inset-0 z-30 border-2 border-dashed border-c-action bg-d-lightblue/60"
+		></div>
+	{/if}
+	<CalendarDragGhost sourceDateSlug={dateSlug} />
 </div>

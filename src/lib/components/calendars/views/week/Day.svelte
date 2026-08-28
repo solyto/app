@@ -11,7 +11,9 @@
 		calendarDrag,
 		consumeCalendarDragClick,
 		createCalendarDragController,
-		getCalendarEventKey
+		findCalendarDayElement,
+		getCalendarEventKey,
+		parseDateSlug
 	} from '$lib/components/calendars/views/dnd/CalendarDragState.svelte';
 	import type { CalendarDragTarget } from '$lib/components/calendars/views/dnd/CalendarDragState.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -82,7 +84,7 @@
 	});
 
 	function computeTarget(x: number, y: number, item: CalendarEvent): CalendarDragTarget | null {
-		const column = findColumnElement(x, y);
+		const column = findCalendarDayElement(x, y);
 		if (!column) return null;
 		const targetDate = parseDateSlug(column.dataset.calendarDay ?? '');
 		if (!targetDate) return null;
@@ -111,24 +113,6 @@
 		}
 
 		return { date: targetDate, hour, minute };
-	}
-
-	function findColumnElement(x: number, y: number): HTMLElement | null {
-		for (const el of document.elementsFromPoint(x, y)) {
-			const column = (el as HTMLElement).closest('[data-calendar-day]');
-			if (column) return column as HTMLElement;
-		}
-		return null;
-	}
-
-	function parseDateSlug(slug: string): Date | null {
-		const parts = slug.split('.');
-		if (parts.length !== 3) return null;
-		const day = parseInt(parts[0], 10);
-		const month = parseInt(parts[1], 10);
-		const year = parseInt(parts[2], 10);
-		if (!day || !month || !year) return null;
-		return new Date(year, month - 1, day);
 	}
 
 	async function commitMove(item: CalendarEvent, target: CalendarDragTarget): Promise<void> {
