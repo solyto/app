@@ -6,7 +6,7 @@
 	import type { CalendarEvent } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarDragService from '$lib/services/CalendarDragService';
-	import CalendarDragGhost from '$lib/components/calendars/views/dnd/CalendarDragGhost.svelte';
+	import CalendarDragGhost from '$lib/components/calendars/dnd/CalendarDragGhost.svelte';
 	import {
 		calendarDrag,
 		consumeCalendarDragClick,
@@ -14,8 +14,8 @@
 		findCalendarDayElement,
 		getCalendarEventKey,
 		parseDateSlug
-	} from '$lib/components/calendars/views/dnd/CalendarDragState.svelte';
-	import type { CalendarDragTarget } from '$lib/components/calendars/views/dnd/CalendarDragState.svelte';
+	} from '$lib/components/calendars/dnd/CalendarDragState.svelte';
+	import type { CalendarDragTarget } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';

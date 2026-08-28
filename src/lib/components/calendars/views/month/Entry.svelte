@@ -10,8 +10,8 @@
 		findCalendarDayElement,
 		getCalendarEventKey,
 		parseDateSlug
-	} from '$lib/components/calendars/views/dnd/CalendarDragState.svelte';
-	import type { CalendarDragTarget } from '$lib/components/calendars/views/dnd/CalendarDragState.svelte';
+	} from '$lib/components/calendars/dnd/CalendarDragState.svelte';
+	import type { CalendarDragTarget } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';

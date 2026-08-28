@@ -5,8 +5,8 @@
 	import { formatDate, isDateToday } from '$lib/helpers/DateHelper';
 	import type { CalendarDay } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
-	import CalendarDragGhost from '$lib/components/calendars/views/dnd/CalendarDragGhost.svelte';
-	import { calendarDrag } from '$lib/components/calendars/views/dnd/CalendarDragState.svelte';
+	import CalendarDragGhost from '$lib/components/calendars/dnd/CalendarDragGhost.svelte';
+	import { calendarDrag } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
 
 	const calendars = getCalendars();
 
