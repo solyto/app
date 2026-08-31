@@ -131,12 +131,6 @@ export interface CalendarDragController {
 
 const DRAG_THRESHOLD = 5; // px of movement before a press becomes a drag
 
-/**
- * Creates the pointer-driven drag controller used by the calendar views.
- * A press only becomes a drag after the pointer moves beyond DRAG_THRESHOLD,
- * so plain clicks keep working; the ghost follows the pointer and the
- * drop target is recomputed on every (animation-frame-throttled) move.
- */
 export function createCalendarDragController(
 	options: CalendarDragControllerOptions
 ): CalendarDragController {

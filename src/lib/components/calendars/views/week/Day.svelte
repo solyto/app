@@ -94,17 +94,6 @@
 		const targetDate = parseDateSlug(column.dataset.calendarDay ?? '');
 		if (!targetDate) return null;
 
-		// Days of the adjacent month (first/last week of the loaded month) are
-		// rejected as drop targets: the post-move reload only covers the loaded
-		// month, so a move there would make the event vanish from the view.
-		// Mirrors the month view's grayed-out-day rejection (is_grayed_out).
-		if (
-			targetDate.getFullYear() !== calendars.currentYear ||
-			targetDate.getMonth() + 1 !== calendars.currentMonth
-		) {
-			return null;
-		}
-
 		if (item.is_all_day) {
 			return { date: targetDate, hour: 0, minute: 0 };
 		}
@@ -112,10 +101,6 @@
 		const rect = column.getBoundingClientRect();
 		const allDayHeight = rect.height * (3 / 30);
 		const hourHeight = rect.height * (1 / 27);
-		// The drop time is anchored to the ghost's top edge (where the event
-		// was grabbed), not the pointer itself: the ghost already follows the
-		// pointer minus the grab offset, so without this the event would land
-		// grabOffsetY (e.g. half an event height) lower than it appears.
 		const gridY = y - grabOffsetY - rect.top - allDayHeight;
 
 		if (gridY < 0) {

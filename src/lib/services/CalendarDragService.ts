@@ -1,22 +1,12 @@
 import { formatFloatingDate } from '$lib/helpers/DateHelper';
 import type { CalendarEvent, UpdateEventRequest } from '$lib/types/calendar';
 
-/**
- * The place an event was dropped onto. `hour`/`minute` are only meaningful
- * for timed drops on the week/day hour grid; month-view drops keep the
- * event's original time of day.
- */
 export interface CalendarDropTarget {
 	date: Date;
 	hour: number;
 	minute: number;
 }
 
-/**
- * Pure helpers for the calendar drag & drop feature: computes the new
- * start/end dates of a moved event from a drop target while preserving
- * duration, all-day and recurrence semantics.
- */
 export default class CalendarDragService {
 	static readonly SNAP_MINUTES: number = 15;
 
@@ -24,12 +14,6 @@ export default class CalendarDragService {
 		return Math.round(minutes / granularity) * granularity;
 	}
 
-	/**
-	 * Builds the UpdateEventRequest for moving `event` to `target`.
-	 * Returns null when the drop would not change anything (same day and time).
-	 * Timed events keep their duration and snap to the target slot; all-day
-	 * events move date-only (start at 00:00, end shifted by the same day delta).
-	 */
 	buildMoveRequest(event: CalendarEvent, target: CalendarDropTarget): UpdateEventRequest | null {
 		if (this.isSameSlot(event, target)) {
 			return null;
