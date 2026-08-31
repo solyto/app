@@ -418,6 +418,8 @@ export interface LibraryRecords {
 		deezer_import_validation_error: string;
 		discogs_import: string;
 		discogs_import_validation_error: string;
+		spotify_import: string;
+		spotify_import_validation_error: string;
 		create_error: string;
 		update_error: string;
 		search_placeholder: string;
@@ -760,6 +762,8 @@ export interface CalendarRecords {
 	sync_error: string;
 	sync_still_running: string;
 	entry_create_error: string;
+	entry_move_error: string;
+	recurring_move_question: string;
 	create_success: string;
 	delete_success: string;
 	delete_title: string;

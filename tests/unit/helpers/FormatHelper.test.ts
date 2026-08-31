@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { nl2br, markdownToHtml } from '$lib/helpers/FormatHelper';
+import { nl2br, markdownToHtml, truncate } from '$lib/helpers/FormatHelper';
 
 describe('nl2br', () => {
 	it('replaces newlines with <br>', () => {
@@ -33,5 +33,35 @@ describe('markdownToHtml', () => {
 		expect(markdownToHtml('[solyto](https://solyto.app)')).toContain(
 			'href="https://solyto.app"'
 		);
+	});
+});
+
+describe('truncate', () => {
+	it('returns short text unchanged', () => {
+		expect(truncate('hello', 10)).toBe('hello');
+	});
+
+	it('truncates long text and appends "..."', () => {
+		expect(truncate('hello world', 5)).toBe('hello...');
+	});
+
+	it('leaves text at the exact boundary length unchanged', () => {
+		expect(truncate('hello', 5)).toBe('hello');
+	});
+
+	it('does not put the ellipsis on its own line after a trailing newline', () => {
+		expect(truncate('line1\nline2\nline3', 6)).toBe('line1...');
+	});
+
+	it('trims trailing whitespace and newlines before the ellipsis', () => {
+		expect(truncate('abc\ndef  \n\n', 4)).toBe('abc...');
+	});
+
+	it('preserves newlines inside the truncated text', () => {
+		expect(truncate('a\nb\nc\nd\ne', 4)).toBe('a\nb...');
+	});
+
+	it('returns empty string unchanged', () => {
+		expect(truncate('', 10)).toBe('');
 	});
 });

@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { Calendars } from '$lib/state/Calendars.svelte';
 import { api, storage, resetStoreMocks } from '../setup/storeMocks';
 import { todo } from '../helpers/factories';
 import { SvelteDate } from 'svelte/reactivity';
+import { getWeekNumber } from '$lib/helpers/DateHelper';
 import type { Calendar, CalendarEvent } from '$lib/types/calendar';
 
 function event(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
@@ -29,24 +30,17 @@ function event(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
 	};
 }
 
-const FIXED_DATE = new Date(2026, 7, 14); // 14 August 2026
-
 beforeEach(() => {
 	resetStoreMocks();
-	vi.useFakeTimers();
-	vi.setSystemTime(FIXED_DATE);
-});
-
-afterEach(() => {
-	vi.useRealTimers();
 });
 
 describe('Calendars store', () => {
 	describe('constructor', () => {
 		it('initialises from the current date and loads the persisted view', () => {
 			const c = new Calendars();
-			expect(c.currentYear).toBe(2026);
-			expect(c.currentMonth).toBe(8); // 1-based
+			const now = new Date();
+			expect(c.currentYear).toBe(now.getFullYear());
+			expect(c.currentMonth).toBe(now.getMonth() + 1); // 1-based
 			expect(c.view).toBe('month');
 			expect(c.month.weeks).toHaveLength(6);
 			expect(storage.get).toHaveBeenCalledWith(Calendars.LS_VIEW_KEY);
@@ -336,13 +330,16 @@ describe('Calendars store', () => {
 			c.currentWeek = 1;
 			c.currentMonth = 1;
 			c.currentYear = 2020;
+			const now = new Date();
 			await c.goToToday();
-			expect(c.currentYear).toBe(2026);
-			expect(c.currentMonth).toBe(8);
-			expect(c.currentWeek).toBe(33);
-			expect(c.currentDate.getDate()).toBe(14);
+			expect(c.currentYear).toBe(now.getFullYear());
+			expect(c.currentMonth).toBe(now.getMonth() + 1);
+			expect(c.currentWeek).toBe(getWeekNumber(now));
+			expect(c.currentDate.getDate()).toBe(now.getDate());
 			expect(api.list).toHaveBeenCalledWith(
-				expect.stringContaining('/calendars/events/2026-08')
+				expect.stringContaining(
+					`/calendars/events/${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+				)
 			);
 		});
 	});
@@ -413,6 +410,156 @@ describe('Calendars store', () => {
 			await c.loadCalendars();
 			expect(c.calendars).toHaveLength(1);
 			expect(c.loaded).toBe(true);
+		});
+	});
+
+	describe('moveEvent', () => {
+		it('updates a non-recurring event with the new dates and reloads events', async () => {
+			api.update.mockResolvedValue(true);
+			api.list.mockResolvedValue({ data: [] });
+			const c = new Calendars();
+			c.currentYear = 2026;
+			c.currentMonth = 8;
+
+			const e = event();
+			const ok = await c.moveEvent(e, { date: new SvelteDate(2026, 7, 14), hour: 14, minute: 30 });
+
+			expect(ok).toBe(true);
+			expect(api.update).toHaveBeenCalledWith(
+				expect.stringContaining('/calendars/1/events/'),
+				'event-1',
+				expect.objectContaining({
+					start_date: '2026-08-14T14:30:00',
+					end_date: '2026-08-14T15:30:00',
+					etag: ''
+				})
+			);
+			// loadEvents ran after the update
+			expect(api.list).toHaveBeenCalledWith(
+				expect.stringContaining('/calendars/events/2026-08')
+			);
+		});
+
+		it('returns false when the API update fails', async () => {
+			api.update.mockResolvedValue(false);
+			const c = new Calendars();
+			const ok = await c.moveEvent(event(), {
+				date: new SvelteDate(2026, 7, 14),
+				hour: 14,
+				minute: 30
+			});
+			expect(ok).toBe(false);
+		});
+
+		it('does nothing for a no-op drop on the same slot and returns true', async () => {
+			const c = new Calendars();
+			const ok = await c.moveEvent(
+				event({ start_date: new SvelteDate(2026, 7, 10, 10, 0) }),
+				{ date: new SvelteDate(2026, 7, 10), hour: 10, minute: 0 }
+			);
+			expect(ok).toBe(true);
+			expect(api.update).not.toHaveBeenCalled();
+		});
+
+		it('defers recurring occurrences to the pending move decision instead of calling the API', async () => {
+			const c = new Calendars();
+			const recurring = event({
+				is_recurring: true,
+				original_start_date: new SvelteDate(2026, 7, 10, 10, 0)
+			});
+
+			const ok = await c.moveEvent(recurring, {
+				date: new SvelteDate(2026, 7, 14),
+				hour: 10,
+				minute: 0
+			});
+
+			expect(ok).toBe(true);
+			expect(c.pendingMove).not.toBeNull();
+			expect(c.pendingMove!.request.start_date).toBe('2026-08-14T10:00:00');
+			expect(api.update).not.toHaveBeenCalled();
+			expect(api.put).not.toHaveBeenCalled();
+		});
+
+		it('resolvePendingMove(true) updates only the occurrence via the original start date', async () => {
+			api.put.mockResolvedValue(true);
+			api.list.mockResolvedValue({ data: [] });
+			const c = new Calendars();
+			c.currentYear = 2026;
+			c.currentMonth = 8;
+			const recurring = event({
+				is_recurring: true,
+				original_start_date: new SvelteDate(2026, 7, 10, 10, 0)
+			});
+
+			await c.moveEvent(recurring, { date: new SvelteDate(2026, 7, 14), hour: 10, minute: 0 });
+			const ok = await c.resolvePendingMove(true);
+
+			expect(ok).toBe(true);
+			expect(c.pendingMove).toBeNull();
+			expect(api.put).toHaveBeenCalledWith(
+				expect.stringContaining('/calendars/1/events/event-1/occurrence/'),
+				expect.objectContaining({ start_date: '2026-08-14T10:00:00' })
+			);
+			expect(api.update).not.toHaveBeenCalled();
+		});
+
+		it('resolvePendingMove(false) updates the whole series', async () => {
+			api.update.mockResolvedValue(true);
+			api.list.mockResolvedValue({ data: [] });
+			const c = new Calendars();
+			c.currentYear = 2026;
+			c.currentMonth = 8;
+			const recurring = event({
+				is_recurring: true,
+				original_start_date: new SvelteDate(2026, 7, 10, 10, 0)
+			});
+
+			await c.moveEvent(recurring, { date: new SvelteDate(2026, 7, 14), hour: 10, minute: 0 });
+			const ok = await c.resolvePendingMove(false);
+
+			expect(ok).toBe(true);
+			expect(c.pendingMove).toBeNull();
+			expect(api.update).toHaveBeenCalledWith(
+				expect.stringContaining('/calendars/1/events/'),
+				'event-1',
+				expect.objectContaining({ start_date: '2026-08-14T10:00:00' })
+			);
+			expect(api.put).not.toHaveBeenCalled();
+		});
+
+		it('moves the series master (recurring without original start) directly', async () => {
+			api.update.mockResolvedValue(true);
+			api.list.mockResolvedValue({ data: [] });
+			const c = new Calendars();
+			c.currentYear = 2026;
+			c.currentMonth = 8;
+			const master = event({ is_recurring: true, original_start_date: null });
+
+			const ok = await c.moveEvent(master, {
+				date: new SvelteDate(2026, 7, 14),
+				hour: 10,
+				minute: 0
+			});
+
+			expect(ok).toBe(true);
+			expect(c.pendingMove).toBeNull();
+			expect(api.update).toHaveBeenCalled();
+		});
+
+		it('cancelPendingMove clears the pending decision', async () => {
+			const c = new Calendars();
+			const recurring = event({
+				is_recurring: true,
+				original_start_date: new SvelteDate(2026, 7, 10, 10, 0)
+			});
+
+			await c.moveEvent(recurring, { date: new SvelteDate(2026, 7, 14), hour: 10, minute: 0 });
+			expect(c.pendingMove).not.toBeNull();
+
+			c.cancelPendingMove();
+			expect(c.pendingMove).toBeNull();
+			expect(api.update).not.toHaveBeenCalled();
 		});
 	});
 });
