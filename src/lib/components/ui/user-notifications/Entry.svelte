@@ -4,9 +4,9 @@
 
 	const userNotifications = getUserNotifications();
 
-	let { notification, onClose } = $props<{
+	let { notification, onClose = () => {} } = $props<{
 		notification: UserNotification;
-		onClose: () => void;
+		onClose?: () => void;
 	}>();
 
 	function goTo(): void {
@@ -14,11 +14,7 @@
 	}
 </script>
 
-<a
-	class="relative flex w-full cursor-pointer flex-col gap-1 px-4 py-2 hover:bg-c-neutral dark:hover:bg-s-dark-2"
-	href={notification.link ?? '#'}
-	onclick={goTo}
->
+{#snippet rowContent()}
 	<div class="flex items-center gap-2">
 		{#if !notification.read_at}
 			<div class="size-2 rounded-full bg-c-btn-hover shadow-sm"></div>
@@ -28,4 +24,21 @@
 	<p class="text-sm">
 		{notification.body}
 	</p>
-</a>
+{/snippet}
+
+{#if notification.link}
+	<a
+		class="relative flex w-full cursor-pointer flex-col gap-1 px-4 py-2 hover:bg-c-neutral dark:hover:bg-s-dark-2"
+		href={notification.link}
+		onclick={goTo}
+	>
+		{@render rowContent()}
+	</a>
+{:else}
+	<div
+		class="relative flex w-full cursor-pointer flex-col gap-1 px-4 py-2 hover:bg-c-neutral dark:hover:bg-s-dark-2"
+		onclick={goTo}
+	>
+		{@render rowContent()}
+	</div>
+{/if}

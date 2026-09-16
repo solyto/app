@@ -64,6 +64,7 @@ const nav: NavigationRecords = {
 	feeds: 'Flux',
 	admin: 'Admin',
 	notifications: 'Notifications',
+	notifications_empty: 'Vous êtes à jour',
 	calendar: 'Calendrier',
 	contacts: 'Contacts',
 	clipboard: 'Presse-papiers',

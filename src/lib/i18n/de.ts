@@ -64,6 +64,7 @@ const nav: NavigationRecords = {
 	feeds: 'Feeds',
 	admin: 'Admin',
 	notifications: 'Benachrichtigungen',
+	notifications_empty: 'Du bist auf dem neuesten Stand',
 	calendar: 'Kalender',
 	contacts: 'Kontakte',
 	clipboard: 'Zwischenablage',

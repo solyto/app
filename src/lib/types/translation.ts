@@ -36,6 +36,7 @@ export interface NavigationRecords {
 	feeds: string;
 	admin: string;
 	notifications: string;
+	notifications_empty: string;
 	calendar: string;
 	contacts: string;
 	clipboard: string;
