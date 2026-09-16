@@ -329,7 +329,7 @@
 		}
 
 		:global(.tiptap-editor hr) {
-			border-top-color: var(--color-s-dark, #121212);
+			border-top-color: var(--color-s-dark-3, #2f3741);
 		}
 
 		:global(.tiptap-editor a) {
