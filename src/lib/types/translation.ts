@@ -358,6 +358,7 @@ export interface NoteRecords {
 	create_note_success: string;
 	create_folder_success: string;
 	save_success: string;
+	save_error: string;
 	import: string;
 	export: string;
 	created_days_ago: string;

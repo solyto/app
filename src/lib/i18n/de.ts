@@ -379,6 +379,7 @@ const notes: NoteRecords = {
 	create_note_success: 'Die Notiz wurde erfolgreich erstellt.',
 	create_folder_success: 'Der Ordner wurde erfolgreich erstellt.',
 	save_success: 'Notiz wurde erfolgreich gespeichert.',
+	save_error: 'Notiz konnte nicht gespeichert werden.',
 	import: 'Importieren',
 	export: 'Exportieren',
 	created_days_ago: 'Vor %d Tagen erstellt',

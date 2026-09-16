@@ -378,6 +378,7 @@ const notes: NoteRecords = {
 	create_note_success: 'Note was successfully created.',
 	create_folder_success: 'Folder was successfully created.',
 	save_success: 'Note was successfully saved.',
+	save_error: 'Failed to save note.',
 	import: 'Import',
 	export: 'Export',
 	created_days_ago: 'Created %d days ago',
