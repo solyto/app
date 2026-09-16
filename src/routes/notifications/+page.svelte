@@ -19,9 +19,9 @@
 <div class="flex h-full w-full flex-col px-4 py-2">
 	<SubHeading title={ts.get.nav.notifications} my={2} mb={2} />
 	{#if userNotifications.notifications.length > 0}
-		<div class="flex w-full flex-col gap-2">
+		<div class="flex w-full flex-col gap-3">
 			{#each userNotifications.notifications as notification (notification.id)}
-				<Entry {notification} onClose={() => {}} />
+				<Entry {notification} variant="card" onClose={() => {}} />
 			{/each}
 		</div>
 	{:else if userNotifications.loaded}
