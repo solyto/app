@@ -838,7 +838,9 @@ const contacts: ContactRecords = {
 	import_create_address_book: 'Création du carnet d\'adresses %s..',
 	import_address_books: 'Importation des carnets d\'adresses en cours..',
 	import_contacts_running: 'Importation de %d contacts pour le carnet d\'adresses %s…',
-	import_contacts: 'Importer les contacts'
+	import_contacts: 'Importer les contacts',
+	save_error: 'Échec de l\'enregistrement du contact.',
+	name_required: 'Le prénom et le nom sont obligatoires.'
 };
 
 const notifications: NotificationRecords = {

@@ -820,6 +820,8 @@ export interface ContactRecords {
 	import_address_books: string;
 	import_contacts: string;
 	import_contacts_running: string;
+	save_error: string;
+	name_required: string;
 }
 
 export interface DavRecords {

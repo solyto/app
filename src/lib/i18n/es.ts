@@ -837,7 +837,9 @@ const contacts: ContactRecords = {
 	import_create_address_book: 'Creando libreta de direcciones %s..',
 	import_address_books: 'Importando libretas de direcciones..',
 	import_contacts_running: 'Importando %d contactos para la libreta de direcciones %s…',
-	import_contacts: 'Importar contactos'
+	import_contacts: 'Importar contactos',
+	save_error: 'No se pudo guardar el contacto.',
+	name_required: 'El nombre y el apellido son obligatorios.'
 };
 
 const notifications: NotificationRecords = {

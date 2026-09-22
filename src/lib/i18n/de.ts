@@ -839,7 +839,9 @@ const contacts: ContactRecords = {
 	import_create_address_book: 'Erstelle Adressbuch %s..',
 	import_address_books: 'Importiere Adressbücher..',
 	import_contacts: 'Kontakte importieren',
-	import_contacts_running: 'Importiere %d Kontakte für das Adressbuch %s..'
+	import_contacts_running: 'Importiere %d Kontakte für das Adressbuch %s..',
+	save_error: 'Kontakt konnte nicht gespeichert werden.',
+	name_required: 'Vor- und Nachname sind erforderlich.'
 };
 
 const dav: DavRecords = {
