@@ -96,6 +96,12 @@ export class LinkLibrary {
 		return this.entries.filter((link) => link.is_favorite).length;
 	}
 
+	getActiveCategoryId(): number | null {
+		return typeof this.activeFilter === 'number' && this.activeFilter > 0
+			? this.activeFilter
+			: null;
+	}
+
 	openCreateModal(): void {
 		this.createModalVisible = true;
 		this.searchVisible = false;

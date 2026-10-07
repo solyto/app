@@ -590,4 +590,19 @@ describe('LinkLibrary', () => {
 		s.reapplyFilter();
 		expect(s.activeFilter).toBe('favorite');
 	});
+
+	it('resolves the active category id for new entries', () => {
+		const s = new LinkLibrary();
+
+		expect(s.getActiveCategoryId()).toBeNull(); // "All"
+
+		s.filterByCategory(3);
+		expect(s.getActiveCategoryId()).toBe(3);
+
+		s.filterByCategory(0); // uncategorised
+		expect(s.getActiveCategoryId()).toBeNull();
+
+		s.filterByFavorite();
+		expect(s.getActiveCategoryId()).toBeNull();
+	});
 });
