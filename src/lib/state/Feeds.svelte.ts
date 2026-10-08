@@ -37,7 +37,7 @@ export class Feeds {
 	localStorage = new LocalStorageService();
 
 	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+		this.apiService = this.auth.apiService;
 		this.loadView();
 	}
 

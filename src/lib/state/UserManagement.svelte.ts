@@ -12,7 +12,7 @@ export class UserManagement {
 	search = $state<string>('');
 
 	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+		this.apiService = this.auth.apiService;
 	}
 
 	filterUsers(): ManagedUser[] {

@@ -61,7 +61,7 @@ export class MusicLibrary {
 	filterService = new LibraryFilterService();
 
 	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+		this.apiService = this.auth.apiService;
 
 		const saved = this.localStorage.get(MusicLibrary.LS_VIEW_KEY);
 		this.view = (saved as 'list' | 'cards' | 'shelf' | 'spine' | null) ?? 'cards';

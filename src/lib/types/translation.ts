@@ -188,6 +188,7 @@ export interface AuthRecords {
 	register_link: string;
 	have_account: string;
 	open_in_app: string;
+	session_expired: string;
 }
 
 export interface TodoRecords {
@@ -357,6 +358,8 @@ export interface NoteRecords {
 	output: string;
 	create_note_success: string;
 	create_folder_success: string;
+	create_error: string;
+	create_folder_error: string;
 	save_success: string;
 	save_error: string;
 	import: string;

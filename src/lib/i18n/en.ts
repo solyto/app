@@ -123,7 +123,8 @@ const auth: AuthRecords = {
 	no_account: "Don't have an account?",
 	register_link: 'Create account',
 	have_account: 'Already have an account?',
-	open_in_app: 'Open in App'
+	open_in_app: 'Open in App',
+	session_expired: 'Your session expired. Please sign in again.'
 };
 
 const home: HomeRecords = {
@@ -377,6 +378,8 @@ const notes: NoteRecords = {
 	output: 'Output',
 	create_note_success: 'Note was successfully created.',
 	create_folder_success: 'Folder was successfully created.',
+	create_error: 'Failed to create note.',
+	create_folder_error: 'Failed to create folder.',
 	save_success: 'Note was successfully saved.',
 	save_error: 'Failed to save note.',
 	import: 'Import',

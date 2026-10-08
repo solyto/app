@@ -29,7 +29,7 @@ export class CheckInData {
 	apiService: ApiService;
 
 	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+		this.apiService = this.auth.apiService;
 	}
 
 	private loadScoredTrackers(): CheckInType[] {

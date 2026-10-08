@@ -124,7 +124,8 @@ const auth: AuthRecords = {
 	no_account: 'Noch kein Konto?',
 	register_link: 'Konto erstellen',
 	have_account: 'Bereits ein Konto?',
-	open_in_app: 'In App öffnen'
+	open_in_app: 'In App öffnen',
+	session_expired: 'Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.'
 };
 
 const home: HomeRecords = {
@@ -378,6 +379,8 @@ const notes: NoteRecords = {
 	output: 'Output',
 	create_note_success: 'Die Notiz wurde erfolgreich erstellt.',
 	create_folder_success: 'Der Ordner wurde erfolgreich erstellt.',
+	create_error: 'Notiz konnte nicht erstellt werden.',
+	create_folder_error: 'Ordner konnte nicht erstellt werden.',
 	save_success: 'Notiz wurde erfolgreich gespeichert.',
 	save_error: 'Notiz konnte nicht gespeichert werden.',
 	import: 'Importieren',

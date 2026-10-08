@@ -22,7 +22,7 @@ export class QuickAdd {
 	apiService: ApiService;
 
 	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+		this.apiService = this.auth.apiService;
 	}
 
 	openModal(): void {

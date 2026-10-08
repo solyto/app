@@ -60,7 +60,7 @@ export class BookLibrary {
 	localStorage = new LocalStorageService();
 
 	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+		this.apiService = this.auth.apiService;
 		const saved = this.localStorage.get(BookLibrary.LS_VIEW_KEY);
 		this.view = (saved as 'list' | 'cards' | 'shelf' | 'spine' | null) ?? 'cards';
 	}

@@ -29,6 +29,8 @@ export const storage = {
 
 export const auth = {
 	getToken: vi.fn(() => 'test-token'),
+	// Stores share Auth's ApiService instance instead of snapshotting a token.
+	apiService: api,
 	user: { settings: {} },
 	getPublicProfile: vi.fn(),
 	updateNavigation: vi.fn(),

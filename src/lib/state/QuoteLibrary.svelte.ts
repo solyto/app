@@ -36,7 +36,7 @@ export class QuoteLibrary {
 	apiService: ApiService;
 
 	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+		this.apiService = this.auth.apiService;
 	}
 
 	async load(): Promise<void> {

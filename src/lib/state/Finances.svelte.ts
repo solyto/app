@@ -23,7 +23,7 @@ export class Finances {
 	auth: Auth;
 	apiService: ApiService;
 
-	constructor(auth: Auth = getAuth(), apiService: ApiService = new ApiService(auth.getToken())) {
+	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
 		this.auth = auth;
 		this.apiService = apiService;
 		this.activePage = this.getActivePage();

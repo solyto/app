@@ -61,7 +61,7 @@ export class Todos {
 
 	constructor(
 		auth: Auth = getAuth(),
-		apiService: ApiService = new ApiService(auth.getToken()),
+		apiService: ApiService = auth.apiService,
 		localStorage: LocalStorageService = new LocalStorageService()
 	) {
 		this.auth = auth;

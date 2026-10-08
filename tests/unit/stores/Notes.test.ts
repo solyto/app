@@ -13,6 +13,26 @@ const { navigation } = vi.hoisted(() => ({
 vi.mock('$app/navigation', () => ({ goto: navigation.goto }));
 vi.mock('$app/paths', () => ({ resolve: navigation.resolve }));
 
+// The Notes store reads getTranslation() / getUiNotifications() at field
+// initialisation; storeMocks does not cover those modules, so stub them here.
+const notifications = { error: vi.fn() };
+const ts = {
+	get: {
+		notes: {
+			create_error: 'Failed to create note.',
+			create_folder_error: 'Failed to create folder.'
+		}
+	}
+};
+
+vi.mock('$lib/state/Translation.svelte', () => ({
+	getTranslation: () => ts
+}));
+
+vi.mock('$lib/state/UiNotifications.svelte', () => ({
+	getUiNotifications: () => notifications
+}));
+
 function note(overrides: Partial<Note> = {}): Note {
 	return {
 		id: 'n1',
@@ -46,6 +66,7 @@ beforeEach(() => {
 	pageState.params = {};
 	navigation.goto.mockReset();
 	navigation.goto.mockResolvedValue(undefined);
+	notifications.error.mockReset();
 });
 
 afterEach(() => {
@@ -251,13 +272,16 @@ describe('Notes store', () => {
 			]);
 		});
 
-		it('returns null and resets the input when creation fails', async () => {
+		it('reports the failure and keeps the input and modal when creation fails', async () => {
 			api.create.mockResolvedValue(null);
 
 			const n = new NotesSvelte();
 			n.inputValue = 'Doomed';
+			n.modalOpen = true;
 			await expect(n.create()).resolves.toBeNull();
-			expect(n.inputValue).toBe('');
+			expect(n.inputValue).toBe('Doomed');
+			expect(n.modalOpen).toBe(true);
+			expect(notifications.error).toHaveBeenCalledWith('Failed to create note.');
 			expect(navigation.goto).not.toHaveBeenCalled();
 		});
 	});
@@ -333,6 +357,19 @@ describe('Notes store', () => {
 			await n.createCategory();
 
 			expect(n.isCategoryCollapsed(2)).toBe(true);
+		});
+
+		it('reports the failure and keeps the input and modal when creation fails', async () => {
+			api.create.mockResolvedValue(null);
+
+			const n = new NotesSvelte();
+			n.inputValue = 'Doomed';
+			n.modalOpen = true;
+			await expect(n.createCategory()).resolves.toBeNull();
+			expect(n.inputValue).toBe('Doomed');
+			expect(n.modalOpen).toBe(true);
+			expect(notifications.error).toHaveBeenCalledWith('Failed to create folder.');
+			expect(api.list).not.toHaveBeenCalled();
 		});
 	});
 });

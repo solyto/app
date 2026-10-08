@@ -8,6 +8,8 @@ import type {
 } from '$lib/types/note';
 import { setContext, getContext, tick } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
+import { getTranslation } from '$lib/state/Translation.svelte';
+import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 import { page } from '$app/state';
 import { goto } from '$app/navigation';
 import { urls } from '$lib/config/urls';
@@ -41,11 +43,13 @@ export class NotesSvelte {
 	input = $state<HTMLInputElement | null>(null);
 	inputValue = $state<string>('');
 	auth = getAuth();
+	ts = getTranslation();
+	notifications = getUiNotifications();
 	apiService: ApiService;
 	localStorage = new LocalStorageService();
 
 	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+		this.apiService = this.auth.apiService;
 		this.loadCollapsedCategories();
 	}
 
@@ -208,8 +212,9 @@ export class NotesSvelte {
 		const res = await this.apiService.create(apiRoutes.notes.create, request);
 
 		if (!res) {
-			this.inputValue = '';
-			this.createParent = null;
+			// Keep the modal and the user's input intact so the note (and the
+			// failure) is not silently swallowed; a 401 is recovered upstream.
+			this.notifications.error(this.ts.get.notes.create_error);
 			this.rightClickMenuOpen = false;
 			return null;
 		}
@@ -223,6 +228,7 @@ export class NotesSvelte {
 		this.inputValue = '';
 		this.createParent = null;
 		this.rightClickMenuOpen = false;
+		this.modalOpen = false;
 
 		await this.load();
 		this.activeNote = this.notes.find((n) => n.id === note.id) ?? note;
@@ -253,7 +259,14 @@ export class NotesSvelte {
 			res = await this.apiService.create(apiRoutes.notes.createCategory, request);
 		}
 
-		if (res) await this.loadCategories();
+		if (!res) {
+			// Keep the modal and the user's input intact (see create()).
+			this.notifications.error(this.ts.get.notes.create_folder_error);
+			this.rightClickMenuOpen = false;
+			return null;
+		}
+
+		await this.loadCategories();
 
 		if (this.createParent && !this.collapsedCategories.includes(this.createParent)) {
 			this.toggleCollapseCategory(this.createParent);
@@ -262,8 +275,9 @@ export class NotesSvelte {
 		this.inputValue = '';
 		this.createParent = null;
 		this.rightClickMenuOpen = false;
+		this.modalOpen = false;
 
-		return res && typeof res === 'object' ? (res.data as NoteCategory) : null;
+		return typeof res === 'object' ? (res.data as NoteCategory) : null;
 	}
 
 	async saveContent(): Promise<boolean> {

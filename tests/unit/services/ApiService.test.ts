@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import ApiService from '$lib/services/ApiService';
+import { apiRoutes } from '$lib/config/apiRoutes';
 
 function jsonResponse(data: unknown, ok = true, status = 200) {
 	return {
@@ -127,6 +128,32 @@ describe('createWithStatus', () => {
 	});
 });
 
+describe('postWithStatus', () => {
+	it('returns the parsed payload and status on success', async () => {
+		vi.stubGlobal(
+			'fetch',
+			vi.fn().mockResolvedValue(jsonResponse({ data: { id: 1 } }, true, 200))
+		);
+		await expect(new ApiService('tok').postWithStatus('/refresh', {})).resolves.toEqual({
+			ok: true,
+			status: 200,
+			data: { data: { id: 1 } }
+		});
+	});
+
+	it('keeps the status and omits the payload on failure', async () => {
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse(null, false, 503));
+		vi.stubGlobal('fetch', fetchMock);
+		await expect(new ApiService('tok').postWithStatus('/refresh', {})).resolves.toEqual({
+			ok: false,
+			status: 503,
+			data: null
+		});
+		// Refresh is an auth endpoint, so recovery must not run for it.
+		expect(fetchMock).toHaveBeenCalledTimes(1);
+	});
+});
+
 describe('delete', () => {
 	it('replaces the id and uses the DELETE method', async () => {
 		const fetchMock = vi.fn().mockResolvedValue(jsonResponse(null, true, 204));
@@ -212,5 +239,66 @@ describe('image', () => {
 
 		vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }));
 		await expect(new ApiService().image('/img')).resolves.toBeNull();
+	});
+});
+
+describe('401 recovery', () => {
+	it('recovers once and retries with the fresh token', async () => {
+		const service = new ApiService('old');
+		const handler = vi.fn(async () => {
+			service.updateAuthToken('new');
+			return true;
+		});
+		service.setUnauthorizedHandler(handler);
+
+		const fetchMock = vi
+			.fn()
+			.mockResolvedValueOnce(jsonResponse(null, false, 401))
+			.mockResolvedValueOnce(jsonResponse({ data: [] }));
+		vi.stubGlobal('fetch', fetchMock);
+
+		await expect(service.list('/todos')).resolves.toEqual({ data: [] });
+		expect(handler).toHaveBeenCalledTimes(1);
+		expect(fetchMock).toHaveBeenCalledTimes(2);
+		expect(fetchMock.mock.calls[1][1].headers.Authorization).toBe('Bearer new');
+	});
+
+	it('does not retry when recovery declines', async () => {
+		const service = new ApiService('old');
+		const handler = vi.fn(async () => false);
+		service.setUnauthorizedHandler(handler);
+
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse(null, false, 401));
+		vi.stubGlobal('fetch', fetchMock);
+
+		await expect(service.list('/todos')).resolves.toBeNull();
+		expect(handler).toHaveBeenCalledTimes(1);
+		expect(fetchMock).toHaveBeenCalledTimes(1);
+	});
+
+	it('never runs recovery for auth endpoints', async () => {
+		const service = new ApiService('old');
+		const handler = vi.fn(async () => true);
+		service.setUnauthorizedHandler(handler);
+
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse(null, false, 401));
+		vi.stubGlobal('fetch', fetchMock);
+
+		await service.post(apiRoutes.auth.login, {});
+		expect(handler).not.toHaveBeenCalled();
+		expect(fetchMock).toHaveBeenCalledTimes(1);
+	});
+
+	it('does not run recovery on a network error', async () => {
+		const service = new ApiService('old');
+		const handler = vi.fn(async () => true);
+		service.setUnauthorizedHandler(handler);
+
+		const fetchMock = vi.fn().mockRejectedValue(new Error('offline'));
+		vi.stubGlobal('fetch', fetchMock);
+
+		await expect(service.list('/todos')).rejects.toThrow('offline');
+		expect(handler).not.toHaveBeenCalled();
+		expect(fetchMock).toHaveBeenCalledTimes(1);
 	});
 });

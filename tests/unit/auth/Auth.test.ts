@@ -7,6 +7,7 @@ import type { User, AuthToken, LoginResponse } from '$lib/types/auth';
 const { api, storage } = vi.hoisted(() => {
 	const api = {
 		post: vi.fn(),
+		postWithStatus: vi.fn(),
 		postRaw: vi.fn(),
 		get: vi.fn(),
 		put: vi.fn(),
@@ -28,6 +29,7 @@ const { api, storage } = vi.hoisted(() => {
 vi.mock('$lib/services/ApiService', () => ({
 	default: class FakeApi {
 		post = api.post;
+		postWithStatus = api.postWithStatus;
 		postRaw = api.postRaw;
 		get = api.get;
 		put = api.put;
@@ -35,6 +37,7 @@ vi.mock('$lib/services/ApiService', () => ({
 		delete = api.delete;
 		postFormData = api.postFormData;
 		updateAuthToken = api.updateAuthToken;
+		setUnauthorizedHandler = vi.fn();
 	}
 }));
 
@@ -100,6 +103,7 @@ beforeEach(() => {
 	storage.getJson.mockReturnValue(null);
 	storage.destroy.mockReturnValue(undefined);
 	api.post.mockResolvedValue(null);
+	api.postWithStatus.mockResolvedValue({ ok: false, status: 500, data: null });
 	api.postRaw.mockResolvedValue(null);
 	api.get.mockResolvedValue(null);
 	api.put.mockResolvedValue(null);
@@ -149,12 +153,19 @@ describe('Auth store', () => {
 		it('refreshes when the token expires within the 5-day threshold', async () => {
 			const expiresAt = new Date(Date.now() + 1 * 24 * 3600 * 1000).toISOString();
 			storage.getJson.mockReturnValue({ user: user(), authToken: authToken(expiresAt) });
-			api.post.mockResolvedValue({ data: loginResponse({ token: 'refreshed-token' }) });
+			api.postWithStatus.mockResolvedValue({
+				ok: true,
+				status: 200,
+				data: { data: loginResponse({ token: 'refreshed-token' }) }
+			});
 
 			const auth = new Auth();
 			await flushAsync();
 
-			expect(api.post).toHaveBeenCalledWith(expect.stringContaining('/refresh'), {});
+			expect(api.postWithStatus).toHaveBeenCalledWith(
+				expect.stringContaining('/refresh'),
+				{}
+			);
 			expect(auth.getToken()).toBe('refreshed-token');
 			expect(auth.loggedIn).toBe(true);
 		});
@@ -218,22 +229,98 @@ describe('Auth store', () => {
 
 	describe('refresh', () => {
 		it('updates the session from the refresh response', async () => {
-			api.post.mockResolvedValue({ data: loginResponse({ token: 'new-session' }) });
+			api.postWithStatus.mockResolvedValue({
+				ok: true,
+				status: 200,
+				data: { data: loginResponse({ token: 'new-session' }) }
+			});
 
 			const auth = new Auth();
-			const ok = await auth.refresh();
+			const outcome = await auth.refresh();
 
-			expect(ok).toBe(true);
+			expect(outcome).toBe('refreshed');
 			expect(auth.getToken()).toBe('new-session');
 			expect(auth.loggedIn).toBe(true);
 			expect(storage.setJson).toHaveBeenCalled();
 		});
 
-		it('reports failure when the refresh request fails', async () => {
-			api.post.mockResolvedValue(null);
+		it('reports a definitive rejection on 401 without touching the session', async () => {
+			api.postWithStatus.mockResolvedValue({ ok: false, status: 401, data: null });
 
 			const auth = new Auth();
-			await expect(auth.refresh()).resolves.toBe(false);
+			await expect(auth.refresh()).resolves.toBe('rejected');
+		});
+
+		it('reports a transient failure on 5xx', async () => {
+			api.postWithStatus.mockResolvedValue({ ok: false, status: 503, data: null });
+
+			const auth = new Auth();
+			await expect(auth.refresh()).resolves.toBe('transient');
+		});
+	});
+
+	describe('recoverFromUnauthorized', () => {
+		async function loggedInAuth(): Promise<Auth> {
+			const expiresAt = new Date(Date.now() + 6 * 24 * 3600 * 1000).toISOString();
+			storage.getJson.mockReturnValue({ user: user(), authToken: authToken(expiresAt) });
+			const auth = new Auth();
+			await flushAsync();
+			storage.getJson.mockClear();
+			return auth;
+		}
+
+		it('keeps the session when the refresh fails transiently', async () => {
+			const auth = await loggedInAuth();
+			api.postWithStatus.mockResolvedValue({ ok: false, status: 503, data: null });
+			// adoptExternalSession reads storage; return the same session so it declines.
+			storage.getJson.mockReturnValue({
+				user: user(),
+				authToken: authToken(new Date(Date.now() + 6 * 24 * 3600 * 1000).toISOString())
+			});
+
+			await expect(auth.recoverFromUnauthorized()).resolves.toBe(false);
+			expect(auth.loggedIn).toBe(true);
+			expect(storage.destroy).not.toHaveBeenCalled();
+		});
+
+		it('logs out only on a definitive refresh rejection', async () => {
+			const auth = await loggedInAuth();
+			api.postWithStatus.mockResolvedValue({ ok: false, status: 401, data: null });
+			storage.getJson.mockReturnValue(null);
+
+			await expect(auth.recoverFromUnauthorized()).resolves.toBe(false);
+			expect(auth.loggedIn).toBe(false);
+			expect(storage.destroy).toHaveBeenCalledWith('auth');
+		});
+
+		it('keeps the session when the refresh request rejects (offline)', async () => {
+			const auth = await loggedInAuth();
+			api.postWithStatus.mockRejectedValue(new Error('offline'));
+			storage.getJson.mockReturnValue(null);
+
+			await expect(auth.recoverFromUnauthorized()).resolves.toBe(false);
+			expect(auth.loggedIn).toBe(true);
+			expect(storage.destroy).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('validateSession', () => {
+		// Accessing the private resume routine directly to assert it never leaks
+		// a rejected promise when the network drops mid-check.
+		async function callValidateSession(auth: Auth): Promise<void> {
+			await (auth as unknown as { validateSession: () => Promise<void> }).validateSession();
+		}
+
+		it('swallows a rejecting loadAdditionalData while resuming offline', async () => {
+			const expiresAt = new Date(Date.now() + 6 * 24 * 3600 * 1000).toISOString();
+			storage.getJson.mockReturnValue({ user: user(), authToken: authToken(expiresAt) });
+			const auth = new Auth();
+			await flushAsync();
+
+			api.get.mockRejectedValue(new Error('offline'));
+
+			await expect(callValidateSession(auth)).resolves.toBeUndefined();
+			expect(auth.loggedIn).toBe(true);
 		});
 	});
 

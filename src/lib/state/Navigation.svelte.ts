@@ -31,7 +31,7 @@ export class Navigation {
 	localStorage = new LocalStorageService();
 
 	constructor() {
-		this.apiService = new ApiService(this.auth.getToken());
+		this.apiService = this.auth.apiService;
 		void Promise.all([this.loadActiveFeatures(), this.loadUsage(), this.loadMobileOrder()]);
 	}
 
