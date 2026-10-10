@@ -406,7 +406,13 @@ const notes: NoteRecords = {
 	insert_link_name: 'Linkname',
 	delete_confirm_label: 'Notiz löschen',
 	delete_confirm_message: 'Bist du sicher, dass du diese Notiz löschen möchtest?',
-	delete_success: 'Notiz wurde erfolgreich gelöscht.'
+	delete_success: 'Notiz wurde erfolgreich gelöscht.',
+	journal: 'Journal',
+	today: 'Heute',
+	yesterday: 'Gestern',
+	other: 'Andere',
+	journal_empty: 'Für diesen Tag gibt es noch keinen Eintrag.',
+	journal_create_error: 'Der Journaleintrag konnte nicht geöffnet werden.'
 };
 
 const libraries: LibraryRecords = {

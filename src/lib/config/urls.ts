@@ -15,6 +15,7 @@ export const urls = {
 	notifications: '/notifications',
 	todos: '/todos',
 	notes: '/notes',
+	journal: '/notes/journal',
 	notesImport: '/notes/import',
 	notesExport: '/notes/export',
 	note: '/notes/[id]',

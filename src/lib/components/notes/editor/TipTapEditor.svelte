@@ -21,6 +21,8 @@
 	const notes = getNotes()
 	const viewPoint = getViewPoint()
 
+	let { autofocus = false } = $props<{ autofocus?: boolean }>();
+
 	let editorDiv = $state<HTMLDivElement | null>(null)
 	let tableBubbleRoot = $state<HTMLDivElement | null>(null)
 	let editor = $state<Editor | null>(null)
@@ -122,6 +124,8 @@
 		})
 
 		editor = instance
+
+		if (autofocus) instance.commands.focus()
 
 		const vv = window.visualViewport
 		if (vv && viewPoint.isMobile) {

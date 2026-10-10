@@ -404,7 +404,13 @@ const notes: NoteRecords = {
 	insert_link_name: 'Nom du lien',
 	delete_confirm_label: 'Supprimer la note',
 	delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette note ?',
-	delete_success: 'La note a été supprimée avec succès.'
+	delete_success: 'La note a été supprimée avec succès.',
+	journal: 'Journal',
+	today: "Aujourd'hui",
+	yesterday: 'Hier',
+	other: 'Autre',
+	journal_empty: "Il n'y a pas encore d'entrée pour ce jour.",
+	journal_create_error: "Échec de l'ouverture de l'entrée du journal."
 };
 
 const libraries: LibraryRecords = {

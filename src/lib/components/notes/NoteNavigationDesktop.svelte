@@ -7,6 +7,9 @@
 	import AddNoteButton from '$lib/components/notes/AddNoteButton.svelte';
 	import AddFolderButton from '$lib/components/notes/AddFolderButton.svelte';
 	import NoteNavigationFavoriteNoteRenderer from '$lib/components/notes/NoteNavigationFavoriteNoteRenderer.svelte';
+	import { urls } from '$lib/config/urls';
+	import { resolve } from '$app/paths';
+	import IconBookOpen from '@lucide/svelte/icons/book-open';
 
 	const ts = getTranslation();
 	const notes = getNotes();
@@ -25,6 +28,14 @@
 		<AddFolderButton onClick={() => notes.openModal('category')} />
 	</div>
 	<div class="mb-4 text-2xl font-bold 2xl:font-normal">{ts.get.notes.notebook}</div>
+	<a
+		href={resolve(urls.journal)}
+		onclick={handleNavigation}
+		class="mb-4 flex cursor-pointer items-center space-x-2 rounded-lg px-2 py-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
+	>
+		<IconBookOpen size={18} class="text-surface-300" />
+		<span class="text-base">{ts.get.notes.journal}</span>
+	</a>
 	{#if favorites && favorites.length > 0}
 		<div class="mb-4 flex flex-col gap-1">
 			<div class="mb-1 text-xl">{ts.get.notes.favorites}</div>
@@ -34,7 +45,7 @@
 	{#each notes.categories as category (category.id)}
 		<NoteNavigationCategoryRenderer {category} depth={0} {handleNavigation} />
 	{/each}
-	{#if notes.notes.length > 0}
+	{#if notes.getNotesForCategory(null).length > 0}
 		<div
 			class="min-h-8 rounded-lg transition-all"
 			ondragover={(e: DragEvent) => {
@@ -56,7 +67,7 @@
 			<NoteNavigationNoteRenderer categoryId={null} depth={0} {handleNavigation} />
 		</div>
 	{/if}
-	{#if notes.categories.length === 0 && notes.notes.length === 0}
+	{#if notes.categories.length === 0 && notes.getVisibleNotes().length === 0}
 		<span class="text-md font-bold">{ts.get.notes.no_entries}</span>
 	{/if}
 </div>

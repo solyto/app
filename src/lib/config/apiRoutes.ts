@@ -85,6 +85,7 @@ export const apiRoutes = {
 		listCategories: API_URL + '/notes/categories',
 		createCategory: API_URL + '/notes/categories',
 		updateCategory: API_URL + '/notes/categories/%d',
+		updateCategoryHidden: API_URL + '/notes/categories/%d/hidden',
 		deleteCategory: API_URL + '/notes/categories/%d'
 	},
 	weather: {

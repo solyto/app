@@ -20,7 +20,8 @@ const ts = {
 	get: {
 		notes: {
 			create_error: 'Failed to create note.',
-			create_folder_error: 'Failed to create folder.'
+			create_folder_error: 'Failed to create folder.',
+			journal_create_error: 'Failed to open journal entry.'
 		}
 	}
 };
@@ -53,6 +54,8 @@ function category(id: number, title: string, overrides: Partial<NoteCategory> = 
 		title,
 		parent_id: null,
 		sort_order: 0,
+		is_system: false,
+		is_hidden: false,
 		created_at: '',
 		updated_at: '',
 		children: [],
@@ -283,6 +286,155 @@ describe('Notes store', () => {
 			expect(n.modalOpen).toBe(true);
 			expect(notifications.error).toHaveBeenCalledWith('Failed to create note.');
 			expect(navigation.goto).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('journal', () => {
+		const journal = category(9, '.journal', { is_system: true, is_hidden: true });
+
+		function withJournal(): NotesSvelte {
+			const n = new NotesSvelte();
+			n.journalCategory = journal;
+			return n;
+		}
+
+		it('loadCategories resolves the journal folder and keeps it out of the tree', async () => {
+			api.list.mockResolvedValue({
+				data: [category(1, 'Work'), journal, category(2, 'Private')]
+			});
+
+			const n = new NotesSvelte();
+			await n.loadCategories();
+
+			expect(n.journalCategory?.id).toBe(9);
+			expect(n.categories.map((c) => c.id)).toEqual([1, 2]);
+		});
+
+		it('getJournalEntry finds the day entry in the journal folder', () => {
+			const n = withJournal();
+			n.notes = [
+				note({ id: 'j1', title: '2026-08-04', category_id: 9 }),
+				note({ id: 'j2', title: '2026-08-04', category_id: 1 })
+			];
+			expect(n.getJournalEntry(new Date(2026, 7, 4))?.id).toBe('j1');
+		});
+
+		it('getJournalEntryDates lists the dates with entries', () => {
+			const n = withJournal();
+			n.notes = [
+				note({ id: 'j1', title: '2026-08-04', category_id: 9 }),
+				note({ id: 'x', title: 'Scribble', category_id: 9 }),
+				note({ id: 'o', title: '2026-08-01', category_id: 1 })
+			];
+			expect(n.getJournalEntryDates()).toEqual(['2026-08-04']);
+		});
+
+		it('openJournalEntry reuses an existing entry without creating', async () => {
+			const n = withJournal();
+			n.notes = [note({ id: 'j1', title: '2026-08-04', category_id: 9 })];
+
+			const result = await n.openJournalEntry(new Date(2026, 7, 4));
+
+			expect(result?.id).toBe('j1');
+			expect(n.activeNote?.id).toBe('j1');
+			expect(api.create).not.toHaveBeenCalled();
+		});
+
+		it('openJournalEntry creates the day entry on first open', async () => {
+			api.create.mockResolvedValue({
+				data: note({ id: 'j5', title: '2026-08-04', category_id: 9 })
+			});
+			api.list.mockResolvedValue({
+				data: [note({ id: 'j5', title: '2026-08-04', category_id: 9 })]
+			});
+
+			const n = withJournal();
+			const result = await n.openJournalEntry(new Date(2026, 7, 4));
+
+			expect(api.create).toHaveBeenCalledWith(expect.stringContaining('/notes'), {
+				title: '2026-08-04',
+				category_id: 9
+			});
+			expect(result?.id).toBe('j5');
+			expect(n.activeNote?.id).toBe('j5');
+		});
+
+		it('openJournalEntry reports an error when creation fails', async () => {
+			api.create.mockResolvedValue(null);
+
+			const n = withJournal();
+			await expect(n.openJournalEntry(new Date(2026, 7, 4))).resolves.toBeNull();
+			expect(notifications.error).toHaveBeenCalledWith('Failed to open journal entry.');
+		});
+
+		it('openJournalEntry does nothing when no journal folder is known', async () => {
+			const n = new NotesSvelte();
+			await expect(n.openJournalEntry(new Date(2026, 7, 4))).resolves.toBeNull();
+			expect(api.create).not.toHaveBeenCalled();
+		});
+
+		it('excludes journal entries from the ordinary note surfaces', () => {
+			const n = withJournal();
+			n.notes = [
+				note({
+					id: 'j1',
+					title: '2026-08-04',
+					category_id: 9,
+					is_favorite: true,
+					created_at: '2026-09-01T00:00:00',
+					updated_at: '2026-09-01T00:00:00'
+				}),
+				note({
+					id: 'o1',
+					title: 'Ordinary',
+					category_id: null,
+					created_at: '2026-01-01T00:00:00',
+					updated_at: '2026-01-01T00:00:00'
+				})
+			];
+
+			expect(n.getVisibleNotes().map((x) => x.id)).toEqual(['o1']);
+			expect(n.getNewestNotes().map((x) => x.id)).toEqual(['o1']);
+			expect(n.getLastUpdatedNotes().map((x) => x.id)).toEqual(['o1']);
+			expect(n.getFavorites()).toEqual([]);
+			expect(n.getNotesForCategory(null).map((x) => x.id)).toEqual(['o1']);
+			expect(n.getNotesForCategory(9)).toEqual([]);
+		});
+
+		it('re-snapshots the overview lists once the journal folder is resolved', async () => {
+			const entry = note({
+				id: 'j1',
+				title: '2026-08-04',
+				category_id: 9,
+				is_favorite: true,
+				created_at: '2026-09-01T00:00:00',
+				updated_at: '2026-09-01T00:00:00'
+			});
+			const ordinary = note({
+				id: 'o1',
+				title: 'Ordinary',
+				category_id: null,
+				created_at: '2026-01-01T00:00:00',
+				updated_at: '2026-01-01T00:00:00'
+			});
+
+			api.list.mockImplementation((url: string) =>
+				url.includes('/notes/categories')
+					? Promise.resolve({ data: [journal] })
+					: Promise.resolve({ data: [entry, ordinary] })
+			);
+
+			const n = new NotesSvelte();
+			// Worst case: the notes resolve before the categories, so the journal
+			// flag is still unknown when `load()` snapshots the overview.
+			await n.load();
+			expect(n.newestNotes.map((x) => x.id)).toContain('j1');
+
+			await n.loadCategories();
+
+			expect(n.newestNotes.map((x) => x.id)).toEqual(['o1']);
+			expect(n.lastUpdatedNotes.map((x) => x.id)).toEqual(['o1']);
+			expect(n.favoriteNotes).toEqual([]);
 		});
 	});
 

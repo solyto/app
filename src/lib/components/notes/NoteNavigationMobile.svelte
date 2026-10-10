@@ -7,6 +7,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
 	import IconArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import IconBookOpen from '@lucide/svelte/icons/book-open';
 	import AddNoteButton from '$lib/components/notes/AddNoteButton.svelte';
 	import AddFolderButton from '$lib/components/notes/AddFolderButton.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
@@ -66,6 +67,14 @@
 							</div>
 						</div>
 						<div class="flex-1 overflow-y-auto">
+							<a
+								href={resolve(urls.journal)}
+								onclick={close}
+								class="flex items-center gap-2 border-b border-c-neutral-1 px-4 py-4 hover:bg-c-neutral-1 dark:border-s-dark-3 dark:hover:bg-s-dark-3"
+							>
+								<IconBookOpen size={18} class="shrink-0 text-c-neutral-4" />
+								<span class="text-base">{ts.get.notes.journal}</span>
+							</a>
 							{#if favorites.length > 0}
 								<div class="px-4 pt-4 pb-1 text-xs font-semibold uppercase tracking-wider text-c-neutral-4 dark:text-c-neutral-5">
 									{ts.get.notes.favorites}
@@ -98,7 +107,7 @@
 									<span class="text-base">{note.title}</span>
 								</a>
 							{/each}
-							{#if notes.categories.length === 0 && notes.notes.length === 0}
+							{#if notes.categories.length === 0 && notes.getVisibleNotes().length === 0}
 								<div class="px-4 py-8 text-center text-c-neutral-4">{ts.get.notes.no_entries}</div>
 							{/if}
 						</div>

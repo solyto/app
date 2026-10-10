@@ -386,6 +386,12 @@ export interface NoteRecords {
 	delete_confirm_label: string;
 	delete_confirm_message: string;
 	delete_success: string;
+	journal: string;
+	today: string;
+	yesterday: string;
+	other: string;
+	journal_empty: string;
+	journal_create_error: string;
 }
 
 export interface LibraryRecords {

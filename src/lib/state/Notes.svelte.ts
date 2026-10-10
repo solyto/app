@@ -15,6 +15,7 @@ import { goto } from '$app/navigation';
 import { urls } from '$lib/config/urls';
 import { resolve } from '$app/paths';
 import ApiService from '$lib/services/ApiService';
+import JournalService from '$lib/services/JournalService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { SvelteDate } from 'svelte/reactivity';
@@ -28,6 +29,7 @@ export class NotesSvelte {
 	lastUpdatedNotes = $state<Note[]>([]);
 	favoriteNotes = $state<Note[]>([]);
 	categories = $state<NoteCategory[]>([]);
+	journalCategory = $state<NoteCategory | null>(null);
 	collapsedCategories = $state<number[]>([]);
 	activeNote = $state<Note | null>(null);
 	modalOpen = $state<boolean>(false);
@@ -47,6 +49,7 @@ export class NotesSvelte {
 	notifications = getUiNotifications();
 	apiService: ApiService;
 	localStorage = new LocalStorageService();
+	journalService = new JournalService();
 
 	constructor() {
 		this.apiService = this.auth.apiService;
@@ -85,7 +88,62 @@ export class NotesSvelte {
 
 	async loadCategories(): Promise<void> {
 		const res = await this.apiService.list(apiRoutes.notes.listCategories);
-		if (res) this.categories = res.data as NoteCategory[];
+		if (res) {
+			const all = res.data as NoteCategory[];
+			// The system journal folder is resolved separately and kept out of the
+			// rendered category tree.
+			this.journalCategory = this.journalService.findJournalCategory(all);
+			this.categories = all.filter((c) => !c.is_system);
+			// `load()` snapshots the overview lists before the journal folder may
+			// be resolved. Re-snapshot here so the exclusion is correct regardless
+			// of whether `load()` or `loadCategories()` finishes first.
+			this.newestNotes = this.getNewestNotes();
+			this.lastUpdatedNotes = this.getLastUpdatedNotes();
+			this.favoriteNotes = this.getFavorites();
+		}
+	}
+
+	isJournalNote(note: Note): boolean {
+		return this.journalCategory !== null && note.category_id === this.journalCategory.id;
+	}
+
+	getJournalEntry(date: Date): Note | null {
+		if (this.journalCategory === null) return null;
+		return this.journalService.findEntry(this.notes, this.journalCategory.id, date);
+	}
+
+	getJournalEntryDates(): string[] {
+		if (this.journalCategory === null) return [];
+		return this.journalService.getEntryDates(this.notes, this.journalCategory.id);
+	}
+
+	// Resolves the day's entry in the journal folder, creating it on first open,
+	// and makes it the active note so the editor can render it.
+	async openJournalEntry(date: Date): Promise<Note | null> {
+		if (this.journalCategory === null) return null;
+
+		const existing = this.getJournalEntry(date);
+		if (existing) {
+			this.activeNote = existing;
+			return existing;
+		}
+
+		const request: CreateNoteRequest = {
+			title: this.journalService.getEntryTitle(date),
+			category_id: this.journalCategory.id
+		};
+		const res = await this.apiService.create(apiRoutes.notes.create, request);
+
+		if (!res) {
+			this.notifications.error(this.ts.get.notes.journal_create_error);
+			return null;
+		}
+
+		const created = res.data as Note;
+		await this.load();
+		this.activeNote = this.notes.find((n) => n.id === created.id) ?? created;
+
+		return this.activeNote;
 	}
 
 	toggleCollapseCategory(categoryId: number): void {
@@ -103,7 +161,11 @@ export class NotesSvelte {
 	}
 
 	getNotesForCategory(categoryId: number | null): Note[] {
-		return this.notes.filter((n) => n.category_id === categoryId);
+		return this.notes.filter((n) => n.category_id === categoryId && !this.isJournalNote(n));
+	}
+
+	getVisibleNotes(): Note[] {
+		return this.notes.filter((n) => !this.isJournalNote(n));
 	}
 
 	getCategoryTitle(categoryId: number): string {
@@ -120,7 +182,7 @@ export class NotesSvelte {
 	}
 
 	getLastUpdatedNotes(): Note[] {
-		return [...this.notes]
+		return this.getVisibleNotes()
 			.sort(
 				(a, b) =>
 					new SvelteDate(b.updated_at).getTime() - new SvelteDate(a.updated_at).getTime()
@@ -129,7 +191,7 @@ export class NotesSvelte {
 	}
 
 	getNewestNotes(): Note[] {
-		return [...this.notes]
+		return this.getVisibleNotes()
 			.sort(
 				(a, b) =>
 					new SvelteDate(b.created_at).getTime() - new SvelteDate(a.created_at).getTime()
@@ -138,7 +200,7 @@ export class NotesSvelte {
 	}
 
 	getFavorites(): Note[] {
-		return [...this.notes].filter((n) => n.is_favorite);
+		return this.getVisibleNotes().filter((n) => n.is_favorite);
 	}
 
 	selectNote(noteId: string): void {
