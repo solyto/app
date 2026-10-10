@@ -18,6 +18,7 @@ export interface LayoutRecords {
 	privacy_policy: string;
 	terms_of_service: string;
 	reload: string;
+	remove: string;
 }
 
 export interface NavigationRecords {
@@ -969,9 +970,7 @@ export interface TimeTrackingRecords {
 	started_at: string;
 	stopped_at: string;
 	duration: string;
-	duration_minutes: string;
 	project: string;
-	category: string;
 	start_timer: string;
 	stop_timer: string;
 	timer_running: string;
@@ -990,7 +989,6 @@ export interface TimeTrackingRecords {
 	recent_entries: string;
 	today: string;
 	this_week: string;
-	this_month: string;
 	deletion_title: string;
 	deletion_description: string;
 	pomodoro: string;
@@ -1006,6 +1004,10 @@ export interface TimeTrackingRecords {
 	filter_by_category: string;
 	all_categories: string;
 	edit_entry: string;
+	entry_deletion_title: string;
+	entry_deletion_description: string;
+	category_deletion_title: string;
+	category_deletion_description: string;
 }
 
 export interface CookieConsentRecords {

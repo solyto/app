@@ -17,6 +17,8 @@
 	import EntryCreate from '$lib/components/time-tracking/EntryCreate.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
+	import Heading from '$lib/components/ui/Heading.svelte';
+	import { getReadableTextColor } from '$lib/helpers/ColorHelper';
 
 	const tt = getTimeTracking();
 	const ts = getTranslation();
@@ -26,6 +28,7 @@
 	let editModal = $state<boolean>(false);
 	let deleteModal = $state<boolean>(false);
 	let showEntryCreate = $state<boolean>(false);
+	let editingEntry = $state<TimeTrackingEntry | null>(null);
 
 	let project = $derived<TimeTrackingProject | null>(
 		tt.projects.find((p) => p.id === page.params.id) ?? null
@@ -41,13 +44,7 @@
 			: []
 	);
 
-	let totalDuration = $derived(
-		project
-			? tt.entries
-					.filter((e) => e.project?.id === project!.id && e.stopped_at !== null)
-					.reduce((sum, e) => sum + e.duration_minutes, 0)
-			: 0
-	);
+	let totalDuration = $derived(project?.total_duration ?? 0);
 
 	$effect(() => {
 		if (tt.loaded && !project) {
@@ -113,9 +110,7 @@
 						<IconArrowLeft class="size-5" />
 					</a>
 					<div class="flex flex-col">
-						<span class="text-lg font-bold text-c-heading dark:text-c-primary">
-							{project.title}
-						</span>
+						<Heading title={project.title} my={0} />
 						{#if project.description}
 							<span class="text-xs text-c-neutral-5 dark:text-c-neutral-4">
 								{project.description}
@@ -125,8 +120,8 @@
 							<div class="mt-1 flex flex-row flex-wrap gap-1">
 								{#each project.categories as cat (cat.id)}
 									<span
-										class="rounded-sm px-1.5 py-0.5 text-xs text-white"
-										style="background-color: {cat.color ?? '#888'}"
+										class="rounded-sm px-1.5 py-0.5 text-xs"
+										style="background-color: {cat.color ?? 'var(--color-c-neutral-4)'}; color: {getReadableTextColor(cat.color ?? 'var(--color-c-neutral-4)')}"
 									>
 										{cat.title}
 									</span>
@@ -141,11 +136,13 @@
 						onclick={() => (showEntryCreate = true)}
 					/>
 					<InlineEditButton
+						label={ts.get.timeTracking.edit_project}
 						onClick={() => {
 							editModal = true;
 						}}
 					/>
 					<InlineDeleteButton
+						label={ts.get.timeTracking.deletion_title}
 						onClick={() => {
 							deleteModal = true;
 						}}
@@ -176,7 +173,7 @@
 								{group.date}
 							</span>
 							{#each group.entries as entry (entry.id)}
-								<Entry {entry} showDelete />
+								<Entry {entry} showEdit showDelete onEdit={(e) => (editingEntry = e)} />
 							{/each}
 						</div>
 					{/each}
@@ -188,4 +185,8 @@
 
 {#if showEntryCreate && project}
 	<EntryCreate projectId={project.id} onClose={() => (showEntryCreate = false)} />
+{/if}
+
+{#if editingEntry}
+	<EntryCreate entry={editingEntry} onClose={() => (editingEntry = null)} />
 {/if}

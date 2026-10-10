@@ -45,7 +45,8 @@ const layout: LayoutRecords = {
 	legal_notice: 'Impressum',
 	privacy_policy: 'Datenschutzerklärung',
 	terms_of_service: 'Nutzungsbedingungen',
-	reload: 'Neu laden'
+	reload: 'Neu laden',
+	remove: 'Entfernen'
 };
 
 const nav: NavigationRecords = {
@@ -1086,9 +1087,7 @@ const timeTracking: TimeTrackingRecords = {
 	started_at: 'Gestartet um',
 	stopped_at: 'Gestoppt um',
 	duration: 'Dauer',
-	duration_minutes: 'Dauer (Minuten)',
 	project: 'Projekt',
-	category: 'Kategorie',
 	start_timer: 'Timer starten',
 	stop_timer: 'Timer stoppen',
 	timer_running: 'Timer läuft',
@@ -1107,7 +1106,6 @@ const timeTracking: TimeTrackingRecords = {
 	recent_entries: 'Letzte Einträge',
 	today: 'Heute',
 	this_week: 'Diese Woche',
-	this_month: 'Dieser Monat',
 	deletion_title: 'Projekt löschen',
 	deletion_description:
 		'Möchtest du dieses Projekt wirklich löschen? Alle zugehörigen Einträge werden entfernt.',
@@ -1123,7 +1121,11 @@ const timeTracking: TimeTrackingRecords = {
 	reset: 'Zurücksetzen',
 	filter_by_category: 'Nach Kategorie filtern',
 	all_categories: 'Alle',
-	edit_entry: 'Eintrag bearbeiten'
+	edit_entry: 'Eintrag bearbeiten',
+	entry_deletion_title: 'Eintrag löschen',
+	entry_deletion_description: 'Möchtest du diesen Eintrag wirklich löschen?',
+	category_deletion_title: 'Kategorie löschen',
+	category_deletion_description: 'Möchtest du diese Kategorie wirklich löschen?'
 };
 
 const cookie_consent: CookieConsentRecords = {
