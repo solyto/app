@@ -23,7 +23,6 @@ export class TimeTracking {
 	entries = $state<TimeTrackingEntry[]>([]);
 	activeTimer = $state<TimeTrackingEntry | null>(null);
 	statistics = $state<TimeTrackingStatistics | null>(null);
-	activeTab = $state<'dashboard' | 'entries'>('dashboard');
 	auth = getAuth();
 	apiService: ApiService;
 
@@ -144,9 +143,11 @@ export class TimeTracking {
 		return res !== null;
 	}
 
-	async loadStatistics(from: string, to: string): Promise<void> {
+	async loadStatistics(from: string, to: string, categoryIds: number[] = []): Promise<void> {
+		const params = [`from=${encodeURIComponent(from)}`, `to=${encodeURIComponent(to)}`];
+		for (const id of categoryIds) params.push(`category_ids=${encodeURIComponent(String(id))}`);
 		const res = await this.apiService.list(
-			apiRoutes.timeTracking.entries.statistics + `?from=${from}&to=${to}`
+			apiRoutes.timeTracking.entries.statistics + `?${params.join('&')}`
 		);
 		if (res) this.statistics = res.data as unknown as TimeTrackingStatistics;
 	}

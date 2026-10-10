@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { lightenColor } from '$lib/helpers/ColorHelper';
+import { lightenColor, isLightColor, getReadableTextColor } from '$lib/helpers/ColorHelper';
 
 describe('lightenColor', () => {
 	it('lightens towards white by the default amount', () => {
@@ -23,5 +23,38 @@ describe('lightenColor', () => {
 
 	it('rounds to nearest integer', () => {
 		expect(lightenColor('#010203', 0.5)).toBe('rgb(128, 129, 129)');
+	});
+});
+
+describe('isLightColor', () => {
+	it('detects light hex colours', () => {
+		expect(isLightColor('#ffffff')).toBe(true);
+		expect(isLightColor('#ffff00')).toBe(true);
+	});
+
+	it('detects dark hex colours', () => {
+		expect(isLightColor('#000000')).toBe(false);
+		expect(isLightColor('#1dbda5')).toBe(false);
+	});
+
+	it('handles 3-digit hex and case', () => {
+		expect(isLightColor('#fff')).toBe(true);
+		expect(isLightColor('#FFF')).toBe(true);
+		expect(isLightColor('#123')).toBe(false);
+	});
+
+	it('treats CSS variables as dark', () => {
+		expect(isLightColor('var(--color-c-neutral-4)')).toBe(false);
+	});
+});
+
+describe('getReadableTextColor', () => {
+	it('returns a dark text colour on light backgrounds', () => {
+		expect(getReadableTextColor('#ffffff')).toBe('var(--color-c-neutral-9)');
+	});
+
+	it('returns white on dark backgrounds', () => {
+		expect(getReadableTextColor('#000000')).toBe('#ffffff');
+		expect(getReadableTextColor('var(--color-c-primary)')).toBe('#ffffff');
 	});
 });
