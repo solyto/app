@@ -78,7 +78,7 @@
 </script>
 
 <div class="flex flex-col gap-6">
-	<div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+	<div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-start">
 		<Heading title={ts.get.timeTracking.statistics} my={0} />
 		<div class="flex flex-wrap items-end gap-4">
 			<label class="flex flex-col gap-1">

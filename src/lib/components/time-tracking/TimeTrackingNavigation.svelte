@@ -277,7 +277,7 @@
 								onInput={(e) => { if (e.hex) setCategoryHex(category.id, e.hex); }}
 								position="responsive"
 								nullable={false}
-								label={ts.get.timeTracking.color}
+								label=""
 								isTextInput={false}
 								--cp-border-color="var(--color-c-neutral-2)"
 							/>
@@ -293,23 +293,25 @@
 						{:else}
 							<span class="text-sm">{category.title}</span>
 						{/if}
+					</div>
+					<div class="flex flex-row items-center gap-0.5">
 						{#if editingCategoryId !== category.id}
 							<button
 								aria-label={ts.get.timeTracking.edit_category}
-								class="cursor-pointer rounded-full p-1 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-primary dark:hover:bg-s-dark-2"
+								class="cursor-pointer rounded-full p-1.5 text-c-neutral-4 transition-colors hover:bg-c-neutral-2 hover:text-c-primary dark:hover:bg-s-dark-2"
 								onclick={() => startEditCategory(category.id, category.title)}
 							>
 								<IconPen class="size-3.5" />
 							</button>
 						{/if}
+						<button
+							aria-label={ts.get.timeTracking.category_deletion_title}
+							class="cursor-pointer rounded-full p-1.5 text-c-neutral-4 transition-colors hover:bg-c-neutral-2 hover:text-c-danger dark:hover:bg-s-dark-2"
+							onclick={() => (confirmDeleteCategoryId = category.id)}
+						>
+							<IconTrash class="size-3.5" />
+						</button>
 					</div>
-					<button
-						aria-label={ts.get.timeTracking.category_deletion_title}
-						class="cursor-pointer rounded-full p-1.5 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-danger dark:hover:bg-s-dark-3"
-						onclick={() => (confirmDeleteCategoryId = category.id)}
-					>
-						<IconTrash class="size-3.5" />
-					</button>
 				</div>
 			{/each}
 		</div>

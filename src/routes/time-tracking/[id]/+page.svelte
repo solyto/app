@@ -9,7 +9,11 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { urls } from '$lib/config/urls';
-	import type { TimeTrackingProject, TimeTrackingEntry } from '$lib/types/time_tracking';
+	import type {
+		TimeTrackingProject,
+		TimeTrackingEntry,
+		TimeTrackingCategory
+	} from '$lib/types/time_tracking';
 	import InlineEditButton from '$lib/components/ui/buttons/InlineEditButton.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 	import Entry from '$lib/components/time-tracking/Entry.svelte';
@@ -45,6 +49,14 @@
 	);
 
 	let totalDuration = $derived(project?.total_duration ?? 0);
+
+	function categoryColor(cat: TimeTrackingCategory): string {
+		return (
+			tt.categories.find((c) => c.id === cat.id)?.color ??
+			cat.color ??
+			'var(--color-c-neutral-4)'
+		);
+	}
 
 	$effect(() => {
 		if (tt.loaded && !project) {
@@ -119,9 +131,10 @@
 						{#if project.categories.length > 0}
 							<div class="mt-1 flex flex-row flex-wrap gap-1">
 								{#each project.categories as cat (cat.id)}
+									{@const color = categoryColor(cat)}
 									<span
 										class="rounded-sm px-1.5 py-0.5 text-xs"
-										style="background-color: {cat.color ?? 'var(--color-c-neutral-4)'}; color: {getReadableTextColor(cat.color ?? 'var(--color-c-neutral-4)')}"
+										style="background-color: {color}; color: {getReadableTextColor(color)}"
 									>
 										{cat.title}
 									</span>
