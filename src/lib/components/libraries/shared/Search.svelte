@@ -58,10 +58,10 @@
 </button>
 
 {#if library.searchVisible}
-	<div class="absolute z-30 flex w-full justify-center">
+	<div class="pointer-events-none absolute z-30 flex w-full justify-center">
 		<input
 			type="text"
-			class="w-0 rounded-xl border-1 border-c-neutral-2 !bg-c-neutral/60 text-xl backdrop-blur-sm transition-all duration-300 dark:!bg-s-dark/80"
+			class="pointer-events-auto w-0 rounded-xl border-1 border-c-neutral-2 !bg-c-neutral/60 text-xl backdrop-blur-sm transition-all duration-300 dark:!bg-s-dark/80"
 			class:w-72={inputExpanded}
 			class:md:w-96={inputExpanded}
 			in:fade
@@ -70,7 +70,7 @@
 			{oninput}
 		/>
 		<button
-			class="z-20 ml-[-30px] cursor-pointer text-c-neutral-3 hover:text-c-neutral-5"
+			class="pointer-events-auto z-20 ml-[-30px] cursor-pointer text-c-neutral-3 hover:text-c-neutral-5"
 			onclick={closeSearch}
 		>
 			<IconCircleX />
