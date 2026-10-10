@@ -49,6 +49,14 @@ The client for [solyto.app](https://solyto.app): a free, private, all-in-one per
 - `tests/` — Vitest unit tests for pure helpers/services only (no component or integration tests); run in node env with `TZ=UTC` and `$lib` aliased to `src/lib`.
 - Data flow: component → state store → `ApiService` → REST API. There is no server-side rendering of app data.
 
+## Coding policies
+When writing or reviewing code, follow the policy set in `docs/` — the rules are grounded in this repo's actual idioms, and AI agents should treat them as binding:
+- `docs/BEST_PRACTICES.md` — general in-file principles (readability, DRY, early returns, naming, comments, `$derived`, tooling)
+- `docs/STATE_SERVICES.md` — the `src/lib/state/*.svelte.ts` layer
+- `docs/COMPONENTS.md` — the `src/lib/components/**` and `src/routes/**` UI layer
+- `docs/DATA_LAYER.md` — `services/`, `helpers/`, `config/`, `types/`, `i18n/` and the data flow
+- `docs/TESTING.md` — the test coverage plan ("test logic and contracts, not markup, not third-party internals")
+
 ## Commands
 - `npm run dev` — start the Vite dev server on port 5173 (expects the API at `http://localhost:8000`)
 - `npm run build` — production build via `vite build` (adapter-node, output in `build/`)
