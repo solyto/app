@@ -218,7 +218,11 @@ const settings: SettingsRecords = {
 	passkey_no_passkeys: 'No passkeys registered yet.',
 	theme: 'Theme',
 	animations: 'Animations',
-	animations_label: 'Enable animations and transitions'
+	animations_label: 'Enable animations and transitions',
+	calendar_life_marks: 'Journal & Calendar Marks',
+	journal_enabled: 'Enable journal',
+	journal_calendar_mark: 'Journal mark in calendar',
+	check_in_calendar_mark: 'Check-in mark in calendar'
 };
 
 const todos: TodoRecords = {
@@ -412,7 +416,7 @@ const notes: NoteRecords = {
 	yesterday: 'Yesterday',
 	other: 'Other',
 	journal_empty: 'There is no entry for this day yet.',
-	journal_create_error: 'Failed to open the journal entry.'
+	journal_create_error: 'Failed to create the journal entry.'
 };
 
 const libraries: LibraryRecords = {
@@ -836,6 +840,8 @@ const calendar: CalendarRecords = {
 	attach_note: 'Attach Note',
 	search_todo: 'Search Todo',
 	search_note: 'Search Note',
+	life_journal: 'Journal',
+	life_check_in: 'Check-in',
 };
 
 const contacts: ContactRecords = {

@@ -31,9 +31,13 @@
 
 	onMount(async () => {
 		loadingIndicator.start();
-		await calendars.loadCalendars();
-		await calendars.loadEvents();
-		await calendars.loadTodos();
+		await Promise.all([
+			calendars.loadCalendars(),
+			calendars.loadEvents(),
+			calendars.loadTodos(),
+			// The day-cell marks are scoped light fetches, loaded separately.
+			calendars.loadMarks()
+		]);
 		loadingIndicator.stop();
 	});
 </script>

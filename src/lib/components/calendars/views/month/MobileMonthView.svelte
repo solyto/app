@@ -6,6 +6,7 @@
 	import { isDateToday, formatDate, formatTime } from '$lib/helpers/DateHelper';
 	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
+	import DayLifeMarks from '$lib/components/calendars/DayLifeMarks.svelte';
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
@@ -100,16 +101,19 @@
 								>
 									{day.number}
 								</div>
-								<div class="mt-0.5 flex h-1.5 gap-0.5">
-									{#each getEventDots(day.date) as color (color)}
-										<div
-											class="size-1.5 rounded-full"
-											style="background-color: {color};"
-										></div>
-									{/each}
-									{#if !getEventDots(day.date).length && hasEventsOnDate(day.date)}
-										<div class="size-1.5 rounded-full bg-c-neutral-4"></div>
-									{/if}
+								<div class="mt-0.5 flex h-1.5 items-center gap-1">
+									<DayLifeMarks date={day.date} compact />
+									<div class="flex items-center gap-0.5">
+										{#each getEventDots(day.date) as color (color)}
+											<div
+												class="size-1.5 rounded-full"
+												style="background-color: {color};"
+											></div>
+										{/each}
+										{#if !getEventDots(day.date).length && hasEventsOnDate(day.date)}
+											<div class="size-1.5 rounded-full bg-c-neutral-4"></div>
+										{/if}
+									</div>
 								</div>
 							</button>
 						{/each}

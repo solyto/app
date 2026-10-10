@@ -7,6 +7,7 @@
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarDragGhost from '$lib/components/calendars/dnd/CalendarDragGhost.svelte';
 	import { calendarDrag } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
+	import DayLifeMarks from '$lib/components/calendars/DayLifeMarks.svelte';
 
 	const calendars = getCalendars();
 
@@ -30,12 +31,15 @@
 >
 	<div class="flex w-full flex-col items-start justify-start">
 		<div class="flex w-full items-start justify-between">
-			<div
-				class="flex w-8 justify-center rounded-br-lg border-r-1 border-b-1 border-c-neutral-1 bg-c-neutral px-2 py-1 text-sm font-bold max-md:text-xs dark:border-s-dark dark:bg-s-dark-3"
-				class:!bg-c-primary={isDateToday(day.date)}
-				class:text-white={isDateToday(day.date)}
-			>
-				{day.number}
+			<div class="flex items-center gap-2">
+				<div
+					class="flex w-8 justify-center rounded-br-lg border-r-1 border-b-1 border-c-neutral-1 bg-c-neutral px-2 py-1 text-sm font-bold max-md:text-xs dark:border-s-dark dark:bg-s-dark-3"
+					class:!bg-c-primary={isDateToday(day.date)}
+					class:text-white={isDateToday(day.date)}
+				>
+					{day.number}
+				</div>
+				<DayLifeMarks date={day.date} />
 			</div>
 			<button
 				onclick={async () => {

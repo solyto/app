@@ -218,7 +218,11 @@ const settings: SettingsRecords = {
 	passkey_no_passkeys: 'Aún no hay claves de acceso registradas.',
 	theme: 'Tema',
 	animations: 'Animaciones',
-	animations_label: 'Activar animaciones y transiciones'
+	animations_label: 'Activar animaciones y transiciones',
+	calendar_life_marks: 'Diario y marcas del calendario',
+	journal_enabled: 'Activar diario',
+	journal_calendar_mark: 'Marca del diario en el calendario',
+	check_in_calendar_mark: 'Marca de check-in en el calendario'
 };
 
 const todos: TodoRecords = {
@@ -412,7 +416,7 @@ const notes: NoteRecords = {
 	yesterday: 'Ayer',
 	other: 'Otro',
 	journal_empty: 'Todavía no hay una entrada para este día.',
-	journal_create_error: 'No se pudo abrir la entrada del diario.'
+	journal_create_error: 'No se pudo crear la entrada del diario.'
 };
 
 const libraries: LibraryRecords = {
@@ -836,6 +840,8 @@ const calendar: CalendarRecords = {
 	attach_note: 'Adjuntar nota',
 	search_todo: 'Buscar todo',
 	search_note: 'Buscar nota',
+	life_journal: 'Diario',
+	life_check_in: 'Check-in',
 };
 
 const contacts: ContactRecords = {

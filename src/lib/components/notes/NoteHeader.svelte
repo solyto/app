@@ -30,7 +30,28 @@
 		Escape: null
 	});
 
+	// Journal entries are ordinary notes addressed by a date title; show a
+	// readable, localized heading and keep the date title non-editable.
+	let isJournalNote = $derived(
+		notes.activeNote !== null && notes.isJournalNote(notes.activeNote)
+	);
+	let journalTitle = $derived.by(() => {
+		if (!isJournalNote || notes.activeNote === null) return '';
+		const date = notes.journalService.parseEntryTitle(notes.activeNote.title);
+		return date === null
+			? notes.activeNote.title
+			: `${ts.get.notes.journal}: ${auth.getDateInUserPreferredFormat(date)}`;
+	});
+
+	// A journal day that has no persisted entry yet: favorite/delete/tags have
+	// nothing to act on, so they stay hidden until the entry is saved.
+	let isDraft = $derived(notes.isJournalDraft(notes.activeNote));
+
 	async function saveNote() {
+		// An untouched journal day has nothing to persist; saving it must not
+		// create an empty entry on the server.
+		if (isDraft && !notes.journalService.hasContent(notes.activeNote!.content)) return;
+
 		loadingIndicator.start();
 		const res = await notes.saveContent();
 		if (res) {
@@ -115,7 +136,9 @@
 	<div class="relative flex flex-col gap-1 max-md:pt-18">
 		<div class="flex flex-row items-start gap-4">
 			<div class="flex min-w-0 flex-1 flex-col gap-0.5">
-				{#if changeTitle}
+				{#if isJournalNote}
+					<h1 class="text-left text-3xl leading-tight font-bold">{journalTitle}</h1>
+				{:else if changeTitle}
 					<input
 						type="text"
 						class="text-xl font-bold dark:bg-s-dark-3 dark:text-white"
@@ -124,7 +147,11 @@
 						bind:value={titleValue}
 					/>
 				{:else}
-					<button type="button" class="text-3xl font-bold leading-tight text-left" ondblclick={toggleChangeTitle}>
+					<button
+						type="button"
+						class="text-left text-3xl leading-tight font-bold"
+						ondblclick={toggleChangeTitle}
+					>
 						{notes.activeNote.title}
 					</button>
 				{/if}
@@ -134,28 +161,42 @@
 					</span>
 				{/if}
 			</div>
-			<div class="flex shrink-0 items-center gap-3 pt-1 max-md:absolute max-md:top-0 max-md:right-0">
-				<button
-					class="flex cursor-pointer items-center justify-center rounded-sm p-1.5 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
-					class:text-c-action={notes.activeNote.is_favorite}
-					class:text-c-neutral-4={!notes.activeNote.is_favorite}
-					title={notes.activeNote.is_favorite
-						? ts.get.notes.remove_from_favorites
-						: ts.get.notes.add_to_favorites}
-					onclick={async () => {
-						changeFavoriteStatus(notes.activeNote!);
-					}}
-				>
-					<IconStar
-						size={16}
-						fill={notes.activeNote.is_favorite ? 'currentColor' : 'none'}
+			<div
+				class="flex shrink-0 items-center gap-3 pt-1 max-md:absolute max-md:top-0 max-md:right-0"
+			>
+				{#if !isJournalNote}
+					<button
+						class="flex cursor-pointer items-center justify-center rounded-sm p-1.5 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
+						class:text-c-action={notes.activeNote.is_favorite}
+						class:text-c-neutral-4={!notes.activeNote.is_favorite}
+						title={notes.activeNote.is_favorite
+							? ts.get.notes.remove_from_favorites
+							: ts.get.notes.add_to_favorites}
+						onclick={async () => {
+							changeFavoriteStatus(notes.activeNote!);
+						}}
+					>
+						<IconStar
+							size={16}
+							fill={notes.activeNote.is_favorite ? 'currentColor' : 'none'}
+						/>
+					</button>
+				{/if}
+				{#if !isDraft}
+					<DeleteButton
+						onClick={() => {
+							deleteModalOpen = true;
+						}}
+						inModal={false}
+						buttonStyle="plain"
 					/>
-				</button>
-				<DeleteButton onClick={() => { deleteModalOpen = true; }} inModal={false} buttonStyle="plain" />
+				{/if}
 				<TextButton title={ts.get.layout.save} onclick={saveNote} />
 			</div>
 		</div>
-		<NoteTags />
+		{#if !isDraft}
+			<NoteTags />
+		{/if}
 	</div>
 {/if}
 

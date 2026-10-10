@@ -21,6 +21,9 @@ export interface UserSettings {
 	openai_api_key: string | null;
 	first_visit: boolean;
 	temperature_unit: 'c' | 'f';
+	journal_enabled: boolean;
+	journal_calendar_mark: boolean;
+	check_in_calendar_mark: boolean;
 }
 
 export interface User {

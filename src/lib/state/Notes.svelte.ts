@@ -107,6 +107,12 @@ export class NotesSvelte {
 		return this.journalCategory !== null && note.category_id === this.journalCategory.id;
 	}
 
+	// A journal day that has been opened but not yet persisted: an in-memory
+	// draft with an empty id, so merely browsing days never creates entries.
+	isJournalDraft(note: Note | null): boolean {
+		return note !== null && note.id === '' && this.isJournalNote(note);
+	}
+
 	getJournalEntry(date: Date): Note | null {
 		if (this.journalCategory === null) return null;
 		return this.journalService.findEntry(this.notes, this.journalCategory.id, date);
@@ -117,8 +123,9 @@ export class NotesSvelte {
 		return this.journalService.getEntryDates(this.notes, this.journalCategory.id);
 	}
 
-	// Resolves the day's entry in the journal folder, creating it on first open,
-	// and makes it the active note so the editor can render it.
+	// Opens the day's entry in the journal folder. If none exists yet, an
+	// in-memory draft is returned instead of creating an empty note on the
+	// server; the entry is created only once there is content to save.
 	async openJournalEntry(date: Date): Promise<Note | null> {
 		if (this.journalCategory === null) return null;
 
@@ -128,22 +135,19 @@ export class NotesSvelte {
 			return existing;
 		}
 
-		const request: CreateNoteRequest = {
+		const draft: Note = {
+			id: '',
 			title: this.journalService.getEntryTitle(date),
-			category_id: this.journalCategory.id
+			content: '',
+			category_id: this.journalCategory.id,
+			tags: [],
+			is_favorite: false,
+			created_at: '',
+			updated_at: ''
 		};
-		const res = await this.apiService.create(apiRoutes.notes.create, request);
+		this.activeNote = draft;
 
-		if (!res) {
-			this.notifications.error(this.ts.get.notes.journal_create_error);
-			return null;
-		}
-
-		const created = res.data as Note;
-		await this.load();
-		this.activeNote = this.notes.find((n) => n.id === created.id) ?? created;
-
-		return this.activeNote;
+		return draft;
 	}
 
 	toggleCollapseCategory(categoryId: number): void {
@@ -343,10 +347,41 @@ export class NotesSvelte {
 	}
 
 	async saveContent(): Promise<boolean> {
-		const request: UpdateNoteRequest = { content: this.activeNote!.content };
+		if (this.activeNote === null) return false;
+
+		// A journal day opens as a draft; persist it only once it has content,
+		// so browsing days never creates empty entries. Creating is two calls
+		// because the create contract does not accept content.
+		if (this.isJournalDraft(this.activeNote)) {
+			if (!this.journalService.hasContent(this.activeNote.content)) return true;
+
+			const createRes = await this.apiService.create(apiRoutes.notes.create, {
+				title: this.activeNote.title,
+				category_id: this.activeNote.category_id
+			});
+			if (!createRes) {
+				this.notifications.error(this.ts.get.notes.journal_create_error);
+				return false;
+			}
+
+			const created = createRes.data as Note;
+			const updateRes = await this.apiService.update(apiRoutes.notes.update, created.id, {
+				content: this.activeNote.content
+			});
+			if (!updateRes) {
+				this.notifications.error(this.ts.get.notes.save_error);
+				return false;
+			}
+
+			await this.load();
+			this.activeNote = this.notes.find((n) => n.id === created.id) ?? created;
+			return true;
+		}
+
+		const request: UpdateNoteRequest = { content: this.activeNote.content };
 		const ok = await this.apiService.update(
 			apiRoutes.notes.update,
-			this.activeNote!.id,
+			this.activeNote.id,
 			request
 		);
 		if (ok) await this.load();

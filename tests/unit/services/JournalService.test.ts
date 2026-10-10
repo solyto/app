@@ -76,6 +76,28 @@ describe('isEntryTitle', () => {
 	});
 });
 
+describe('parseEntryTitle', () => {
+	it('parses a date title into a local date', () => {
+		const parsed = service.parseEntryTitle('2026-08-04');
+		expect(parsed?.getFullYear()).toBe(2026);
+		expect(parsed?.getMonth()).toBe(7);
+		expect(parsed?.getDate()).toBe(4);
+	});
+
+	it('returns null for non-date titles', () => {
+		expect(service.parseEntryTitle('My day')).toBeNull();
+		expect(service.parseEntryTitle('2026-8-4')).toBeNull();
+		expect(service.parseEntryTitle('')).toBeNull();
+	});
+
+	it('round-trips with getEntryTitle', () => {
+		const date = new Date(2026, 0, 9);
+		expect(service.parseEntryTitle(service.getEntryTitle(date))?.getTime()).toBe(
+			date.getTime()
+		);
+	});
+});
+
 describe('findEntry', () => {
 	it('finds the entry in the journal folder for the date', () => {
 		const notes = [
@@ -129,5 +151,28 @@ describe('isReachable', () => {
 	it('compares by day, ignoring the time of day', () => {
 		const lateToday = new Date(2026, 7, 4, 23, 59);
 		expect(service.isReachable(lateToday, new Date(2026, 7, 4, 0, 1))).toBe(true);
+	});
+});
+
+describe('hasContent', () => {
+	it('rejects an empty string', () => {
+		expect(service.hasContent('')).toBe(false);
+	});
+
+	it('rejects the editor empty paragraph and line-break variants', () => {
+		expect(service.hasContent('<p></p>')).toBe(false);
+		expect(service.hasContent('<p><br></p>')).toBe(false);
+		expect(service.hasContent('<p>   </p>')).toBe(false);
+		expect(service.hasContent('<p>&nbsp;</p>')).toBe(false);
+	});
+
+	it('accepts visible text', () => {
+		expect(service.hasContent('<p>Hello</p>')).toBe(true);
+		expect(service.hasContent('<p><strong>Hi</strong> there</p>')).toBe(true);
+	});
+
+	it('accepts content with only embedded media', () => {
+		expect(service.hasContent('<p></p><img src="x.png">')).toBe(true);
+		expect(service.hasContent('<hr>')).toBe(true);
 	});
 });
