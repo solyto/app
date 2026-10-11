@@ -28,6 +28,7 @@ export interface NavigationRecords {
 	settings: string;
 	todos: string;
 	notes: string;
+	planner: string;
 	logout: string;
 	profile: string;
 	checkIn: string;
@@ -1029,6 +1030,30 @@ export interface CookieConsentRecords {
 	privacy_policy: string;
 }
 
+export interface PlannerRecords {
+	title: string;
+	today: string;
+	no_entries: string;
+	add_entry: string;
+	edit_entry: string;
+	entry_title: string;
+	entry_title_placeholder: string;
+	start: string;
+	duration: string;
+	save: string;
+	cancel: string;
+	delete: string;
+	all_day: string;
+	events: string;
+	todos: string;
+	overdue: string;
+	journal: string;
+	check_in: string;
+	no_events: string;
+	duration_hours: string;
+	color: string;
+}
+
 export interface QuickAddRecords {
 	title: string;
 	placeholder: string;
@@ -1116,4 +1141,5 @@ export interface LanguageFile {
 	cookie_consent: CookieConsentRecords;
 	timeTracking: TimeTrackingRecords;
 	quick_add: QuickAddRecords;
+	planner: PlannerRecords;
 }

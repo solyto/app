@@ -25,6 +25,7 @@ import type {
 	CookieConsentRecords,
 	TimeTrackingRecords,
 	QuickAddRecords,
+	PlannerRecords,
 	SetupRecords
 } from '$lib/types/translation';
 
@@ -56,6 +57,7 @@ const nav: NavigationRecords = {
 	settings: 'Configuración',
 	todos: 'Tareas',
 	notes: 'Notas',
+	planner: 'Planificador',
 	logout: 'Cerrar sesión',
 	profile: 'Perfil',
 	checkIn: 'Check-in',
@@ -1191,6 +1193,30 @@ const quick_add: QuickAddRecords = {
 	}
 };
 
+const planner: PlannerRecords = {
+	title: 'Planificador',
+	today: 'Hoy',
+	no_entries: 'No hay entradas para este día.',
+	add_entry: 'Añadir entrada',
+	edit_entry: 'Editar entrada',
+	entry_title: 'Título',
+	entry_title_placeholder: '¿Qué estás planeando?',
+	start: 'Inicio',
+	duration: 'Duración',
+	save: 'Guardar',
+	cancel: 'Cancelar',
+	delete: 'Eliminar',
+	all_day: 'Todo el día',
+	events: 'Eventos',
+	todos: 'Tareas',
+	overdue: 'Vencidas',
+	journal: 'Diario',
+	check_in: 'Check-in',
+	no_events: 'Sin eventos',
+	duration_hours: 'horas',
+	color: 'Color'
+};
+
 const setup: SetupRecords = {
 	hosted_title: 'Usar solyto.app',
 	hosted_description: 'Conectarse al servicio oficial alojado',
@@ -1230,5 +1256,6 @@ export const es: LanguageFile = {
 	cookie_consent,
 	timeTracking,
 	quick_add,
+	planner,
 	setup
 };

@@ -13,6 +13,7 @@
 	import IconClipboardCopy from '@lucide/svelte/icons/clipboard-copy';
 	import IconContactRound from '@lucide/svelte/icons/contact-round';
 	import IconBell from '@lucide/svelte/icons/bell';
+	import IconCalendarClock from '@lucide/svelte/icons/calendar-clock';
 
 	let { type } = $props<{ type: string }>();
 </script>
@@ -21,6 +22,8 @@
 	<IconHouse />
 {:else if type === 'calendar'}
 	<IconCalendar />
+{:else if type === 'planner'}
+	<IconCalendarClock />
 {:else if type === 'todos'}
 	<IconCheckCheck />
 {:else if type === 'notes'}

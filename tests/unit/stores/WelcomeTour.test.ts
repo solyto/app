@@ -6,6 +6,7 @@ import type { FeatureType } from '$lib/config/navigation';
 function allFeatures(enabled: boolean): Record<FeatureType, boolean> {
 	return {
 		calendar: enabled,
+		planner: enabled,
 		todos: enabled,
 		notes: enabled,
 		libraries: enabled,

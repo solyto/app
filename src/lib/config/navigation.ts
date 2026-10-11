@@ -3,6 +3,7 @@ import type { NavigationRecords } from '$lib/types/translation';
 
 export type FeatureType =
 	| 'calendar'
+	| 'planner'
 	| 'todos'
 	| 'notes'
 	| 'libraries'
@@ -35,6 +36,7 @@ export const navItems: Record<string, NavItem> = {
 	'home':          { slug: 'home',          href: urls.home,         iconType: 'home',         translationKey: 'home',         featureFlag: null,           dataTour: 'home' },
 	'todos':         { slug: 'todos',         href: urls.todos,        iconType: 'todos',        translationKey: 'todos',        featureFlag: 'todos',        dataTour: 'todos' },
 	'notes':         { slug: 'notes',         href: urls.notes,        iconType: 'notes',        translationKey: 'notes',        featureFlag: 'notes',        dataTour: 'notes' },
+	'planner':       { slug: 'planner',       href: urls.planner,      iconType: 'planner',      translationKey: 'planner',      featureFlag: 'planner',      dataTour: 'planner' },
 	'check-in':      { slug: 'check-in',      href: urls.checkIn,      iconType: 'checkIn',      translationKey: 'checkIn',      featureFlag: 'checkIn',      dataTour: 'checkIn' },
 	'libraries':     { slug: 'libraries',     href: urls.libraries,    iconType: 'libraries',    translationKey: 'libraries',    featureFlag: 'libraries',    dataTour: 'libraries' },
 	'calendar':      { slug: 'calendar',      href: urls.calendar,     iconType: 'calendar',     translationKey: 'calendar',     featureFlag: 'calendar',     dataTour: 'calendar' },
@@ -47,7 +49,7 @@ export const navItems: Record<string, NavItem> = {
 };
 
 export const desktopOrder: string[] = [
-	'home', 'calendar', 'todos', 'notes', 'libraries', 'contacts', 'check-in', 'finances', 'time-tracking', 'feeds', 'clipboard',
+	'home', 'calendar', 'todos', 'notes', 'planner', 'libraries', 'contacts', 'check-in', 'finances', 'time-tracking', 'feeds', 'clipboard',
 ];
 
 export const mobileDefaultOrder: string[] = [
