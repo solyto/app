@@ -45,7 +45,7 @@ export class Todos {
 	workspaces = $state<TodoWorkspace[]>([]);
 	activeWorkspace = $state<TodoWorkspace | null>(null);
 	activeFilters = $state<TodoFilter[]>([]);
-	view = $state<'list' | 'kanban' | 'overview' | 'card'>('list');
+	view = $state<'list' | 'kanban' | 'overview' | 'card' | 'grouped'>('list');
 	sortByScore = $state<boolean>(false);
 	todosScored = $state<boolean>(false);
 	hideItActive = $state<boolean>(false);
@@ -117,7 +117,7 @@ export class Todos {
 		}
 	}
 
-	changeView(view: 'list' | 'kanban' | 'overview' | 'card'): void {
+	changeView(view: 'list' | 'kanban' | 'overview' | 'card' | 'grouped'): void {
 		this.view = view;
 	}
 

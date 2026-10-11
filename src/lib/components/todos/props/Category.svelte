@@ -128,9 +128,9 @@
 		{:else}
 			<button
 				class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
-				class:opacity-0={todos.view === 'list'}
-				class:group-hover:opacity-100={todos.view === 'list'}
-				class:ml-2={todos.view === 'list'}
+				class:opacity-0={(todos.view === 'list' || todos.view === 'grouped')}
+				class:group-hover:opacity-100={(todos.view === 'list' || todos.view === 'grouped')}
+				class:ml-2={(todos.view === 'list' || todos.view === 'grouped')}
 				onclick={toggleAddCategories}>+ {ts.get.todos.add_category}</button
 			>
 		{/if}

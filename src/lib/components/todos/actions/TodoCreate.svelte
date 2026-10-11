@@ -110,7 +110,7 @@
 </script>
 
 <div
-	class="relative mb-4 flex h-14 w-full flex-row justify-end p-2 pl-20 sm:pl-30 lg:pl-2 2xl:pl-14 pr-0"
+	class="relative mb-4 flex h-14 w-full flex-row justify-end p-2 pr-0"
 >
 	{#if formOpen}
 		{#if viewPoint.isDesktop}

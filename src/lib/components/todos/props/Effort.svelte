@@ -40,9 +40,9 @@
 
 <div
 	class="relative flex items-center justify-center p-4"
-	class:2xl:w-full={todos.view === 'list'}
-	class:2xl:h-full={todos.view === 'list'}
-	class:p-4={todos.view === 'list'}
+	class:2xl:w-full={(todos.view === 'list' || todos.view === 'grouped')}
+	class:2xl:h-full={(todos.view === 'list' || todos.view === 'grouped')}
+	class:p-4={(todos.view === 'list' || todos.view === 'grouped')}
 >
 	{#if changeEffort}
 		<IconClock class="cursor-pointer {getColor(todo.effort)}" onclick={toggleEffortMenu} />

@@ -39,7 +39,7 @@
 >
 	<ScoreBar {todo} />
 	<div class="h-full w-14">
-		<Priority {todo} changePriority={true} />
+		<Priority {todo} changePriority={true} {expanded} />
 	</div>
 	<div class="ml-1 w-[25%]">
 		<Title {todo} />
@@ -59,7 +59,7 @@
 	<div class="group flex w-1/16 items-center">
 		<Progress {todo} />
 	</div>
-	<div class="group ml-auto w-1/16 justify-end">
+	<div class="group ml-auto flex w-1/16 items-center justify-center">
 		<DueDate {todo} />
 	</div>
 	<div class="ml-auto flex h-full w-auto flex-row items-center gap-2 pr-2 2xl:gap-4 2xl:pr-4">

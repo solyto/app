@@ -35,7 +35,7 @@
 	</span>
 	{#if todo.due_at}
 		<div class="shrink-0">
-			<DueDate {todo} reversed={true} />
+			<DueDate {todo} />
 		</div>
 	{/if}
 	<div class="flex shrink-0 items-center">

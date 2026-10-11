@@ -11,8 +11,8 @@
 <div class="flex flex-row gap-1">
 	{#each tags as tag (tag.id)}
 		<div
-			class="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-c-neutral-7"
-			style="background-color: {tag.color !== null ? tag.color : 'var(--color-c-neutral-1)'};"
+			class="flex items-center gap-1 rounded-full border px-3 py-1 text-xs text-c-neutral-7"
+			style="border-color: {tag.color !== null ? tag.color : 'var(--color-c-neutral-2)'};"
 		>
 			#{tag.name}
 			{#if onRemove}

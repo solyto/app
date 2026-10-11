@@ -14,6 +14,7 @@
 
 	const viewsDesktop = [
 		{ type: 'list' as const, title: ts.get.todos.view_list },
+		{ type: 'grouped' as const, title: ts.get.todos.view_grouped },
 		{ type: 'kanban' as const, title: ts.get.todos.view_kanban },
 		{ type: 'overview' as const, title: ts.get.todos.view_overview }
 	];
@@ -33,15 +34,7 @@
 <div
 	class="absolute top-7 left-20 2xl:top-10 2xl:left-8 z-30 2xl:block"
 >
-	{#if quickCreateOpen && currentView}
-		<div class="transition-opacity duration-150 ease-in-out">
-			<ViewSwitcher
-				views={viewPoint.isDesktop ? [currentView] : []}
-				currentlySelected={todos.view}
-				onChange={(type) => todos.changeView(type as any)}
-			/>
-		</div>
-	{:else}
+	{#if !quickCreateOpen}
 		<div class="transition-opacity duration-150 ease-in-out">
 			<ViewSwitcher
 				views={views}

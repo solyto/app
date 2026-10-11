@@ -54,7 +54,7 @@
 	}
 
 	function getColor(priority: string): string {
-		if (todos.view === 'list') {
+		if ((todos.view === 'list' || todos.view === 'grouped')) {
 			return 'text-white';
 		}
 
@@ -75,9 +75,9 @@
 		relative flex items-center justify-center rounded-l-md transition-all duration-300
 		max-2xl:rounded-full
 	"
-	class:p-4={todos.view === 'list' && !simple}
-	class:2xl:w-full={todos.view === 'list'}
-	class:2xl:h-full={todos.view === 'list'}
+	class:p-4={(todos.view === 'list' || todos.view === 'grouped') && !simple}
+	class:2xl:w-full={(todos.view === 'list' || todos.view === 'grouped')}
+	class:2xl:h-full={(todos.view === 'list' || todos.view === 'grouped')}
 	class:rounded-bl-none={expanded}
 	class:rounded-br-md={expanded}
 >

@@ -11,6 +11,7 @@
 	import ViewSwitcher from '$lib/components/todos/views/ViewSwitcher.svelte';
 	import KanbanView from '$lib/components/todos/views/KanbanView.svelte';
 	import ListView from '$lib/components/todos/views/ListView.svelte';
+	import GroupedListView from '$lib/components/todos/views/GroupedListView.svelte';
 	import CardView from '$lib/components/todos/views/CardView.svelte';
 	import OverviewView from '$lib/components/todos/views/OverviewView.svelte';
 	import Counter from '$lib/components/todos/Counter.svelte';
@@ -69,6 +70,8 @@
 		{#if viewPoint.isDesktop}
 			{#if view === 'list'}
 				<ListView {handleCheck} />
+			{:else if view === 'grouped'}
+				<GroupedListView {handleCheck} />
 			{:else if view === 'kanban'}
 				<KanbanView {handleCheck} />
 			{:else if view === 'overview'}

@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
-	import Card from '$lib/components/todos/views/Card.svelte';
+	import CompactEntry from '$lib/components/todos/views/CompactEntry.svelte';
 	import type { GroupedTodos, Todo, TodoStatus } from '$lib/types/todo';
 	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -105,7 +105,7 @@
 			>
 				{#each group.todos as item (item.id)}
 					<div animate:flip={{ duration: flipDurationMs }} transition:fade>
-						<Card todo={item} {handleCheck} />
+						<CompactEntry todo={item} {handleCheck} />
 					</div>
 				{/each}
 			</div>

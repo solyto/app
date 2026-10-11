@@ -60,9 +60,9 @@
 		<Tags {todo} />
 	</div>
 	<div class="relative flex w-full flex-row items-center gap-2">
-		<Priority {todo} changePriority={true} />
+		<Priority {todo} changePriority={true} expanded={false} />
 		<Effort {todo} changeEffort={true} />
-		<DueDate {todo} reversed={true} />
+		<DueDate {todo} />
 	</div>
 	<div class="flex w-full flex-row items-center justify-between">
 		<div class="w-6/10">
