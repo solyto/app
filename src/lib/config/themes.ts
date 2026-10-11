@@ -99,13 +99,4 @@ export const themes: Theme[] = [
 		previewText: '#ffffff',
 		previewAccent: '#ff6600'
 	},
-	{
-		id: 'modern',
-		name: 'Modern',
-		supportsDarkMode: false,
-		previewBg: '#ffffff',
-		previewSurface: '#f7f6f3',
-		previewText: '#37352f',
-		previewAccent: '#2383e2'
-	},
 ]
