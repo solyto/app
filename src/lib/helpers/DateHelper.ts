@@ -1,4 +1,4 @@
-import type { CalendarDay } from '$lib/types/nextcloud_calendar';
+import type { CalendarDay } from '$lib/types/calendar';
 import { SvelteDate } from 'svelte/reactivity';
 
 export function formatDateTime(
@@ -10,7 +10,7 @@ export function formatDateTime(
 }
 
 export function formatDate(input: string | Date, dateFormat: string | null = null): string {
-	const date = new Date(input),
+	const date = new SvelteDate(input),
 		day = String(date.getDate()).padStart(2, '0'),
 		month = String(date.getMonth() + 1).padStart(2, '0'),
 		year = date.getFullYear();
@@ -36,7 +36,7 @@ export function formatDateWithoutYear(
 	input: string | Date,
 	dateFormat: string | null = null
 ): string {
-	const date = new Date(input),
+	const date = new SvelteDate(input),
 		day = String(date.getDate()).padStart(2, '0'),
 		month = String(date.getMonth() + 1).padStart(2, '0');
 
@@ -60,7 +60,7 @@ export function formatDateWithoutYear(
 }
 
 export function formatTime(input: string | Date, timeFormat: string | null = null): string {
-	const date = typeof input === 'string' ? new Date(input) : input,
+	const date = typeof input === 'string' ? new SvelteDate(input) : input,
 		hours = date.getHours(),
 		minutes = date.getMinutes(),
 		hour = String(hours),
@@ -91,7 +91,7 @@ export function formatDateWithWeekday(
 	dateFormat: string | null = null,
 	locale: string | undefined = undefined
 ): string {
-	const date = new Date(input),
+	const date = new SvelteDate(input),
 		weekday = date.toLocaleDateString(locale, { weekday: 'long' });
 
 	return `${weekday}, ${formatDate(input, dateFormat)}`;
@@ -101,7 +101,7 @@ export function formatTimeWithSeconds(
 	input: string | Date,
 	timeFormat: string | null = null
 ): string {
-	const date = typeof input === 'string' ? new Date(input) : input,
+	const date = typeof input === 'string' ? new SvelteDate(input) : input,
 		hours = date.getHours(),
 		minutes = date.getMinutes(),
 		seconds = date.getSeconds(),
@@ -141,14 +141,14 @@ export function getUrlFormat(date: Date): string {
 }
 
 export function getDateMinusDays(date: Date, days: number): Date {
-	const dateMinusDays = new Date(date);
+	const dateMinusDays = new SvelteDate(date);
 	dateMinusDays.setDate(dateMinusDays.getDate() - days);
 
 	return dateMinusDays;
 }
 
 export function getDatePlusDays(date: Date, days: number): Date {
-	const datePlusDays = new Date(date);
+	const datePlusDays = new SvelteDate(date);
 	datePlusDays.setDate(datePlusDays.getDate() + days);
 
 	return datePlusDays;
@@ -173,12 +173,12 @@ export function getDaysInMonth(year: number, month: number): SvelteDate[] {
 
 export function getLast30Days(): Date[] {
 	const dates: Date[] = [];
-	const today = new Date();
+	const today = new SvelteDate();
 
 	dates.push(today);
 
 	for (let i = 1; i < 30; i++) {
-		const newDate = new Date();
+		const newDate = new SvelteDate();
 		newDate.setDate(today.getDate() - i);
 		dates.push(newDate);
 	}
@@ -188,7 +188,7 @@ export function getLast30Days(): Date[] {
 
 export function getNextXDays(x: number): Date[] {
 	const dates: Date[] = [];
-	const today = new Date();
+	const today = new SvelteDate();
 
 	dates.push(today);
 
@@ -202,7 +202,7 @@ export function getNextXDays(x: number): Date[] {
 }
 
 export function isDateToday(date: Date): boolean {
-	const today = new Date();
+	const today = new SvelteDate();
 	return (
 		date.getDate() === today.getDate() &&
 		date.getMonth() === today.getMonth() &&
@@ -211,7 +211,7 @@ export function isDateToday(date: Date): boolean {
 }
 
 export function isDateTomorrow(date: Date): boolean {
-	const tomorrow = new Date();
+	const tomorrow = new SvelteDate();
 	tomorrow.setDate(tomorrow.getDate() + 1);
 	return (
 		date.getDate() === tomorrow.getDate() &&
@@ -221,7 +221,7 @@ export function isDateTomorrow(date: Date): boolean {
 }
 
 export function isDateYesterday(date: Date): boolean {
-	const tomorrow = new Date();
+	const tomorrow = new SvelteDate();
 	tomorrow.setDate(tomorrow.getDate() - 1);
 	return (
 		date.getDate() === tomorrow.getDate() &&
@@ -231,31 +231,31 @@ export function isDateYesterday(date: Date): boolean {
 }
 
 export function isDateThisWeek(date: Date): boolean {
-	const today = new Date();
+	const today = new SvelteDate();
 	const dayOfWeek = today.getDay();
-	const startOfWeek = new Date(today);
+	const startOfWeek = new SvelteDate(today);
 	startOfWeek.setDate(today.getDate() - dayOfWeek);
 	startOfWeek.setHours(0, 0, 0, 0);
-	const endOfWeek = new Date(startOfWeek);
+	const endOfWeek = new SvelteDate(startOfWeek);
 	endOfWeek.setDate(startOfWeek.getDate() + 6);
 	endOfWeek.setHours(23, 59, 59, 999);
 	return date >= startOfWeek && date <= endOfWeek;
 }
 
 export function isDateLast7Days(date: Date): boolean {
-	const today = new Date();
-	const sevenDaysAgo = new Date(today);
+	const today = new SvelteDate();
+	const sevenDaysAgo = new SvelteDate(today);
 	sevenDaysAgo.setDate(today.getDate() - 7);
 	return date >= sevenDaysAgo && date <= today;
 }
 
 export function isDateInThePast(date: Date): boolean {
-	const today = new Date();
+	const today = new SvelteDate();
 	return date < today;
 }
 
 export function isDateInTheFuture(date: Date): boolean {
-	const today = new Date();
+	const today = new SvelteDate();
 	return date > today;
 }
 
@@ -264,13 +264,13 @@ export function isDateAfter(date: Date, compareDate: Date): boolean {
 }
 
 export function daysSince(date: string | Date): number {
-	if (!(date instanceof Date)) date = new Date(date);
+	if (!(date instanceof Date)) date = new SvelteDate(date);
 
 	return Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24));
 }
 
 export function dateFromTimestamp(timestamp: number): Date {
-	return new Date(timestamp * 1000);
+	return new SvelteDate(timestamp * 1000);
 }
 
 export function getDateDiffInMinutes(date1: Date, date2: Date): number {
@@ -284,28 +284,28 @@ export function getDateDiffInDays(date1: Date, date2: Date): number {
 }
 
 export function getCurrentTimestamp(): number {
-	return Math.floor(new Date().getTime() / 1000);
+	return Math.floor(new SvelteDate().getTime() / 1000);
 }
 
 export function getCurrentYearMonthString(): string {
-	const today = new Date();
+	const today = new SvelteDate();
 	return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
 }
 
 export function getWeekNumber(date: Date): number {
-	const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+	const d = new SvelteDate(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
 	const dayNum = d.getUTCDay() || 7;
 	d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-	const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+	const yearStart = new SvelteDate(Date.UTC(d.getUTCFullYear(), 0, 1));
 	return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 }
 
 export function getISOWeek(date: Date): { week: number; year: number } {
-	const tmp = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+	const tmp = new SvelteDate(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
 	const day = tmp.getUTCDay() || 7;
 	tmp.setUTCDate(tmp.getUTCDate() + 4 - day);
 
-	const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+	const yearStart = new SvelteDate(Date.UTC(tmp.getUTCFullYear(), 0, 1));
 	const week = Math.ceil(((tmp.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 
 	return { week, year: tmp.getUTCFullYear() };
@@ -318,7 +318,7 @@ interface ISODateInfo {
 }
 
 export function getISODateInfo(date: Date): ISODateInfo {
-	const tmpDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+	const tmpDate = new SvelteDate(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
 
 	// ISO week day (Mon=1 ... Sun=7)
 	const dayOfWeek = tmpDate.getUTCDay() || 7;
@@ -328,7 +328,7 @@ export function getISODateInfo(date: Date): ISODateInfo {
 	const isoYear = tmpDate.getUTCFullYear();
 
 	// ISO week number
-	const yearStart = new Date(Date.UTC(isoYear, 0, 1));
+	const yearStart = new SvelteDate(Date.UTC(isoYear, 0, 1));
 	const weekNumber = Math.ceil(((tmpDate.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 
 	return {
@@ -339,18 +339,18 @@ export function getISODateInfo(date: Date): ISODateInfo {
 }
 
 export function getCalendarMonth(year?: number, month?: number): CalendarDay[] {
-	const now = new Date();
+	const now = new SvelteDate();
 	const targetYear = year ?? now.getFullYear();
 	const targetMonth = month ?? now.getMonth();
 
-	const firstOfMonth = new Date(targetYear, targetMonth, 1);
+	const firstOfMonth = new SvelteDate(targetYear, targetMonth, 1);
 	const startWeekday = (firstOfMonth.getDay() || 7) - 1; // Monday = 0
-	const startDate = new Date(targetYear, targetMonth, 1 - startWeekday);
+	const startDate = new SvelteDate(targetYear, targetMonth, 1 - startWeekday);
 
 	const days: CalendarDay[] = [];
 
 	for (let i = 0; i < 42; i++) {
-		const date = new Date(startDate);
+		const date = new SvelteDate(startDate);
 		date.setDate(startDate.getDate() + i);
 
 		days.push({
@@ -368,16 +368,16 @@ export function getCalendarMonth(year?: number, month?: number): CalendarDay[] {
 export function getCalendarWeek(year: number, week: number): CalendarDay[] {
 	const days: CalendarDay[] = [];
 
-	const simple = new Date(year, 0, 1 + (week - 1) * 7);
+	const simple = new SvelteDate(year, 0, 1 + (week - 1) * 7);
 	const dayOfWeek = simple.getDay();
-	const isoThursday = new Date(simple);
+	const isoThursday = new SvelteDate(simple);
 	isoThursday.setDate(simple.getDate() + (4 - (dayOfWeek === 0 ? 7 : dayOfWeek)));
 
-	const weekStart = new Date(isoThursday);
+	const weekStart = new SvelteDate(isoThursday);
 	weekStart.setDate(isoThursday.getDate() - 3);
 
 	for (let i = 0; i < 7; i++) {
-		const date = new Date(weekStart);
+		const date = new SvelteDate(weekStart);
 		date.setDate(weekStart.getDate() + i);
 
 		days.push({

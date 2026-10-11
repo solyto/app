@@ -49,7 +49,7 @@ export interface CalendarEvent {
 export interface CalendarDay {
 	number: number;
 	weekday: number;
-	date: Date;
+	date: SvelteDate;
 	entries: CalendarEvent[];
 	is_grayed_out: boolean;
 }
@@ -57,7 +57,7 @@ export interface CalendarDay {
 export interface OutOfScopeCalendarDay {
 	number: number;
 	weekday: number;
-	date: Date;
+	date: SvelteDate;
 	is_grayed_out: boolean;
 }
 

@@ -6,15 +6,17 @@
 	import { urls } from '$lib/config/urls';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { SvelteDate } from 'svelte/reactivity';
+	import { getUrlFormat, isDateInTheFuture } from '$lib/helpers/DateHelper';
 
 	let {
-		dateKey,
+		date,
 		showJournal,
 		showCheckIn,
 		size = 14,
 		class: extraClass = ''
 	} = $props<{
-		dateKey: string;
+		date: SvelteDate;
 		showJournal: boolean;
 		showCheckIn: boolean;
 		size?: number;
@@ -25,16 +27,16 @@
 	const ts = getTranslation();
 
 	function openJournal(): void {
-		goto(resolve(urls.journalDate, { date: dateKey }));
+		goto(resolve(urls.journalDate, { date: getUrlFormat(date) }));
 	}
 
 	function openCheckIn(): void {
-		goto(resolve(urls.checkInDate, { date: dateKey }));
+		goto(resolve(urls.checkInDate, { date: getUrlFormat(date) }));
 	}
 </script>
 
-{#if showJournal || showCheckIn}
-	<div class="flex items-center {extraClass}" style="gap: {Math.round(size * 0.45)}px">
+{#if !isDateInTheFuture(date) && (showJournal || showCheckIn)}
+	<div class="flex items-center {extraClass}" style="gap: {Math.round(size * 0.5)}px">
 		{#if showJournal}
 			<button
 				tabindex="-1"
@@ -44,7 +46,7 @@
 			>
 				<IconNotebook
 					{size}
-					class={calendars.journalMarks.includes(dateKey) ? 'text-c-action' : 'text-c-neutral-4 dark:text-c-neutral-6'}
+					class={calendars.journalMarks.includes(date) ? 'text-c-action' : 'text-c-neutral-4 dark:text-c-neutral-6'}
 				/>
 			</button>
 		{/if}
@@ -57,7 +59,7 @@
 			>
 				<IconGoal
 					{size}
-					class={calendars.checkInMarks.includes(dateKey) ? 'text-c-primary' : 'text-c-neutral-4 dark:text-c-neutral-6'}
+					class={calendars.checkInMarks.includes(date) ? 'text-c-primary' : 'text-c-neutral-4 dark:text-c-neutral-6'}
 				/>
 			</button>
 		{/if}

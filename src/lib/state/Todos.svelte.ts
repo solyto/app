@@ -68,9 +68,6 @@ export class Todos {
 		this.apiService = apiService;
 		this.localStorage = localStorage;
 
-		// Restore synchronously so every filter pass (including the ones run by
-		// load() before the workspaces request resolves) already sees the
-		// persisted value instead of the default false.
 		this.hideItActive = this.localStorage.getBool(Todos.LS_HIDE_IT_KEY) ?? false;
 	}
 
@@ -95,8 +92,6 @@ export class Todos {
 		try {
 			await Promise.all([this.loadCategories(), this.loadWorkspaces()]);
 		} finally {
-			// Always re-apply hide-it once the parallel loads settled: a failed
-			// or rejected workspaces/categories request must not skip this.
 			this.loadHideIt();
 		}
 	}
@@ -110,9 +105,6 @@ export class Todos {
 	}
 
 	async loadWorkspaces(retries: number = 1): Promise<void> {
-		// Treated like a failed request (null) so a network error gets the same
-		// single retry as a non-ok response. An empty workspaces list would
-		// silently disable hide-it filtering for the whole page lifetime.
 		const res = await this.apiService.list(apiRoutes.todos.listWorkspaces).catch(() => null);
 
 		if (res) {
@@ -167,9 +159,6 @@ export class Todos {
 	}
 
 	useFilters(filters: TodoFilter[]): void {
-		// Set before the hide-it guard below (which reads it via
-		// isCategoryFilterActive()/isTagFilterActive()) so that guard reflects
-		// the filters being applied, not the previous selection.
 		this.activeFilters = filters;
 		this.filteredTodos = this.todos;
 
@@ -250,9 +239,6 @@ export class Todos {
 	}
 
 	loadHideIt(): void {
-		// Re-reads storage so a toggle issued while load() was still in flight
-		// wins over the constructor restore, then re-applies the filters now
-		// that workspaces (which decide what hide-it removes) are loaded.
 		this.hideItActive = this.localStorage.getBool(Todos.LS_HIDE_IT_KEY) ?? false;
 		if (this.hideItActive) {
 			this.filterCategories();

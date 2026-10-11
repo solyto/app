@@ -29,6 +29,7 @@
 	const hours = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
 		(i - 1).toString().padStart(2, '0')
 	);
+	const desktopRows = '10% repeat(24, calc(100% / 27))';
 
 	let { date, isMobile = false } = $props<{ date: Date; isMobile?: boolean }>();
 
@@ -62,7 +63,6 @@
 		return h > 65 ? h + '%' : '65%';
 	}
 
-	// --- drag & drop (desktop/tablet variants only; isMobile is the mobile layout) ---
 	const dragEnabled = $derived(!isMobile);
 	const dateSlug = $derived(formatDate(date));
 	const isDropTargetColumn = $derived(
@@ -152,12 +152,11 @@
 </script>
 
 <div
-	class="relative flex h-full w-full flex-col {isDropTargetColumn ? 'bg-d-lightblue/40' : ''}"
+	class="relative grid {isMobile ? 'row-span-full' : 'h-full w-full'} {isDropTargetColumn ? 'bg-d-lightblue/40' : ''}"
 	data-calendar-day={dateSlug}
+	style={isMobile ? 'grid-template-rows: subgrid' : `grid-template-rows: ${desktopRows}`}
 >
-	<div 
-		class="group relative w-full {isMobile ? 'h-16' : 'h-3/30'}"
-	>
+	<div class="group relative w-full">
 		<button
 			onclick={async () => {
 				await calendars.showSidebar(date);
@@ -167,14 +166,14 @@
 		>
 			<IconPlus class="size-3" />
 		</button>
-		{#if !isMobile}
+		<!-- {#if !isMobile}
 			<CalendarMarks
-			dateKey={dateSlug}
-			showJournal={calendars.journalMarksEnabled}
-			showCheckIn={calendars.checkInMarksEnabled}
-			class="px-2 py-1.5"
-		/>
-		{/if}
+				date={date}
+				showJournal={calendars.journalMarksEnabled}
+				showCheckIn={calendars.checkInMarksEnabled}
+				class="px-2 py-1.5"
+			/>
+		{/if} -->
 		{#each calendars.getTodosForDate(date) as todo (todo.id)}
 			<TodoEntry {todo} />
 		{/each}
@@ -203,11 +202,9 @@
 	{#each hours as hour (hour)}
 		{@const offHour = isMobile && (parseInt(hour) < 6 || parseInt(hour) >= 22)}
 		<div
-			class="group relative border-t-1 border-c-neutral-1 dark:border-s-dark {isMobile
-				? offHour
-					? 'h-6 bg-c-neutral dark:bg-s-dark-2'
-					: 'h-14'
-				: 'h-1/27'}"
+			class="group relative border-t-1 border-c-neutral-1 dark:border-s-dark {offHour
+				? 'bg-c-neutral dark:bg-s-dark-2'
+				: ''}"
 		>
 			<button
 				onclick={async () => {

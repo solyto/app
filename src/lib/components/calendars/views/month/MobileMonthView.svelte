@@ -3,7 +3,7 @@
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { isDateToday, formatDate, formatTime, getUrlFormat } from '$lib/helpers/DateHelper';
+	import { isDateToday, formatDate, formatTime } from '$lib/helpers/DateHelper';
 	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
@@ -133,7 +133,7 @@
 			</span>
 			<div class="flex items-center gap-3">
 				<CalendarMarks 
-					dateKey={getUrlFormat(selectedDate)} 
+					date={selectedDate} 
 					showJournal={calendars.journalMarksEnabled} 
 					showCheckIn={calendars.checkInMarksEnabled} 
 					size={20}

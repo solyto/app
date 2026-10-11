@@ -40,7 +40,7 @@
 					{day.number}
 				</div>
 				<CalendarMarks 
-					dateKey={dateSlug} 
+					date={day.date} 
 					showJournal={calendars.journalMarksEnabled} 
 					showCheckIn={calendars.checkInMarksEnabled} 
 				/>
