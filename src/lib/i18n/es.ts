@@ -218,7 +218,11 @@ const settings: SettingsRecords = {
 	passkey_no_passkeys: 'Aún no hay claves de acceso registradas.',
 	theme: 'Tema',
 	animations: 'Animaciones',
-	animations_label: 'Activar animaciones y transiciones'
+	animations_label: 'Activar animaciones y transiciones',
+	appearance: 'Apariencia',
+	appearance_system: 'Auto',
+	appearance_light: 'Claro',
+	appearance_dark: 'Oscuro'
 };
 
 const todos: TodoRecords = {

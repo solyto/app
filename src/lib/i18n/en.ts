@@ -218,7 +218,11 @@ const settings: SettingsRecords = {
 	passkey_no_passkeys: 'No passkeys registered yet.',
 	theme: 'Theme',
 	animations: 'Animations',
-	animations_label: 'Enable animations and transitions'
+	animations_label: 'Enable animations and transitions',
+	appearance: 'Appearance',
+	appearance_system: 'Auto',
+	appearance_light: 'Light',
+	appearance_dark: 'Dark'
 };
 
 const todos: TodoRecords = {

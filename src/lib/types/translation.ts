@@ -134,6 +134,10 @@ export interface SettingsRecords {
 	theme: string;
 	animations: string;
 	animations_label: string;
+	appearance: string;
+	appearance_system: string;
+	appearance_light: string;
+	appearance_dark: string;
 }
 
 export interface AuthRecords {
