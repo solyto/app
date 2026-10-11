@@ -122,7 +122,7 @@
 	}
 </script>
 
-<div class="flex flex-col gap-6 md:p-4">
+<div class="flex flex-col gap-6">
 <SettingsSection label={ts.get.settings.passkeys}>
 	{#snippet headerAction()}
 		{#if !showNameInput}

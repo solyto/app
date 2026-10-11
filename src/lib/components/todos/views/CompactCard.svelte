@@ -30,7 +30,7 @@
 	in:fade
 >
 	<div class="absolute top-0 left-0 h-full w-1 rounded-l-md {getBgColor(todo)}"></div>
-	<span class="flex-1 truncate font-medium" class:line-through={todo.is_completed}>
+	<span class="flex-1 truncate" class:line-through={todo.is_completed}>
 		{todo.title}
 	</span>
 	{#if todo.due_at}

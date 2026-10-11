@@ -45,7 +45,7 @@
 			class:ml-1={todos.view === 'kanban'}
 			onclick={toggleDatePicker}
 		>
-			<span>{auth.getDateInUserPreferredFormat(todo.due_at)}</span>
+			<span class="text-xs">{auth.getDateInUserPreferredFormat(todo.due_at)}</span>
 			<IconCalendarClock class="size-4 shrink-0" />
 		</button>
 		<button

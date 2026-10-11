@@ -10,7 +10,7 @@
 </script>
 
 <div class="flex flex-col gap-6">
-	<div class="flex gap-6 max-lg:flex-col md:p-4">
+	<div class="flex gap-6 max-lg:flex-col">
 		<SettingsSection label={ts.get.settings.telegram_bot}>
 			<TelegramBotConnection />
 		</SettingsSection>
@@ -21,7 +21,7 @@
 		{/if}
 	</div>
 
-	<div class="md:p-4">
+	<div>
 		<SettingsSection label={ts.get.settings.notifications}>
 			<p class="mb-4 text-sm text-c-neutral-6 dark:text-c-neutral-4">
 				Choose which notifications you want to receive and through which channels.

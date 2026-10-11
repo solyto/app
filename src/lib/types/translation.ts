@@ -135,6 +135,7 @@ export interface SettingsRecords {
 	animations: string;
 	animations_label: string;
 	appearance: string;
+	color_mode: string;
 	appearance_system: string;
 	appearance_light: string;
 	appearance_dark: string;

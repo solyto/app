@@ -7,6 +7,7 @@
 	import type { CreateClipboardEntryRequest } from '$lib/types/clipboard';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
+	import Heading from '$lib/components/ui/Heading.svelte';
 	import IconImage from '@lucide/svelte/icons/image';
 
 	const clipboard = getClipboard();
@@ -82,9 +83,7 @@
 </script>
 
 <div class="flex w-full flex-col md:w-1/2">
-	<h1 class="mb-8 text-xl font-bold text-c-heading dark:text-c-primary">
-		{ts.get.clipboard.add_entry}
-	</h1>
+	<Heading title={ts.get.clipboard.add_entry} my={0} mb={8} />
 
 	<input
 		type="file"

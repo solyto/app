@@ -71,9 +71,10 @@
 </script>
 
 <div
-	class="relative flex items-center justify-center rounded-l-md transition-all duration-300 {getBgColor(
-		todo.priority
-	)} max-2xl:rounded-full"
+	class="
+		relative flex items-center justify-center rounded-l-md transition-all duration-300
+		max-2xl:rounded-full
+	"
 	class:p-4={todos.view === 'list' && !simple}
 	class:2xl:w-full={todos.view === 'list'}
 	class:2xl:h-full={todos.view === 'list'}
@@ -82,15 +83,18 @@
 >
 	{#if changePriority}
 		{#if todo.priority === 'high'}
-			<IconUp class="cursor-pointer {getColor(todo.priority)}" onclick={togglePriorityMenu} />
+			<IconUp
+				class="cursor-pointer rounded-full text-c-danger hover:bg-c-neutral dark:hover:bg-s-dark-3"
+				onclick={togglePriorityMenu}
+			/>
 		{:else if todo.priority === 'medium'}
 			<IconRight
-				class="cursor-pointer {getColor(todo.priority)}"
+				class="cursor-pointer rounded-full text-c-btn hover:bg-c-neutral dark:hover:bg-s-dark-3"
 				onclick={togglePriorityMenu}
 			/>
 		{:else if todo.priority === 'low'}
 			<IconDown
-				class="cursor-pointer {getColor(todo.priority)}"
+				class="cursor-pointer rounded-full text-c-success hover:bg-c-neutral dark:hover:bg-s-dark-3"
 				onclick={togglePriorityMenu}
 			/>
 		{/if}

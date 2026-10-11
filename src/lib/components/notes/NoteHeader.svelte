@@ -132,7 +132,7 @@
 		<div class="flex flex-row items-start gap-4">
 			<div class="flex min-w-0 flex-1 flex-col gap-0.5">
 				{#if isJournal}
-					<h1 class="text-left text-3xl leading-tight font-bold">{journalTitle()}</h1>
+					<h1 class="text-left text-3xl leading-tight">{journalTitle()}</h1>
 				{:else if changeTitle}
 					<input
 						type="text"
@@ -144,7 +144,7 @@
 				{:else}
 					<button
 						type="button"
-						class="text-left text-3xl leading-tight font-bold"
+						class="text-left text-3xl leading-tight"
 						ondblclick={toggleChangeTitle}
 					>
 						{notes.activeNote.title}

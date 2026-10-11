@@ -10,7 +10,7 @@
 	const todos = getTodos();
 </script>
 
-<div class="flex flex-col gap-8 md:p-4">
+<div class="flex flex-col gap-8">
 	<SettingsSection label={ts.get.settings.categories}>
 		{#snippet headerAction()}
 			<CreateEntry
@@ -19,7 +19,7 @@
 				useAddButton={true}
 			/>
 		{/snippet}
-		<div class="flex flex-row flex-wrap gap-2 py-4">
+		<div class="flex flex-row flex-wrap gap-2">
 			{#each todos.categories as category (category.id)}
 				<CategoryEdit {category} />
 			{/each}
@@ -33,7 +33,7 @@
 				useAddButton={true}
 			/>
 		{/snippet}
-		<div class="flex flex-row flex-wrap gap-4 py-4">
+		<div class="flex flex-row flex-wrap gap-4">
 			{#each todos.workspaces as workspace (workspace.id)}
 				<WorkspaceEdit {workspace} />
 			{/each}

@@ -39,9 +39,9 @@
 >
 	<ScoreBar {todo} />
 	<div class="h-full w-14">
-		<Priority {todo} changePriority={true} {expanded} />
+		<Priority {todo} changePriority={true} />
 	</div>
-	<div class="ml-4 w-[25%] font-bold">
+	<div class="ml-1 w-[25%]">
 		<Title {todo} />
 	</div>
 	<div class="group flex w-1/10 items-center">

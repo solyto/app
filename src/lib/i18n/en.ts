@@ -220,6 +220,7 @@ const settings: SettingsRecords = {
 	animations: 'Animations',
 	animations_label: 'Enable animations and transitions',
 	appearance: 'Appearance',
+	color_mode: 'Color Mode',
 	appearance_system: 'Auto',
 	appearance_light: 'Light',
 	appearance_dark: 'Dark',

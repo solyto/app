@@ -7,6 +7,7 @@
 	import type { GroupedTodos, Todo, TodoStatus } from '$lib/types/todo';
 	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import Heading from '$lib/components/ui/Heading.svelte';
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
@@ -88,11 +89,9 @@
 			class="flex w-[24%] flex-col rounded-lg transition-all duration-400"
 			animate:flip={{ duration: flipDurationMs }}
 		>
-			<span
-				class="mb-6 border-b-4 p-4 text-xl font-bold border-{getStatusColor(group.status)}"
-			>
-				{getStatusLabel(group.status)}
-			</span>
+			<div class="mb-6 border-b-4 p-4 border-{getStatusColor(group.status)}">
+				<Heading title={getStatusLabel(group.status)} my={0} />
+			</div>
 			<div
 				class="flex flex-1 flex-col space-y-4 rounded-lg !outline-0 transition-all"
 				data-status={group.status}

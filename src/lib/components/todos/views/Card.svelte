@@ -41,13 +41,13 @@
 </script>
 
 <div
-	class="relative flex w-full flex-col space-y-2 rounded-lg border-1 bg-c-bg-surface p-4 shadow-sm transition-all hover:bg-d-lighterblue dark:hover:bg-s-dark-3 {todos.recentlyCreated === todo.id ? 'border-c-btn-hover' : 'border-d-lightblue dark:border-s-dark'}"
+	class="relative flex w-full flex-col space-y-2 rounded-lg border-1 bg-c-bg-surface px-4 py-3 shadow-sm transition-all hover:bg-d-lighterblue dark:hover:bg-s-dark-3 {todos.recentlyCreated === todo.id ? 'border-c-btn-hover' : 'border-d-lightblue dark:border-s-dark'}"
 	in:fade
 >
 	<div class="absolute top-0 left-0 h-full w-1 rounded-l-md {getBgColor(todo)}"></div>
 	<ScoreBar {todo} />
 	<div class="relative w-full">
-		<span class="font-bold">
+		<span>
 			<Title {todo} />
 		</span>
 		<div class="absolute top-1 right-1 flex flex-row items-center gap-2">
@@ -60,7 +60,7 @@
 		<Tags {todo} />
 	</div>
 	<div class="relative flex w-full flex-row items-center gap-2">
-		<Priority {todo} changePriority={true} expanded={false} />
+		<Priority {todo} changePriority={true} />
 		<Effort {todo} changeEffort={true} />
 		<DueDate {todo} reversed={true} />
 	</div>

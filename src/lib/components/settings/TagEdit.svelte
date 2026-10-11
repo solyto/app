@@ -13,8 +13,12 @@
 	let { tag } = $props<{ tag: Tag }>();
 
 	let hex = $state<string>(tag.color !== null ? tag.color : 'var(--color-c-neutral-2)');
+	let pickerOpen = $state<boolean>(false);
 
 	async function onColorChange(): Promise<void> {
+		if (!pickerOpen) return;
+		pickerOpen = false;
+
 		if (hex === tag.color) return;
 
 		loadingIndicator.start();
@@ -36,6 +40,7 @@
 	<div use:clickOutside={onColorChange}>
 		<ColorPicker
 			bind:hex
+			bind:isOpen={pickerOpen}
 			position="responsive"
 			nullable={false}
 			label=""

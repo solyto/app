@@ -14,6 +14,7 @@
 	import { page } from '$app/state';
 	import { getDateMinusDays, getUrlFormat } from '$lib/helpers/DateHelper';
 	import { getAuth } from '$lib/state/Auth.svelte';
+	import NavHeading from '$lib/components/ui/NavHeading.svelte';
 
 	const ts = getTranslation();
 	const notes = getNotes();
@@ -50,14 +51,13 @@
 	in:fade
 	class="hidden h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg p-2 text-sm drop-shadow-xl sm:relative sm:flex sm:min-w-72 max-w-72 sm:p-4 dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 >
-	<div class="absolute top-2 right-2 flex gap-1">
+	<div class="absolute top-4 right-4 flex gap-1">
 		<AddNoteButton onClick={() => notes.openModal('note')} />
 		<AddFolderButton onClick={() => notes.openModal('category')} />
 	</div>
-	<div class="mb-4 text-2xl font-bold 2xl:font-normal">{ts.get.notes.notebook}</div>
 	{#if journalEnabled}
 		<div class="mb-4 flex flex-col gap-1">
-			<div class="mb-1 text-xl">{ts.get.notes.journal}</div>
+			<NavHeading title={ts.get.notes.journal} class="mb-1" />
 			<a
 				href={resolve(urls.journalDate, { date: todayKey })}
 				onclick={handleNavigation}
@@ -94,7 +94,7 @@
 	{/if}
 	{#if favorites && favorites.length > 0}
 		<div class="mb-4 flex flex-col gap-1">
-			<div class="mb-1 text-xl">{ts.get.notes.favorites}</div>
+			<NavHeading title={ts.get.notes.favorites} class="mb-1" />
 			<NoteNavigationFavoriteNoteRenderer {favorites} {handleNavigation} />
 		</div>
 	{/if}

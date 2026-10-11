@@ -38,7 +38,7 @@
 	}
 </script>
 
-<div class="md:p-4">
+<div>
 	<SettingsSection label={ts.get.settings.features}>
 		<div class="flex w-full flex-col gap-2">
 			{#each Object.keys(nav.features).filter((key) => key in ts.get.nav) as featureType (featureType)}

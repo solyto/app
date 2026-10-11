@@ -59,7 +59,7 @@
 </script>
 
 <div
-	class="lg:text-md flex cursor-pointer items-center gap-1 border-1 border-c-neutral-2 px-4 py-2 text-sm font-semibold dark:border-0 dark:border-s-dark-3 dark:bg-s-dark-2"
+	class="lg:text-md flex cursor-pointer items-center gap-1 rounded-full border-1 border-c-neutral-2 px-5 py-2.5 text-sm font-semibold dark:border-0 dark:bg-s-dark-2"
 	in:fade
 >
 	{#if editing}

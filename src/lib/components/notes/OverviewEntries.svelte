@@ -8,6 +8,7 @@
 	import { getNotes } from '$lib/state/Notes.svelte';
 	import type { Note } from '$lib/types/note';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import Heading from '$lib/components/ui/Heading.svelte';
 
 	const notes = getNotes();
 	const ts = getTranslation();
@@ -44,8 +45,8 @@
 </script>
 
 <div class="relative flex flex-col gap-4" in:blur>
-	<h1 class="mt-2 text-2xl font-bold text-c-heading md:mt-6 dark:text-c-primary">{title}</h1>
-	<div class="flex flex-row max-md:flex-col gap-4 pb-4 items-start">
+	<Heading title={title} my={0} mt={4} />
+	<div class="flex flex-row max-md:flex-col flex-wrap gap-4 pb-4 items-start">
 		{#each entries as note (note.id)}
 			<button
 				class="cursor-pointer text-left w-60 max-md:w-full"
