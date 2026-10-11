@@ -68,7 +68,10 @@ function user(overrides: Partial<User> = {}): User {
 			navigation: '',
 			openai_api_key: null,
 			first_visit: true,
-			temperature_unit: 'c'
+			temperature_unit: 'c',
+			journal_enabled: false,
+			journal_calendar_mark: false,
+			check_in_calendar_mark: false
 		},
 		created_at: '2026-01-01T00:00:00',
 		updated_at: '2026-01-01T00:00:00',
@@ -477,6 +480,66 @@ describe('Auth store', () => {
 			await expect(auth.getPublicProfile('nobody')).resolves.toBeUndefined();
 			await expect(auth.getPublicProfile('nobody')).resolves.toBeUndefined();
 			expect(api.get).toHaveBeenCalledTimes(2);
+		});
+	});
+
+	describe('life mark settings', () => {
+		async function loggedInUser(): Promise<Auth> {
+			const expiresAt = new Date(Date.now() + 6 * 24 * 3600 * 1000).toISOString();
+			storage.getJson.mockReturnValue({ user: user(), authToken: authToken(expiresAt) });
+			const auth = new Auth();
+			await flushAsync();
+			storage.getJson.mockClear();
+			return auth;
+		}
+
+		it('keeps a toggled journal_enabled in the user settings', async () => {
+			api.put.mockResolvedValue(true);
+			const auth = await loggedInUser();
+
+			await auth.updateJournalEnabled(true);
+
+			expect(api.put).toHaveBeenCalledWith(
+				expect.stringContaining('/settings/journal'),
+				{ enabled: true }
+			);
+			expect(auth.user?.settings?.journal_enabled).toBe(true);
+		});
+
+		it('keeps a toggled journal_calendar_mark in the user settings', async () => {
+			api.put.mockResolvedValue(true);
+			const auth = await loggedInUser();
+
+			await auth.updateJournalCalendarMark(true);
+
+			expect(api.put).toHaveBeenCalledWith(
+				expect.stringContaining('/settings/journal-calendar-mark'),
+				{ enabled: true }
+			);
+			expect(auth.user?.settings?.journal_calendar_mark).toBe(true);
+		});
+
+		it('keeps a toggled check_in_calendar_mark in the user settings', async () => {
+			api.put.mockResolvedValue(true);
+			const auth = await loggedInUser();
+
+			await auth.updateCheckInCalendarMark(true);
+
+			expect(api.put).toHaveBeenCalledWith(
+				expect.stringContaining('/settings/check-in-calendar-mark'),
+				{ enabled: true }
+			);
+			expect(auth.user?.settings?.check_in_calendar_mark).toBe(true);
+		});
+
+		it('does not persist the flag when the API rejects the update', async () => {
+			api.put.mockResolvedValue(false);
+			const auth = await loggedInUser();
+
+			const result = await auth.updateJournalEnabled(true);
+
+			expect(result).toBe(false);
+			expect(auth.user?.settings?.journal_enabled).toBe(false);
 		});
 	});
 

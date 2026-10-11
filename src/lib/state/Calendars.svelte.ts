@@ -22,6 +22,7 @@ import {
 	getCalendarMonth,
 	getCalendarWeek,
 	getDateDiffInMinutes,
+	getUrlFormat,
 	getWeekNumber
 } from '$lib/helpers/DateHelper';
 import type { Todo, UpdateTodoRequest } from '$lib/types/todo';
@@ -74,6 +75,11 @@ export class Calendars {
 	acceptedSharedCalendars = $derived(
 		this.calendars.filter((c) => c.invite_status === 'accepted')
 	);
+	// Days that carry a life mark for the currently visible month: journal
+	// entries and check-ins. Fetching the scoped mark lists (instead of the full
+	// notes/check-in histories) is what keeps the calendar light.
+	journalMarks = $state<string[]>([]);
+	checkInMarks = $state<string[]>([]);
 
 	constructor() {
 		this.apiService = this.auth.apiService;
@@ -184,6 +190,34 @@ export class Calendars {
 		if (res) this.todos = res.data as Todo[];
 	}
 
+	// Fetches the life marks (journal + check-in) for the currently visible
+	// month grid. Called after any navigation that rebuilds the month. Each
+	// fetch is skipped when the corresponding display setting is off, so a
+	// disabled source never costs a request.
+	async loadMarks(): Promise<void> {
+		const days = this.month.weeks.flatMap((week) => week.days.map((day) => day.date));
+		if (days.length === 0) return;
+
+		const from = getUrlFormat(days[0]);
+		const to = getUrlFormat(days[days.length - 1]);
+
+		const journalEnabled = this.auth.user?.settings?.journal_enabled ?? false;
+		const journalMarkEnabled = this.auth.user?.settings?.journal_calendar_mark ?? false;
+		const checkInMarkEnabled = this.auth.user?.settings?.check_in_calendar_mark ?? false;
+
+		const [journalRes, checkInRes] = await Promise.all([
+			journalEnabled && journalMarkEnabled
+				? this.apiService.list(`${apiRoutes.notes.journalMarks}?from=${from}&to=${to}`)
+				: Promise.resolve(null),
+			checkInMarkEnabled
+				? this.apiService.list(`${apiRoutes.checkIn.marks}?from=${from}&to=${to}`)
+				: Promise.resolve(null)
+		]);
+
+		this.journalMarks = (journalRes?.data as string[]) ?? [];
+		this.checkInMarks = (checkInRes?.data as string[]) ?? [];
+	}
+
 	changeView(view: 'month' | 'week' | 'day' | 'list'): void {
 		this.view = view;
 		this.saveView();
@@ -207,6 +241,7 @@ export class Calendars {
 		}
 		this.loadMonth();
 		await this.loadEvents();
+		await this.loadMarks();
 	}
 
 	async lastMonth(): Promise<void> {
@@ -218,6 +253,7 @@ export class Calendars {
 		}
 		this.loadMonth();
 		await this.loadEvents();
+		await this.loadMarks();
 	}
 
 	nextWeek(): void {
@@ -271,6 +307,7 @@ export class Calendars {
 		this.mobileWeekStart = new SvelteDate(today);
 		this.loadMonth();
 		await this.loadEvents();
+		await this.loadMarks();
 	}
 
 	getEventsForDate(date: Date): CalendarEvent[] {

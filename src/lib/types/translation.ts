@@ -138,6 +138,10 @@ export interface SettingsRecords {
 	appearance_system: string;
 	appearance_light: string;
 	appearance_dark: string;
+	calendar_life_marks: string;
+	journal_enabled: string;
+	journal_calendar_mark: string;
+	check_in_calendar_mark: string;
 }
 
 export interface AuthRecords {
@@ -822,6 +826,8 @@ export interface CalendarRecords {
 	attach_note: string;
 	search_todo: string;
 	search_note: string;
+	life_journal: string;
+	life_check_in: string;
 }
 
 export interface ContactRecords {

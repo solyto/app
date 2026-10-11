@@ -37,7 +37,10 @@ export const apiRoutes = {
 			completeOnboarding: API_URL + '/users/me/settings/complete-onboarding',
 			updateWeatherCity: API_URL + '/users/me/settings/weather-city',
 			updateWeatherTemperatureUnit: API_URL + '/users/me/settings/weather-temperature-unit',
-			updateCheckInSettings: API_URL + '/users/me/settings/check-in'
+			updateCheckInSettings: API_URL + '/users/me/settings/check-in',
+			updateJournal: API_URL + '/users/me/settings/journal',
+			updateJournalCalendarMark: API_URL + '/users/me/settings/journal-calendar-mark',
+			updateCheckInCalendarMark: API_URL + '/users/me/settings/check-in-calendar-mark'
 		}
 	},
 	todos: {
@@ -71,7 +74,8 @@ export const apiRoutes = {
 	checkIn: {
 		list: API_URL + '/check-in',
 		create: API_URL + '/check-in',
-		update: API_URL + '/check-in/%s'
+		update: API_URL + '/check-in/%s',
+		marks: API_URL + '/check-in/marks'
 	},
 	notes: {
 		list: API_URL + '/notes',
@@ -86,7 +90,8 @@ export const apiRoutes = {
 		createCategory: API_URL + '/notes/categories',
 		updateCategory: API_URL + '/notes/categories/%d',
 		updateCategoryHidden: API_URL + '/notes/categories/%d/hidden',
-		deleteCategory: API_URL + '/notes/categories/%d'
+		deleteCategory: API_URL + '/notes/categories/%d',
+		journalMarks: API_URL + '/notes/journal/marks'
 	},
 	weather: {
 		today: API_URL + '/weather/today'

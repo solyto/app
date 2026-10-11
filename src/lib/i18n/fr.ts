@@ -221,7 +221,11 @@ const settings: SettingsRecords = {
 	appearance: 'Apparence',
 	appearance_system: 'Auto',
 	appearance_light: 'Clair',
-	appearance_dark: 'Sombre'
+	appearance_dark: 'Sombre',
+	calendar_life_marks: 'Journal et indicateurs du calendrier',
+	journal_enabled: 'Activer le journal',
+	journal_calendar_mark: 'Indicateur du journal dans le calendrier',
+	check_in_calendar_mark: 'Indicateur de test quotidien dans le calendrier'
 };
 
 const todos: TodoRecords = {
@@ -415,7 +419,7 @@ const notes: NoteRecords = {
 	yesterday: 'Hier',
 	other: 'Autre',
 	journal_empty: "Il n'y a pas encore d'entrée pour ce jour.",
-	journal_create_error: "Échec de l'ouverture de l'entrée du journal."
+	journal_create_error: "Échec de la création de l'entrée du journal."
 };
 
 const libraries: LibraryRecords = {
@@ -841,6 +845,8 @@ const calendar: CalendarRecords = {
 	attach_note: 'Associer une note',
 	search_todo: 'Rechercher un todo',
 	search_note: 'Rechercher une note',
+	life_journal: 'Journal',
+	life_check_in: 'Suivi quotidien',
 };
 
 const contacts: ContactRecords = {

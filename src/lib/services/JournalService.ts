@@ -29,6 +29,16 @@ export default class JournalService {
 		return ENTRY_TITLE_PATTERN.test(title);
 	}
 
+	// Parses a YYYY-MM-DD entry title back into a local date, so the title can
+	// be rendered in the user's preferred format without a UTC day shift.
+	parseEntryTitle(title: string): Date | null {
+		if (!this.isEntryTitle(title)) return null;
+
+		const [year, month, day] = title.split('-').map(Number);
+
+		return new Date(year, month - 1, day);
+	}
+
 	findEntry(notes: Note[], categoryId: number, date: Date): Note | null {
 		const title = this.getEntryTitle(date);
 		return (
@@ -46,5 +56,18 @@ export default class JournalService {
 	// Only today and earlier are reachable from the notebook; future days are not.
 	isReachable(date: Date, today: Date = new Date()): boolean {
 		return getUrlFormat(date) <= getUrlFormat(today);
+	}
+
+	// A journal day is only persisted once it holds something worth keeping: any
+	// visible text or embedded media. An untouched editor serializes to an empty
+	// paragraph (e.g. `<p></p>`), which must not create an entry.
+	hasContent(html: string): boolean {
+		const stripped = html
+			.replace(/<p>\s*(<br\s*\/?>)?\s*<\/p>/gi, '')
+			.replace(/<[^>]+>/g, '')
+			.replace(/&nbsp;/gi, ' ')
+			.trim();
+
+		return stripped !== '' || /<(img|hr|table|video|audio|iframe)\b/i.test(html);
 	}
 }

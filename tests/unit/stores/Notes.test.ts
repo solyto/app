@@ -21,7 +21,7 @@ const ts = {
 		notes: {
 			create_error: 'Failed to create note.',
 			create_folder_error: 'Failed to create folder.',
-			journal_create_error: 'Failed to open journal entry.'
+			journal_create_error: 'Failed to create the journal entry.'
 		}
 	}
 };
@@ -340,8 +340,33 @@ describe('Notes store', () => {
 			expect(api.create).not.toHaveBeenCalled();
 		});
 
-		it('openJournalEntry creates the day entry on first open', async () => {
+		it('openJournalEntry opens an in-memory draft without creating', async () => {
+			const n = withJournal();
+			const result = await n.openJournalEntry(new Date(2026, 7, 4));
+
+			expect(api.create).not.toHaveBeenCalled();
+			expect(result?.id).toBe('');
+			expect(result?.title).toBe('2026-08-04');
+			expect(result?.category_id).toBe(9);
+			expect(n.activeNote).toBe(result);
+			expect(n.isJournalDraft(n.activeNote)).toBe(true);
+		});
+
+		it('saveContent does not create an entry for an untouched draft', async () => {
+			const n = withJournal();
+			await n.openJournalEntry(new Date(2026, 7, 4));
+
+			await expect(n.saveContent()).resolves.toBe(true);
+
+			expect(api.create).not.toHaveBeenCalled();
+			expect(api.update).not.toHaveBeenCalled();
+		});
+
+		it('saveContent creates the draft once it has content, then stores the content', async () => {
 			api.create.mockResolvedValue({
+				data: note({ id: 'j5', title: '2026-08-04', category_id: 9 })
+			});
+			api.update.mockResolvedValue({
 				data: note({ id: 'j5', title: '2026-08-04', category_id: 9 })
 			});
 			api.list.mockResolvedValue({
@@ -349,22 +374,31 @@ describe('Notes store', () => {
 			});
 
 			const n = withJournal();
-			const result = await n.openJournalEntry(new Date(2026, 7, 4));
+			const draft = await n.openJournalEntry(new Date(2026, 7, 4));
+			draft!.content = '<p>Hello</p>';
+
+			await expect(n.saveContent()).resolves.toBe(true);
 
 			expect(api.create).toHaveBeenCalledWith(expect.stringContaining('/notes'), {
 				title: '2026-08-04',
 				category_id: 9
 			});
-			expect(result?.id).toBe('j5');
+			expect(api.update).toHaveBeenCalledWith(expect.stringContaining('/notes'), 'j5', {
+				content: '<p>Hello</p>'
+			});
 			expect(n.activeNote?.id).toBe('j5');
 		});
 
-		it('openJournalEntry reports an error when creation fails', async () => {
+		it('saveContent reports an error when draft creation fails', async () => {
 			api.create.mockResolvedValue(null);
 
 			const n = withJournal();
-			await expect(n.openJournalEntry(new Date(2026, 7, 4))).resolves.toBeNull();
-			expect(notifications.error).toHaveBeenCalledWith('Failed to open journal entry.');
+			const draft = await n.openJournalEntry(new Date(2026, 7, 4));
+			draft!.content = '<p>Hello</p>';
+
+			await expect(n.saveContent()).resolves.toBe(false);
+			expect(api.update).not.toHaveBeenCalled();
+			expect(notifications.error).toHaveBeenCalledWith('Failed to create the journal entry.');
 		});
 
 		it('openJournalEntry does nothing when no journal folder is known', async () => {

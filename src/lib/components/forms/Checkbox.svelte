@@ -14,7 +14,7 @@
 	<label class="relative flex cursor-pointer items-center">
 		<input
 			type="checkbox"
-			class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-c-neutral-3 shadow transition-all checked:border-c-success checked:bg-c-success hover:shadow-md bg-c-bg-elevated"
+			class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-c-neutral-3 bg-c-bg-elevated shadow transition-all checked:border-c-success checked:bg-c-success hover:shadow-md dark:border-c-neutral-6 dark:checked:border-c-success"
 			checked={isChecked}
 			{onchange}
 		/>

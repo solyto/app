@@ -7,14 +7,41 @@
 	import AddNoteButton from '$lib/components/notes/AddNoteButton.svelte';
 	import AddFolderButton from '$lib/components/notes/AddFolderButton.svelte';
 	import NoteNavigationFavoriteNoteRenderer from '$lib/components/notes/NoteNavigationFavoriteNoteRenderer.svelte';
+	import JournalArchivePicker from '$lib/components/notes/journal/JournalArchivePicker.svelte';
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
-	import IconBookOpen from '@lucide/svelte/icons/book-open';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
+	import { getDateMinusDays, getUrlFormat } from '$lib/helpers/DateHelper';
+	import { getAuth } from '$lib/state/Auth.svelte';
 
 	const ts = getTranslation();
 	const notes = getNotes();
+	const auth = getAuth();
+
+	let journalEnabled = $derived(auth.user?.settings?.journal_enabled ?? false);
 
 	let favorites = $derived(notes.getFavorites());
+	let otherOpen = $state(false);
+
+	const todayKey = getUrlFormat(new Date());
+	const yesterdayKey = getUrlFormat(getDateMinusDays(new Date(), 1));
+
+	let activeKey = $derived.by(() => {
+		const date = page.params.date;
+		return date && notes.journalService.isEntryTitle(date) ? date : null;
+	});
+	let journalSelectedDate = $derived(
+		notes.journalService.parseEntryTitle(page.params.date ?? '') ?? new Date()
+	);
+	let otherActive = $derived(
+		otherOpen || (activeKey !== null && activeKey !== todayKey && activeKey !== yesterdayKey)
+	);
+
+	function openOtherDate(date: Date): void {
+		otherOpen = false;
+		goto(resolve(urls.journalDate, { date: getUrlFormat(date) }));
+	}
 
 	function handleNavigation(): void {}
 </script>
@@ -28,14 +55,43 @@
 		<AddFolderButton onClick={() => notes.openModal('category')} />
 	</div>
 	<div class="mb-4 text-2xl font-bold 2xl:font-normal">{ts.get.notes.notebook}</div>
-	<a
-		href={resolve(urls.journal)}
-		onclick={handleNavigation}
-		class="mb-4 flex cursor-pointer items-center space-x-2 rounded-lg px-2 py-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
-	>
-		<IconBookOpen size={18} class="text-surface-300" />
-		<span class="text-base">{ts.get.notes.journal}</span>
-	</a>
+	{#if journalEnabled}
+		<div class="mb-4 flex flex-col gap-1">
+			<div class="mb-1 text-xl">{ts.get.notes.journal}</div>
+			<a
+				href={resolve(urls.journalDate, { date: todayKey })}
+				onclick={handleNavigation}
+				class="flex cursor-pointer items-center space-x-2 rounded-lg px-2 py-1 hover:bg-c-neutral dark:hover:bg-s-dark-3 {activeKey === todayKey ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}"
+			>
+				<span>{ts.get.notes.today}</span>
+			</a>
+			<a
+				href={resolve(urls.journalDate, { date: yesterdayKey })}
+				onclick={handleNavigation}
+				class="flex cursor-pointer items-center space-x-2 rounded-lg px-2 py-1 hover:bg-c-neutral dark:hover:bg-s-dark-3 {activeKey === yesterdayKey ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}"
+			>
+				<span>{ts.get.notes.yesterday}</span>
+			</a>
+			<div class="relative">
+				<button
+					type="button"
+					class="flex w-full cursor-pointer items-center space-x-2 rounded-lg px-2 py-1 text-left hover:bg-c-neutral dark:hover:bg-s-dark-3 {otherActive ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}"
+					onclick={() => (otherOpen = !otherOpen)}
+				>
+					<span>{ts.get.notes.other}</span>
+				</button>
+				{#if otherOpen}
+					<div class="absolute top-full left-0 z-30 mt-1 rounded-lg bg-c-bg shadow-lg">
+						<JournalArchivePicker
+							selectedDate={journalSelectedDate}
+							markedDates={notes.getJournalEntryDates()}
+							onSelect={openOtherDate}
+						/>
+					</div>
+				{/if}
+			</div>
+		</div>
+	{/if}
 	{#if favorites && favorites.length > 0}
 		<div class="mb-4 flex flex-col gap-1">
 			<div class="mb-1 text-xl">{ts.get.notes.favorites}</div>

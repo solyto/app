@@ -1,6 +1,7 @@
 import type {
 	AuthToken,
 	User,
+	UserSettings,
 	LoginRequest,
 	LoginResponse,
 	RegisterRequest,
@@ -408,6 +409,43 @@ export class Auth {
 			time_format: timeFormat
 		});
 		return Promise.resolve(res);
+	}
+
+	private async updateBooleanSetting(
+		endpoint: string,
+		enabled: boolean,
+		apply: (settings: UserSettings) => void
+	): Promise<boolean> {
+		const res = await this.apiService.put(endpoint, { enabled });
+		if (res && this.user?.settings) {
+			apply(this.user.settings);
+			this.save();
+		}
+		return Promise.resolve(res);
+	}
+
+	async updateJournalEnabled(enabled: boolean): Promise<boolean> {
+		return this.updateBooleanSetting(
+			apiRoutes.users.settings.updateJournal,
+			enabled,
+			(settings) => (settings.journal_enabled = enabled)
+		);
+	}
+
+	async updateJournalCalendarMark(enabled: boolean): Promise<boolean> {
+		return this.updateBooleanSetting(
+			apiRoutes.users.settings.updateJournalCalendarMark,
+			enabled,
+			(settings) => (settings.journal_calendar_mark = enabled)
+		);
+	}
+
+	async updateCheckInCalendarMark(enabled: boolean): Promise<boolean> {
+		return this.updateBooleanSetting(
+			apiRoutes.users.settings.updateCheckInCalendarMark,
+			enabled,
+			(settings) => (settings.check_in_calendar_mark = enabled)
+		);
 	}
 
 	async updateLanguage(language: string): Promise<boolean> {
