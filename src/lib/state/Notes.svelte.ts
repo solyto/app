@@ -90,13 +90,8 @@ export class NotesSvelte {
 		const res = await this.apiService.list(apiRoutes.notes.listCategories);
 		if (res) {
 			const all = res.data as NoteCategory[];
-			// The system journal folder is resolved separately and kept out of the
-			// rendered category tree.
 			this.journalCategory = this.journalService.findJournalCategory(all);
 			this.categories = all.filter((c) => !c.is_system);
-			// `load()` snapshots the overview lists before the journal folder may
-			// be resolved. Re-snapshot here so the exclusion is correct regardless
-			// of whether `load()` or `loadCategories()` finishes first.
 			this.newestNotes = this.getNewestNotes();
 			this.lastUpdatedNotes = this.getLastUpdatedNotes();
 			this.favoriteNotes = this.getFavorites();
@@ -107,8 +102,6 @@ export class NotesSvelte {
 		return this.journalCategory !== null && note.category_id === this.journalCategory.id;
 	}
 
-	// A journal day that has been opened but not yet persisted: an in-memory
-	// draft with an empty id, so merely browsing days never creates entries.
 	isJournalDraft(note: Note | null): boolean {
 		return note !== null && note.id === '' && this.isJournalNote(note);
 	}
@@ -123,9 +116,6 @@ export class NotesSvelte {
 		return this.journalService.getEntryDates(this.notes, this.journalCategory.id);
 	}
 
-	// Opens the day's entry in the journal folder. If none exists yet, an
-	// in-memory draft is returned instead of creating an empty note on the
-	// server; the entry is created only once there is content to save.
 	async openJournalEntry(date: Date): Promise<Note | null> {
 		if (this.journalCategory === null) return null;
 

@@ -49,7 +49,7 @@
 
 <div class="relative flex h-full w-full flex-col gap-4 p-4 lg:px-8">
 	{#if notes.activeNote !== null && notes.isJournalNote(notes.activeNote)}
-		<NoteHeader />
+		<NoteHeader isJournal={true} />
 		{#key `${notes.activeNote.id}-${notes.activeNote.title}`}
 			<TipTapEditor autofocus={isToday} />
 		{/key}

@@ -20,9 +20,6 @@
 
 	let hex = $state<string>(calendar.color !== null ? calendar.color : 'var(--color-c-neutral-2)');
 
-	const isOwned = $derived(!calendar.is_shared && calendar.invite_status === null);
-	let hidden = $derived(calendars.isCalendarHidden(calendar.id));
-
 	async function onColorChange(): Promise<void> {
 		if (hex === calendar.color) return;
 		if (hex === null) return;
@@ -78,7 +75,7 @@
 			class="text-c-neutral-4"
 			onclick={() => calendars.toggleCalendar(calendar.id)}
 		>
-			{#if hidden}
+			{#if calendars.isCalendarHidden(calendar.id)}
 				<IconEyeOff class="size-4" />
 			{:else}
 				<IconEye class="size-4" />
@@ -86,7 +83,7 @@
 		</button>
 	</div>
 	<div class="flex items-center">
-		{#if isOwned}
+		{#if !calendar.is_shared && calendar.invite_status === null}
 			<button
 				class="cursor-pointer rounded-full p-2 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-primary dark:hover:bg-s-dark-3"
 				onclick={onShare}

@@ -20,6 +20,10 @@
 	const notifications = getUiNotifications();
 	const keyManager = getKeyManager();
 
+	let { isJournal = false } = $props<{
+		isJournal?: boolean;
+	}>();
+
 	let changeTitle = $state<boolean>(false);
 	let titleInput = $state<HTMLInputElement | null>(null);
 	let titleValue = $state<string>(notes.activeNote!.title);
@@ -30,26 +34,17 @@
 		Escape: null
 	});
 
-	// Journal entries are ordinary notes addressed by a date title; show a
-	// readable, localized heading and keep the date title non-editable.
-	let isJournalNote = $derived(
-		notes.activeNote !== null && notes.isJournalNote(notes.activeNote)
-	);
-	let journalTitle = $derived.by(() => {
-		if (!isJournalNote || notes.activeNote === null) return '';
-		const date = notes.journalService.parseEntryTitle(notes.activeNote.title);
-		return date === null
-			? notes.activeNote.title
-			: `${ts.get.notes.journal}: ${auth.getDateInUserPreferredFormat(date)}`;
-	});
-
-	// A journal day that has no persisted entry yet: favorite/delete/tags have
-	// nothing to act on, so they stay hidden until the entry is saved.
 	let isDraft = $derived(notes.isJournalDraft(notes.activeNote));
 
+	function journalTitle(): string {
+		const date = notes.journalService.parseEntryTitle(notes.activeNote!.title);
+
+		return date === null ? 
+			notes.activeNote!.title :
+			`${ts.get.notes.journal}: ${auth.getDateInUserPreferredFormat(date)}`;
+	}
+
 	async function saveNote() {
-		// An untouched journal day has nothing to persist; saving it must not
-		// create an empty entry on the server.
 		if (isDraft && !notes.journalService.hasContent(notes.activeNote!.content)) return;
 
 		loadingIndicator.start();
@@ -123,12 +118,12 @@
 		deleteModalOpen = false;
 	}
 
-	onMount(
-		() =>
-			(keyHandlers.CtrlS = keyManager.registerKeyDown('s', saveNote, {
-				withHelperKey: 'Control'
-			}))
-	);
+	onMount(() => {
+		keyHandlers.CtrlS = keyManager.registerKeyDown('s', saveNote, {
+			withHelperKey: 'Control'
+		});
+	});
+
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 </script>
 
@@ -136,8 +131,8 @@
 	<div class="relative flex flex-col gap-1 max-md:pt-18">
 		<div class="flex flex-row items-start gap-4">
 			<div class="flex min-w-0 flex-1 flex-col gap-0.5">
-				{#if isJournalNote}
-					<h1 class="text-left text-3xl leading-tight font-bold">{journalTitle}</h1>
+				{#if isJournal}
+					<h1 class="text-left text-3xl leading-tight font-bold">{journalTitle()}</h1>
 				{:else if changeTitle}
 					<input
 						type="text"
@@ -164,7 +159,7 @@
 			<div
 				class="flex shrink-0 items-center gap-3 pt-1 max-md:absolute max-md:top-0 max-md:right-0"
 			>
-				{#if !isJournalNote}
+				{#if !isJournal}
 					<button
 						class="flex cursor-pointer items-center justify-center rounded-sm p-1.5 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 						class:text-c-action={notes.activeNote.is_favorite}
@@ -206,6 +201,8 @@
 		description={ts.get.notes.delete_confirm_message}
 		type="confirm-delete"
 		onConfirm={onDeleteConfirm}
-		onCancel={() => { deleteModalOpen = false; }}
+		onCancel={() => {
+			deleteModalOpen = false;
+		}}
 	/>
 {/if}
