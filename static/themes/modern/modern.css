@@ -1,0 +1,163 @@
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/*  Modern  —  Clean, professional, Notion-inspired                            */
+/*                                                                             */
+/*  Light-only. System font stack (Notion ships none), warm near-black text,   */
+/*  Notion-blue accent, white canvas with a warm-gray sidebar, whisper         */
+/*  hairlines and restrained multi-layer shadows.                              */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+	/* ── TYPOGRAPHY ──────────────────────────────────────────────────────────
+	   Notion's product UI uses a pure system stack (SF on Apple, Segoe UI on
+	   Windows, Roboto on Android) — no webfont. The professional look comes
+	   from weight (600–700 headings, subtle negative tracking) not a custom
+	   face.                                                                  */
+	--t-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
+		'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+	--t-font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
+		'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+	--font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
+		'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+	/* ── SHADOWS ─────────────────────────────────────────────────────────────
+	   Deliberately flat. Multi-layer shadows whose cumulative opacity stays
+	   under ~0.05 — Notion's whispered depth. Tinted warm (text color).        */
+	--shadow-xs: 0 1px 2px 0 rgb(55 53 47 / 0.04);
+	--shadow-sm: 0 1px 3px 0 rgb(55 53 47 / 0.06), 0 1px 2px -1px rgb(55 53 47 / 0.04);
+	--shadow-md: 0 4px 6px -2px rgb(55 53 47 / 0.05), 0 2px 4px -2px rgb(55 53 47 / 0.04);
+	--shadow-lg: 0 12px 28px -4px rgb(55 53 47 / 0.1), 0 4px 8px -4px rgb(55 53 47 / 0.06);
+	--drop-shadow-sm: 0 1px 2px rgb(55 53 47 / 0.05);
+	--drop-shadow-md: 0 4px 12px rgb(55 53 47 / 0.08);
+
+	/* ── SEMANTIC COLORS ───────────────────────────────────────────────────── */
+	--color-c-primary: #2383e2; /* Notion blue                                   */
+	--color-c-heading: #37352f; /* warm near-black — Notion primary text         */
+	--color-c-heading-base: #37352f;
+	--color-c-btn: #2383e2; /* flat blue buttons, Notion "New page" style        */
+	--color-c-btn-hover: #0f6fc6;
+	--color-c-btn-text: #ffffff;
+	--color-c-action: #2383e2; /* actions follow the blue accent                  */
+	--color-c-action-hover: #0f6fc6;
+	--color-c-danger: #d44c47; /* Notion red                                     */
+	--color-c-danger-hover: #bf3b36;
+	--color-c-success: #0f7b6c; /* Notion green                                  */
+	--color-c-warning: #cb912f; /* Notion yellow                                  */
+
+	/* ── BACKGROUNDS ─────────────────────────────────────────────────────────
+	   White canvas, warm-gray sidebar (#f7f6f3 — Notion's panel tone).
+	   Surfaces stay white and are separated by hairlines, not fill changes.    */
+	--color-c-bg: #ffffff;
+	--color-c-bg-surface: #ffffff;
+	--color-c-bg-elevated: #ffffff;
+	--color-c-bg-modal: #ffffff;
+	--color-c-nav-hover: rgba(55, 53, 47, 0.06);
+	--color-c-nav-active: rgba(55, 53, 47, 0.08);
+	--color-c-nav-active-text: #37352f;
+	--color-c-border: rgba(0, 0, 0, 0.1); /* whisper hairline */
+
+	/* ── S-DARK PALETTE ──────────────────────────────────────────────────────
+	   Light-only theme. Remap so dark: utility classes stay readable if the
+	   class ever appears (ThemeState removes it for non-dark themes anyway).  */
+	--color-s-dark: #ffffff;
+	--color-s-dark-2: #f7f6f3;
+	--color-s-dark-3: #e9e9e7;
+	--color-s-dark-shadow: rgb(55, 53, 47);
+
+	--color-white: #ffffff;
+
+	/* ── GRAY SCALE ──────────────────────────────────────────────────────────
+	   Warm, Notion-tinted neutrals. Gray-700 is the base body text
+	   (base.css: html { @apply text-c-neutral-7 }) → #37352f exactly.          */
+	--color-gray-50: #fafaf9;
+	--color-gray-100: #f7f6f3;
+	--color-gray-200: #e9e9e7;
+	--color-gray-300: #d3d2cf;
+	--color-gray-400: #9b9a97;
+	--color-gray-500: #787774;
+	--color-gray-600: #5f5e5b;
+	--color-gray-700: #37352f;
+	--color-gray-800: #2f2e2b;
+	--color-gray-900: #262522;
+
+	/* Light-blue utility surfaces — barely-there cool tints (selection bars,
+	   date pickers). Kept near-white so hairlines stay whisper-fine.          */
+	--color-d-lightblue: #f0f4f8;
+	--color-d-lighterblue: #f7f9fb;
+
+	/* ── NAV GRADIENT ────────────────────────────────────────────────────────
+	   Flat warm-gray sidebar — no gradient, no depth. The nav overrides in
+	   this file turn the bars into square, flush surfaces.                     */
+	--t-gradient-colors: #f7f6f3, #f7f6f3;
+}
+
+/* Light only — enforce light backgrounds regardless of dark toggle */
+html.dark {
+	--color-c-bg: #ffffff;
+	--color-c-bg-surface: #ffffff;
+	--color-c-bg-elevated: #ffffff;
+	--color-c-bg-modal: #ffffff;
+	--color-c-nav-hover: rgba(55, 53, 47, 0.06);
+	--color-c-nav-active: rgba(55, 53, 47, 0.08);
+	--color-c-nav-active-text: #37352f;
+	--color-c-neutral: #fafaf9;
+	--color-c-border: rgba(0, 0, 0, 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/*  NAVIGATION — flat bar, square corners, flush to the window edges           */
+/*                                                                             */
+/*  The brief asks for a flat nav bar with no spacing to the window border     */
+/*  and no rounded border, on desktop AND mobile. The layout wraps both bars    */
+/*  in .*-container wrappers whose p-1 is what creates the gap to the window    */
+/*  edge; the inner bars carry the rounded-md corners and drop-shadow-xl.       */
+/*  The hook classes are used only by DesktopNavbar/MobileNavbar (grep-         */
+/*  confirmed), so these rules touch nothing else.                              */
+/*                                                                             */
+/*  Mobile overflow popover (the "…" menu): Notion popovers are white,          */
+/*  rounded and shadowed — the "flat bar" requirement applies to the nav bar    */
+/*  itself, not to floating overlays, so it stays rounded. It is restyled       */
+/*  below with a white surface + hairline border to match Notion menus.         */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Flush to the window border — drop the wrapping p-1 */
+.nav-desktop-container,
+.nav-mobile-container {
+	padding: 0;
+}
+
+/* Square, flat, no drop shadow (drop-shadow-xl is a filter utility, not
+   box-shadow, hence filter: none) */
+.nav-desktop,
+.nav-mobile {
+	border-radius: 0;
+	box-shadow: none;
+	filter: none;
+}
+
+/* Themed fills — Notion's warm-gray sidebar tone on both bars (the bounding
+   wrapper is invisible now, the inner bar fills the whole strip). Pinned
+   directly so hover/active fills (rgba over #f7f6f3) stay legible no matter
+   the cascade order. */
+.nav-desktop-container,
+.nav-desktop {
+	background: #f7f6f3;
+}
+.nav-mobile-container,
+.nav-mobile {
+	background: #f7f6f3;
+}
+
+/* Mobile overflow popover — Notion-style menu: white, hairline border,
+   whisper shadow, rounded corners kept. */
+.nav-mobile-container .gradient-down {
+	background: #ffffff;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow:
+		0 12px 28px -4px rgb(55 53 47 / 0.1),
+		0 4px 8px -4px rgb(55 53 47 / 0.06);
+}
+
+/* Subtle logo treatment — desaturate the colorful mark so it reads neutral */
+.logo {
+	filter: grayscale(0.7) brightness(1.05);
+}
