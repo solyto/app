@@ -21,6 +21,12 @@
 	const themeState = getThemeState();
 
 	const version = env.PUBLIC_VERSION;
+
+	const appearanceOptions = $derived([
+		{ value: 'system' as const, label: ts.get.settings.appearance_system },
+		{ value: 'light' as const, label: ts.get.settings.appearance_light },
+		{ value: 'dark' as const, label: ts.get.settings.appearance_dark }
+	]);
 </script>
 
 <div class="flex flex-col gap-6 md:p-4">
@@ -52,6 +58,22 @@
 			{/each}
 		</div>
 	</SettingsSection>
+	{#if themeState.theme.supportsDarkMode}
+		<SettingsSection label={ts.get.settings.appearance}>
+			<div class="mt-2 flex items-center gap-1">
+				{#each appearanceOptions as option (option.value)}
+					<button
+						class="cursor-pointer rounded-lg px-3 py-1.5 text-sm transition-all hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
+						class:bg-c-neutral-1={themeState.appearance === option.value}
+						class:dark:bg-s-dark-3={themeState.appearance === option.value}
+						onclick={() => themeState.setAppearance(option.value)}
+					>
+						{option.label}
+					</button>
+				{/each}
+			</div>
+		</SettingsSection>
+	{/if}
 	<SettingsSection label={ts.get.settings.animations}>
 		<div class="mt-2">
 			<Toggle

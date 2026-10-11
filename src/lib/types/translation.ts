@@ -134,6 +134,10 @@ export interface SettingsRecords {
 	theme: string;
 	animations: string;
 	animations_label: string;
+	appearance: string;
+	appearance_system: string;
+	appearance_light: string;
+	appearance_dark: string;
 	calendar_life_marks: string;
 	journal_enabled: string;
 	journal_calendar_mark: string;

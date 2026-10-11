@@ -5,15 +5,22 @@ import LocalStorageService from '$lib/services/LocalStorageService';
 export class ThemeState {
 	static readonly LS_THEME_KEY: string = 'theme';
 	static readonly LS_ANIMATIONS_KEY: string = 'animations';
+	static readonly LS_APPEARANCE_KEY: string = 'appearance';
 
 	theme = $state<Theme>(themes[0]);
 	animations = $state<boolean>(true);
+	appearance = $state<'system' | 'light' | 'dark'>('system');
 	link: HTMLLinkElement | null = null;
 	mediaQuery: MediaQueryList | null = null;
 	darkListener: ((e: MediaQueryListEvent) => void) | null = null;
 	localStorage = new LocalStorageService();
 
 	load(): void {
+		const savedAppearance = this.localStorage.get(ThemeState.LS_APPEARANCE_KEY);
+		if (savedAppearance === 'light' || savedAppearance === 'dark') {
+			this.appearance = savedAppearance;
+		}
+
 		const saved = this.localStorage.get(ThemeState.LS_THEME_KEY) ?? 'default';
 		this.apply(themes.find((t) => t.id === saved) ?? themes[0]);
 
@@ -24,6 +31,16 @@ export class ThemeState {
 	setTheme(theme: Theme): void {
 		this.localStorage.set(ThemeState.LS_THEME_KEY, theme.id);
 		this.apply(theme);
+	}
+
+	setAppearance(appearance: 'system' | 'light' | 'dark'): void {
+		this.localStorage.set(ThemeState.LS_APPEARANCE_KEY, appearance);
+		this.appearance = appearance;
+
+		if (this.theme.supportsDarkMode) {
+			this.teardownDarkListener();
+			this.applyAppearance();
+		}
 	}
 
 	setAnimations(enabled: boolean): void {
@@ -67,16 +84,10 @@ export class ThemeState {
 			document.head.appendChild(this.link);
 		}
 
-		if (this.mediaQuery && this.darkListener) {
-			this.mediaQuery.removeEventListener('change', this.darkListener);
-			this.darkListener = null;
-		}
+		this.teardownDarkListener();
 
 		if (theme.supportsDarkMode) {
-			this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-			this.darkListener = (e) => this.applyDark(e.matches);
-			this.mediaQuery.addEventListener('change', this.darkListener);
-			this.applyDark(this.mediaQuery.matches);
+			this.applyAppearance();
 		} else {
 			document.documentElement.classList.remove('dark');
 		}
@@ -84,6 +95,24 @@ export class ThemeState {
 
 	applyDark(dark: boolean): void {
 		document.documentElement.classList.toggle('dark', dark);
+	}
+
+	private teardownDarkListener(): void {
+		if (this.mediaQuery && this.darkListener) {
+			this.mediaQuery.removeEventListener('change', this.darkListener);
+			this.darkListener = null;
+		}
+	}
+
+	private applyAppearance(): void {
+		if (this.appearance === 'system') {
+			this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+			this.darkListener = (e) => this.applyDark(e.matches);
+			this.mediaQuery.addEventListener('change', this.darkListener);
+			this.applyDark(this.mediaQuery.matches);
+		} else {
+			this.applyDark(this.appearance === 'dark');
+		}
 	}
 }
 

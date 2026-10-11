@@ -194,4 +194,83 @@ describe('Theme store', () => {
 			);
 		});
 	});
+
+	describe('appearance', () => {
+		it('loads a saved forced appearance and does not follow the OS', () => {
+			const dom = setupDom();
+			storage.get.mockImplementation((key: string) =>
+				key === ThemeState.LS_APPEARANCE_KEY ? 'dark' : 'default'
+			);
+			storage.getBool.mockReturnValue(true);
+
+			const s = new ThemeState();
+			s.load();
+
+			expect(s.appearance).toBe('dark');
+			expect(dom.classList.toggle).toHaveBeenCalledWith('dark', true);
+			expect(dom.mediaQuery.addEventListener).not.toHaveBeenCalled();
+		});
+
+		it('ignores unknown appearance values and falls back to system', () => {
+			const dom = setupDom();
+			storage.get.mockImplementation((key: string) =>
+				key === ThemeState.LS_APPEARANCE_KEY ? 'sepia' : 'default'
+			);
+			storage.getBool.mockReturnValue(true);
+
+			const s = new ThemeState();
+			s.load();
+
+			expect(s.appearance).toBe('system');
+			expect(dom.mediaQuery.addEventListener).toHaveBeenCalledWith(
+				'change',
+				expect.any(Function)
+			);
+		});
+
+		it('setAppearance persists forced dark and removes the OS listener', () => {
+			const dom = setupDom();
+			const s = new ThemeState();
+			s.apply(defaultTheme);
+
+			s.setAppearance('dark');
+
+			expect(storage.set).toHaveBeenCalledWith(ThemeState.LS_APPEARANCE_KEY, 'dark');
+			expect(dom.mediaQuery.removeEventListener).toHaveBeenCalledWith(
+				'change',
+				expect.any(Function)
+			);
+			expect(s.appearance).toBe('dark');
+			expect(dom.classList.toggle).toHaveBeenCalledWith('dark', true);
+		});
+
+		it('setAppearance forced light drops the dark class', () => {
+			const dom = setupDom();
+			const s = new ThemeState();
+			s.apply(defaultTheme);
+
+			s.setAppearance('light');
+
+			expect(storage.set).toHaveBeenCalledWith(ThemeState.LS_APPEARANCE_KEY, 'light');
+			expect(s.appearance).toBe('light');
+			expect(dom.classList.toggle).toHaveBeenCalledWith('dark', false);
+			expect(dom.mediaQuery.addEventListener).toHaveBeenCalledTimes(1);
+		});
+
+		it('switching back to system re-registers the OS listener', () => {
+			const dom = setupDom();
+			const s = new ThemeState();
+			s.apply(defaultTheme);
+			s.setAppearance('light');
+
+			dom.mediaQuery.addEventListener.mockClear();
+			s.setAppearance('system');
+
+			expect(s.appearance).toBe('system');
+			expect(dom.mediaQuery.addEventListener).toHaveBeenCalledWith(
+				'change',
+				expect.any(Function)
+			);
+		});
+	});
 });
