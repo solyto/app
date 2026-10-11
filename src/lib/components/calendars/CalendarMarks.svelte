@@ -26,12 +26,14 @@
 	const calendars = getCalendars();
 	const ts = getTranslation();
 
+	let dateUrlFormat = getUrlFormat(date);
+
 	function openJournal(): void {
-		goto(resolve(urls.journalDate, { date: getUrlFormat(date) }));
+		goto(resolve(urls.journalDate, { date: dateUrlFormat }));
 	}
 
 	function openCheckIn(): void {
-		goto(resolve(urls.checkInDate, { date: getUrlFormat(date) }));
+		goto(resolve(urls.checkInDate, { date: dateUrlFormat }));
 	}
 </script>
 
@@ -46,7 +48,7 @@
 			>
 				<IconNotebook
 					{size}
-					class={calendars.journalMarks.includes(date) ? 'text-c-action' : 'text-c-neutral-4 dark:text-c-neutral-6'}
+					class={calendars.journalMarks.includes(dateUrlFormat) ? 'text-c-action' : 'text-c-neutral-4 dark:text-c-neutral-6'}
 				/>
 			</button>
 		{/if}
@@ -59,7 +61,7 @@
 			>
 				<IconGoal
 					{size}
-					class={calendars.checkInMarks.includes(date) ? 'text-c-primary' : 'text-c-neutral-4 dark:text-c-neutral-6'}
+					class={calendars.checkInMarks.includes(dateUrlFormat) ? 'text-c-primary' : 'text-c-neutral-4 dark:text-c-neutral-6'}
 				/>
 			</button>
 		{/if}
