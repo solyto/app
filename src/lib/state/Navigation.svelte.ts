@@ -14,7 +14,6 @@ export class Navigation {
 	auth = getAuth();
 	features = $state<Record<FeatureType, boolean>>({
 		calendar: true,
-		planner: true,
 		todos: true,
 		notes: true,
 		libraries: true,

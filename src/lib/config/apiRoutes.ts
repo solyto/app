@@ -5,15 +5,6 @@ const API_URL = `${BASE_URL}/api/v1`;
 export const API_STORAGE_URL = `${BASE_URL}/storage`;
 export const API_USER_STORAGE_URL = `${BASE_URL}/storage/user`;
 
-function toQuery(q: Record<string, string | undefined>): string {
-	const params = new URLSearchParams();
-	for (const [key, value] of Object.entries(q)) {
-		if (value !== undefined && value !== null) params.set(key, value);
-	}
-	const qs = params.toString();
-	return qs ? '?' + qs : '';
-}
-
 export const apiRoutes = {
 	auth: {
 		login: API_URL + '/auth/login',
@@ -54,8 +45,6 @@ export const apiRoutes = {
 	},
 	todos: {
 		list: API_URL + '/todos',
-		listRange: (q: { due_from?: string; due_to?: string }) =>
-			API_URL + '/todos' + toQuery(q),
 		listDueDate: API_URL + '/todos/due-date',
 		get: API_URL + '/todos/%s',
 		create: API_URL + '/todos',
@@ -84,7 +73,6 @@ export const apiRoutes = {
 	},
 	checkIn: {
 		list: API_URL + '/check-in',
-		listRange: (q: { from?: string; to?: string }) => API_URL + '/check-in' + toQuery(q),
 		create: API_URL + '/check-in',
 		update: API_URL + '/check-in/%s',
 		marks: API_URL + '/check-in/marks'
@@ -322,8 +310,6 @@ export const apiRoutes = {
 		updateCalendarsOrder: API_URL + '/calendars/order',
 		deleteCalendar: API_URL + '/calendars/%d',
 		listEvents: API_URL + '/calendars/events/%s',
-		eventsRange: (from: string, to: string) =>
-			API_URL + '/calendars/events' + toQuery({ from, to }),
 		listWidgetEvents: API_URL + '/calendars/events/widget',
 		createEvent: API_URL + '/calendars/%d/events',
 		updateEvent: API_URL + '/calendars/%d/events/%s',
@@ -364,12 +350,5 @@ export const apiRoutes = {
 	dashboard: {
 		quickAddDetect: API_URL + '/dashboard/quick-add/detect',
 		quickAddCommit: API_URL + '/dashboard/quick-add/commit'
-	},
-	planner: {
-		list: (from: string, to: string) =>
-			API_URL + '/planner/entries' + toQuery({ from, to }),
-		create: API_URL + '/planner/entries',
-		update: API_URL + '/planner/entries/%d',
-		delete: API_URL + '/planner/entries/%d'
 	}
 } as const;
