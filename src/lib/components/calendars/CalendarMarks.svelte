@@ -36,7 +36,7 @@
 </script>
 
 {#if !isDateInTheFuture(date) && (showJournal || showCheckIn)}
-	<div class="flex items-center {extraClass}" style="gap: {Math.round(size * 0.5)}px">
+	<div class="flex items-center {extraClass}" style="gap: {Math.round(size * 0.45)}px">
 		{#if showJournal}
 			<button
 				tabindex="-1"

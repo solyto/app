@@ -37,6 +37,7 @@
 						date={calendars.currentDate}
 						showJournal={calendars.journalMarksEnabled}
 						showCheckIn={calendars.checkInMarksEnabled}
+						size={20}
 						class="flex flex-col"
 					/>
 				</div>
