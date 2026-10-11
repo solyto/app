@@ -26,7 +26,6 @@
 	{...swipe.handlers}
 >
 	<div class="flex flex-1 overflow-y-auto">
-		<!-- hour label gutter -->
 		<div class="flex w-8 flex-shrink-0 flex-col">
 			<div class="flex h-16 w-full flex-shrink-0 items-center justify-center">
 				<span class="px-1 text-center text-xs">{ts.get.calendar.is_all_day}</span>
@@ -39,7 +38,6 @@
 			{/each}
 		</div>
 
-		<!-- animated day content -->
 		<div class="min-w-0 flex-1" style="overflow-x: clip">
 			<div
 				bind:this={contentEl}
@@ -49,7 +47,7 @@
 				<div
 					class="flex w-full flex-col border-1 border-c-neutral-1 bg-c-bg-surface dark:border-s-dark"
 				>
-					<CalendarWeekDay date={calendars.currentDate} fixedHeight />
+					<CalendarWeekDay date={calendars.currentDate} isMobile />
 				</div>
 			</div>
 		</div>

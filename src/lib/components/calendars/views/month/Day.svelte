@@ -7,7 +7,7 @@
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarDragGhost from '$lib/components/calendars/dnd/CalendarDragGhost.svelte';
 	import { calendarDrag } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
-	import DayLifeMarks from '$lib/components/calendars/DayLifeMarks.svelte';
+	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 
 	const calendars = getCalendars();
 
@@ -39,7 +39,11 @@
 				>
 					{day.number}
 				</div>
-				<DayLifeMarks date={day.date} />
+				<CalendarMarks 
+					dateKey={dateSlug} 
+					showJournal={calendars.journalMarksEnabled} 
+					showCheckIn={calendars.checkInMarksEnabled} 
+				/>
 			</div>
 			<button
 				onclick={async () => {

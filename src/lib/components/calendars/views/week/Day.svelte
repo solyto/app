@@ -5,6 +5,7 @@
 	import { formatDate, getDateDiffInMinutes } from '$lib/helpers/DateHelper';
 	import type { CalendarEvent } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
+	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 	import CalendarDragService from '$lib/services/CalendarDragService';
 	import CalendarDragGhost from '$lib/components/calendars/dnd/CalendarDragGhost.svelte';
 	import {
@@ -29,7 +30,7 @@
 		(i - 1).toString().padStart(2, '0')
 	);
 
-	let { date, fixedHeight = false } = $props<{ date: Date; fixedHeight?: boolean }>();
+	let { date, isMobile = false } = $props<{ date: Date; isMobile?: boolean }>();
 
 	let entries = $derived(calendars.getEventsForDate(date));
 	let allDayEntries = $derived(entries.filter((e) => e.is_all_day));
@@ -61,8 +62,8 @@
 		return h > 65 ? h + '%' : '65%';
 	}
 
-	// --- drag & drop (desktop/tablet variants only; fixedHeight is the mobile layout) ---
-	const dragEnabled = $derived(!fixedHeight);
+	// --- drag & drop (desktop/tablet variants only; isMobile is the mobile layout) ---
+	const dragEnabled = $derived(!isMobile);
 	const dateSlug = $derived(formatDate(date));
 	const isDropTargetColumn = $derived(
 		dragEnabled && calendarDrag.active && calendarDrag.target !== null
@@ -154,7 +155,9 @@
 	class="relative flex h-full w-full flex-col {isDropTargetColumn ? 'bg-d-lightblue/40' : ''}"
 	data-calendar-day={dateSlug}
 >
-	<div class="group relative w-full {fixedHeight ? 'h-16' : 'h-3/30'}">
+	<div 
+		class="group relative w-full {isMobile ? 'h-16' : 'h-3/30'}"
+	>
 		<button
 			onclick={async () => {
 				await calendars.showSidebar(date);
@@ -164,6 +167,14 @@
 		>
 			<IconPlus class="size-3" />
 		</button>
+		{#if !isMobile}
+			<CalendarMarks
+			dateKey={dateSlug}
+			showJournal={calendars.journalMarksEnabled}
+			showCheckIn={calendars.checkInMarksEnabled}
+			class="px-2 py-1.5"
+		/>
+		{/if}
 		{#each calendars.getTodosForDate(date) as todo (todo.id)}
 			<TodoEntry {todo} />
 		{/each}
@@ -173,10 +184,10 @@
 					class="flex w-full cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm transition-all select-none hover:bg-c-neutral dark:hover:bg-s-dark-3"
 					class:!border-l-0={item.start_date < date}
 					class:opacity-40={isDragged(item)}
-					style="border-color: {item.calendar_color ??
-						'var(--color-c-neutral-2)'}; background-color: {item.calendar_color
-						? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))`
-						: ''};"
+					style="
+						border-color: {item.calendar_color ?? 'var(--color-c-neutral-2)'};
+						background-color: {item.calendar_color ? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))` : ''};
+					"
 					onclick={() => onEventClick(item)}
 					onpointerdown={(e) => drag.onPointerDown(e, item)}
 					onpointermove={drag.onPointerMove}
@@ -190,9 +201,9 @@
 		{/each}
 	</div>
 	{#each hours as hour (hour)}
-		{@const offHour = fixedHeight && (parseInt(hour) < 6 || parseInt(hour) >= 22)}
+		{@const offHour = isMobile && (parseInt(hour) < 6 || parseInt(hour) >= 22)}
 		<div
-			class="group relative border-t-1 border-c-neutral-1 dark:border-s-dark {fixedHeight
+			class="group relative border-t-1 border-c-neutral-1 dark:border-s-dark {isMobile
 				? offHour
 					? 'h-6 bg-c-neutral dark:bg-s-dark-2'
 					: 'h-14'

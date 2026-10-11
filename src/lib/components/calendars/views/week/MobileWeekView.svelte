@@ -86,7 +86,7 @@
 						class="flex-shrink-0 overflow-hidden border-1 border-c-neutral-1 bg-c-bg-surface dark:border-s-dark"
 						style="min-width: calc((100vw - 2rem) / 3); max-width: calc((100vw - 2rem) / 3)"
 					>
-						<Day date={day.date} fixedHeight />
+						<Day date={day.date} isMobile />
 					</div>
 				{/each}
 			</div>

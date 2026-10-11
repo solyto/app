@@ -3,10 +3,10 @@
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { isDateToday, formatDate, formatTime } from '$lib/helpers/DateHelper';
+	import { isDateToday, formatDate, formatTime, getUrlFormat } from '$lib/helpers/DateHelper';
 	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
-	import DayLifeMarks from '$lib/components/calendars/DayLifeMarks.svelte';
+	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
@@ -102,7 +102,6 @@
 									{day.number}
 								</div>
 								<div class="mt-0.5 flex h-1.5 items-center gap-1">
-									<DayLifeMarks date={day.date} compact />
 									<div class="flex items-center gap-0.5">
 										{#each getEventDots(day.date) as color (color)}
 											<div
@@ -132,12 +131,20 @@
 			<span class="text-sm font-bold text-c-heading dark:text-c-primary">
 				{formatDate(selectedDate)}
 			</span>
-			<button
-				class="cursor-pointer rounded-full p-2 transition-all hover:bg-c-primary hover:text-white"
-				onclick={async () => await calendars.showSidebar(selectedDate)}
-			>
-				<IconPlus class="size-4" />
-			</button>
+			<div class="flex items-center gap-3">
+				<CalendarMarks 
+					dateKey={getUrlFormat(selectedDate)} 
+					showJournal={calendars.journalMarksEnabled} 
+					showCheckIn={calendars.checkInMarksEnabled} 
+					size={20}
+				/>
+				<button
+					class="cursor-pointer rounded-full p-2 transition-all hover:bg-c-primary hover:text-white"
+					onclick={async () => await calendars.showSidebar(selectedDate)}
+				>
+					<IconPlus class="size-4" />
+				</button>
+			</div>
 		</div>
 		{#if hasEvents}
 			<div class="flex flex-col px-2">

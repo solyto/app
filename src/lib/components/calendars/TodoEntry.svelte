@@ -27,7 +27,6 @@
 	class="flex w-full cursor-pointer flex-nowrap items-center justify-start gap-1.5 py-1 text-sm text-nowrap transition-all hover:bg-c-neutral max-md:text-xs max-sm:pl-1 dark:hover:bg-s-dark-3"
 	class:px-2={px}
 	class:max-sm:pl-1={px}
-	class:md:pr-8={checkboxRight}
 	class:bg-c-neutral-1={todo.is_completed}
 	class:dark:bg-s-dark-3={todo.is_completed}
 	in:blur

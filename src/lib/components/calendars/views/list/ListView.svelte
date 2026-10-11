@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { blur } from 'svelte/transition';
+	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { formatDate, formatTime, getNextXDays } from '$lib/helpers/DateHelper';
 	import Day from '$lib/components/calendars/views/list/Day.svelte';
@@ -15,12 +16,22 @@
 		<div class="flex w-full">
 			<div class="flex h-8 w-full items-center justify-center max-md:hidden"></div>
 		</div>
-		<div
-			class="flex h-full w-full flex-col overflow-y-auto border-1 border-c-neutral-1 bg-c-bg-surface p-4 shadow-lg dark:border-s-dark"
-		>
-			{#each days as day (day.getTime())}
-				<Day {day} />
-			{/each}
+		<div class="relative min-h-0 w-full flex-1">
+			<div
+				class="flex h-full w-full flex-col overflow-y-auto border-1 border-c-neutral-1 bg-c-bg-surface p-4 shadow-lg dark:border-s-dark"
+			>
+				{#each days as day (day.getTime())}
+					<Day {day} />
+				{/each}
+			</div>
+			<button
+				onclick={async () => {
+					await calendars.showSidebar(calendars.currentDate);
+				}}
+				class="absolute top-3 right-3 z-10 cursor-pointer rounded-full p-2 transition-all max-md:hidden hover:bg-c-btn hover:text-white"
+			>
+				<IconPlus class="size-4" />
+			</button>
 		</div>
 	</div>
 </div>

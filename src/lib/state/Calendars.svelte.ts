@@ -66,20 +66,19 @@ export class Calendars {
 	shareModal = $state<boolean>(false);
 	shareCalendarTarget = $state<Calendar | null>(null);
 	pendingMove = $state<{ event: CalendarEvent; request: UpdateEventRequest } | null>(null);
-	apiService: ApiService;
-	localStorage = new LocalStorageService();
-	dragService = new CalendarDragService();
-
 	pendingInvites = $derived(this.calendars.filter((c) => c.invite_status === 'pending'));
 	ownedCalendars = $derived(this.calendars.filter((c) => c.invite_status === null));
 	acceptedSharedCalendars = $derived(
 		this.calendars.filter((c) => c.invite_status === 'accepted')
 	);
-	// Days that carry a life mark for the currently visible month: journal
-	// entries and check-ins. Fetching the scoped mark lists (instead of the full
-	// notes/check-in histories) is what keeps the calendar light.
+	journalMarksEnabled = $state<boolean>(false);
+	checkInMarksEnabled = $state<boolean>(false);
 	journalMarks = $state<string[]>([]);
 	checkInMarks = $state<string[]>([]);
+
+	apiService: ApiService;
+	localStorage = new LocalStorageService();
+	dragService = new CalendarDragService();
 
 	constructor() {
 		this.apiService = this.auth.apiService;
@@ -91,6 +90,7 @@ export class Calendars {
 
 		this.loadView();
 		this.loadMonth();
+		this.loadMarksConfig();
 	}
 
 	async loadCalendars(): Promise<void> {
@@ -121,62 +121,64 @@ export class Calendars {
 				this.currentYear.toString() + '-' + this.currentMonth.toString().padStart(2, '0')
 			)
 		);
-		if (res) {
-			const newEvents: CalendarEvent[] = [];
-			const newSortedEvents: Record<string, CalendarEvent[]> = {};
 
-			for (const item of res.data as CalendarEvent[]) {
-				const start_date = item.start_date ? new SvelteDate(item.start_date) : null;
-				const end_date = item.end_date ? new SvelteDate(item.end_date) : null;
-				const recurrence_end = item.recurrence_end
-					? new SvelteDate(item.recurrence_end)
-					: null;
-				const original_start_date = item.original_start_date
-					? new SvelteDate(item.original_start_date)
-					: null;
+		if (!res) return;
 
-				const itemWithDates = {
-					...item,
-					start_date,
-					end_date,
-					recurrence_end,
-					original_start_date
-				};
+		const newEvents: CalendarEvent[] = [];
+		const newSortedEvents: Record<string, CalendarEvent[]> = {};
 
-				newEvents.push(<CalendarEvent>itemWithDates);
+		for (const item of res.data as CalendarEvent[]) {
+			const start_date = item.start_date ? new SvelteDate(item.start_date) : null;
+			const end_date = item.end_date ? new SvelteDate(item.end_date) : null;
+			const recurrence_end = item.recurrence_end ? new SvelteDate(item.recurrence_end) : null;
+			const original_start_date = item.original_start_date ? new SvelteDate(item.original_start_date) : null;
 
-				if (start_date !== null) {
-					const dateSlug = formatDate(start_date);
+			const itemWithDates = {
+				...item,
+				start_date,
+				end_date,
+				recurrence_end,
+				original_start_date
+			};
 
-					if (!newSortedEvents[dateSlug]) {
-						newSortedEvents[dateSlug] = [];
-					}
+			newEvents.push(<CalendarEvent>itemWithDates);
 
-					newSortedEvents[dateSlug].push(<CalendarEvent>itemWithDates);
+			if (start_date !== null) {
+				const dateSlug = formatDate(start_date);
 
-					if (
-						item.is_all_day &&
-						end_date !== null &&
-						getDateDiffInMinutes(start_date, end_date) > 1440
-					) {
-						let currentDate = new SvelteDate(start_date);
-						while (currentDate < end_date) {
-							currentDate = new SvelteDate(
-								currentDate.setDate(currentDate.getDate() + 1)
-							);
-							const dateSlug = formatDate(currentDate);
-							if (!newSortedEvents[dateSlug]) {
-								newSortedEvents[dateSlug] = [];
-							}
-							newSortedEvents[dateSlug].push(<CalendarEvent>itemWithDates);
+				if (!newSortedEvents[dateSlug]) {
+					newSortedEvents[dateSlug] = [];
+				}
+
+				newSortedEvents[dateSlug].push(<CalendarEvent>itemWithDates);
+
+				if (
+					item.is_all_day &&
+					end_date !== null &&
+					getDateDiffInMinutes(start_date, end_date) > 1440
+				) {
+					let currentDate = new SvelteDate(start_date);
+					while (currentDate < end_date) {
+						currentDate = new SvelteDate(
+							currentDate.setDate(currentDate.getDate() + 1)
+						);
+						const dateSlug = formatDate(currentDate);
+						if (!newSortedEvents[dateSlug]) {
+							newSortedEvents[dateSlug] = [];
 						}
+						newSortedEvents[dateSlug].push(<CalendarEvent>itemWithDates);
 					}
 				}
 			}
-
-			this.events = newEvents;
-			this.sortedEvents = newSortedEvents;
 		}
+
+		this.events = newEvents;
+		this.sortedEvents = newSortedEvents;
+	}
+
+	loadMarksConfig(): void {
+		this.journalMarksEnabled = this.auth.user?.settings?.journal_calendar_mark ?? false;
+		this.checkInMarksEnabled = this.auth.user?.settings?.check_in_calendar_mark ?? false;
 	}
 
 	async getWidgetEvents(): Promise<CalendarEvent[]> {
@@ -190,28 +192,20 @@ export class Calendars {
 		if (res) this.todos = res.data as Todo[];
 	}
 
-	// Fetches the life marks (journal + check-in) for the currently visible
-	// month grid. Called after any navigation that rebuilds the month. Each
-	// fetch is skipped when the corresponding display setting is off, so a
-	// disabled source never costs a request.
 	async loadMarks(): Promise<void> {
+		if (!this.journalMarksEnabled && !this.checkInMarksEnabled) {
+			return;
+		}
+
 		const days = this.month.weeks.flatMap((week) => week.days.map((day) => day.date));
 		if (days.length === 0) return;
 
 		const from = getUrlFormat(days[0]);
 		const to = getUrlFormat(days[days.length - 1]);
 
-		const journalEnabled = this.auth.user?.settings?.journal_enabled ?? false;
-		const journalMarkEnabled = this.auth.user?.settings?.journal_calendar_mark ?? false;
-		const checkInMarkEnabled = this.auth.user?.settings?.check_in_calendar_mark ?? false;
-
 		const [journalRes, checkInRes] = await Promise.all([
-			journalEnabled && journalMarkEnabled
-				? this.apiService.list(`${apiRoutes.notes.journalMarks}?from=${from}&to=${to}`)
-				: Promise.resolve(null),
-			checkInMarkEnabled
-				? this.apiService.list(`${apiRoutes.checkIn.marks}?from=${from}&to=${to}`)
-				: Promise.resolve(null)
+			this.journalMarksEnabled ? this.apiService.list(`${apiRoutes.notes.journalMarks}?from=${from}&to=${to}`) : Promise.resolve(null),
+			this.checkInMarksEnabled ? this.apiService.list(`${apiRoutes.checkIn.marks}?from=${from}&to=${to}`) : Promise.resolve(null)
 		]);
 
 		this.journalMarks = (journalRes?.data as string[]) ?? [];
@@ -420,11 +414,6 @@ export class Calendars {
 		return res;
 	}
 
-	/**
-	 * Moves an event to a new date/time (drag & drop). Returns true when the
-	 * move was applied, when it was a no-op (same slot) or when a recurring
-	 * decision is pending (see pendingMove); false when the API call failed.
-	 */
 	async moveEvent(event: CalendarEvent, target: CalendarDropTarget): Promise<boolean> {
 		const request = this.dragService.buildMoveRequest(event, target);
 		if (request === null) return true;
