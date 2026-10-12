@@ -1,4 +1,4 @@
-# Backlog: Keyboard handling cleanup
+# Backlog: 08 Keyboard handling cleanup
 
 created: 2026-10-12
 

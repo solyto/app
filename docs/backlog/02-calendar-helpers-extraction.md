@@ -1,4 +1,4 @@
-# Backlog: Extract the duplicated calendar helpers
+# Backlog: 02 Extract the duplicated calendar helpers
 
 created: 2026-10-12
 

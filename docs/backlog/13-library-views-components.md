@@ -1,4 +1,4 @@
-# Backlog: Library views and remaining @const cleanup
+# Backlog: 13 Library views and remaining @const cleanup
 
 created: 2026-10-12
 

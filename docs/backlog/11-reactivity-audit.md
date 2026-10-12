@@ -1,4 +1,4 @@
-# Backlog: Reactivity audit
+# Backlog: 11 Reactivity audit
 
 created: 2026-10-12
 

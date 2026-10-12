@@ -1,4 +1,4 @@
-# Backlog: Session monitor and ApiService follow-ups
+# Backlog: 09 Session monitor and ApiService follow-ups
 
 created: 2026-10-12
 

@@ -1,4 +1,4 @@
-# Backlog: Use SvelteDate only where a date is mutated in place
+# Backlog: 12 Use SvelteDate only where a date is mutated in place
 
 created: 2026-10-12
 

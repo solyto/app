@@ -1,4 +1,4 @@
-# Backlog: Move calendar event conversion and grouping into a service
+# Backlog: 04 Move calendar event conversion and grouping into a service
 
 created: 2026-10-12
 

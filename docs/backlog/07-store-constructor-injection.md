@@ -1,4 +1,4 @@
-# Backlog: Constructor injection for all stores
+# Backlog: 07 Constructor injection for all stores
 
 created: 2026-10-12
 

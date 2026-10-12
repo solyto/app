@@ -1,4 +1,4 @@
-# Backlog: Calendar drag state as a store and an action
+# Backlog: 06 Calendar drag state as a store and an action
 
 created: 2026-10-12
 

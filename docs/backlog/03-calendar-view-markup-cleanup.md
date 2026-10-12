@@ -1,4 +1,4 @@
-# Backlog: Clean up the calendar view components
+# Backlog: 03 Clean up the calendar view components
 
 created: 2026-10-12
 

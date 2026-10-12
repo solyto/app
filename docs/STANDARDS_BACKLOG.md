@@ -11,12 +11,9 @@ rule's "Check" line.
 The items are grouped into thirteen manigot backlog entries in
 `docs/backlog/*.md`, each a ready-made job brief with its testing strategy
 in `## Notes`. This file is the fine-grained inventory those entries refer
-to. Suggested order: `green-the-test-gate` first; then the calendar chain
-(`calendar-helpers-extraction` → `calendar-view-markup-cleanup` →
-`calendar-events-loading-service` → `recurrence-rule-service` →
-`calendar-drag-state-store`); `store-constructor-injection`,
-`keyboard-handling-cleanup` and `session-and-network-follow-ups` are
-independent of the chain and of each other; the rest in any order.
+to. The entries are numbered in the suggested order: 01 first; 02–06 are
+the calendar chain and depend on each other in sequence; 07–09 are
+independent of the chain and of each other; 10–13 in any order.
 
 ## Mechanical (grep, replace, done)
 
