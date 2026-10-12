@@ -110,6 +110,9 @@ into rules 1.5, 3.3, 3.6 and 11.1; the cleanups moved to
 
 Still to do:
 
-1. Work through the backlog as small commits.
+1. Run the thirteen job entries in `docs/backlog/` (order and dependencies
+   at the top of `STANDARDS_BACKLOG.md`). Each entry says whether tests come
+   first (a logic seam exists) or the job relies on the gates plus a manual
+   run (markup only).
 3. Keep collecting examples whenever something new annoys the owner; most
    will now land on an existing rule, which is fine.

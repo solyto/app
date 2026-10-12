@@ -8,6 +8,16 @@ they land, and delete this file when it is empty.
 Counts are from 2026-10-12 and are reproducible with the greps given in the
 rule's "Check" line.
 
+The items are grouped into thirteen manigot backlog entries in
+`docs/backlog/*.md`, each a ready-made job brief with its testing strategy
+in `## Notes`. This file is the fine-grained inventory those entries refer
+to. Suggested order: `green-the-test-gate` first; then the calendar chain
+(`calendar-helpers-extraction` → `calendar-view-markup-cleanup` →
+`calendar-events-loading-service` → `recurrence-rule-service` →
+`calendar-drag-state-store`); `store-constructor-injection`,
+`keyboard-handling-cleanup` and `session-and-network-follow-ups` are
+independent of the chain and of each other; the rest in any order.
+
 ## Mechanical (grep, replace, done)
 
 - [ ] `tsconfig.json`: set `"noUnusedParameters": true` (rule 12.1). `tsc`
