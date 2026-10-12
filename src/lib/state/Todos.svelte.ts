@@ -50,6 +50,10 @@ export class Todos {
 	todosScored = $state<boolean>(false);
 	hideItActive = $state<boolean>(false);
 	recentlyCreated = $state<string | null>(null);
+	createModalOpen = $state<boolean>(false);
+	editingTodoId = $state<string | null>(null);
+
+	editingTodo = $derived(this.todos.find((t) => t.id === this.editingTodoId) ?? null);
 	quickCreateOpen = $state<boolean>(false);
 	auth: Auth;
 	apiService: ApiService;
@@ -119,6 +123,16 @@ export class Todos {
 
 	changeView(view: 'list' | 'kanban' | 'overview' | 'card' | 'grouped'): void {
 		this.view = view;
+	}
+
+	openEdit(todoId: string): void {
+		this.editingTodoId = todoId;
+		this.createModalOpen = true;
+	}
+
+	closeEdit(): void {
+		this.editingTodoId = null;
+		this.createModalOpen = false;
 	}
 
 	toggleSortByScore(): void {

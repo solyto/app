@@ -75,7 +75,7 @@
 		type="text"
 		class="
 			rounded-lg border-1 border-c-neutral-2 text-sm shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-2 dark:bg-s-dark-3 dark:text-white dark:focus:ring-c-primary
-			{(todos.view === 'list' || todos.view === 'grouped') ? 'w-9/10' : 'w-3/4'}
+			{todos.view === 'list' ? 'w-9/10' : 'w-3/4'}
 		"
 		{onblur}
 		bind:this={titleInput}

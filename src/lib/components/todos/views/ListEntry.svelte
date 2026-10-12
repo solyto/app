@@ -31,7 +31,11 @@
 </script>
 
 <div
-	class="group relative flex h-auto w-full flex-row flex-wrap items-center rounded-lg border-1 shadow-sm transition-all hover:bg-d-lighterblue dark:hover:bg-s-dark-3 {todos.recentlyCreated === todo.id ? 'border-c-btn-hover' : 'border-d-lightblue dark:border-s-dark'}"
+	class="
+		group relative flex h-auto w-full flex-row flex-wrap items-center rounded-lg border-1 shadow-sm 
+		transition-all hover:bg-d-lighterblue dark:hover:bg-s-dark-3 
+		{todos.recentlyCreated === todo.id ? 'border-c-btn-hover' : 'border-d-lightblue dark:border-s-dark'}
+	"
 	class:bg-c-bg-surface={!todo.is_completed}
 	class:bg-c-neutral-1={todo.is_completed}
 	class:dark:bg-c-bg={todo.is_completed}

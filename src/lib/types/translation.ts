@@ -204,6 +204,7 @@ export interface AuthRecords {
 export interface TodoRecords {
 	all_todos: string;
 	new_todo: string;
+	title: string;
 	enter_todo: string;
 	no_todos: string;
 	no_todos_desc: string;

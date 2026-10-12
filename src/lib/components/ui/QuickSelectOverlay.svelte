@@ -1,24 +1,40 @@
 <script lang="ts">
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import { fade } from 'svelte/transition';
+	import { portalToBody } from '$lib/helpers/PortalHelper';
 
 	let {
 		onClose,
 		children,
 		class: className = '',
-		p = null
+		p = null,
+		portal = false,
+		target = null
 	} = $props<{
 		onClose: () => void;
 		children?: any;
 		class?: string;
 		p?: number;
+		portal?: boolean;
+		target?: HTMLElement | null;
 	}>();
 </script>
 
-<div
-	use:clickOutside={onClose}
-	transition:fade={{ duration: 200 }}
-	class="absolute top-0 z-50 flex flex-col gap-2 rounded-lg bg-c-bg-modal drop-shadow-lg {p !== null ? 'p-' + p : 'p-4'} {className}"
->
-	{@render children?.()}
-</div>
+{#if portal}
+	<div
+		use:clickOutside={onClose}
+		use:portalToBody={{ target, closeOnScroll: true, onClose }}
+		transition:fade={{ duration: 200 }}
+		class="flex flex-col gap-2 rounded-lg border-1 border-c-neutral-2 bg-c-bg-modal p-4 drop-shadow-lg {className}"
+	>
+		{@render children?.()}
+	</div>
+{:else}
+	<div
+		use:clickOutside={onClose}
+		transition:fade={{ duration: 200 }}
+		class="absolute top-0 z-50 flex flex-col gap-2 rounded-lg bg-c-bg-modal {p !== null ? 'p-' + p : 'p-4'} drop-shadow-lg {className}"
+	>
+		{@render children?.()}
+	</div>
+{/if}

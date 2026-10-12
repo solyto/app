@@ -15,8 +15,9 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 
-	let { todo } = $props<{
+	let { todo, readonly = false } = $props<{
 		todo: Todo;
+		readonly?: boolean;
 	}>();
 
 	let addCategoryVisible = $state<boolean>(false);
@@ -96,7 +97,7 @@
 	}
 </script>
 
-{#if addCategoryVisible}
+{#if addCategoryVisible && !readonly}
 	<div class="w-32 {todos.view === 'kanban' ? 'px-2 py-1 text-xs' : ''}">
 		<InputAutocomplete
 			bind:input={addCategoryInput}
@@ -110,22 +111,28 @@
 {:else}
 	<div class="flex flex-row gap-1">
 		{#if todo.category}
-			<div class="group relative">
-				<button
-					type="button"
-					class="cursor-pointer bg-c-neutral-1 px-2 py-1 text-xs dark:bg-c-neutral-7 dark:text-white"
-					onclick={toggleAddCategories}
-				>
+			{#if readonly}
+				<div class="bg-c-neutral-1 px-2 py-1 text-xs dark:bg-c-neutral-7 dark:text-white">
 					/{todo.category.title}
-				</button>
-				<button
-					class="absolute top-[-14px] right-[-14px] z-40 hidden size-[20px] cursor-pointer items-center justify-center rounded-full bg-c-danger text-white drop-shadow-md transition-all group-hover:flex hover:text-c-heading hover:drop-shadow-xl"
-					onclick={onRemove}
-				>
-					<IconTrash class="size-3" />
-				</button>
-			</div>
-		{:else}
+				</div>
+			{:else}
+				<div class="group relative">
+					<button
+						type="button"
+						class="cursor-pointer bg-c-neutral-1 px-2 py-1 text-xs dark:bg-c-neutral-7 dark:text-white"
+						onclick={toggleAddCategories}
+					>
+						/{todo.category.title}
+					</button>
+					<button
+						class="absolute top-[-14px] right-[-14px] z-40 hidden size-[20px] cursor-pointer items-center justify-center rounded-full bg-c-danger text-white drop-shadow-md transition-all group-hover:flex hover:text-c-heading hover:drop-shadow-xl"
+						onclick={onRemove}
+					>
+						<IconTrash class="size-3" />
+					</button>
+				</div>
+			{/if}
+		{:else if !readonly}
 			<button
 				class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
 				class:opacity-0={(todos.view === 'list' || todos.view === 'grouped')}

@@ -105,7 +105,7 @@
 			>
 				{#each group.todos as item (item.id)}
 					<div animate:flip={{ duration: flipDurationMs }} transition:fade>
-						<CompactEntry todo={item} {handleCheck} />
+						<CompactEntry todo={item} {handleCheck} minimal={false} />
 					</div>
 				{/each}
 			</div>

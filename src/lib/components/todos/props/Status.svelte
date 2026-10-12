@@ -5,13 +5,18 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';
 
-	let { todo, changeStatus } = $props<{ todo: Todo; changeStatus: boolean }>();
+	let { todo, changeStatus, portal = false } = $props<{
+		todo: Todo;
+		changeStatus: boolean;
+		portal?: boolean;
+	}>();
 
 	const todos = getTodos();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 
 	let statusMenuVisible = $state<boolean>(false);
+	let trigger = $state<HTMLDivElement | null>(null);
 
 	function toggleStatusMenu(): void {
 		statusMenuVisible = !statusMenuVisible;
@@ -59,7 +64,7 @@
 	}
 </script>
 
-<div class="relative">
+<div bind:this={trigger} class="relative">
 	{#if changeStatus}
 		<button
 			type="button"
@@ -72,6 +77,8 @@
 			<QuickSelectOverlay
 				onClose={() => (statusMenuVisible = false)}
 				class="w-48 text-c-neutral-7 dark:text-white"
+				{portal}
+				target={trigger}
 			>
 				<button
 					type="button"

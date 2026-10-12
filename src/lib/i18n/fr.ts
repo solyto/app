@@ -232,6 +232,7 @@ const settings: SettingsRecords = {
 const todos: TodoRecords = {
 	all_todos: 'Toutes les tâches',
 	new_todo: 'Nouvelle tâche',
+	title: 'Titre',
 	enter_todo: 'Entrer une tâche',
 	no_todos: 'Aucune tâche trouvée.',
 	no_todos_desc: 'Appuie sur Entrée pour en ajouter une.',

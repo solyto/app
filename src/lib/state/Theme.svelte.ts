@@ -84,6 +84,11 @@ export class ThemeState {
 			document.head.appendChild(this.link);
 		}
 
+		document.documentElement.classList.toggle(
+			'theme-dark',
+			!theme.supportsDarkMode && ThemeState.isDarkTheme(theme)
+		);
+
 		this.teardownDarkListener();
 
 		if (theme.supportsDarkMode) {
@@ -91,6 +96,15 @@ export class ThemeState {
 		} else {
 			document.documentElement.classList.remove('dark');
 		}
+	}
+
+	private static isDarkTheme(theme: Theme): boolean {
+		const hex = theme.previewBg.replace('#', '');
+		const r = parseInt(hex.slice(0, 2), 16);
+		const g = parseInt(hex.slice(2, 4), 16);
+		const b = parseInt(hex.slice(4, 6), 16);
+		const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+		return luminance < 140;
 	}
 
 	applyDark(dark: boolean): void {

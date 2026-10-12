@@ -7,9 +7,11 @@
 	import IconTrash from '@lucide/svelte/icons/trash-2';
 	import DatePicker from '$lib/components/forms/DatePicker.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
+	import { portalToBody } from '$lib/helpers/PortalHelper';
 
-	let { todo } = $props<{
+	let { todo, portal = false } = $props<{
 		todo: Todo;
+		portal?: boolean;
 	}>();
 
 	const todos = getTodos();
@@ -19,6 +21,7 @@
 
 	let isOpen = $state<boolean>(false);
 	let startDate = $state<Date | null>(new Date(todo.due_at));
+	let dateTrigger = $state<HTMLButtonElement | null>(null);
 
 	function toggleDatePicker(): void {
 		isOpen = !isOpen;
@@ -34,6 +37,7 @@
 {#if todo.due_at !== null}
 	<div class="group relative">
 		<button
+			bind:this={dateTrigger}
 			class="cursor-pointer text-sm"
 			class:pr-4={(todos.view === 'list' || todos.view === 'grouped')}
 			class:ml-1={todos.view === 'kanban'}
@@ -54,6 +58,7 @@
 {:else}
 	<div class={(todos.view === 'list' || todos.view === 'grouped') ? 'w-full pr-4' : ''}>
 		<button
+			bind:this={dateTrigger}
 			class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
 			class:opacity-0={(todos.view === 'list' || todos.view === 'grouped')}
 			class:group-hover:opacity-100={(todos.view === 'list' || todos.view === 'grouped')}
@@ -61,4 +66,18 @@
 		>
 	</div>
 {/if}
-<DatePicker bind:isOpen bind:startDate {onChange} />
+{#if portal}
+	<div
+		use:portalToBody={{
+			target: dateTrigger,
+			closeOnScroll: true,
+			onClose: () => {
+				isOpen = false;
+			}
+		}}
+	>
+		<DatePicker bind:isOpen bind:startDate {onChange} />
+	</div>
+{:else}
+	<DatePicker bind:isOpen bind:startDate {onChange} />
+{/if}

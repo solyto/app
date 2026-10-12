@@ -5,12 +5,18 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';
 
-	let { todo, changeEffort = true } = $props<{ todo: Todo; changeEffort: boolean }>();
+	let { todo, changeEffort = true, left = false, portal = false } = $props<{
+		todo: Todo;
+		changeEffort: boolean;
+		left?: boolean;
+		portal?: boolean;
+	}>();
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
 
 	let effortMenuVisible = $state<boolean>(false);
+	let trigger = $state<HTMLDivElement | null>(null);
 
 	function toggleEffortMenu(): void {
 		effortMenuVisible = !effortMenuVisible;
@@ -39,7 +45,10 @@
 </script>
 
 <div
-	class="relative flex items-center justify-center p-4"
+	bind:this={trigger}
+	class="relative flex items-center p-4"
+	class:justify-center={!left}
+	class:justify-start={left}
 	class:2xl:w-full={(todos.view === 'list' || todos.view === 'grouped')}
 	class:2xl:h-full={(todos.view === 'list' || todos.view === 'grouped')}
 	class:p-4={(todos.view === 'list' || todos.view === 'grouped')}
@@ -47,7 +56,7 @@
 	{#if changeEffort}
 		<IconClock class="cursor-pointer {getColor(todo.effort)}" onclick={toggleEffortMenu} />
 		{#if effortMenuVisible}
-			<QuickSelectOverlay onClose={() => (effortMenuVisible = false)}>
+			<QuickSelectOverlay onClose={() => (effortMenuVisible = false)} {portal} target={trigger}>
 				<IconClock
 					class="cursor-pointer rounded-full hover:bg-c-neutral dark:hover:bg-s-dark-3 {getColor(
 						'low'

@@ -233,6 +233,7 @@ const settings: SettingsRecords = {
 const todos: TodoRecords = {
 	all_todos: 'All Todos',
 	new_todo: 'New Todo',
+	title: 'Title',
 	enter_todo: 'Enter Todo',
 	no_todos: 'No Todos found.',
 	no_todos_desc: 'Press Enter to add one.',

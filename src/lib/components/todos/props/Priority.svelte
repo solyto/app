@@ -11,18 +11,23 @@
 		todo,
 		changePriority = true,
 		expanded = false,
-		simple = false
+		simple = false,
+		left = false,
+		portal = false
 	} = $props<{
 		todo: Todo;
 		changePriority: boolean;
 		expanded: boolean;
 		simple?: boolean;
+		left?: boolean;
+		portal?: boolean;
 	}>();
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
 
 	let priorityMenuVisible = $state<boolean>(false);
+	let trigger = $state<HTMLDivElement | null>(null);
 
 	function togglePriorityMenu(): void {
 		priorityMenuVisible = !priorityMenuVisible;
@@ -71,10 +76,13 @@
 </script>
 
 <div
+	bind:this={trigger}
 	class="
-		relative flex items-center justify-center rounded-l-md transition-all duration-300
+		relative flex items-center rounded-l-md transition-all duration-300
 		max-2xl:rounded-full
 	"
+	class:justify-center={!left}
+	class:justify-start={left}
 	class:p-4={(todos.view === 'list' || todos.view === 'grouped') && !simple}
 	class:2xl:w-full={(todos.view === 'list' || todos.view === 'grouped')}
 	class:2xl:h-full={(todos.view === 'list' || todos.view === 'grouped')}
@@ -99,7 +107,7 @@
 			/>
 		{/if}
 		{#if priorityMenuVisible}
-			<QuickSelectOverlay onClose={() => (priorityMenuVisible = false)}>
+			<QuickSelectOverlay onClose={() => (priorityMenuVisible = false)} {portal} target={trigger}>
 				<IconUp
 					class="cursor-pointer rounded-full text-c-danger hover:bg-c-neutral dark:hover:bg-s-dark-3"
 					onclick={() => handlePriorityChange(todo, 'high')}

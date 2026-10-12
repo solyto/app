@@ -18,8 +18,9 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 
-	let { todo } = $props<{
+	let { todo, readonly = false } = $props<{
 		todo: Todo;
+		readonly?: boolean;
 	}>();
 
 	let addTagVisible = $state<boolean>(false);
@@ -93,7 +94,7 @@
 	}
 </script>
 
-{#if addTagVisible}
+{#if addTagVisible && !readonly}
 	<div class="w-32 {todos.view === 'kanban' ? 'px-2 py-1 text-xs' : ''}">
 		<InputAutocomplete
 			bind:input={addTagInput}
@@ -105,12 +106,14 @@
 		/>
 	</div>
 {:else}
-	<TagFlexList tags={todo.tags} onRemove={onRemoveTag} />
-	<button
-		class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
-		class:ml-2={(todos.view === 'list' || todos.view === 'grouped')}
-		class:opacity-0={(todos.view === 'list' || todos.view === 'grouped')}
-		class:group-hover:opacity-100={(todos.view === 'list' || todos.view === 'grouped')}
-		onclick={toggleAddTags}>+ {ts.get.todos.add_tag}</button
-	>
+	<TagFlexList tags={todo.tags} onRemove={readonly ? undefined : onRemoveTag} />
+	{#if !readonly}
+		<button
+			class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
+			class:ml-2={(todos.view === 'list' || todos.view === 'grouped')}
+			class:opacity-0={(todos.view === 'list' || todos.view === 'grouped')}
+			class:group-hover:opacity-100={(todos.view === 'list' || todos.view === 'grouped')}
+			onclick={toggleAddTags}>+ {ts.get.todos.add_tag}</button
+		>
+	{/if}
 {/if}
