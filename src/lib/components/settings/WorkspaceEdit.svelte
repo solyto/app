@@ -80,7 +80,7 @@
 			{/each}
 			<div class="text-sm">
 				<TextButton
-					title="+ {ts.get.todos.add_category}"
+					title="+ {ts.get.todos.category}"
 					onclick={() => {
 						findCategoryMenuVisible = true;
 					}}

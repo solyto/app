@@ -1,7 +1,8 @@
 <script lang="ts">
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
+	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
-	import TextInput from '$lib/components/forms/TextInput.svelte';
+	import Title from '$lib/components/todos/props/Title.svelte';
 	import Status from '$lib/components/todos/props/Status.svelte';
 	import Priority from '$lib/components/todos/props/Priority.svelte';
 	import Category from '$lib/components/todos/props/Category.svelte';
@@ -9,71 +10,79 @@
 	import Effort from '$lib/components/todos/props/Effort.svelte';
 	import DueDate from '$lib/components/todos/props/DueDate.svelte';
 	import Progress from '$lib/components/todos/props/Progress.svelte';
-	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
+	import Description from '$lib/components/todos/props/Description.svelte';
+	import Link from '$lib/components/todos/props/Link.svelte';
+	import Subtasks from '$lib/components/todos/props/Subtasks.svelte';
+	import Recurrence from '$lib/components/todos/props/Recurrence.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
-	import { onDestroy } from 'svelte';
+	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import confetti from 'canvas-confetti';
+	import { createConfettiOptions } from '$lib/effects/confetti';
 
 	const todos = getTodos();
 	const ts = getTranslation();
-	const keyManager = getKeyManager();
+	const loadingIndicator = getLoadingIndicator();
+	const notifications = getUiNotifications();
 
-	let title = $state<string>('');
-	let openedTodoId = $state<string | null>(null);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null });
+	let deleteConfirmOpen = $state<boolean>(false);
 
-	onDestroy(() => keyManager.unregisterAll(keyHandlers));
+	async function onDeleteConfirm(): Promise<void> {
+		if (!todos.editingTodo) return;
 
-	function handleEnter(event: KeyboardEvent): void {
-		handleSaveTitle();
+		loadingIndicator.start();
+		await todos.delete(todos.editingTodo);
+		notifications.success(ts.get.todos.delete_success);
+		loadingIndicator.stop();
+		deleteConfirmOpen = false;
+		todos.closeEdit();
 	}
 
-	function handleSaveTitle(): void {
-		if (todos.editingTodo) {
-			todos.changeTitle(todos.editingTodo, title);
-		}
-	}
+	async function onComplete(event?: MouseEvent): Promise<void> {
+		if (!todos.editingTodo) return;
 
-	$effect(() => {
-		const id = todos.editingTodoId;
-		if (id === null) {
-			keyManager.unregisterAll(keyHandlers);
-			return;
-		}
-		if (id === openedTodoId) return;
-		openedTodoId = id;
-		title = todos.editingTodo?.title ?? '';
-		keyHandlers.Enter = keyManager.registerKeyDown('Enter', handleEnter);
-	});
+		const target = event?.currentTarget as HTMLElement | undefined;
+		const rect = target?.getBoundingClientRect();
+		const x = rect ? (rect.left + rect.right) / 2 / window.innerWidth : 0.5;
+		const y = rect ? (rect.top + rect.bottom) / 2 / window.innerHeight : 0.5;
+
+		confetti(createConfettiOptions({ x, y }, 'default'));
+
+		loadingIndicator.start();
+		await todos.changeCompleted(todos.editingTodo, true);
+		todos.editingTodo.is_completed = true;
+		loadingIndicator.stop();
+		todos.closeEdit();
+	}
 </script>
 
 {#if todos.editingTodo}
 	{@const todo = todos.editingTodo}
-	<ContentModal title={todo.title} onClose={() => todos.closeEdit()} rounded="2xl">
+	<ContentModal
+		onClose={() => todos.closeEdit()}
+		{onComplete}
+		onDelete={() => (deleteConfirmOpen = true)}
+		rounded="2xl"
+	>
 		<div class="flex w-full flex-col gap-4">
-			<ModalFormRow label={ts.get.todos.title}>
-				<div class="flex w-full flex-row items-center space-x-2">
-					<div class="flex-1">
-						<TextInput bind:value={title} onblur={handleSaveTitle} />
-					</div>
-					<SaveButton onClick={handleSaveTitle} />
-				</div>
-			</ModalFormRow>
+			<div class="w-full">
+				<Title {todo} />
+			</div>
 			<ModalFormRow label={ts.get.todos.status}>
 				<Status {todo} changeStatus={true} portal />
 			</ModalFormRow>
 			<ModalFormRow label={ts.get.todos.priority}>
-				<Priority {todo} changePriority={true} left portal expanded={false} />
+				<Priority {todo} changePriority={true} left portal expanded={false} compact />
 			</ModalFormRow>
-			<ModalFormRow label={ts.get.todos.categories}>
+			<ModalFormRow label={ts.get.todos.category}>
 				<Category {todo} />
 			</ModalFormRow>
 			<ModalFormRow label={ts.get.todos.tags}>
 				<Tags {todo} />
 			</ModalFormRow>
 			<ModalFormRow label={ts.get.todos.effort}>
-				<Effort {todo} changeEffort={true} left portal />
+				<Effort {todo} changeEffort={true} left portal compact />
 			</ModalFormRow>
 			<ModalFormRow label={ts.get.todos.due_at}>
 				<DueDate {todo} portal />
@@ -81,6 +90,29 @@
 			<ModalFormRow label={ts.get.todos.progress}>
 				<Progress {todo} />
 			</ModalFormRow>
+			<ModalFormRow label={ts.get.todos.link}>
+				<div class="-mt-2">
+					<Link {todo} />
+				</div>
+			</ModalFormRow>
+			<ModalFormRow label={ts.get.todos.recurrence}>
+				<Recurrence {todo} />
+			</ModalFormRow>
+			<div class="w-full">
+				<Subtasks {todo} subtasks={todo.subtasks} fullWidth />
+			</div>
+			<div class="w-full">
+				<Description {todo} />
+			</div>
 		</div>
 	</ContentModal>
+	{#if deleteConfirmOpen}
+		<ConfirmationModal
+			title={ts.get.todos.delete_confirm_label}
+			description={ts.get.todos.delete_confirm_message}
+			type="confirm-delete"
+			onConfirm={onDeleteConfirm}
+			onCancel={() => (deleteConfirmOpen = false)}
+		/>
+	{/if}
 {/if}

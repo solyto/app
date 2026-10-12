@@ -18,9 +18,10 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 
-	let { todo, readonly = false } = $props<{
+	let { todo, readonly = false, hoverReveal = false } = $props<{
 		todo: Todo;
 		readonly?: boolean;
+		hoverReveal?: boolean;
 	}>();
 
 	let addTagVisible = $state<boolean>(false);
@@ -106,14 +107,15 @@
 		/>
 	</div>
 {:else}
-	<TagFlexList tags={todo.tags} onRemove={readonly ? undefined : onRemoveTag} />
-	{#if !readonly}
-		<button
-			class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
-			class:ml-2={(todos.view === 'list' || todos.view === 'grouped')}
-			class:opacity-0={(todos.view === 'list' || todos.view === 'grouped')}
-			class:group-hover:opacity-100={(todos.view === 'list' || todos.view === 'grouped')}
-			onclick={toggleAddTags}>+ {ts.get.todos.add_tag}</button
-		>
-	{/if}
+	<div class="flex flex-row flex-wrap items-center gap-2">
+		<TagFlexList tags={todo.tags} onRemove={readonly ? undefined : onRemoveTag} />
+		{#if !readonly}
+			<button
+				class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
+				class:opacity-0={hoverReveal}
+				class:group-hover:opacity-100={hoverReveal}
+				onclick={toggleAddTags}>+ {ts.get.todos.tag}</button
+			>
+		{/if}
+	</div>
 {/if}

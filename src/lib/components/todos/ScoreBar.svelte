@@ -18,7 +18,7 @@
 		out:slide={{ axis: 'x' }}
 	></div>
 	<div
-		class="absolute top-0 right-[4px] z-20 h-[1px] rounded-full bg-white"
+		class="absolute top-0 right-[4px] z-20 h-[2px] rounded-full bg-white"
 		style="width: calc({(1 - todo.relevance) * 100}% - 6px);"
 	></div>
 {/if}

@@ -5,11 +5,12 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';
 
-	let { todo, changeEffort = true, left = false, portal = false } = $props<{
+	let { todo, changeEffort = true, left = false, portal = false, compact = false } = $props<{
 		todo: Todo;
 		changeEffort: boolean;
 		left?: boolean;
 		portal?: boolean;
+		compact?: boolean;
 	}>();
 
 	const todos = getTodos();
@@ -49,9 +50,9 @@
 	class="relative flex items-center p-4"
 	class:justify-center={!left}
 	class:justify-start={left}
-	class:2xl:w-full={(todos.view === 'list' || todos.view === 'grouped')}
-	class:2xl:h-full={(todos.view === 'list' || todos.view === 'grouped')}
-	class:p-4={(todos.view === 'list' || todos.view === 'grouped')}
+	class:2xl:w-full={(todos.view === 'list' || todos.view === 'grouped') && !compact}
+	class:2xl:h-full={(todos.view === 'list' || todos.view === 'grouped') && !compact}
+	class:p-4={(todos.view === 'list' || todos.view === 'grouped') && !compact}
 >
 	{#if changeEffort}
 		<IconClock class="cursor-pointer {getColor(todo.effort)}" onclick={toggleEffortMenu} />

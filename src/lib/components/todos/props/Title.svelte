@@ -83,7 +83,7 @@
 	/>
 {:else}
 	<span
-		class="text-base"
+		class="text-base font-semibold"
 		role="button"
 		tabindex="0"
 		ondblclick={toggleChangeTitle}

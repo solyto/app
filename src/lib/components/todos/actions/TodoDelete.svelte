@@ -33,7 +33,7 @@
 </script>
 
 <div class="z-10">
-	<DeleteButton onClick={openModal} inModal={false} buttonStyle="plain" />
+	<DeleteButton onClick={openModal} inModal={false} buttonStyle="minimal" />
 </div>
 
 {#if modalOpen}

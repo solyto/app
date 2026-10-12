@@ -13,7 +13,11 @@
 	const loadingIndicator = getLoadingIndicator();
 	const keyManager = getKeyManager();
 
-	let { todo, subtasks } = $props<{ todo: Todo; subtasks: TodoSubtask[] }>();
+	let { todo, subtasks, fullWidth = false } = $props<{
+		todo: Todo;
+		subtasks: TodoSubtask[];
+		fullWidth?: boolean;
+	}>();
 
 	let addSubtaskVisible = $state<boolean>(false);
 	let subtaskInput = $state<HTMLInputElement | null>(null);
@@ -62,7 +66,7 @@
 	}
 </script>
 
-<div class="mt-2 flex flex-col items-start gap-1">
+<div class="mt-2 flex flex-col gap-1" class:items-start={!fullWidth} class:w-full={fullWidth}>
 	{#each subtasks as subtask (subtask.id)}
 		<Subtask {todo} {subtask} {handleCheckboxClick} />
 	{/each}
@@ -72,7 +76,7 @@
 		</div>
 	{:else}
 		<button
-			class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
+			class="cursor-pointer text-left text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
 			onclick={toggleAddSubtask}>+ {ts.get.todos.add_subtask}</button
 		>
 	{/if}

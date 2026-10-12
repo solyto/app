@@ -35,15 +35,15 @@
 		switch (status) {
 			case 'pending':
 			default:
-				return 'border border-c-neutral-2 dark:border-s-dark-3';
+				return 'border-2 border-c-neutral-2 dark:border-s-dark-3';
 			case 'backlog':
-				return 'border border-c-neutral-2 dark:border-s-dark-3';
+				return 'border-2 border-c-neutral-2 dark:border-s-dark-3';
 			case 'in-progress':
-				return 'border border-c-action';
+				return 'border-2 border-c-action';
 			case 'waiting':
-				return 'border border-c-primary';
+				return 'border-2 border-c-primary';
 			case 'almost-done':
-				return 'border border-c-success';
+				return 'border-2 border-c-success';
 		}
 	}
 
@@ -68,7 +68,7 @@
 	{#if changeStatus}
 		<button
 			type="button"
-			class="cursor-pointer rounded-lg px-2 py-1 text-xs text-c-neutral-7 dark:text-white {getColor(todo.status)}"
+			class="cursor-pointer rounded-lg px-2 py-1 text-xs font-semibold text-c-neutral-7 dark:text-white {getColor(todo.status)}"
 			onclick={toggleStatusMenu}
 		>
 			{getLabel(todo.status)}
@@ -76,7 +76,7 @@
 		{#if statusMenuVisible}
 			<QuickSelectOverlay
 				onClose={() => (statusMenuVisible = false)}
-				class="w-48 text-c-neutral-7 dark:text-white"
+				class="w-48 font-semibold text-c-neutral-7 dark:text-white"
 				{portal}
 				target={trigger}
 			>
@@ -118,7 +118,7 @@
 			</QuickSelectOverlay>
 		{/if}
 	{:else}
-		<div class="rounded-lg px-2 py-1 text-xs {getColor(todo.status)}">
+		<div class="rounded-lg px-2 py-1 text-xs font-semibold {getColor(todo.status)}">
 			{getLabel(todo.status)}
 		</div>
 	{/if}

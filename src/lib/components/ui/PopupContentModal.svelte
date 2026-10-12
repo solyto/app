@@ -3,11 +3,13 @@
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
+	import AcceptButton from '$lib/components/ui/buttons/AcceptButton.svelte';
 
 	let {
 		onClose,
 		onEdit,
 		onDelete,
+		onComplete,
 		children,
 		small = false,
 		rounded = null,
@@ -21,6 +23,7 @@
 		onClose?: () => void | Promise<void>;
 		onEdit?: () => void | Promise<void>;
 		onDelete?: () => void | Promise<void>;
+		onComplete?: (event?: MouseEvent) => void | Promise<void>;
 		children?: any;
 		small?: boolean;
 		rounded?: string | null;
@@ -54,12 +57,15 @@
 				{title}
 			</div>
 		{/if}
-		{#if onClose || onEdit || onDelete}
+		{#if onClose || onEdit || onComplete || onDelete}
 			{#if onClose}
 				<CloseButton onClick={onClose} />
 			{/if}
 			{#if onEdit}
 				<EditButton onClick={onEdit} />
+			{/if}
+			{#if onComplete}
+				<AcceptButton onClick={onComplete} inModal />
 			{/if}
 			{#if onDelete}
 				<DeleteButton onClick={onDelete} />

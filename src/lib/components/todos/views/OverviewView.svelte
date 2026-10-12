@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Todo } from '$lib/types/todo';
 	import { fade } from 'svelte/transition';
-	import MinimalEntry from '$lib/components/todos/views/MinimalEntry.svelte';
+	import CompactEntry from '$lib/components/todos/views/CompactEntry.svelte';
 	import NoTodos from '$lib/components/todos/NoTodos.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -30,7 +30,7 @@
 				</h3>
 				<div class="grid grid-cols-1 gap-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
 					{#each group.todos as todo (todo.id)}
-						<MinimalEntry {todo} {handleCheck} />
+						<CompactEntry {todo} {handleCheck} minimal={true} />
 					{/each}
 				</div>
 			</div>

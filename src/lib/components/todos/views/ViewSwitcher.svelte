@@ -21,6 +21,7 @@
 
 	const viewsMobile = [
 		{ type: 'card' as const, title: ts.get.todos.view_card },
+		{ type: 'grouped' as const, title: ts.get.todos.view_grouped },
 		{ type: 'overview' as const, title: ts.get.todos.view_overview }
 	];
 

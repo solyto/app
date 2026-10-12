@@ -12,6 +12,7 @@
 	import KanbanView from '$lib/components/todos/views/KanbanView.svelte';
 	import ListView from '$lib/components/todos/views/ListView.svelte';
 	import GroupedListView from '$lib/components/todos/views/GroupedListView.svelte';
+	import MobileGroupedListView from '$lib/components/todos/views/MobileGroupedListView.svelte';
 	import CardView from '$lib/components/todos/views/CardView.svelte';
 	import OverviewView from '$lib/components/todos/views/OverviewView.svelte';
 	import Counter from '$lib/components/todos/Counter.svelte';
@@ -82,6 +83,8 @@
 				<OverviewView {handleCheck} />
 			{:else if view === 'card'}
 				<CardView {handleCheck} />
+			{:else if view === 'grouped'}
+				<MobileGroupedListView {handleCheck} />
 			{/if}
 		{/if}
 	</div>

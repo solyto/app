@@ -15,9 +15,10 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 
-	let { todo, readonly = false } = $props<{
+	let { todo, readonly = false, hoverReveal = false } = $props<{
 		todo: Todo;
 		readonly?: boolean;
+		hoverReveal?: boolean;
 	}>();
 
 	let addCategoryVisible = $state<boolean>(false);
@@ -135,10 +136,10 @@
 		{:else if !readonly}
 			<button
 				class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
-				class:opacity-0={(todos.view === 'list' || todos.view === 'grouped')}
-				class:group-hover:opacity-100={(todos.view === 'list' || todos.view === 'grouped')}
-				class:ml-2={(todos.view === 'list' || todos.view === 'grouped')}
-				onclick={toggleAddCategories}>+ {ts.get.todos.add_category}</button
+				class:opacity-0={hoverReveal}
+				class:group-hover:opacity-100={hoverReveal}
+				class:ml-2={hoverReveal}
+				onclick={toggleAddCategories}>+ {ts.get.todos.category}</button
 			>
 		{/if}
 	</div>

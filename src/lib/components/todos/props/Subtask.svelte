@@ -91,29 +91,31 @@
 			handleCheckboxClick(subtask);
 		}}
 	/>
-	{#if changeTitle}
-		<TextInput bind:input={titleInput} bind:value={titleValue} {onblur} />
-	{:else}
-		<div
-			role="button"
-			tabindex="0"
-			ondblclick={toggleChangeTitle}
-			onmouseover={() => (showExplanationBox = true)}
-			onmouseout={() => (showExplanationBox = false)}
-			onfocus={() => (showExplanationBox = true)}
-			onblur={() => (showExplanationBox = false)}
-			onmousemove={(e) => setExplanationBoxPosition(e)}
-		>
-			{subtask.title}
-		</div>
-		<MovableHoverBox
-			content={ts.get.layout.double_click_to_edit}
-			show={showExplanationBox}
-			x={explanationBoxX}
-			y={explanationBoxY}
-		/>
-	{/if}
-	<div class="ml-2">
+	<div class="min-w-0 flex-1">
+		{#if changeTitle}
+			<TextInput bind:input={titleInput} bind:value={titleValue} {onblur} />
+		{:else}
+			<div
+				role="button"
+				tabindex="0"
+				ondblclick={toggleChangeTitle}
+				onmouseover={() => (showExplanationBox = true)}
+				onmouseout={() => (showExplanationBox = false)}
+				onfocus={() => (showExplanationBox = true)}
+				onblur={() => (showExplanationBox = false)}
+				onmousemove={(e) => setExplanationBoxPosition(e)}
+			>
+				{subtask.title}
+			</div>
+			<MovableHoverBox
+				content={ts.get.layout.double_click_to_edit}
+				show={showExplanationBox}
+				x={explanationBoxX}
+				y={explanationBoxY}
+			/>
+		{/if}
+	</div>
+	<div class="shrink-0">
 		<DeleteButton inModal={false} buttonStyle="plain" onClick={onDelete} />
 	</div>
 </div>

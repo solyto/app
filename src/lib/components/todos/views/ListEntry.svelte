@@ -19,6 +19,7 @@
 	import Flags from '$lib/components/todos/props/Flags.svelte';
 	import Recurrence from '$lib/components/todos/props/Recurrence.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getPriorityColorClass } from '$lib/helpers/TodoHelper';
 
 	let { todo, handleCheck } = $props<{
 		todo: Todo;
@@ -41,8 +42,9 @@
 	class:dark:bg-c-bg={todo.is_completed}
 	in:fade
 >
+	<div class="absolute top-0 left-0 h-full w-1 rounded-l-md {getPriorityColorClass(todo.priority)}"></div>
 	<ScoreBar {todo} />
-	<div class="h-full w-14">
+	<div class="ml-2 h-full w-14">
 		<Priority {todo} changePriority={true} {expanded} />
 	</div>
 	<div class="ml-1 w-[25%]">
@@ -52,10 +54,10 @@
 		<Status {todo} changeStatus={true} />
 	</div>
 	<div class="group flex w-1/10 items-center">
-		<Category {todo} />
+		<Category {todo} hoverReveal />
 	</div>
 	<div class="group flex w-1/5 items-center">
-		<Tags {todo} />
+		<Tags {todo} hoverReveal />
 	</div>
 	<div class="h-full w-14">
 		<Effort {todo} changeEffort={true} />
@@ -76,7 +78,7 @@
 	</div>
 	<Flags {todo} />
 	{#if expanded}
-		<div class="w-full p-4" transition:slide>
+		<div class="w-full p-4 pt-0" transition:slide>
 			<Description {todo} />
 			<Link {todo} />
 			<Subtasks {todo} subtasks={todo.subtasks} />

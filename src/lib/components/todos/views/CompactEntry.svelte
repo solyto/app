@@ -4,9 +4,13 @@
 	import DueDate from '$lib/components/todos/props/DueDate.svelte';
 	import Category from '$lib/components/todos/props/Category.svelte';
 	import Tags from '$lib/components/todos/props/Tags.svelte';
+	import Flags from '$lib/components/todos/props/Flags.svelte';
+	import ScoreBar from '$lib/components/todos/ScoreBar.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
-	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
+	import { getPriorityColorClass } from '$lib/helpers/TodoHelper';
+
+	const todos = getTodos();
 
 	let {
 		todo,
@@ -18,33 +22,37 @@
 		minimal?: boolean;
 	}>();
 
-	const todos = getTodos();
+	function openEdit(): void {
+		todos.openEdit(todo.id);
+	}
 
-	function getBgColor(todo: Todo): string {
-		switch (todo.priority) {
-			case 'low':
-				return 'bg-c-success';
-			case 'high':
-				return 'bg-c-danger';
-			default:
-				return 'bg-c-btn';
-		}
+	function stopPropagation(event: Event): void {
+		event.stopPropagation();
 	}
 </script>
 
 <div
-	class="relative rounded-lg border-1 bg-c-bg-surface px-4 py-2 shadow-sm transition-all {todos.recentlyCreated === todo.id ? 'border-c-btn-hover' : 'border-d-lightblue dark:border-s-dark'}"
+	class="relative w-full cursor-pointer rounded-lg border-1 bg-c-bg-surface px-4 py-2 shadow-sm transition-all {todos.recentlyCreated ===
+	todo.id
+		? 'border-c-btn-hover'
+		: 'border-d-lightblue dark:border-s-dark'}"
 	class:opacity-50={todo.is_completed}
+	role="button"
+	tabindex="0"
+	onclick={openEdit}
+	onkeydown={(e) => e.key === 'Enter' && openEdit()}
 	in:fade
 >
-	<div class="absolute top-0 left-0 h-full w-1 rounded-l-md {getBgColor(todo)}"></div>
+	<div class="absolute top-0 left-0 h-full w-1 rounded-l-md {getPriorityColorClass(todo.priority)}"></div>
+	<ScoreBar {todo} />
 	<div class="flex items-center gap-3">
-		<span class="flex-1 truncate" class:line-through={todo.is_completed}>
+		<span class="flex-1 truncate font-semibold" class:line-through={todo.is_completed}>
 			{todo.title}
 		</span>
 		<div class="flex shrink-0 items-center gap-2">
-			<EditButton onClick={() => todos.openEdit(todo.id)} inModal={false} buttonStyle="minimal" />
-			<Checkbox isChecked={todo.is_completed} onchange={(e: Event) => handleCheck(e, todo)} />
+			<div class="mt-1" onclick={stopPropagation}>
+				<Checkbox isChecked={todo.is_completed} onchange={(e: Event) => handleCheck(e, todo)} />
+			</div>
 		</div>
 	</div>
 	{#if !minimal}
@@ -56,4 +64,5 @@
 			<Tags {todo} readonly />
 		</div>
 	{/if}
+	<Flags {todo} />
 </div>

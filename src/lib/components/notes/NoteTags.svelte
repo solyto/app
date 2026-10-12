@@ -93,7 +93,7 @@
 			<TagFlexList tags={notes.activeNote.tags} onRemove={onRemoveTag} />
 			<button
 				class="text-surface-300 hover:text-surface-700 dark:hover:text-surface-400 cursor-pointer text-xs transition-all"
-				onclick={toggleAddTags}>+ {ts.get.todos.add_tag}</button
+				onclick={toggleAddTags}>+ {ts.get.todos.tag}</button
 			>
 		{/if}
 	{/if}

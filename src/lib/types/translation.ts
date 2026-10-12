@@ -209,10 +209,10 @@ export interface TodoRecords {
 	no_todos: string;
 	no_todos_desc: string;
 	tags: string;
-	add_tag: string;
+	tag: string;
 	tag_error: string;
+	category: string;
 	categories: string;
-	add_category: string;
 	category_error: string;
 	workspaces: string;
 	workspace_hide_it: string;

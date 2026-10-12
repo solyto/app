@@ -13,7 +13,8 @@
 		expanded = false,
 		simple = false,
 		left = false,
-		portal = false
+		portal = false,
+		compact = false
 	} = $props<{
 		todo: Todo;
 		changePriority: boolean;
@@ -21,6 +22,7 @@
 		simple?: boolean;
 		left?: boolean;
 		portal?: boolean;
+		compact?: boolean;
 	}>();
 
 	const todos = getTodos();
@@ -41,38 +43,6 @@
 
 		loadingIndicator.stop();
 	}
-
-	function getBgColor(priority: string): string {
-		if (todos.view !== 'list' || simple) {
-			return 'bg-transparent';
-		}
-
-		switch (priority) {
-			case 'high':
-				return 'bg-c-danger';
-			case 'medium':
-			default:
-				return 'bg-c-btn';
-			case 'low':
-				return 'bg-c-success';
-		}
-	}
-
-	function getColor(priority: string): string {
-		if ((todos.view === 'list' || todos.view === 'grouped')) {
-			return 'text-white';
-		}
-
-		switch (priority) {
-			case 'high':
-				return 'text-c-danger';
-			case 'medium':
-			default:
-				return 'text-c-btn-hover';
-			case 'low':
-				return 'text-c-success';
-		}
-	}
 </script>
 
 <div
@@ -83,9 +53,9 @@
 	"
 	class:justify-center={!left}
 	class:justify-start={left}
-	class:p-4={(todos.view === 'list' || todos.view === 'grouped') && !simple}
-	class:2xl:w-full={(todos.view === 'list' || todos.view === 'grouped')}
-	class:2xl:h-full={(todos.view === 'list' || todos.view === 'grouped')}
+	class:p-4={(todos.view === 'list' || todos.view === 'grouped') && !simple && !compact}
+	class:2xl:w-full={(todos.view === 'list' || todos.view === 'grouped') && !compact}
+	class:2xl:h-full={(todos.view === 'list' || todos.view === 'grouped') && !compact}
 	class:rounded-bl-none={expanded}
 	class:rounded-br-md={expanded}
 >

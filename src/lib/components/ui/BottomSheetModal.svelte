@@ -2,13 +2,19 @@
 	import { onMount } from 'svelte';
 	import { fade, blur, fly } from 'svelte/transition';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
+	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
+	import AcceptButton from '$lib/components/ui/buttons/AcceptButton.svelte';
 
 	let {
 		onClose,
+		onDelete,
+		onComplete,
 		children,
 		title = null
 	} = $props<{
 		onClose?: () => void | Promise<void>;
+		onDelete?: () => void | Promise<void>;
+		onComplete?: (event?: MouseEvent) => void | Promise<void>;
 		children?: any;
 		title?: string | null;
 	}>();
@@ -50,6 +56,16 @@
 	>
 		{#if onClose}
 			<CloseButton onClick={onClose} />
+		{/if}
+		{#if onComplete}
+			<div class="absolute top-20 right-4 z-40">
+				<AcceptButton onClick={onComplete} />
+			</div>
+		{/if}
+		{#if onDelete}
+			<div class="absolute top-32 right-4 z-40">
+				<DeleteButton onClick={onDelete} inModal={false} />
+			</div>
 		{/if}
 		<div class="relative z-30 w-full overflow-y-auto rounded-t-2xl bg-c-bg-modal p-6 shadow-md not-dark:border-t-1 not-dark:border-c-neutral-2 dark:shadow-s-dark-shadow max-h-[calc(100dvh-4rem)]">
 			{#if title}
