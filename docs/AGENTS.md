@@ -50,12 +50,12 @@ The client for [solyto.app](https://solyto.app): a free, private, all-in-one per
 - Data flow: component → state store → `ApiService` → REST API. There is no server-side rendering of app data.
 
 ## Coding policies
-When writing or reviewing code, follow the policy set in `docs/` — the rules are grounded in this repo's actual idioms, and AI agents should treat them as binding:
-- `docs/BEST_PRACTICES.md` — general in-file principles (readability, DRY, early returns, naming, comments, `$derived`, tooling)
-- `docs/STATE_SERVICES.md` — the `src/lib/state/*.svelte.ts` layer
-- `docs/COMPONENTS.md` — the `src/lib/components/**` and `src/routes/**` UI layer
-- `docs/DATA_LAYER.md` — `services/`, `helpers/`, `config/`, `types/`, `i18n/` and the data flow
-- `docs/TESTING.md` — the test coverage plan ("test logic and contracts, not markup, not third-party internals")
+`docs/STANDARDS.md` is the single coding standard for this repository and is binding for every change, human or AI. Read it before writing code. Every rule in it comes from a real case in this repo and has a bad/good example and, where possible, a check. Start with "The recurring themes" at the top.
+
+Related files:
+- `docs/STANDARDS_BACKLOG.md` — known violations of the standard, as a todo list. Do not fix items from it unless asked; do not add new violations.
+- `docs/STANDARDS_WORKFLOW.md` — how the standard is extended (the owner brings an example, the agent investigates and writes the rule). Only relevant when asked to continue that work.
+- `docs/TESTING.md` — test setup and recipes ("test logic and contracts, not markup, not third-party internals").
 
 ## Commands
 - `npm run dev` — start the Vite dev server on port 5173 (expects the API at `http://localhost:8000`)
