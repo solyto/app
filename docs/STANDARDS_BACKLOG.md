@@ -10,6 +10,10 @@ rule's "Check" line.
 
 ## Mechanical (grep, replace, done)
 
+- [ ] `tsconfig.json`: set `"noUnusedParameters": true` (rule 12.1). `tsc`
+      reports three hits: `Calendars.svelte.ts:117` (`month`, `year` of
+      `loadEvents`), `Notes.svelte.ts:392` (`note`). Then run `npm run check`
+      for hits inside `.svelte` scripts, count unknown.
 - [ ] `calendars/EventEdit.svelte:90`: remove leftover `console.log`.
 - [ ] `keyHandlers = $state<…>({…})` → plain `let` in 35 components
       (rule 3.6; target shape in 9.1).
@@ -122,6 +126,3 @@ rule's "Check" line.
 
 ## Decisions still to make (not code)
 
-- [ ] Job archives in `docs/jobs/archive/*` (`session.log`, `tokens.json`) are
-      ~85% of the lines in an AI commit. Decide whether they belong in the repo.
-- [ ] `tsconfig.json`: consider `noUnusedParameters` (would have caught 12.1).
