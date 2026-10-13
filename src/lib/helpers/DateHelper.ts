@@ -173,12 +173,12 @@ export function getDaysInMonth(year: number, month: number): SvelteDate[] {
 
 export function getLast30Days(): Date[] {
 	const dates: Date[] = [];
-	const today = new SvelteDate();
+	const today = new Date();
 
 	dates.push(today);
 
 	for (let i = 1; i < 30; i++) {
-		const newDate = new SvelteDate();
+		const newDate = new Date();
 		newDate.setDate(today.getDate() - i);
 		dates.push(newDate);
 	}
@@ -231,20 +231,20 @@ export function isDateYesterday(date: Date): boolean {
 }
 
 export function isDateThisWeek(date: Date): boolean {
-	const today = new SvelteDate();
+	const today = new Date();
 	const dayOfWeek = today.getDay();
-	const startOfWeek = new SvelteDate(today);
+	const startOfWeek = new Date(today);
 	startOfWeek.setDate(today.getDate() - dayOfWeek);
 	startOfWeek.setHours(0, 0, 0, 0);
-	const endOfWeek = new SvelteDate(startOfWeek);
+	const endOfWeek = new Date(startOfWeek);
 	endOfWeek.setDate(startOfWeek.getDate() + 6);
 	endOfWeek.setHours(23, 59, 59, 999);
 	return date >= startOfWeek && date <= endOfWeek;
 }
 
 export function isDateLast7Days(date: Date): boolean {
-	const today = new SvelteDate();
-	const sevenDaysAgo = new SvelteDate(today);
+	const today = new Date();
+	const sevenDaysAgo = new Date(today);
 	sevenDaysAgo.setDate(today.getDate() - 7);
 	return date >= sevenDaysAgo && date <= today;
 }
@@ -284,11 +284,11 @@ export function getDateDiffInDays(date1: Date, date2: Date): number {
 }
 
 export function getCurrentTimestamp(): number {
-	return Math.floor(new SvelteDate().getTime() / 1000);
+	return Math.floor(new Date().getTime() / 1000);
 }
 
 export function getCurrentYearMonthString(): string {
-	const today = new SvelteDate();
+	const today = new Date();
 	return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
 }
 

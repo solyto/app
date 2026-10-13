@@ -114,7 +114,7 @@ export class Calendars {
 		this.month = { weeks };
 	}
 
-	async loadEvents(month: string | null = null, year: string | null = null): Promise<void> {
+	async loadEvents(): Promise<void> {
 		const res = await this.apiService.list(
 			apiRoutes.calendars.listEvents.replace(
 				'%s',

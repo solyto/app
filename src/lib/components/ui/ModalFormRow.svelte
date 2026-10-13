@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	let { label, children } = $props<{
 		label: string;
-		children: any;
+		children: Snippet;
 	}>();
 </script>
 

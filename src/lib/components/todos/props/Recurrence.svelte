@@ -5,7 +5,6 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconRepeat from '@lucide/svelte/icons/repeat';
 	import IconX from '@lucide/svelte/icons/x';
-	import { formatDate } from '$lib/helpers/DateHelper';
 
 	let { todo } = $props<{ todo: Todo }>();
 
@@ -98,7 +97,7 @@
 		role="dialog"
 	>
 		<div class="flex flex-wrap gap-2">
-			{#each frequencyOptions as option}
+			{#each frequencyOptions as option (option.value)}
 				<button
 					class="rounded-md border px-3 py-1 text-xs transition-all"
 					class:border-c-primary={selectedFrequency === option.value}

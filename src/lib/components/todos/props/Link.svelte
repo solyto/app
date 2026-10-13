@@ -63,6 +63,7 @@
 	function openLink(): void {
 		if (!todo.link) return;
 		if (todo.link.startsWith('/')) {
+			// eslint-disable-next-line svelte/no-navigation-without-resolve -- user-entered path, not a known route
 			goto(todo.link);
 		} else {
 			window.open(todo.link, '_blank', 'noopener,noreferrer');

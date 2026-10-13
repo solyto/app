@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Component } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import type { LibraryType } from '$lib/types/library.js';
@@ -7,7 +8,7 @@
 		type: LibraryType;
 		title: string;
 		url: string;
-		icon: any;
+		icon: Component;
 		isActive: boolean;
 		setActive: (type: LibraryType) => void;
 	}>();

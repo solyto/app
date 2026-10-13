@@ -2,7 +2,7 @@
 	import IconPlus from '@lucide/svelte/icons/plus';
 
 	let { onClick, colorOnHover = false } = $props<{
-		onClick: Function;
+		onClick: () => void;
 		colorOnHover?: boolean;
 	}>();
 </script>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Component, Snippet } from 'svelte';
 	let {
 		label = null,
 		fixedWidth = true,
@@ -13,10 +14,10 @@
 		fixedWidth?: boolean;
 		fullWidth?: boolean;
 		href?: string | null;
-		icon?: any;
+		icon?: Component<{ class?: string }>;
 		hover?: boolean;
 		noShadowOnMobile?: boolean;
-		children?: any;
+		children?: Snippet;
 	}>();
 </script>
 

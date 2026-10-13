@@ -2,7 +2,6 @@ import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import { browser } from '$app/environment';
 import type {
 	AddressBook,
 	Contact,
@@ -185,8 +184,8 @@ export class Contacts {
 		if (searchTerm.length === 0) return;
 
 		this.searchEntries = this.contacts.filter((contact) => {
-			return ['first_name', 'last_name'].some((field) => {
-				return String((contact as any)[field]).toLowerCase().includes(searchTerm.toLowerCase());
+			return (['first_name', 'last_name'] as const).some((field) => {
+				return String(contact[field]).toLowerCase().includes(searchTerm.toLowerCase());
 			});
 		});
 	}

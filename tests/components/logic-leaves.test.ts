@@ -86,8 +86,8 @@ describe('StatisticWidget', () => {
 		const { container } = render(StatisticWidget, {
 			props: { label: 'X', number: 1, color: 'blue' }
 		});
-		expect(container.querySelector('.bg-blue-50')).toBeInTheDocument();
-		expect(container.querySelector('.text-blue-600')).toBeInTheDocument();
+		expect(container.querySelector('[class~="bg-c-btn/10"]')).toBeInTheDocument();
+		expect(container.querySelector('.text-c-btn')).toBeInTheDocument();
 	});
 });
 

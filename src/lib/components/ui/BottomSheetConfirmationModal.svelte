@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { fade, blur, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, type Snippet } from 'svelte';
 
 	const ts = getTranslation();
 
@@ -18,9 +18,9 @@
 		title?: string;
 		description?: string;
 		type?: 'default' | 'confirm' | 'confirm-delete' | 'info';
-		children?: any;
-		onConfirm: () => void | Promise<any>;
-		onCancel: () => void | Promise<any>;
+		children?: Snippet;
+		onConfirm: () => void;
+		onCancel: () => void;
 	}>();
 
 	// Keyboard-aware bottom offset: when the on-screen keyboard opens on mobile it would
@@ -62,6 +62,9 @@
 		<div class="relative z-30 w-full overflow-y-auto rounded-t-2xl bg-c-bg-modal p-6 shadow-md not-dark:border-t-1 not-dark:border-c-neutral-2 dark:shadow-s-dark-shadow max-h-[calc(100dvh-4rem)]">
 			{#if title}
 				<p class="mb-4 text-xl font-bold text-c-heading dark:text-c-primary">{title}</p>
+			{/if}
+			{#if description}
+				<p class="text-sm text-c-neutral-5">{description}</p>
 			{/if}
 			{@render children?.()}
 			<div class="mt-8 flex w-full flex-row justify-center gap-4">

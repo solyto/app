@@ -2,9 +2,8 @@
 	import { scale, fade, blur } from 'svelte/transition';
 	import { getKeyManager } from '$lib/KeyManager.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount, type Snippet } from 'svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import Divider from '$lib/components/ui/Divider.svelte';
 
 	const ts = getTranslation(),
 		keyManager = getKeyManager();
@@ -22,9 +21,9 @@
 		description?: string;
 		type?: 'default' | 'confirm' | 'confirm-delete' | 'info';
 		width?: string;
-		onConfirm: () => void | Promise<any>;
-		onCancel: () => void | Promise<any>;
-		children?: any;
+		onConfirm: () => void;
+		onCancel: () => void;
+		children?: Snippet;
 	}>();
 
 	let visible = $state<boolean>(false);

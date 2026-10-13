@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { urls } from '$lib/config/urls';
+	import { resolve } from '$app/paths';
 	import type { Link } from '$lib/types/library_link';
 	import type { Quote } from '$lib/types/library_quote';
 	import type { MusicRelease } from '$lib/types/library_music';
@@ -13,7 +15,6 @@
 	import { apiRoutes } from '$lib/config/apiRoutes';
 	import MusicReleasesWidget from '$lib/components/dashboard/widgets/MusicReleasesWidget.svelte';
 	import BookReleasesWidget from '$lib/components/dashboard/widgets/BookReleasesWidget.svelte';
-	import MovieReleasesWidget from '$lib/components/dashboard/widgets/MovieReleasesWidget.svelte';
 	import NewestNotesWidget from '$lib/components/dashboard/widgets/NewestNotesWidget.svelte';
 	import NewestLinksWidget from '$lib/components/dashboard/widgets/NewestLinksWidget.svelte';
 	import QuoteWidget from '$lib/components/dashboard/widgets/QuoteWidget.svelte';
@@ -102,13 +103,13 @@
 			<p class="text-sm text-c-neutral-4 dark:text-c-neutral-5">{ts.get.home.inspiration_empty_hint}</p>
 			<div class="flex flex-wrap gap-3">
 				<a
-					href="/notes"
+					href={resolve(urls.notes)}
 					class="text-xs text-c-primary transition-colors hover:text-c-primary/70"
 				>
 					{ts.get.nav.notes} →
 				</a>
 				<a
-					href="/libraries"
+					href={resolve(urls.libraries)}
 					class="text-xs text-c-primary transition-colors hover:text-c-primary/70"
 				>
 					{ts.get.nav.libraries} →

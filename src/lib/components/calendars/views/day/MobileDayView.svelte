@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { getCalendars } from '$lib/state/Calendars.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import CalendarWeekDay from '$lib/components/calendars/views/week/Day.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 
 	const calendars = getCalendars();
-	const ts = getTranslation();
 	const hours = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
 		(i - 1).toString().padStart(2, '0')
 	);

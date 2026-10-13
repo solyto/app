@@ -61,7 +61,7 @@
 <ConfirmationModal title={ts.get.notes.insert_image} onConfirm={confirm} onCancel={onCancel} width="w-112">
 	<!-- Tabs -->
 	<div class="mb-4 flex gap-1 rounded-lg bg-c-neutral-1 p-1 dark:bg-s-dark-3">
-		{#each (['url', 'clipboard', 'upload'] as Mode[]) as tab}
+		{#each (['url', 'clipboard', 'upload'] as Mode[]) as tab (tab)}
 			<button
 				onclick={() => switchMode(tab)}
 				class="flex-1 rounded-md py-1.5 text-sm font-medium transition-all cursor-pointer"

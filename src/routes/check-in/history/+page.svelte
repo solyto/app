@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getDaysInMonth, getUrlFormat } from '$lib/helpers/DateHelper';
 	import { SvelteDate } from 'svelte/reactivity';
 	import { fade } from 'svelte/transition';
@@ -15,7 +14,6 @@
 
 	const viewPoint = getViewPoint();
 	const checkInData = getCheckInData();
-	const ts = getTranslation();
 
 	const dates = $derived(getDaysInMonth(checkInData.historyMonth.year, checkInData.historyMonth.month).reverse());
 

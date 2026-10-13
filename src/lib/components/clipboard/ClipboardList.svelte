@@ -51,7 +51,8 @@
 				canvas.getContext('2d')!.drawImage(img, 0, 0);
 				canvas.toBlob((result) => {
 					URL.revokeObjectURL(img.src);
-					result ? resolve(result) : reject();
+					if (result) resolve(result);
+				else reject();
 				}, 'image/png');
 			};
 			img.onerror = () => {

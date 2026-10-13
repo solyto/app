@@ -10,7 +10,6 @@
 	import type { Friend } from '$lib/types/friend.js';
 	import type { Calendar, CalendarSharee } from '$lib/types/calendar.js';
 	import IconUserPlus from '@lucide/svelte/icons/user-plus';
-	import IconUsers from '@lucide/svelte/icons/users';
 	import IconX from '@lucide/svelte/icons/x';
 	import { onMount } from 'svelte';
 

@@ -9,8 +9,7 @@
 	import type {
 		EventForm,
 		CreateEventRequest,
-		UpdateEventRequest,
-		CalendarEvent
+		UpdateEventRequest
 	} from '$lib/types/calendar';
 	import SvelteDateInput from '$lib/components/forms/SvelteDateInput.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
@@ -21,7 +20,7 @@
 	import ChooseRecurrenceRule from '$lib/components/calendars/ChooseRecurrenceRule.svelte';
 	import RecurrenceActionModal from '$lib/components/calendars/RecurrenceActionModal.svelte';
 	import EventAttachments from '$lib/components/calendars/EventAttachments.svelte';
-	import { formatFloatingDate, getDateDiffInDays, getDateDiffInMinutes } from '$lib/helpers/DateHelper';
+	import { formatFloatingDate } from '$lib/helpers/DateHelper';
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
@@ -87,7 +86,6 @@
 	async function afterSelectStartDate(): Promise<void> {
 		await tick();
 
-		console.log(form.start_date, form.end_date);
 		if (form.start_date.getTime() > form.end_date.getTime()) {
 			form.end_date = new SvelteDate(form.start_date);
 		}

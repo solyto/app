@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	let {
 		title = null,
 		hover = true,
@@ -8,7 +9,7 @@
 		title?: string;
 		hover?: boolean;
 		noShadowOnMobile?: boolean;
-		children?: any;
+		children?: Snippet;
 	}>();
 </script>
 

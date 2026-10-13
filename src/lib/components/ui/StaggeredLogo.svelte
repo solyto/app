@@ -2,8 +2,6 @@
 	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
 
-	const w = 56;
-	const h = 71;
 	const x = 7;
 	const y = 9;
 

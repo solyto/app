@@ -17,12 +17,8 @@
 	const ts = getTranslation();
 
 	const flipDurationMs = 200;
-	let items = $state<Calendar[]>([]);
+	let items = $derived<Calendar[]>([...calendars.ownedCalendars, ...calendars.acceptedSharedCalendars]);
 	let dragDisabled = $state(true);
-
-	$effect(() => {
-		items = [...calendars.ownedCalendars, ...calendars.acceptedSharedCalendars];
-	});
 
 	function handleConsider(e: CustomEvent) {
 		items = e.detail.items;

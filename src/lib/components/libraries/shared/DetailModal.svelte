@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import Rating from '$lib/components/libraries/shared/Rating.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -30,7 +31,7 @@
 			| GameLibrary
 			| PlantLibrary
 			| QuoteLibrary;
-		children: any;
+		children: Snippet;
 	}>();
 
 	async function changeRating(rating: number): Promise<void> {

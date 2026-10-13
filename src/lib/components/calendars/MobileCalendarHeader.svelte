@@ -8,11 +8,9 @@
 	import IconWeek from '$lib/components/ui/icons/IconWeek.svelte';
 	import IconDay from '$lib/components/ui/icons/IconDay.svelte';
 	import IconList from '$lib/components/ui/icons/IconList.svelte';
-	import NavigationEntry from '$lib/components/calendars/NavigationEntry.svelte';
 	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import ImportButton from '$lib/components/ui/buttons/ImportButton.svelte';
 	import CloudButton from '$lib/components/ui/buttons/CloudButton.svelte';
-	import Divider from '$lib/components/ui/Divider.svelte';
 	import BottomSheetModal from '$lib/components/ui/BottomSheetModal.svelte';
 	import ManageCalendars from '$lib/components/calendars/ManageCalendars.svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';

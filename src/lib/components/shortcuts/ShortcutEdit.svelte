@@ -1,6 +1,4 @@
 <script lang="ts">
-	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
-	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import type { Shortcut, UpdateShortcutRequest } from '$lib/types/shortcut.js';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getShortcuts } from '$lib/state/Shortcuts.svelte';

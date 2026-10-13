@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { blur } from 'svelte/transition';
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
-	import { formatDate, formatTime, getNextXDays } from '$lib/helpers/DateHelper';
+	import { getNextXDays } from '$lib/helpers/DateHelper';
 	import Day from '$lib/components/calendars/views/list/Day.svelte';
 
 	const calendars = getCalendars();

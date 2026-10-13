@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { startRegistration } from '@simplewebauthn/browser';
+	import { startRegistration, type RegistrationResponseJSON } from '@simplewebauthn/browser';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -24,7 +24,7 @@
 	let addingPasskey = $state(false);
 	let newPasskeyName = $state('');
 	let showNameInput = $state(false);
-	let pendingResponse = $state<any>(null);
+	let pendingResponse = $state<RegistrationResponseJSON | null>(null);
 	let editingId = $state<string | null>(null);
 	let editingName = $state('');
 	let confirmDeletePasskey = $state<Passkey | null>(null);
@@ -51,7 +51,7 @@
 			pendingResponse = response;
 			newPasskeyName = '';
 			showNameInput = true;
-		} catch (e) {
+		} catch {
 			notifications.error(ts.get.settings.passkey_add_error);
 		} finally {
 			addingPasskey = false;
@@ -66,7 +66,7 @@
 			await auth.passkeyRegister(pendingResponse, newPasskeyName.trim() || 'Passkey');
 			notifications.success(ts.get.settings.passkey_added);
 			await loadPasskeys();
-		} catch (e) {
+		} catch {
 			notifications.error(ts.get.settings.passkey_add_error);
 		} finally {
 			addingPasskey = false;
@@ -89,7 +89,7 @@
 			await auth.deletePasskey(id);
 			notifications.success(ts.get.settings.passkey_deleted);
 			passkeys = passkeys.filter((p) => p.id !== id);
-		} catch (e) {
+		} catch {
 			notifications.error(ts.get.settings.passkey_delete_error);
 		}
 	}
@@ -101,7 +101,7 @@
 			await auth.renamePasskey(id, name);
 			passkeys = passkeys.map((p) => (p.id === id ? { ...p, name } : p));
 			editingId = null;
-		} catch (e) {
+		} catch {
 			notifications.error(ts.get.settings.passkey_rename_error);
 		}
 	}

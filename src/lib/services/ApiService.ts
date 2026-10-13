@@ -146,6 +146,11 @@ export default class ApiService {
 		return { ok: res.ok, status: res.status, data: res.ok ? await res.json() : null };
 	}
 
+	async getRaw<T = object>(endpoint: string): Promise<T | null> {
+		const res = await this.fetchWithRecovery(endpoint, { headers: this.getApiHeader() });
+		return res.ok ? await res.json() : null;
+	}
+
 	async postRaw<T = object>(endpoint: string, body: FormData | object): Promise<T> {
 		const res = await this.fetchWithRecovery(endpoint, {
 			method: 'POST',

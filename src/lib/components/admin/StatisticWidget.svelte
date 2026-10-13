@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Component } from 'svelte';
 	import { scale } from 'svelte/transition';
 	import { humanReadableNumber } from '$lib/helpers/NumberHelper.js';
 
@@ -12,7 +13,7 @@
 		label: string;
 		number: number;
 		loadDelay?: number;
-		icon?: any;
+		icon?: Component<{ class?: string }>;
 		color?: 'teal' | 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'yellow';
 	}>();
 

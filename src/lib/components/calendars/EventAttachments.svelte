@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { onDestroy, tick } from 'svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -167,7 +168,7 @@
 			{#each calendars.activeEventNotes as note (note.id)}
 				<div class="flex items-center justify-between gap-2 py-1">
 					<a
-						href={urls.note.replace('[id]', note.id)}
+						href={resolve(urls.note, { id: note.id })}
 						target="_blank"
 						rel="noopener noreferrer"
 						class="flex min-w-0 items-center gap-1.5 truncate hover:opacity-80"

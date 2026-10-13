@@ -6,7 +6,7 @@
 		running = false,
 		disabled = false
 	} = $props<{
-		onClick: Function;
+		onClick: () => void;
 		running: boolean;
 		disabled: boolean;
 	}>();

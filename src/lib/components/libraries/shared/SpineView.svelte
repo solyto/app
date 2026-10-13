@@ -119,7 +119,7 @@
 </script>
 
 <div class="w-full pb-10 pl-3" bind:clientWidth={containerWidth} in:fade>
-	{#each rows as row, rowIndex}
+	{#each rows as row, rowIndex (rowIndex)}
 		<div
 			class="relative flex items-end"
 			style="
@@ -129,7 +129,7 @@
 				perspective-origin: 50% 100%;
 			"
 		>
-			{#each row as { entry, xOffset }}
+			{#each row as { entry, xOffset } (entry.id)}
 				{@const spineW = getSpineWidth(entry)}
 				{@const coverW = getCoverW(entry.id)}
 				{@const coverH = getCoverH()}

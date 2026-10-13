@@ -1,13 +1,14 @@
 <script lang="ts">
+	import type { Component, Snippet } from 'svelte';
 	let {
 		label = null,
 		icon = null,
 		children
 	} = $props<{
 		label?: string;
-		icon?: any;
+		icon?: Component<{ class?: string }>;
 		hover?: boolean;
-		children?: any;
+		children?: Snippet;
 	}>();
 </script>
 

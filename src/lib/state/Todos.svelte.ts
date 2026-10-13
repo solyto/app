@@ -17,7 +17,8 @@ import type {
 	UpdateTodoRequest,
 	CreateTodoSubtaskRequest,
 	TodoSubtask,
-	UpdateTodoSubtaskRequest
+	UpdateTodoSubtaskRequest,
+	TodoView
 } from '$lib/types/todo';
 import type { Tag } from '$lib/types/tag';
 import type { Auth } from '$lib/state/Auth.svelte';
@@ -45,7 +46,7 @@ export class Todos {
 	workspaces = $state<TodoWorkspace[]>([]);
 	activeWorkspace = $state<TodoWorkspace | null>(null);
 	activeFilters = $state<TodoFilter[]>([]);
-	view = $state<'list' | 'kanban' | 'overview' | 'card' | 'grouped'>('list');
+	view = $state<TodoView>('list');
 	sortByScore = $state<boolean>(false);
 	todosScored = $state<boolean>(false);
 	hideItActive = $state<boolean>(false);
@@ -121,7 +122,7 @@ export class Todos {
 		}
 	}
 
-	changeView(view: 'list' | 'kanban' | 'overview' | 'card' | 'grouped'): void {
+	changeView(view: TodoView): void {
 		this.view = view;
 	}
 

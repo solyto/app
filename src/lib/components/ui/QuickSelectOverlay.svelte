@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import { fade } from 'svelte/transition';
 	import { portalToBody } from '$lib/helpers/PortalHelper';
@@ -12,7 +13,7 @@
 		target = null
 	} = $props<{
 		onClose: () => void;
-		children?: any;
+		children?: Snippet;
 		class?: string;
 		p?: number;
 		portal?: boolean;

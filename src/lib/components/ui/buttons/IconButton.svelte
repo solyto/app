@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	let {
 		onclick = () => {},
 		type = 'btn',
@@ -12,7 +13,7 @@
 		disabled?: boolean;
 		pulse?: boolean;
 		class?: string;
-		children: any;
+		children: Snippet;
 	}>();
 </script>
 

@@ -2,7 +2,7 @@
 	import IconSave from '@lucide/svelte/icons/save';
 
 	let { onClick } = $props<{
-		onClick: Function;
+		onClick: () => void;
 	}>();
 </script>
 

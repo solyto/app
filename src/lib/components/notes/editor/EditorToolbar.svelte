@@ -3,7 +3,6 @@
 	import InsertImageModal from './InsertImageModal.svelte'
 	import InsertLinkModal from './InsertLinkModal.svelte'
 	import ToolbarDivider from '$lib/components/notes/editor/ToolbarDivider.svelte'
-	import { getTranslation } from '$lib/state/Translation.svelte'
 	import { fly } from 'svelte/transition';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import Bold from '@lucide/svelte/icons/bold'
@@ -42,7 +41,6 @@
 
 	let { editor, activeStates }: { editor: Editor; activeStates: ActiveStates } = $props()
 
-	const ts = getTranslation()
 
 	let imageModalOpen = $state(false)
 	let linkModalOpen = $state(false)

@@ -2,7 +2,7 @@
 	import IconCheck from '@lucide/svelte/icons/check';
 
 	let { onClick, colorOnHover = false, inModal = false } = $props<{
-		onClick: Function;
+		onClick: () => void;
 		colorOnHover?: boolean;
 		inModal?: boolean;
 	}>();

@@ -14,7 +14,6 @@ import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
 import type { LibraryConfig } from '$lib/types/library';
-import type { Book } from '$lib/types/library_book';
 
 export class MovieLibrary {
 	config: LibraryConfig = {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { FeedSubscription } from '$lib/types/feed';
+	import type { FeedEntrySize, FeedSubscription } from '$lib/types/feed';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getFeeds } from '$lib/state/Feeds.svelte';
 	import InlineEditButton from '$lib/components/ui/buttons/InlineEditButton.svelte';
@@ -43,6 +43,6 @@
 	<ViewSwitcher
 		{views}
 		currentlySelected={feeds.view}
-		onChange={(type) => feeds.changeView(type as any)}
+		onChange={(type) => feeds.changeView(type as FeedEntrySize)}
 	/>
 </div>

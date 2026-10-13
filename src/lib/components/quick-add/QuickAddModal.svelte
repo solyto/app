@@ -120,7 +120,7 @@
 			</button>
 			<p class="text-lg font-bold">{ts.get.quick_add.select_type}</p>
 			<div class="grid grid-cols-3 gap-2 max-md:grid-cols-2">
-				{#each availableTypes() as type}
+				{#each availableTypes() as type (type)}
 					{@const Icon = TYPE_ICONS[type]}
 					<button
 						class="group flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border-1 border-c-neutral-2 bg-c-bg-elevated px-3 py-3.5 text-c-heading transition-colors hover:border-c-btn hover:shadow-sm dark:border-s-dark-3 dark:text-c-primary"
@@ -149,7 +149,7 @@
 			</div>
 			{#if metadataEntries().length > 0}
 				<div class="flex flex-col gap-2">
-					{#each metadataEntries() as [key, value]}
+					{#each metadataEntries() as [key, value] (key)}
 						<ModalFormRow label={key.replace(/_/g, ' ')}>
 							<span class="text-sm">{value}</span>
 						</ModalFormRow>

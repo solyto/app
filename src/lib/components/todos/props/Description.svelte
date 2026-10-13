@@ -158,6 +158,7 @@
 			onmousemove={(e) => setExplanationBoxPosition(e)}
 		>
 			{#if todo.description}
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -- sanitised with DOMPurify -->
 				{@html DOMPurify.sanitize(markdownToHtml(nl2br(todo.description)))}
 			{:else}
 				{ts.get.todos.no_description}

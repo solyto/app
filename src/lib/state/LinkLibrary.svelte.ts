@@ -2,8 +2,7 @@ import type {
 	Link,
 	CreateLinkRequest,
 	UpdateLinkRequest,
-	LinkCategory,
-	CreateLinkCategoryRequest
+	LinkCategory
 } from '$lib/types/library_link';
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';

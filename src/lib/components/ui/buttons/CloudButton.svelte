@@ -2,7 +2,7 @@
 	import IconCloud from '@lucide/svelte/icons/cloud';
 
 	let { onClick, title } = $props<{
-		onClick: Function;
+		onClick: () => void;
 		title: string;
 	}>();
 </script>

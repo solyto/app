@@ -107,7 +107,7 @@
 		ontouchstart={onTouchStart}
 		ontouchend={onTouchEnd}
 	>
-		{#each entries as entry, index}
+		{#each entries as entry, index (entry.id)}
 			{@const offset = index - activeIndex}
 			{@const abs = Math.abs(offset)}
 			{#if abs <= 3}
@@ -186,7 +186,7 @@
 				{/if}
 				{#if activeEntry.genres?.length}
 					<div class="mt-1 flex flex-wrap justify-center gap-1">
-						{#each activeEntry.genres as genre}
+						{#each activeEntry.genres as genre (genre.id)}
 							<span
 								class="rounded-full bg-c-neutral-1 px-2 py-0.5 text-xs dark:bg-s-dark-3"
 							>

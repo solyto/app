@@ -47,7 +47,7 @@
 		loadingIndicator.stop();
 	}
 
-	function onScoredToggle(tracker: CheckInType): void {
+	function onScoredToggle(): void {
 		const scored = ALL_CHECK_IN_TRACKERS.filter((t) => scoredMap[t]);
 		checkInData.saveScoredTrackers(scored);
 	}
@@ -117,7 +117,7 @@
 								isChecked={scoredMap[tracker]}
 								onchange={() => {
 									scoredMap[tracker] = !scoredMap[tracker];
-									onScoredToggle(tracker);
+									onScoredToggle();
 								}}
 							/>
 						</div>

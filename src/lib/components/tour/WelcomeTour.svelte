@@ -32,6 +32,7 @@
 		targetRect = null
 
 		if (page.url.pathname !== step.route) {
+			// eslint-disable-next-line svelte/no-navigation-without-resolve -- route from the step list, resolve() rejects a plain string
 			await goto(step.route)
 		}
 
@@ -153,7 +154,7 @@
 
 			{#if content.tips.length > 0}
 				<ul class="mx-5 mb-4 space-y-1.5 border-t border-c-neutral-1 pt-3 dark:border-s-dark-3">
-					{#each content.tips as tip}
+					{#each content.tips as tip, i (i)}
 						<li class="flex items-start gap-2 text-xs text-c-neutral-5 dark:text-c-neutral-4">
 							<IconCheck class="mt-0.5 size-3.5 shrink-0 text-c-primary" />
 							{tip}

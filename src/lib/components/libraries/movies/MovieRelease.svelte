@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { formatDate } from '$lib/helpers/DateHelper.js';
 	import type { MovieRelease } from '$lib/types/library_movie';
 	import MissingCover from '$lib/components/libraries/shared/MissingCover.svelte';
 	import type { MovieLibrary } from '$lib/state/MovieLibrary.svelte';

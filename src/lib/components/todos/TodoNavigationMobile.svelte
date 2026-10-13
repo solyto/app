@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
 	import { Translation } from '$lib/state/Translation.svelte';
@@ -26,7 +26,7 @@
 
 	let current = $derived(stack.length > 0 ? stack[stack.length - 1] : null);
 
-	const sectionHeaders: { key: SectionKey; label: string; icon?: any }[] = [
+	const sectionHeaders: { key: SectionKey; label: string }[] = [
 		{ key: 'workspaces', label: ts.get.todos.workspaces },
 		{ key: 'categories', label: ts.get.todos.categories },
 		{ key: 'priority', label: ts.get.todos.priority },

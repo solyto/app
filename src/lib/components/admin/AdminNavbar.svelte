@@ -11,7 +11,6 @@
 
 	let active = $derived(page.url.pathname);
 
-	function select(slug: string): void {}
 </script>
 
 <div class="h-full bg-c-bg p-1" out:slide>
@@ -28,14 +27,14 @@
 				href={urls.admin.home}
 				title="Dashboard"
 				active={active === urls.admin.home}
-				onSelect={select}><IconHouse /></NavEntry
+				><IconHouse /></NavEntry
 			>
 			<NavEntry
 				slug="admin.users"
 				href={urls.admin.users}
 				title="Users"
 				active={active === urls.admin.users}
-				onSelect={select}><IconUsers /></NavEntry
+				><IconUsers /></NavEntry
 			>
 		</div>
 
@@ -45,7 +44,7 @@
 				href={urls.home}
 				title="Back to App"
 				active={false}
-				onSelect={select}><IconArrowBigLeft /></NavEntry
+				><IconArrowBigLeft /></NavEntry
 			>
 		</div>
 	</div>

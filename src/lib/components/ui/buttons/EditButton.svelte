@@ -7,7 +7,7 @@
 		inModal = true,
 		buttonStyle = 'default'
 	} = $props<{
-		onClick: Function;
+		onClick: () => void;
 		title?: string;
 		inModal?: boolean;
 		buttonStyle?: 'default' | 'plain' | 'minimal';

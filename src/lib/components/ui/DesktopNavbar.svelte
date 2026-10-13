@@ -28,7 +28,7 @@
 		</div>
 
 		<div class="flex flex-1 flex-col items-center justify-center">
-			{#each desktopOrder as slug}
+			{#each desktopOrder as slug (slug)}
 				{@const item = navItems[slug]}
 				{#if item.featureFlag === null || nav.features[item.featureFlag]}
 					<div data-tour={item.dataTour} class="w-full">

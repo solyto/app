@@ -5,7 +5,6 @@
 	import { formatDate, getDateDiffInMinutes } from '$lib/helpers/DateHelper';
 	import type { CalendarEvent } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
-	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 	import CalendarDragService from '$lib/services/CalendarDragService';
 	import CalendarDragGhost from '$lib/components/calendars/dnd/CalendarDragGhost.svelte';
 	import {
@@ -166,14 +165,6 @@
 		>
 			<IconPlus class="size-3" />
 		</button>
-		<!-- {#if !isMobile}
-			<CalendarMarks
-				date={date}
-				showJournal={calendars.journalMarksEnabled}
-				showCheckIn={calendars.checkInMarksEnabled}
-				class="px-2 py-1.5"
-			/>
-		{/if} -->
 		{#each calendars.getTodosForDate(date) as todo (todo.id)}
 			<TodoEntry {todo} />
 		{/each}

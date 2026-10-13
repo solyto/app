@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getTodos } from '$lib/state/Todos.svelte';
+	import type { TodoView } from '$lib/types/todo';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import ViewSwitcher from '$lib/components/ui/ViewSwitcher.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
@@ -26,10 +27,6 @@
 	];
 
 	const views = viewPoint.isDesktop ? viewsDesktop : viewsMobile;
-
-	let currentView = $derived(
-		quickCreateOpen ? views.find((v) => v.type === todos.view) : null
-	);
 </script>
 
 <div
@@ -40,7 +37,7 @@
 			<ViewSwitcher
 				views={views}
 				currentlySelected={todos.view}
-				onChange={(type) => todos.changeView(type as any)}
+				onChange={(type) => todos.changeView(type as TodoView)}
 			/>
 		</div>
 	{/if}

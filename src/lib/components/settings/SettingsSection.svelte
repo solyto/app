@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import SubHeading from '$lib/components/ui/SubHeading.svelte';
 
 	let {
@@ -7,8 +8,8 @@
 		headerAction = null
 	} = $props<{
 		label: string;
-		children?: any;
-		headerAction?: any;
+		children?: Snippet;
+		headerAction?: Snippet;
 	}>();
 </script>
 

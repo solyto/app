@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import { slide } from 'svelte/transition';
 
 	let {
@@ -16,7 +17,7 @@
 		href: string;
 		onSelect?: (slug: string) => void;
 		active?: boolean;
-		children?: any;
+		children?: Snippet;
 		mobile?: boolean;
 		dataTour?: string;
 	}>();

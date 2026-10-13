@@ -143,7 +143,7 @@
 			<thead>
 				<tr class="border-b border-c-neutral-2 dark:border-s-dark-2">
 					<th class="px-1 py-2 text-left font-semibold"></th>
-					{#each channels as channel}
+					{#each channels as channel (channel.key)}
 						<th class="min-w-[60px] px-2 py-2 text-center font-semibold">
 							<span
 								class:opacity-40={!isChannelAvailable(channel.key)}
@@ -156,10 +156,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each notificationTypes as type}
+				{#each notificationTypes as type (type.key)}
 					<tr class="border-b border-c-neutral-1 last:border-0 dark:border-s-dark-3">
 						<td class="px-1 py-3 text-left">{type.label}</td>
-						{#each channels as channel}
+						{#each channels as channel (channel.key)}
 							<td class="px-2 py-3 text-center">
 								{#if isChannelAvailable(channel.key)}
 									<Checkbox

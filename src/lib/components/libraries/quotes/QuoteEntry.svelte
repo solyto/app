@@ -23,6 +23,7 @@
 
 <div class="ml-2 text-left">
 	<div class="">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -- sanitised with DOMPurify -->
 		{@html DOMPurify.sanitize(entry.summary ? nl2br(entry.summary) : nl2br(entry.quote))}
 	</div>
 	<div class="mt-4 font-bold">{entry.author}</div>

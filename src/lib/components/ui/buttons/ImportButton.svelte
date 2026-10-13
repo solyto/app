@@ -2,7 +2,7 @@
 	import IconImport from '@lucide/svelte/icons/import';
 
 	let { onClick, title = '' } = $props<{
-		onClick: Function;
+		onClick: () => void;
 		title?: string;
 	}>();
 </script>

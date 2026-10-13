@@ -2,8 +2,7 @@
 	import { slide, fade } from 'svelte/transition';
 	import type {
 		DevRequest,
-		UpdateDevRequestRequest,
-		DevRequestVote
+		UpdateDevRequestRequest
 	} from '$lib/types/dev_request';
 	import { formatDate } from '$lib/helpers/DateHelper';
 	import IconChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
@@ -195,11 +194,13 @@
 							class="w-full cursor-pointer pt-4 text-left"
 							ondblclick={() => toggleChange('description')}
 						>
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -- sanitised with DOMPurify -->
 							{@html DOMPurify.sanitize(nl2br(entry.description))}
 						</button>
 					{/if}
 				{:else}
 					<div class="w-full pt-4">
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -- sanitised with DOMPurify -->
 						{@html DOMPurify.sanitize(nl2br(entry.description))}
 					</div>
 				{/if}

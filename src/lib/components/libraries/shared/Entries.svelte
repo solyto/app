@@ -126,7 +126,7 @@
 					{:else if library.config.type === 'games'}
 						<GameEntry {entry} {library} />
 					{:else if library.config.type === 'plants'}
-						<PlantEntry {entry} {library} />
+						<PlantEntry {entry} />
 					{/if}
 				</div>
 			</div>

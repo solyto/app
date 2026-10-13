@@ -1,8 +1,9 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	interface Tab {
 		id: number;
 		title: string;
-		component: any;
+		component: Snippet;
 	}
 
 	let { tabs } = $props<{

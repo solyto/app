@@ -7,6 +7,7 @@
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import { onMount } from 'svelte';
 	import { apiRoutes } from '$lib/config/apiRoutes';
+	import type { ExportStatus } from '$lib/types/export';
 
 	const ts = getTranslation();
 	const auth = getAuth();
@@ -35,14 +36,14 @@
 		Object.fromEntries(FEATURES.map((f) => [f.key, true]))
 	);
 	let loading = $state(false);
-	let exportStatus = $state<any>(null);
+	let exportStatus = $state<ExportStatus | null>(null);
 
 	onMount(async () => {
 		await loadStatus();
 	});
 
 	async function loadStatus() {
-		const res: any = await apiService.list(apiRoutes.export.status);
+		const res = await apiService.getRaw<{ success: boolean; data: ExportStatus }>(apiRoutes.export.status);
 		if (res?.success) {
 			exportStatus = res.data;
 		}
@@ -93,6 +94,7 @@
 	}
 
 	async function downloadExport() {
+		if (!exportStatus) return;
 		const url = apiRoutes.export.download.replace('%s', String(exportStatus.id));
 		const res = await fetch(url, {
 			headers: { Authorization: 'Bearer ' + auth.getToken(), Accept: 'application/zip' }

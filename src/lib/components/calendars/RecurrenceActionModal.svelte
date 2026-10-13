@@ -10,9 +10,9 @@
 
 	let { action, onThisOccurrence, onAllOccurrences, onCancel } = $props<{
 		action: 'edit' | 'delete' | 'move';
-		onThisOccurrence: () => void | Promise<any>;
-		onAllOccurrences: () => void | Promise<any>;
-		onCancel: () => any;
+		onThisOccurrence: () => void;
+		onAllOccurrences: () => void;
+		onCancel: () => void;
 	}>();
 
 	let visible = $state<boolean>(false);

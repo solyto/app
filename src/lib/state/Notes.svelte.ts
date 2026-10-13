@@ -391,11 +391,7 @@ export class NotesSvelte {
 
 	async updateFavoriteStatus(note: Note, isFavorite: boolean): Promise<boolean> {
 		const request: UpdateNoteRequest = { is_favorite: isFavorite };
-		const ok = await this.apiService.update(
-			apiRoutes.notes.update,
-			this.activeNote!.id,
-			request
-		);
+		const ok = await this.apiService.update(apiRoutes.notes.update, note.id, request);
 		if (ok) await this.load();
 		return ok;
 	}

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { fade, blur, fly } from 'svelte/transition';
+	import { onMount, type Snippet } from 'svelte';
+	import { fly } from 'svelte/transition';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import AcceptButton from '$lib/components/ui/buttons/AcceptButton.svelte';
@@ -15,7 +15,7 @@
 		onClose?: () => void | Promise<void>;
 		onDelete?: () => void | Promise<void>;
 		onComplete?: (event?: MouseEvent) => void | Promise<void>;
-		children?: any;
+		children?: Snippet;
 		title?: string | null;
 	}>();
 

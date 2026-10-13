@@ -23,12 +23,8 @@
 	let { onClose } = $props<{ onClose: () => void }>();
 
 	const flipDurationMs = 200;
-	let items = $state<Shortcut[]>([]);
+	let items = $derived<Shortcut[]>(shortcuts.shortcuts);
 	let dragDisabled = $state(true);
-
-	$effect(() => {
-		items = shortcuts.shortcuts;
-	});
 
 	function handleConsider(e: CustomEvent) {
 		items = e.detail.items;

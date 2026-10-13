@@ -2,7 +2,7 @@
 	import IconFolderPlus from '@lucide/svelte/icons/folder-plus';
 
 	let { onClick } = $props<{
-		onClick: Function;
+		onClick: () => void;
 	}>();
 </script>
 

@@ -169,7 +169,7 @@
 		</span>
 
 		<div class="flex flex-row items-center gap-1">
-			{#each Array(SESSIONS_PER_CYCLE) as _, i}
+			{#each Array(SESSIONS_PER_CYCLE) as _, i (i)}
 				<div
 					class="h-2.5 w-2.5 rounded-full"
 					class:bg-c-primary={i < sessionsCompleted % SESSIONS_PER_CYCLE}

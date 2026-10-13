@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import { fade, blur, scale } from 'svelte/transition';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
@@ -24,7 +25,7 @@
 		onEdit?: () => void | Promise<void>;
 		onDelete?: () => void | Promise<void>;
 		onComplete?: (event?: MouseEvent) => void | Promise<void>;
-		children?: any;
+		children?: Snippet;
 		small?: boolean;
 		rounded?: string | null;
 		p?: string;

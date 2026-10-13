@@ -3,7 +3,6 @@
 	import CalendarView from '$lib/components/calendars/CalendarView.svelte';
 	import CalendarNavigation from '$lib/components/calendars/CalendarNavigation.svelte';
 	import MobileCalendarHeader from '$lib/components/calendars/MobileCalendarHeader.svelte';
-	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import DeleteModal from '$lib/components/calendars/DeleteModal.svelte';
 	import ImportModal from '$lib/components/calendars/ImportModal.svelte';
@@ -14,7 +13,6 @@
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
-	const viewPoint = getViewPoint();
 	const calendars = getCalendars();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();

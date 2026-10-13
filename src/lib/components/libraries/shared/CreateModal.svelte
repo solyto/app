@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import MissingCover from '$lib/components/libraries/shared/MissingCover.svelte';
 	import Rating from '$lib/components/libraries/shared/Rating.svelte';
@@ -22,7 +23,7 @@
 	} = $props<{
 		title: string;
 		library: Library;
-		children: any;
+		children: Snippet;
 		existingCover?: string | null;
 		newCover?: string;
 		onCoverClick?: () => void;
