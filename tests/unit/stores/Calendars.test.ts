@@ -102,24 +102,49 @@ describe('Calendars store', () => {
 	});
 
 	describe('loadEvents', () => {
-		it('requests events for the current year-month and builds sortedEvents', async () => {
-			const e1 = event({
+		function apiEvent(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+			return {
 				id: 1,
-				start_date: new SvelteDate(2026, 7, 10, 10, 0),
-				end_date: new SvelteDate(2026, 7, 10, 11, 0)
-			});
-			const e2 = event({
-				id: 2,
-				title: 'Second',
-				start_date: new SvelteDate(2026, 7, 14, 9, 0),
-				end_date: new SvelteDate(2026, 7, 14, 10, 0)
-			});
-			api.list.mockResolvedValue({ data: [e1, e2] });
+				uri: 'event-1',
+				title: 'Event',
+				description: '',
+				location: '',
+				start_date: '2026-08-10T10:00:00Z',
+				end_date: '2026-08-10T11:00:00Z',
+				is_all_day: false,
+				is_recurring: false,
+				recurrence_rule: null,
+				recurrence_end: null,
+				original_start_date: null,
+				created_at: null,
+				updated_at: null,
+				calendar_id: 1,
+				calendar_name: 'Personal',
+				calendar_color: '#fff',
+				etag: '',
+				...overrides
+			};
+		}
 
+		async function loadAugust(data: Record<string, unknown>[]): Promise<Calendars> {
+			api.list.mockResolvedValue({ data });
 			const c = new Calendars();
 			c.currentYear = 2026;
 			c.currentMonth = 8;
 			await c.loadEvents();
+			return c;
+		}
+
+		it('requests events for the current year-month and builds sortedEvents', async () => {
+			const c = await loadAugust([
+				apiEvent({ id: 1 }),
+				apiEvent({
+					id: 2,
+					title: 'Second',
+					start_date: '2026-08-14T09:00:00Z',
+					end_date: '2026-08-14T10:00:00Z'
+				})
+			]);
 
 			expect(api.list).toHaveBeenCalledWith(
 				expect.stringContaining('/calendars/events/2026-08')
@@ -129,42 +154,87 @@ describe('Calendars store', () => {
 			expect(c.sortedEvents['14.08.2026'][0].id).toBe(2);
 		});
 
+		it('converts the date strings to Date instances and keeps the other fields', async () => {
+			const c = await loadAugust([
+				apiEvent({ id: 1 }),
+				apiEvent({
+					id: 2,
+					is_recurring: true,
+					recurrence_rule: 'FREQ=WEEKLY',
+					recurrence_end: '2026-12-31T00:00:00Z',
+					original_start_date: '2026-08-03T10:00:00Z'
+				})
+			]);
+
+			const [plain, recurring] = c.events;
+			expect(plain.start_date).toBeInstanceOf(Date);
+			expect(plain.start_date.getTime()).toBe(Date.UTC(2026, 7, 10, 10, 0));
+			expect(plain.end_date).toBeInstanceOf(Date);
+			expect(plain.end_date.getTime()).toBe(Date.UTC(2026, 7, 10, 11, 0));
+			expect(plain.recurrence_end).toBeNull();
+			expect(plain.original_start_date).toBeNull();
+			expect(plain.title).toBe('Event');
+			expect(plain.calendar_name).toBe('Personal');
+
+			expect(recurring.recurrence_end).toBeInstanceOf(Date);
+			expect(recurring.recurrence_end!.getTime()).toBe(Date.UTC(2026, 11, 31));
+			expect(recurring.original_start_date).toBeInstanceOf(Date);
+			expect(recurring.original_start_date!.getTime()).toBe(Date.UTC(2026, 7, 3, 10, 0));
+			expect(recurring.recurrence_rule).toBe('FREQ=WEEKLY');
+		});
+
 		it('expands multi-day all-day events onto every spanned day', async () => {
-			const multiDay = event({
-				id: 1,
-				is_all_day: true,
-				start_date: new SvelteDate(2026, 7, 10),
-				end_date: new SvelteDate(2026, 7, 12)
-			});
-			api.list.mockResolvedValue({ data: [multiDay] });
+			const c = await loadAugust([
+				apiEvent({
+					is_all_day: true,
+					start_date: '2026-08-10T00:00:00Z',
+					end_date: '2026-08-12T00:00:00Z'
+				})
+			]);
 
-			const c = new Calendars();
-			c.currentYear = 2026;
-			c.currentMonth = 8;
-			await c.loadEvents();
-
+			expect(Object.keys(c.sortedEvents)).toEqual(['10.08.2026', '11.08.2026', '12.08.2026']);
 			expect(c.sortedEvents['10.08.2026']).toHaveLength(1);
 			expect(c.sortedEvents['11.08.2026']).toHaveLength(1);
-			// the loop pushes the incremented date before re-checking, so the end date is included
+			// the end date is included
 			expect(c.sortedEvents['12.08.2026']).toHaveLength(1);
-			expect(c.sortedEvents['13.08.2026']).toBeUndefined();
 		});
 
 		it('does not expand single-day all-day events', async () => {
-			const singleDay = event({
-				id: 1,
-				is_all_day: true,
-				start_date: new SvelteDate(2026, 7, 10),
-				end_date: new SvelteDate(2026, 7, 11)
-			});
-			api.list.mockResolvedValue({ data: [singleDay] });
-
-			const c = new Calendars();
-			c.currentYear = 2026;
-			c.currentMonth = 8;
-			await c.loadEvents();
+			const c = await loadAugust([
+				apiEvent({
+					is_all_day: true,
+					start_date: '2026-08-10T00:00:00Z',
+					end_date: '2026-08-11T00:00:00Z'
+				})
+			]);
 
 			expect(Object.keys(c.sortedEvents)).toEqual(['10.08.2026']);
+		});
+
+		it('does not expand timed events spanning more than one day', async () => {
+			const c = await loadAugust([
+				apiEvent({
+					start_date: '2026-08-10T10:00:00Z',
+					end_date: '2026-08-12T10:00:00Z'
+				})
+			]);
+
+			expect(Object.keys(c.sortedEvents)).toEqual(['10.08.2026']);
+		});
+
+		it('puts the loaded event into every sortedEvents bucket it spans', async () => {
+			const c = await loadAugust([
+				apiEvent({
+					is_all_day: true,
+					start_date: '2026-08-10T00:00:00Z',
+					end_date: '2026-08-12T00:00:00Z'
+				})
+			]);
+
+			const [loaded] = c.events;
+			expect(c.sortedEvents['10.08.2026'][0]).toEqual(loaded);
+			expect(c.sortedEvents['11.08.2026'][0]).toEqual(loaded);
+			expect(c.sortedEvents['12.08.2026'][0]).toEqual(loaded);
 		});
 
 		it('keeps the previous events when the request fails', async () => {

@@ -1,6 +1,7 @@
 import type {
 	Calendar,
 	CalendarEvent,
+	CalendarEventResponse,
 	CalendarWeek,
 	CalendarMonth,
 	UpdateCalendarRequest,
@@ -17,11 +18,9 @@ import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import {
-	eachDayBetween,
 	formatDate,
 	getCalendarMonth,
 	getCalendarWeek,
-	getDateDiffInMinutes,
 	getUrlFormat,
 	getWeekNumber
 } from '$lib/helpers/DateHelper';
@@ -29,6 +28,7 @@ import type { Todo, UpdateTodoRequest } from '$lib/types/todo';
 import type { Note } from '$lib/types/note';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import CalendarDragService from '$lib/services/CalendarDragService';
+import CalendarEventService from '$lib/services/CalendarEventService';
 import type { CalendarDropTarget } from '$lib/services/CalendarDragService';
 
 export class Calendars {
@@ -79,6 +79,7 @@ export class Calendars {
 	apiService: ApiService;
 	localStorage = new LocalStorageService();
 	dragService = new CalendarDragService();
+	eventService = new CalendarEventService();
 
 	constructor() {
 		this.apiService = this.auth.apiService;
@@ -124,52 +125,11 @@ export class Calendars {
 
 		if (!res) return;
 
-		const newEvents: CalendarEvent[] = [];
-		const newSortedEvents: Record<string, CalendarEvent[]> = {};
-
-		for (const item of res.data as CalendarEvent[]) {
-			const start_date = item.start_date ? new Date(item.start_date) : null;
-			const end_date = item.end_date ? new Date(item.end_date) : null;
-			const recurrence_end = item.recurrence_end ? new Date(item.recurrence_end) : null;
-			const original_start_date = item.original_start_date ? new Date(item.original_start_date) : null;
-
-			const itemWithDates = {
-				...item,
-				start_date,
-				end_date,
-				recurrence_end,
-				original_start_date
-			};
-
-			newEvents.push(<CalendarEvent>itemWithDates);
-
-			if (start_date !== null) {
-				const dateSlug = formatDate(start_date);
-
-				if (!newSortedEvents[dateSlug]) {
-					newSortedEvents[dateSlug] = [];
-				}
-
-				newSortedEvents[dateSlug].push(<CalendarEvent>itemWithDates);
-
-				if (
-					item.is_all_day &&
-					end_date !== null &&
-					getDateDiffInMinutes(start_date, end_date) > 1440
-				) {
-					for (const day of eachDayBetween(start_date, end_date)) {
-						const dateSlug = formatDate(day);
-						if (!newSortedEvents[dateSlug]) {
-							newSortedEvents[dateSlug] = [];
-						}
-						newSortedEvents[dateSlug].push(<CalendarEvent>itemWithDates);
-					}
-				}
-			}
-		}
-
-		this.events = newEvents;
-		this.sortedEvents = newSortedEvents;
+		const events = (res.data as CalendarEventResponse[]).map((item) =>
+			this.eventService.fromApi(item)
+		);
+		this.events = events;
+		this.sortedEvents = this.eventService.groupByDay(events);
 	}
 
 	loadMarksConfig(): void {

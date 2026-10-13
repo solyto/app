@@ -78,7 +78,7 @@ independent of the chain and of each other; 10–13 in any order.
       `InlineDeleteButton`; `use:portalToBody` for the popover; `ts.get` for
       `Every`, `occurrence(s)`, `Cancel`, `Save`; move the `find(…)?.label`
       expression out of markup (rules 7.x, 8.1, 1.1).
-- [ ] `Calendars.loadEvents()`: drop the unused parameters; `CalendarEventResponse`
+- [x] `Calendars.loadEvents()`: drop the unused parameters; `CalendarEventResponse`
       type + `fromApi()`; `groupByDay()` in a `CalendarEventService` with tests;
       plain `Date` instead of `SvelteDate` (rules 12.1–12.4, 14.1).
 - [ ] `state/Auth.svelte.ts` (from commit 2df74d2): `destroy()` for the
