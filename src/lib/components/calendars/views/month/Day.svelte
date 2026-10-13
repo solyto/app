@@ -5,7 +5,6 @@
 	import { formatDate, isDateToday } from '$lib/helpers/DateHelper';
 	import type { CalendarDay } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
-	import CalendarDragGhost from '$lib/components/calendars/dnd/CalendarDragGhost.svelte';
 	import { calendarDrag } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 
@@ -72,5 +71,4 @@
 			class="pointer-events-none absolute inset-0 z-30 border-2 border-dashed border-c-action bg-d-lightblue/60"
 		></div>
 	{/if}
-	<CalendarDragGhost sourceDateSlug={dateSlug} />
 </div>

@@ -121,7 +121,7 @@
 				}}
 			>
 				<IconChevronDown
-					class="size-4 transition-transform {calendarsExpanded ? 'rotate-180' : ''}"
+					class={['size-4 transition-transform', calendarsExpanded && 'rotate-180']}
 				/>
 			</button>
 		</div>

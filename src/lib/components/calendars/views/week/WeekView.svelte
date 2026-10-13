@@ -4,6 +4,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Day from '$lib/components/calendars/views/week/Day.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
+	import CalendarDragGhost from '$lib/components/calendars/dnd/CalendarDragGhost.svelte';
 	import { onMount } from 'svelte';
 
 	const calendars = getCalendars();
@@ -59,4 +60,5 @@
 			{/each}
 		</div>
 	</div>
+	<CalendarDragGhost />
 </div>

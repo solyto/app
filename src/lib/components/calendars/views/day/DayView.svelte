@@ -3,6 +3,7 @@
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import CalendarWeekDay from '$lib/components/calendars/views/week/Day.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
+	import CalendarDragGhost from '$lib/components/calendars/dnd/CalendarDragGhost.svelte';
 
 	const calendars = getCalendars();
 	const hours = getHoursOfDay();
@@ -32,4 +33,5 @@
 			<CalendarWeekDay date={calendars.currentDate} />
 		</div>
 	</div>
+	<CalendarDragGhost />
 </div>

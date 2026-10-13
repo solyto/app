@@ -5,9 +5,9 @@
 	import { formatDate, getDateDiffInMinutes, getHoursOfDay, isOffHour, parseDateSlug } from '$lib/helpers/DateHelper';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
 	import type { CalendarEvent } from '$lib/types/calendar';
+	import type { ClassValue } from 'svelte/elements';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarDragService from '$lib/services/CalendarDragService';
-	import CalendarDragGhost from '$lib/components/calendars/dnd/CalendarDragGhost.svelte';
 	import {
 		calendarDrag,
 		consumeCalendarDragClick,
@@ -41,6 +41,10 @@
 			)
 		}))
 	);
+
+	function isShadedHour(hour: string): boolean {
+		return isMobile && isOffHour(hour);
+	}
 
 	function getTop(entry: CalendarEvent): string {
 		if (entry.start_date?.getMinutes() === 0) {
@@ -148,8 +152,29 @@
 	}
 </script>
 
+{#snippet eventButton(item: CalendarEvent, variantClass: ClassValue, top?: string, height?: string)}
+	<button
+		class={['flex cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm transition-all select-none hover:bg-c-neutral dark:hover:bg-s-dark-3', variantClass]}
+		class:opacity-40={isDragged(item)}
+		style="
+			border-color: {getEventBorderColor(item.calendar_color)};
+			background-color: {getEventBackgroundColor(item.calendar_color)};
+		"
+		style:top
+		style:height
+		onclick={() => onEventClick(item)}
+		onpointerdown={(e) => drag.onPointerDown(e, item)}
+		onpointermove={drag.onPointerMove}
+		onpointerup={drag.onPointerUp}
+		onpointercancel={drag.onPointerCancel}
+		in:blur
+	>
+		<span class="text-left">{item.title}</span>
+	</button>
+{/snippet}
+
 <div
-	class="relative grid {isMobile ? 'row-span-full' : 'h-full w-full'} {isDropTargetColumn ? 'bg-d-lightblue/40' : ''}"
+	class={['relative grid', isMobile ? 'row-span-full' : 'h-full w-full', isDropTargetColumn && 'bg-d-lightblue/40']}
 	data-calendar-day={dateSlug}
 	style={isMobile ? 'grid-template-rows: subgrid' : `grid-template-rows: ${desktopRows}`}
 >
@@ -168,32 +193,15 @@
 		{/each}
 		{#each allDayEntries as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
 			{#if !calendars.isCalendarHidden(item.calendar_id)}
-				<button
-					class="flex w-full cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm transition-all select-none hover:bg-c-neutral dark:hover:bg-s-dark-3"
-					class:!border-l-0={item.start_date < date}
-					class:opacity-40={isDragged(item)}
-					style="
-						border-color: {getEventBorderColor(item.calendar_color)};
-						background-color: {getEventBackgroundColor(item.calendar_color)};
-					"
-					onclick={() => onEventClick(item)}
-					onpointerdown={(e) => drag.onPointerDown(e, item)}
-					onpointermove={drag.onPointerMove}
-					onpointerup={drag.onPointerUp}
-					onpointercancel={drag.onPointerCancel}
-					in:blur
-				>
-					<span class="text-left">{item.title}</span>
-				</button>
+				{@render eventButton(item, ['w-full', item.start_date < date && '!border-l-0'])}
 			{/if}
 		{/each}
 	</div>
 	{#each hours as hour (hour)}
-		{@const offHour = isMobile && isOffHour(hour)}
 		<div
-			class="group relative border-t-1 border-c-neutral-1 dark:border-s-dark {offHour
-				? 'bg-c-neutral dark:bg-s-dark-2'
-				: ''}"
+			class="group relative border-t-1 border-c-neutral-1 dark:border-s-dark"
+			class:bg-c-neutral={isShadedHour(hour)}
+			class:dark:bg-s-dark-2={isShadedHour(hour)}
 		>
 			<button
 				onclick={async () => {
@@ -207,26 +215,7 @@
 			{#if entriesByHour[parseInt(hour)].entries.length > 0}
 				{#each entriesByHour[parseInt(hour)].entries as item, i (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
 					{#if !calendars.isCalendarHidden(item.calendar_id)}
-						<button
-							class="absolute z-40 flex w-2/3 cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm shadow-sm transition-all select-none hover:bg-c-neutral dark:hover:bg-s-dark-3"
-							class:left-0={i === 0}
-							class:right-0={i > 0}
-							class:opacity-40={isDragged(item)}
-							style="
-								border-color: {getEventBorderColor(item.calendar_color)};
-								background-color: {getEventBackgroundColor(item.calendar_color)};
-								top: {getTop(item)};
-								height: {getHeight(item)};
-							"
-							onclick={() => onEventClick(item)}
-							onpointerdown={(e) => drag.onPointerDown(e, item)}
-							onpointermove={drag.onPointerMove}
-							onpointerup={drag.onPointerUp}
-							onpointercancel={drag.onPointerCancel}
-							in:blur
-						>
-							<span class="text-left">{item.title}</span>
-						</button>
+						{@render eventButton(item, ['absolute z-40 w-2/3 shadow-sm', i === 0 ? 'left-0' : 'right-0'], getTop(item), getHeight(item))}
 					{/if}
 				{/each}
 			{/if}
@@ -244,5 +233,4 @@
 			></div>
 		{/if}
 	{/if}
-	<CalendarDragGhost sourceDateSlug={dateSlug} />
 </div>
