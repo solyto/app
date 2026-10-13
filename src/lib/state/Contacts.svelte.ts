@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte';
-import { getAuth } from '$lib/state/Auth.svelte';
+import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import type {
@@ -76,7 +76,7 @@ export class Contacts {
 		this.contacts.filter((c) => !this.isAddressBookHidden(c.address_book_id)).length
 	);
 	contactPhotos = $state<Record<string, string>>({});
-	auth = getAuth();
+	auth: Auth;
 	loaded = $state<boolean>(false);
 	contactPhotosLoaded = $state<boolean>(false);
 	detailModalVisible = $state<boolean>(false);
@@ -97,10 +97,16 @@ export class Contacts {
 		)
 	);
 	apiService: ApiService;
-	localStorage = new LocalStorageService();
+	localStorage: LocalStorageService;
 
-	constructor() {
-		this.apiService = this.auth.apiService;
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
+		this.auth = auth;
+		this.apiService = apiService;
+		this.localStorage = localStorage;
 	}
 
 	async load(): Promise<void> {

@@ -7,9 +7,9 @@ import type {
 	UpdateNoteRequest
 } from '$lib/types/note';
 import { setContext, getContext, tick } from 'svelte';
-import { getAuth } from '$lib/state/Auth.svelte';
-import { getTranslation } from '$lib/state/Translation.svelte';
-import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+import { getAuth, type Auth } from '$lib/state/Auth.svelte';
+import { getTranslation, type Translation } from '$lib/state/Translation.svelte';
+import { getUiNotifications, type UiNotifications } from '$lib/state/UiNotifications.svelte';
 import { page } from '$app/state';
 import { goto } from '$app/navigation';
 import { urls } from '$lib/config/urls';
@@ -43,15 +43,25 @@ export class NotesSvelte {
 	dragTarget = $state<NoteCategory | null>(null);
 	input = $state<HTMLInputElement | null>(null);
 	inputValue = $state<string>('');
-	auth = getAuth();
-	ts = getTranslation();
-	notifications = getUiNotifications();
+	auth: Auth;
+	ts: Translation;
+	notifications: UiNotifications;
 	apiService: ApiService;
-	localStorage = new LocalStorageService();
+	localStorage: LocalStorageService;
 	journalService = new JournalService();
 
-	constructor() {
-		this.apiService = this.auth.apiService;
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService(),
+		ts: Translation = getTranslation(),
+		notifications: UiNotifications = getUiNotifications()
+	) {
+		this.auth = auth;
+		this.apiService = apiService;
+		this.localStorage = localStorage;
+		this.ts = ts;
+		this.notifications = notifications;
 		this.loadCollapsedCategories();
 	}
 

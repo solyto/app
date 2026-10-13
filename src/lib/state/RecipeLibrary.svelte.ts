@@ -6,7 +6,7 @@ import type {
 	RecipeRelease
 } from '$lib/types/library_recipe';
 import { getContext, setContext } from 'svelte';
-import { getAuth } from '$lib/state/Auth.svelte';
+import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
@@ -38,12 +38,13 @@ export class RecipeLibrary {
 	typeFilter = $state<RecipeType | null>(null);
 	searchTerm = $state<string>('');
 	view = $state<'list' | 'cards'>('cards');
-	auth = getAuth();
+	auth: Auth;
 	filterService = new LibraryFilterService();
 	apiService: ApiService;
 
-	constructor() {
-		this.apiService = this.auth.apiService;
+	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
+		this.auth = auth;
+		this.apiService = apiService;
 	}
 
 	async load(): Promise<void> {

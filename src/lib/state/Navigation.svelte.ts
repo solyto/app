@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte';
-import { getAuth } from '$lib/state/Auth.svelte';
+import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import type { FeatureType, FeatureUsage, NavItem } from '$lib/config/navigation';
 import { env } from '$env/dynamic/public';
@@ -11,7 +11,7 @@ export class Navigation {
 	static readonly LS_MOBILE_ORDER_KEY: string = 'navigation_mobile_order';
 
 	loaded = $state<boolean>(false);
-	auth = getAuth();
+	auth: Auth;
 	features = $state<Record<FeatureType, boolean>>({
 		calendar: true,
 		todos: true,
@@ -28,10 +28,16 @@ export class Navigation {
 	usage = $state<FeatureUsage>({});
 	mobileOrder = $state<string[]>([...mobileDefaultOrder]);
 	apiService: ApiService;
-	localStorage = new LocalStorageService();
+	localStorage: LocalStorageService;
 
-	constructor() {
-		this.apiService = this.auth.apiService;
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
+		this.auth = auth;
+		this.apiService = apiService;
+		this.localStorage = localStorage;
 		void Promise.all([this.loadActiveFeatures(), this.loadUsage(), this.loadMobileOrder()]);
 	}
 

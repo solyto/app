@@ -13,7 +13,7 @@ import type {
 	LibraryConfig
 } from '$lib/types/library';
 import { getContext, setContext } from 'svelte';
-import { getAuth } from '$lib/state/Auth.svelte';
+import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
@@ -55,13 +55,19 @@ export class MusicLibrary {
 	integrations = $state<string[]>(['deezer', 'discogs']);
 	integrationsLoaded = $state<boolean>(false);
 	view = $state<'list' | 'cards' | 'shelf' | 'spine'>('cards');
-	auth = getAuth();
+	auth: Auth;
 	apiService: ApiService;
-	localStorage = new LocalStorageService();
+	localStorage: LocalStorageService;
 	filterService = new LibraryFilterService();
 
-	constructor() {
-		this.apiService = this.auth.apiService;
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
+		this.auth = auth;
+		this.apiService = apiService;
+		this.localStorage = localStorage;
 
 		const saved = this.localStorage.get(MusicLibrary.LS_VIEW_KEY);
 		this.view = (saved as 'list' | 'cards' | 'shelf' | 'spine' | null) ?? 'cards';

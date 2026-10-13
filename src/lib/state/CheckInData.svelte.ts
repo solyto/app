@@ -1,7 +1,7 @@
 import type { CreateCheckInRequest, CheckIn, CheckInSettings, CheckInType, SportId } from '$lib/types/check_in';
 import { ALL_CHECK_IN_TRACKERS, DEFAULT_SPORTS } from '$lib/types/check_in';
 import { setContext, getContext } from 'svelte';
-import { getAuth } from '$lib/state/Auth.svelte';
+import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { getUrlFormat } from '$lib/helpers/DateHelper';
@@ -20,15 +20,22 @@ export class CheckInData {
 	data = $state<CheckIn[]>([]);
 	settings = $state<CheckInSettings>({ enabledTrackers: [...ALL_CHECK_IN_TRACKERS], selectedSports: [...DEFAULT_SPORTS] });
 	historyMonth = $state<HistoryMonth>({ year: new Date().getFullYear(), month: new Date().getMonth() });
-	localStorage = new LocalStorageService();
-	scoredTrackers = $state<CheckInType[]>(this.loadScoredTrackers());
+	localStorage: LocalStorageService;
+	scoredTrackers = $state<CheckInType[]>([]);
 	activeTrackers = $derived(ALL_CHECK_IN_TRACKERS.filter((t) => this.settings.enabledTrackers.includes(t)));
 	selectedDate = $derived(page.params.date);
-	auth = getAuth();
+	auth: Auth;
 	apiService: ApiService;
 
-	constructor() {
-		this.apiService = this.auth.apiService;
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
+		this.auth = auth;
+		this.apiService = apiService;
+		this.localStorage = localStorage;
+		this.scoredTrackers = this.loadScoredTrackers();
 	}
 
 	private loadScoredTrackers(): CheckInType[] {

@@ -5,7 +5,7 @@ import type {
 	LinkCategory
 } from '$lib/types/library_link';
 import { getContext, setContext } from 'svelte';
-import { getAuth } from '$lib/state/Auth.svelte';
+import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
@@ -36,14 +36,15 @@ export class LinkLibrary {
 	searchTerm = $state<string>('');
 	draggedEntry = $state<Link | null>(null);
 	dragTarget = $state<number | null>(null);
-	auth = getAuth();
+	auth: Auth;
 	view = 'list';
 	createModalVisible = $state<boolean>(false);
 	filterService = new LibraryFilterService();
 	apiService: ApiService;
 
-	constructor() {
-		this.apiService = this.auth.apiService;
+	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
+		this.auth = auth;
+		this.apiService = apiService;
 	}
 
 	async load(): Promise<void> {

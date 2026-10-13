@@ -14,7 +14,7 @@ import type {
 	ShareCalendarRequest
 } from '$lib/types/calendar';
 import { getContext, setContext, tick } from 'svelte';
-import { getAuth } from '$lib/state/Auth.svelte';
+import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import {
@@ -43,7 +43,7 @@ export class Calendars {
 	currentMonth = $state<number>(0);
 	currentYear = $state<number>(0);
 	currentDate = $state<Date>(new Date());
-	auth = getAuth();
+	auth: Auth;
 	loaded = $state<boolean>(false);
 	editSidebar = $state<boolean>(false);
 	selectedDate = $state<Date | null>(null);
@@ -77,12 +77,18 @@ export class Calendars {
 	checkInMarks = $state<string[]>([]);
 
 	apiService: ApiService;
-	localStorage = new LocalStorageService();
+	localStorage: LocalStorageService;
 	dragService = new CalendarDragService();
 	eventService = new CalendarEventService();
 
-	constructor() {
-		this.apiService = this.auth.apiService;
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
+		this.auth = auth;
+		this.apiService = apiService;
+		this.localStorage = localStorage;
 
 		const today = new Date();
 		this.currentWeek = getWeekNumber(today);
