@@ -292,6 +292,12 @@ const todos: TodoRecords = {
 	add_recurrence: 'Wiederholung hinzufügen',
 	remove_recurrence: 'Wiederholung entfernen',
 	recurrence_requires_due: 'Zuerst ein Fälligkeitsdatum setzen',
+	recurrence_every: 'Alle',
+	recurrence_unit_daily: 'Tag(e)',
+	recurrence_unit_weekly: 'Woche(n)',
+	recurrence_unit_monthly: 'Monat(e)',
+	recurrence_unit_yearly: 'Jahr(e)',
+	recurrence_unit_fallback: 'Wiederholung(en)',
 	link: 'Link',
 	no_link: 'Kein Link',
 	add_link: 'Link hinzufügen'
@@ -876,7 +882,9 @@ const contacts: ContactRecords = {
 	import_contacts: 'Kontakte importieren',
 	import_contacts_running: 'Importiere %d Kontakte für das Adressbuch %s..',
 	save_error: 'Kontakt konnte nicht gespeichert werden.',
-	name_required: 'Vor- und Nachname sind erforderlich.'
+	name_required: 'Vor- und Nachname sind erforderlich.',
+	email_placeholder: 'E-Mail',
+	phone_placeholder: 'Telefonnummer'
 };
 
 const dav: DavRecords = {
@@ -1098,7 +1106,8 @@ const welcome_tour: WelcomeTourRecords = {
 
 const admin: AdminRecords = {
 	role_update_success: 'Benutzerrolle wurde erfolgreich aktualisiert.',
-	role_update_error: 'Benutzerrolle konnte nicht aktualisiert werden.'
+	role_update_error: 'Benutzerrolle konnte nicht aktualisiert werden.',
+	search_placeholder: 'Nach Name oder E-Mail suchen...'
 };
 
 const timeTracking: TimeTrackingRecords = {

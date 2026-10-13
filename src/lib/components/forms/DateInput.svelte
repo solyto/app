@@ -4,19 +4,22 @@
 		value = $bindable(),
 		placeholder,
 		onblur,
-		oninput
+		oninput,
+		id
 	} = $props<{
 		input?: HTMLInputElement | null;
 		value: string;
 		placeholder?: string;
 		onblur?: () => void;
 		oninput?: () => void;
+		id?: string;
 	}>();
 </script>
 
 <input
 	bind:this={input}
 	bind:value
+	{id}
 	{onblur}
 	{oninput}
 	type="date"

@@ -3,10 +3,18 @@
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { portalToBody } from '$lib/helpers/PortalHelper';
 	import IconRepeat from '@lucide/svelte/icons/repeat';
-	import IconX from '@lucide/svelte/icons/x';
+	import NumberInput from '$lib/components/forms/NumberInput.svelte';
+	import DateInput from '$lib/components/forms/DateInput.svelte';
+	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 
-	let { todo } = $props<{ todo: Todo }>();
+	let { todo, portal = false } = $props<{
+		todo: Todo;
+		portal?: boolean;
+	}>();
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
@@ -16,6 +24,7 @@
 	let selectedFrequency = $state<TodoRecurrenceFrequency | null>(todo.recurrence_frequency);
 	let selectedInterval = $state<number>(todo.recurrence_interval ?? 1);
 	let selectedEndsAt = $state<string>(todo.recurrence_ends_at ?? '');
+	let trigger = $state<HTMLDivElement | null>(null);
 
 	const hasDueDate = $derived(todo.due_at !== null);
 
@@ -25,6 +34,17 @@
 		{ value: 'monthly', label: ts.get.todos.recurrence_monthly },
 		{ value: 'yearly', label: ts.get.todos.recurrence_yearly }
 	];
+
+	const intervalUnits: Record<TodoRecurrenceFrequency, string> = {
+		daily: ts.get.todos.recurrence_unit_daily,
+		weekly: ts.get.todos.recurrence_unit_weekly,
+		monthly: ts.get.todos.recurrence_unit_monthly,
+		yearly: ts.get.todos.recurrence_unit_yearly
+	};
+
+	function intervalUnit(): string {
+		return selectedFrequency ? intervalUnits[selectedFrequency] : ts.get.todos.recurrence_unit_fallback;
+	}
 
 	function recurrenceLabel(): string {
 		if (!todo.recurrence_frequency) return ts.get.todos.add_recurrence;
@@ -60,9 +80,13 @@
 		selectedEndsAt = todo.recurrence_ends_at ?? '';
 		isOpen = true;
 	}
+
+	function close(): void {
+		isOpen = false;
+	}
 </script>
 
-<div class="group relative flex items-center gap-1">
+<div bind:this={trigger} class="group relative flex items-center gap-1">
 	{#if !hasDueDate}
 		<span class="cursor-not-allowed text-xs text-c-neutral-3 dark:text-c-neutral-6" title={ts.get.todos.recurrence_requires_due}>
 			<IconRepeat class="size-4" />
@@ -75,12 +99,9 @@
 			<IconRepeat class="size-4" />
 			<span>{recurrenceLabel()}</span>
 		</button>
-		<button
-			class="hidden size-4 cursor-pointer items-center justify-center rounded-full bg-c-danger text-white group-hover:flex"
-			onclick={remove}
-		>
-			<IconX class="size-3" />
-		</button>
+		<div class="hidden group-hover:flex">
+			<InlineDeleteButton onClick={remove} label={ts.get.todos.remove_recurrence} />
+		</div>
 	{:else}
 		<button
 			class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
@@ -91,63 +112,43 @@
 	{/if}
 </div>
 
-{#if isOpen}
+{#snippet popover()}
 	<div
-		class="absolute z-50 mt-1 flex flex-col gap-3 rounded-lg border border-c-neutral-2 bg-c-bg-modal p-4 shadow-lg dark:border-s-dark"
+		class="flex flex-col gap-3 rounded-lg border border-c-neutral-2 bg-c-bg-modal p-4 shadow-lg dark:border-s-dark"
+		class:absolute={!portal}
+		class:mt-1={!portal}
+		class:mt-6={portal}
+		class:z-50={!portal}
 		role="dialog"
 	>
-		<div class="flex flex-wrap gap-2">
-			{#each frequencyOptions as option (option.value)}
-				<button
-					class="rounded-md border px-3 py-1 text-xs transition-all"
-					class:border-c-primary={selectedFrequency === option.value}
-					class:text-c-primary={selectedFrequency === option.value}
-					class:border-c-neutral-2={selectedFrequency !== option.value}
-					class:dark:border-s-dark={selectedFrequency !== option.value}
-					onclick={() => (selectedFrequency = option.value)}
-				>
-					{option.label}
-				</button>
-			{/each}
-		</div>
+		<SegmentedControl bind:value={selectedFrequency} options={frequencyOptions} />
 
 		<div class="flex items-center gap-2 text-xs">
-			<span class="text-c-neutral-5 dark:text-c-neutral-4">Every</span>
-			<input
-				type="number"
-				min="1"
-				max="365"
-				bind:value={selectedInterval}
-				class="w-14 rounded border border-c-neutral-2 bg-transparent px-2 py-1 text-center dark:border-s-dark"
-			/>
-			<span class="text-c-neutral-5 dark:text-c-neutral-4">
-				{frequencyOptions.find((o) => o.value === selectedFrequency)?.label?.toLowerCase() ?? 'occurrence(s)'}
-			</span>
+			<span class="text-c-neutral-5 dark:text-c-neutral-4">{ts.get.todos.recurrence_every}</span>
+			<div class="w-16">
+				<NumberInput bind:value={selectedInterval} min={1} max={365} />
+			</div>
+			<span class="text-c-neutral-5 dark:text-c-neutral-4">{intervalUnit()}</span>
 		</div>
 
 		<div class="flex flex-col gap-1 text-xs">
 			<label for="recurrence-ends-at" class="text-c-neutral-5 dark:text-c-neutral-4">{ts.get.todos.recurrence_ends_at}</label>
-			<input
-				id="recurrence-ends-at"
-				type="date"
-				bind:value={selectedEndsAt}
-				class="rounded border border-c-neutral-2 bg-transparent px-2 py-1 dark:border-s-dark"
-			/>
+			<DateInput id="recurrence-ends-at" bind:value={selectedEndsAt} />
 		</div>
 
 		<div class="flex justify-end gap-2">
-			<button
-				class="rounded px-3 py-1 text-xs text-c-neutral-5 hover:text-c-neutral-7 dark:hover:text-white"
-				onclick={() => (isOpen = false)}
-			>
-				Cancel
-			</button>
-			<button
-				class="rounded bg-c-primary px-3 py-1 text-xs text-white hover:bg-c-primary/80"
-				onclick={save}
-			>
-				Save
-			</button>
+			<TextButton title={ts.get.layout.modal_cancel} type="plain" onclick={close} />
+			<TextButton title={ts.get.layout.save} type="primary" onclick={save} />
 		</div>
 	</div>
+{/snippet}
+
+{#if isOpen}
+	{#if portal}
+		<div use:portalToBody={{ target: trigger, closeOnScroll: true, onClose: close }}>
+			{@render popover()}
+		</div>
+	{:else}
+		{@render popover()}
+	{/if}
 {/if}

@@ -262,6 +262,12 @@ export interface TodoRecords {
 	add_recurrence: string;
 	remove_recurrence: string;
 	recurrence_requires_due: string;
+	recurrence_every: string;
+	recurrence_unit_daily: string;
+	recurrence_unit_weekly: string;
+	recurrence_unit_monthly: string;
+	recurrence_unit_yearly: string;
+	recurrence_unit_fallback: string;
 	link: string;
 	no_link: string;
 	add_link: string;
@@ -859,6 +865,8 @@ export interface ContactRecords {
 	import_contacts_running: string;
 	save_error: string;
 	name_required: string;
+	email_placeholder: string;
+	phone_placeholder: string;
 }
 
 export interface DavRecords {
@@ -928,6 +936,7 @@ export interface ProfileRecords {
 export interface AdminRecords {
 	role_update_success: string;
 	role_update_error: string;
+	search_placeholder: string;
 }
 
 export interface WelcomeTourRecords {

@@ -291,6 +291,12 @@ const todos: TodoRecords = {
 	add_recurrence: 'Add recurrence',
 	remove_recurrence: 'Remove recurrence',
 	recurrence_requires_due: 'Set a due date first',
+	recurrence_every: 'Every',
+	recurrence_unit_daily: 'day(s)',
+	recurrence_unit_weekly: 'week(s)',
+	recurrence_unit_monthly: 'month(s)',
+	recurrence_unit_yearly: 'year(s)',
+	recurrence_unit_fallback: 'occurrence(s)',
 	link: 'Link',
 	no_link: 'No link',
 	add_link: 'Add link'
@@ -874,7 +880,9 @@ const contacts: ContactRecords = {
 	import_contacts: 'Import Contacts',
 	import_contacts_running: 'Importing %dcontacts for Address Book %s..',
 	save_error: 'Failed to save contact.',
-	name_required: 'First and last name are required.'
+	name_required: 'First and last name are required.',
+	email_placeholder: 'Email',
+	phone_placeholder: 'Phone number'
 };
 
 const dav: DavRecords = {
@@ -944,7 +952,8 @@ const profile: ProfileRecords = {
 
 const admin: AdminRecords = {
 	role_update_success: 'User role was successfully updated.',
-	role_update_error: 'Failed to update user role.'
+	role_update_error: 'Failed to update user role.',
+	search_placeholder: 'Search by name or email...'
 };
 
 const welcome_tour: WelcomeTourRecords = {

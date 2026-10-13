@@ -96,7 +96,7 @@
 				</div>
 			</ModalFormRow>
 			<ModalFormRow label={ts.get.todos.recurrence}>
-				<Recurrence {todo} />
+				<Recurrence {todo} portal />
 			</ModalFormRow>
 			<div class="w-full">
 				<Subtasks {todo} subtasks={todo.subtasks} fullWidth />

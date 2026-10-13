@@ -291,6 +291,12 @@ const todos: TodoRecords = {
 	add_recurrence: 'Añadir recurrencia',
 	remove_recurrence: 'Eliminar recurrencia',
 	recurrence_requires_due: 'Establece una fecha límite primero',
+	recurrence_every: 'Cada',
+	recurrence_unit_daily: 'día(s)',
+	recurrence_unit_weekly: 'semana(s)',
+	recurrence_unit_monthly: 'mes(es)',
+	recurrence_unit_yearly: 'año(s)',
+	recurrence_unit_fallback: 'repetición(es)',
 	link: 'Enlace',
 	no_link: 'Sin enlace',
 	add_link: 'Añadir enlace'
@@ -874,7 +880,9 @@ const contacts: ContactRecords = {
 	import_contacts_running: 'Importando %d contactos para la libreta de direcciones %s…',
 	import_contacts: 'Importar contactos',
 	save_error: 'No se pudo guardar el contacto.',
-	name_required: 'El nombre y el apellido son obligatorios.'
+	name_required: 'El nombre y el apellido son obligatorios.',
+	email_placeholder: 'Correo electrónico',
+	phone_placeholder: 'Número de teléfono'
 };
 
 const notifications: NotificationRecords = {
@@ -1095,7 +1103,8 @@ const welcome_tour: WelcomeTourRecords = {
 
 const admin: AdminRecords = {
 	role_update_success: 'El rol del usuario se ha actualizado correctamente.',
-	role_update_error: 'No se pudo actualizar el rol del usuario.'
+	role_update_error: 'No se pudo actualizar el rol del usuario.',
+	search_placeholder: 'Buscar por nombre o correo electrónico...'
 };
 
 const timeTracking: TimeTrackingRecords = {

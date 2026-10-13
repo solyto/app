@@ -283,13 +283,7 @@
 							/>
 						</div>
 						{#if editingCategoryId === category.id}
-							<input
-								type="text"
-								bind:this={editingInput}
-								bind:value={editingCategoryTitle}
-								onblur={saveEditCategory}
-								class="w-full rounded-md border-1 border-c-neutral-2 px-2 py-0.5 text-sm shadow-xs focus:ring-2 focus:ring-c-primary focus:outline-none dark:border-s-dark-3 dark:bg-inherit dark:text-white"
-							/>
+							<TextInput bind:input={editingInput} bind:value={editingCategoryTitle} onblur={saveEditCategory} />
 						{:else}
 							<span class="text-sm">{category.title}</span>
 						{/if}

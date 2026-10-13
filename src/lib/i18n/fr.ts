@@ -290,6 +290,12 @@ const todos: TodoRecords = {
 	add_recurrence: 'Ajouter une récurrence',
 	remove_recurrence: 'Supprimer la récurrence',
 	recurrence_requires_due: 'Définir une date d\'échéance d\'abord',
+	recurrence_every: 'Tous les',
+	recurrence_unit_daily: 'jour(s)',
+	recurrence_unit_weekly: 'semaine(s)',
+	recurrence_unit_monthly: 'mois',
+	recurrence_unit_yearly: 'an(s)',
+	recurrence_unit_fallback: 'occurrence(s)',
 	link: 'Lien',
 	no_link: 'Pas de lien',
 	add_link: 'Ajouter un lien'
@@ -875,7 +881,9 @@ const contacts: ContactRecords = {
 	import_contacts_running: 'Importation de %d contacts pour le carnet d\'adresses %s…',
 	import_contacts: 'Importer les contacts',
 	save_error: 'Échec de l\'enregistrement du contact.',
-	name_required: 'Le prénom et le nom sont obligatoires.'
+	name_required: 'Le prénom et le nom sont obligatoires.',
+	email_placeholder: 'E-mail',
+	phone_placeholder: 'Numéro de téléphone'
 };
 
 const notifications: NotificationRecords = {
@@ -1096,7 +1104,8 @@ const welcome_tour: WelcomeTourRecords = {
 
 const admin: AdminRecords = {
 	role_update_success: 'Le rôle de l\'utilisateur a été mis à jour avec succès.',
-	role_update_error: 'Impossible de mettre à jour le rôle de l\'utilisateur.'
+	role_update_error: 'Impossible de mettre à jour le rôle de l\'utilisateur.',
+	search_placeholder: 'Rechercher par nom ou e-mail...'
 };
 
 const timeTracking: TimeTrackingRecords = {

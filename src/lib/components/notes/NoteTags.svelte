@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Tag } from '$lib/types/tag';
 	import TagFlexList from '$lib/components/tags/TagFlexList.svelte';
+	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
@@ -82,13 +83,9 @@
 <div class="flex flex-row gap-2">
 	{#if notes.activeNote !== null}
 		{#if addTagVisible}
-			<input
-				type="text"
-				class="dark:bg-surface-700 w-32 dark:text-white"
-				{onblur}
-				bind:this={addTagInput}
-				bind:value={addTagName}
-			/>
+			<div class="w-32">
+				<TextInput bind:input={addTagInput} bind:value={addTagName} {onblur} />
+			</div>
 		{:else}
 			<TagFlexList tags={notes.activeNote.tags} onRemove={onRemoveTag} />
 			<button

@@ -20,6 +20,7 @@
 	import Type from '$lib/components/dev-requests/Type.svelte';
 	import Status from '$lib/components/dev-requests/Status.svelte';
 	import Comments from '$lib/components/dev-requests/Comments.svelte';
+	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import IconMessageSquare from '@lucide/svelte/icons/message-square';
 
 	const devRequests = getDevRequests();
@@ -130,13 +131,7 @@
 		<div class="mt-1 md:mt-0 md:ml-3 md:w-3/6">
 			{#if isAdmin}
 				{#if changeTitle}
-					<input
-						type="text"
-						class="w-full dark:bg-s-dark-3 dark:text-white"
-						{onblur}
-						bind:this={titleInput}
-						bind:value={titleValue}
-					/>
+					<TextInput bind:input={titleInput} bind:value={titleValue} {onblur} />
 				{:else}
 					<button type="button" ondblclick={() => toggleChange('title')} class="cursor-pointer text-lg font-bold md:text-base">
 						{entry.title}

@@ -5,6 +5,7 @@
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onDestroy, tick } from 'svelte';
 	import MovableHoverBox from '$lib/components/ui/MovableHoverBox.svelte';
+	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { goto } from '$app/navigation';
 
@@ -78,14 +79,7 @@
 
 <div class="mt-2 w-full">
 	{#if editing}
-		<input
-			type="text"
-			class="w-full rounded-lg border-1 border-c-neutral-2 text-sm shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-2 dark:bg-s-dark-3 dark:text-white dark:focus:ring-c-primary"
-			bind:this={linkInput}
-			bind:value={linkValue}
-			placeholder="https://..."
-			{onblur}
-		/>
+		<TextInput bind:input={linkInput} bind:value={linkValue} placeholder="https://..." {onblur} />
 	{:else}
 		<div
 			role="button"
