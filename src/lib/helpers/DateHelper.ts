@@ -25,6 +25,17 @@ export function formatDate(input: string | Date, dateFormat: string | null = nul
 	return `${day}.${month}.${year}`;
 }
 
+/** Parses the "dd.mm.YYYY" value of a data-calendar-day attribute back into a Date. */
+export function parseDateSlug(slug: string): Date | null {
+	const parts = slug.split('.');
+	if (parts.length !== 3) return null;
+	const day = parseInt(parts[0], 10);
+	const month = parseInt(parts[1], 10);
+	const year = parseInt(parts[2], 10);
+	if (!day || !month || !year) return null;
+	return new Date(year, month - 1, day);
+}
+
 export function formatFloatingDate(date: Date) {
 	const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -386,6 +397,29 @@ export function getCalendarWeek(year: number, week: number): CalendarDay[] {
 			entries: [],
 			is_grayed_out: false
 		});
+	}
+
+	return days;
+}
+
+/** The 24 hours of a day as zero-padded strings, '00' to '23'. */
+export function getHoursOfDay(): string[] {
+	return Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
+}
+
+/** Off hours are before 06:00 and from 22:00 on. */
+export function isOffHour(hour: string): boolean {
+	return parseInt(hour) < 6 || parseInt(hour) >= 22;
+}
+
+/** The days after `start`, one day apart, up to and including the first one that reaches `end`. */
+export function eachDayBetween(start: Date, end: Date): Date[] {
+	const days: Date[] = [];
+	const current = new Date(start);
+
+	while (current < end) {
+		current.setDate(current.getDate() + 1);
+		days.push(new Date(current));
 	}
 
 	return days;

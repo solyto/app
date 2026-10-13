@@ -1,15 +1,14 @@
 <script lang="ts">
+	import { getHoursOfDay, isOffHour } from '$lib/helpers/DateHelper';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import CalendarWeekDay from '$lib/components/calendars/views/week/Day.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 
 	const calendars = getCalendars();
-	const hours = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
-		(i - 1).toString().padStart(2, '0')
-	);
+	const hours = getHoursOfDay();
 	const mobileRows = `minmax(4rem, auto) ${hours
-		.map((hour) => (parseInt(hour) < 6 || parseInt(hour) >= 22 ? '1.5rem' : '3.5rem'))
+		.map((hour) => (isOffHour(hour) ? '1.5rem' : '3.5rem'))
 		.join(' ')}`;
 
 	const swipe = new SwipeNavigate({
@@ -40,7 +39,7 @@
 					/>
 				</div>
 				{#each hours as hour (hour)}
-					{@const offHour = parseInt(hour) < 6 || parseInt(hour) >= 22}
+					{@const offHour = isOffHour(hour)}
 					<div class="flex items-center justify-center">
 						<span class="text-xs {offHour ? 'text-c-neutral-4 dark:text-s-dark-3' : ''}">{hour}</span>
 					</div>

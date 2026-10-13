@@ -1,12 +1,11 @@
 <script lang="ts">
+	import { getHoursOfDay } from '$lib/helpers/DateHelper';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import CalendarWeekDay from '$lib/components/calendars/views/week/Day.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 
 	const calendars = getCalendars();
-	const hours = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
-		(i - 1).toString().padStart(2, '0')
-	);
+	const hours = getHoursOfDay();
 	const rows = '10% repeat(24, calc(100% / 27))';
 </script>
 

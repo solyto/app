@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { calendarDrag } from './CalendarDragState.svelte';
+	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
 
 	let { sourceDateSlug } = $props<{ sourceDateSlug: string }>();
 </script>
@@ -8,12 +9,14 @@
 	<div
 		data-calendar-drag-ghost
 		class="pointer-events-none fixed z-[100] flex items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm shadow-lg select-none"
-		style="left: {calendarDrag.ghost.x}px; top: {calendarDrag.ghost.y}px; width: {calendarDrag
-			.ghost.width}px; height: {calendarDrag.ghost.height}px; border-color: {calendarDrag
-			.event.calendar_color ?? 'var(--color-c-neutral-2)'}; background-color: {calendarDrag
-			.event.calendar_color
-			? `color-mix(in srgb, ${calendarDrag.event.calendar_color} 25%, var(--color-c-bg-elevated))`
-			: ''};"
+		style="
+			left: {calendarDrag.ghost.x}px;
+			top: {calendarDrag.ghost.y}px;
+			width: {calendarDrag.ghost.width}px;
+			height: {calendarDrag.ghost.height}px;
+			border-color: {getEventBorderColor(calendarDrag.event.calendar_color)};
+			background-color: {getEventBackgroundColor(calendarDrag.event.calendar_color)};
+		"
 	>
 		<span class="truncate text-left">{calendarDrag.event.title}</span>
 	</div>

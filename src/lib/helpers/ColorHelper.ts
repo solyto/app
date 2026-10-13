@@ -31,3 +31,13 @@ export function isLightColor(color: string): boolean {
 export function getReadableTextColor(color: string): string {
 	return isLightColor(color) ? 'var(--color-c-neutral-9)' : '#ffffff';
 }
+
+/** The left-border colour of a calendar event, neutral when the calendar has none. */
+export function getEventBorderColor(color: string | null | undefined): string {
+	return color ?? 'var(--color-c-neutral-2)';
+}
+
+/** The tinted background of a calendar event, empty when the calendar has no colour. */
+export function getEventBackgroundColor(color: string | null | undefined): string {
+	return color ? `color-mix(in srgb, ${color} 25%, var(--color-c-bg-elevated))` : '';
+}

@@ -98,17 +98,6 @@ export function findCalendarDayElement(x: number, y: number): HTMLElement | null
 	return null;
 }
 
-/** Parses the "dd.mm.YYYY" value of a data-calendar-day attribute back into a Date. */
-export function parseDateSlug(slug: string): Date | null {
-	const parts = slug.split('.');
-	if (parts.length !== 3) return null;
-	const day = parseInt(parts[0], 10);
-	const month = parseInt(parts[1], 10);
-	const year = parseInt(parts[2], 10);
-	if (!day || !month || !year) return null;
-	return new Date(year, month - 1, day);
-}
-
 export interface CalendarDragControllerOptions {
 	enabled: () => boolean;
 	sourceDateSlug: () => string;

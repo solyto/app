@@ -17,6 +17,7 @@ import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import {
+	eachDayBetween,
 	formatDate,
 	getCalendarMonth,
 	getCalendarWeek,
@@ -156,12 +157,8 @@ export class Calendars {
 					end_date !== null &&
 					getDateDiffInMinutes(start_date, end_date) > 1440
 				) {
-					let currentDate = new Date(start_date);
-					while (currentDate < end_date) {
-						currentDate = new Date(
-							currentDate.setDate(currentDate.getDate() + 1)
-						);
-						const dateSlug = formatDate(currentDate);
+					for (const day of eachDayBetween(start_date, end_date)) {
+						const dateSlug = formatDate(day);
 						if (!newSortedEvents[dateSlug]) {
 							newSortedEvents[dateSlug] = [];
 						}

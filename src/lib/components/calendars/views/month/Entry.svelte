@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { blur } from 'svelte/transition';
-	import { formatDate, formatTime } from '$lib/helpers/DateHelper';
+	import { formatDate, formatTime, parseDateSlug } from '$lib/helpers/DateHelper';
+	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
 	import type { CalendarEvent } from '$lib/types/calendar';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import {
@@ -8,8 +9,7 @@
 		consumeCalendarDragClick,
 		createCalendarDragController,
 		findCalendarDayElement,
-		getCalendarEventKey,
-		parseDateSlug
+		getCalendarEventKey
 	} from '$lib/components/calendars/dnd/CalendarDragState.svelte';
 	import type { CalendarDragTarget } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -69,10 +69,10 @@
 {#if !calendars.isCalendarHidden(parseInt(item.calendar_id))}
 	<button
 		class="flex w-full cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm transition-all select-none hover:bg-c-neutral max-md:text-xs dark:hover:bg-s-dark-3"
-		style="border-color: {item.calendar_color ??
-			'var(--color-c-neutral-2)'}; background-color: {item.calendar_color && item.is_all_day
-			? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))`
-			: ''};"
+		style="
+			border-color: {getEventBorderColor(item.calendar_color)};
+			background-color: {item.is_all_day ? getEventBackgroundColor(item.calendar_color) : ''};
+		"
 		class:!border-l-0={item.is_all_day && item.start_date < date}
 		class:opacity-40={isDragged()}
 		onclick={onEntryClick}

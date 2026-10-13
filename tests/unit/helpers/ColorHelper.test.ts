@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { lightenColor, isLightColor, getReadableTextColor } from '$lib/helpers/ColorHelper';
+import {
+	lightenColor,
+	isLightColor,
+	getReadableTextColor,
+	getEventBorderColor,
+	getEventBackgroundColor
+} from '$lib/helpers/ColorHelper';
 
 describe('lightenColor', () => {
 	it('lightens towards white by the default amount', () => {
@@ -56,5 +62,34 @@ describe('getReadableTextColor', () => {
 	it('returns white on dark backgrounds', () => {
 		expect(getReadableTextColor('#000000')).toBe('#ffffff');
 		expect(getReadableTextColor('var(--color-c-primary)')).toBe('#ffffff');
+	});
+});
+
+describe('getEventBorderColor', () => {
+	it('returns the calendar colour', () => {
+		expect(getEventBorderColor('#336699')).toBe('#336699');
+	});
+
+	it('falls back to the neutral colour for null and undefined', () => {
+		expect(getEventBorderColor(null)).toBe('var(--color-c-neutral-2)');
+		expect(getEventBorderColor(undefined)).toBe('var(--color-c-neutral-2)');
+	});
+
+	it('keeps an empty string as it is', () => {
+		expect(getEventBorderColor('')).toBe('');
+	});
+});
+
+describe('getEventBackgroundColor', () => {
+	it('mixes the calendar colour into the elevated background', () => {
+		expect(getEventBackgroundColor('#336699')).toBe(
+			'color-mix(in srgb, #336699 25%, var(--color-c-bg-elevated))'
+		);
+	});
+
+	it('returns an empty string without a colour', () => {
+		expect(getEventBackgroundColor(null)).toBe('');
+		expect(getEventBackgroundColor(undefined)).toBe('');
+		expect(getEventBackgroundColor('')).toBe('');
 	});
 });

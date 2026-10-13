@@ -4,6 +4,7 @@
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { isDateToday, formatDate, formatTime } from '$lib/helpers/DateHelper';
+	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
 	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
@@ -152,7 +153,10 @@
 					{#if !calendars.isCalendarHidden(item.calendar_id)}
 						<button
 							class="my-0.5 flex w-full cursor-pointer items-center justify-start border-l-4 px-3 py-2.5 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
-							style="border-color: {item.calendar_color ?? 'var(--color-c-neutral-2)'}; background-color: {item.calendar_color ? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))` : ''};"
+							style="
+								border-color: {getEventBorderColor(item.calendar_color)};
+								background-color: {getEventBackgroundColor(item.calendar_color)};
+							"
 							onclick={async () => await calendars.showSidebar(null, item)}
 							transition:blur
 						>
@@ -167,7 +171,10 @@
 					{#if !calendars.isCalendarHidden(item.calendar_id)}
 						<button
 							class="my-0.5 flex w-full cursor-pointer items-center justify-start border-l-4 px-3 py-2.5 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
-							style="border-color: {item.calendar_color ?? 'var(--color-c-neutral-2)'}; background-color: {item.calendar_color ? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))` : ''};"
+							style="
+								border-color: {getEventBorderColor(item.calendar_color)};
+								background-color: {getEventBackgroundColor(item.calendar_color)};
+							"
 							onclick={async () => await calendars.showSidebar(null, item)}
 							transition:blur
 						>

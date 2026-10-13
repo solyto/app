@@ -3,6 +3,7 @@
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onDestroy } from 'svelte';
+	import { getHoursOfDay } from '$lib/helpers/DateHelper';
 
 	const keyManager = getKeyManager();
 
@@ -16,9 +17,7 @@
 		oninput?: () => void;
 	} = $props();
 
-	const hourOptions = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
-		(i - 1).toString().padStart(2, '0')
-	);
+	const hourOptions = getHoursOfDay();
 	const minuteOptions = Array.from({ length: 12 }, (_, i) => i).map((i) =>
 		(i * 5).toString().padStart(2, '0')
 	);

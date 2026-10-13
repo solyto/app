@@ -41,11 +41,9 @@
 		link: false
 	})
 
-	// Keyboard-aware bottom padding: on mobile, when the on-screen keyboard opens it
-	// otherwise clips the scrollable editor pane so the caret can't be scrolled into
-	// view. Padding the scroll container by the keyboard height gives it room to do so.
-	let keyboardPadding = $state<string>('')
-	let removeViewportListeners: (() => void) | null = null
+	function keyboardPadding() {
+		return viewPoint.isMobile && viewPoint.keyboardHeight ? `${viewPoint.keyboardHeight}px` : ''
+	}
 
 	function syncActiveStates() {
 		if (!editor) return
@@ -126,35 +124,17 @@
 		editor = instance
 
 		if (autofocus) instance.commands.focus()
-
-		const vv = window.visualViewport
-		if (vv && viewPoint.isMobile) {
-			const updateKeyboardPadding = () => {
-				const diff = window.innerHeight - vv.height
-				keyboardPadding = diff > 60 ? `${diff}px` : ''
-			}
-
-			vv.addEventListener('resize', updateKeyboardPadding)
-			vv.addEventListener('scroll', updateKeyboardPadding)
-			updateKeyboardPadding()
-
-			removeViewportListeners = () => {
-				vv.removeEventListener('resize', updateKeyboardPadding)
-				vv.removeEventListener('scroll', updateKeyboardPadding)
-			}
-		}
 	})
 
 	onDestroy(() => {
 		editor?.destroy()
 		editor = null
-		removeViewportListeners?.()
 	})
 </script>
 
 <TableBubbleMenu {editor} bind:root={tableBubbleRoot} />
 
-<div class="flex flex-1 flex-col overflow-y-auto" style:padding-bottom={keyboardPadding}>
+<div class="flex flex-1 flex-col overflow-y-auto" style:padding-bottom={keyboardPadding()}>
 	{#if editor}
 		<EditorToolbar {editor} {activeStates} />
 	{/if}

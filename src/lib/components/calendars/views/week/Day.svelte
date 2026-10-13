@@ -2,7 +2,8 @@
 	import { blur } from 'svelte/transition';
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
-	import { formatDate, getDateDiffInMinutes } from '$lib/helpers/DateHelper';
+	import { formatDate, getDateDiffInMinutes, getHoursOfDay, isOffHour, parseDateSlug } from '$lib/helpers/DateHelper';
+	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
 	import type { CalendarEvent } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarDragService from '$lib/services/CalendarDragService';
@@ -12,8 +13,7 @@
 		consumeCalendarDragClick,
 		createCalendarDragController,
 		findCalendarDayElement,
-		getCalendarEventKey,
-		parseDateSlug
+		getCalendarEventKey
 	} from '$lib/components/calendars/dnd/CalendarDragState.svelte';
 	import type { CalendarDragTarget } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -25,9 +25,7 @@
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const dragService = new CalendarDragService();
-	const hours = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
-		(i - 1).toString().padStart(2, '0')
-	);
+	const hours = getHoursOfDay();
 	const desktopRows = '10% repeat(24, calc(100% / 27))';
 
 	let { date, isMobile = false } = $props<{ date: Date; isMobile?: boolean }>();
@@ -175,8 +173,8 @@
 					class:!border-l-0={item.start_date < date}
 					class:opacity-40={isDragged(item)}
 					style="
-						border-color: {item.calendar_color ?? 'var(--color-c-neutral-2)'};
-						background-color: {item.calendar_color ? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))` : ''};
+						border-color: {getEventBorderColor(item.calendar_color)};
+						background-color: {getEventBackgroundColor(item.calendar_color)};
 					"
 					onclick={() => onEventClick(item)}
 					onpointerdown={(e) => drag.onPointerDown(e, item)}
@@ -191,7 +189,7 @@
 		{/each}
 	</div>
 	{#each hours as hour (hour)}
-		{@const offHour = isMobile && (parseInt(hour) < 6 || parseInt(hour) >= 22)}
+		{@const offHour = isMobile && isOffHour(hour)}
 		<div
 			class="group relative border-t-1 border-c-neutral-1 dark:border-s-dark {offHour
 				? 'bg-c-neutral dark:bg-s-dark-2'
@@ -214,10 +212,12 @@
 							class:left-0={i === 0}
 							class:right-0={i > 0}
 							class:opacity-40={isDragged(item)}
-							style="border-color: {item.calendar_color ??
-								'var(--color-c-neutral-2)'}; background-color: {item.calendar_color
-								? `color-mix(in srgb, ${item.calendar_color} 25%, var(--color-c-bg-elevated))`
-								: ''}; top: {getTop(item)}; height: {getHeight(item)};"
+							style="
+								border-color: {getEventBorderColor(item.calendar_color)};
+								background-color: {getEventBackgroundColor(item.calendar_color)};
+								top: {getTop(item)};
+								height: {getHeight(item)};
+							"
 							onclick={() => onEventClick(item)}
 							onpointerdown={(e) => drag.onPointerDown(e, item)}
 							onpointermove={drag.onPointerMove}

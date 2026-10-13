@@ -147,6 +147,7 @@ describe('Calendars store', () => {
 			expect(c.sortedEvents['11.08.2026']).toHaveLength(1);
 			// the loop pushes the incremented date before re-checking, so the end date is included
 			expect(c.sortedEvents['12.08.2026']).toHaveLength(1);
+			expect(c.sortedEvents['13.08.2026']).toBeUndefined();
 		});
 
 		it('does not expand single-day all-day events', async () => {

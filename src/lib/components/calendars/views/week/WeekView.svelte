@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getCalendars } from '$lib/state/Calendars.svelte';
-	import { formatDate, getCalendarWeek, getISODateInfo } from '$lib/helpers/DateHelper';
+	import { formatDate, getCalendarWeek, getISODateInfo, getHoursOfDay } from '$lib/helpers/DateHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Day from '$lib/components/calendars/views/week/Day.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
@@ -8,9 +8,7 @@
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
-	const hours = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
-		(i - 1).toString().padStart(2, '0')
-	);
+	const hours = getHoursOfDay();
 	const rows = '10% repeat(24, calc(100% / 27))';
 
 	let week = $derived(getCalendarWeek(calendars.currentYear, calendars.currentWeek));
