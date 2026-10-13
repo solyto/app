@@ -797,6 +797,18 @@ const calendar: CalendarRecords = {
 	location: 'Location',
 	is_all_day: 'All Day',
 	is_recurring: 'Recurring',
+	recurrence_daily: 'Every day',
+	recurrence_weekly: 'Weekly',
+	recurrence_monthly_date: 'Monthly on this date',
+	recurrence_monthly_weekday: 'Monthly on weekday',
+	recurrence_yearly: 'Every year',
+	recurrence_on_the: 'on the',
+	recurrence_ordinals: {
+		1: '1st',
+		2: '2nd',
+		3: '3rd',
+		4: '4th'
+	},
 	choose_calendar: 'Choose Calendar',
 	request_sync: 'Synchronize',
 	sync_success: 'Synchronization was successful.',

@@ -744,6 +744,7 @@ export interface CalendarRecords {
 		12: string;
 	};
 	weekdays: {
+		[key: number]: string;
 		1: string;
 		2: string;
 		3: string;
@@ -779,6 +780,19 @@ export interface CalendarRecords {
 	location: string;
 	is_all_day: string;
 	is_recurring: string;
+	recurrence_daily: string;
+	recurrence_weekly: string;
+	recurrence_monthly_date: string;
+	recurrence_monthly_weekday: string;
+	recurrence_yearly: string;
+	recurrence_on_the: string;
+	recurrence_ordinals: {
+		[key: number]: string;
+		1: string;
+		2: string;
+		3: string;
+		4: string;
+	};
 	choose_calendar: string;
 	request_sync: string;
 	sync_success: string;

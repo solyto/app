@@ -21,11 +21,14 @@
 	import RecurrenceActionModal from '$lib/components/calendars/RecurrenceActionModal.svelte';
 	import EventAttachments from '$lib/components/calendars/EventAttachments.svelte';
 	import { formatFloatingDate } from '$lib/helpers/DateHelper';
+	import RecurrenceRuleService from '$lib/services/RecurrenceRuleService';
+	import type { RecurrenceSelection } from '$lib/services/RecurrenceRuleService';
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
+	const recurrenceRuleService = new RecurrenceRuleService();
 	const emptyForm: EventForm = {
 		calendar_id: 0,
 		title: '',
@@ -60,6 +63,9 @@
 		end_hours: calendars.activeEvent ? calendars.activeEvent.end_date.getHours() : 13,
 		end_minutes: calendars.activeEvent ? calendars.activeEvent.end_date.getMinutes() : 0
 	});
+	let recurrence = $state<RecurrenceSelection | null>(
+		recurrenceRuleService.parse(form.recurrence_rule, form.start_date)
+	);
 	let titleInput = $state<HTMLInputElement | null>(null);
 	let showRecurrenceModal = $state<'edit' | 'delete' | null>(null);
 
@@ -132,10 +138,14 @@
 			...form,
 			start_date: formatFloatingDate(form.start_date),
 			end_date: formatFloatingDate(form.end_date),
-			recurrence_rule: form.is_recurring ? form.recurrence_rule : null,
+			recurrence_rule: form.is_recurring ? recurrenceRule() : null,
 			recurrence_end: form.recurrence_end ? formatFloatingDate(form.recurrence_end) : null,
 			etag: calendars.activeEvent ? calendars.activeEvent.etag : null
 		} as UpdateEventRequest;
+	}
+
+	function recurrenceRule(): string | null {
+		return recurrence ? recurrenceRuleService.build(recurrence, form.start_date) : form.recurrence_rule;
 	}
 
 	async function onsubmit(): Promise<void> {
@@ -171,6 +181,7 @@
 		loadingIndicator.stop();
 		if (ok) {
 			form = { ...emptyForm };
+			recurrence = recurrenceRuleService.parse(null, form.start_date);
 			calendars.hideSidebar();
 		} else {
 			notifications.error(ts.get.calendar.entry_create_error);
@@ -243,11 +254,8 @@
 				{/if}
 			</div>
 		{/if}
-		{#if form.is_recurring}
-			<ChooseRecurrenceRule
-				bind:recurrenceRule={form.recurrence_rule}
-				startDate={form.start_date}
-			/>
+		{#if form.is_recurring && recurrence}
+			<ChooseRecurrenceRule bind:selection={recurrence} startDate={form.start_date} />
 		{/if}
 		<TextInput bind:value={form.description} placeholder={ts.get.calendar.description} />
 		<TextInput bind:value={form.location} placeholder={ts.get.calendar.location} />
