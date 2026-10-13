@@ -35,7 +35,7 @@ may be "no, this one is fine".
    before the owner's rewrite in git).
 2. Measures instead of asserting: greps the pattern across `src/`, counts
    occurrences, checks `git log`/`blame` for who introduced it, runs the
-   tooling (`prettier --check`, the Svelte compiler) when a claim depends on
+   tooling (`npm run check`, the Svelte compiler) when a claim depends on
    it. Numbers go in the answer when they change what the reader does.
 3. Names the pattern, separates the symptom from the design behind it, and
    says plainly when the owner's own code has the same issue.
@@ -97,7 +97,7 @@ already exist, it is time to stop collecting and finish the document.
 
 ## State at the end of the first session (2026-10-12)
 
-Covered: markup expressions and Prettier, `class:`/array form, `{@const}`,
+Covered: markup expressions and formatting, `class:`/array form, `{@const}`,
 snippets, repetition and helpers, reactivity (`$derived`, `$state`, leaf
 components), `$effect` in all its wrong uses, external formats as services,
 shared primitives, i18n, `KeyManager`, desktop/mobile siblings, module-level

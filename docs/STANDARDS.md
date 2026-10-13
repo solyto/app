@@ -22,8 +22,8 @@ and never a todo list.
 After a dozen examples, AI-written code in this repo goes wrong in the same
 handful of ways. If you remember nothing else:
 
-1. **Expressions in markup that Prettier folds.** Keep attribute expressions
-   short; logic goes to the script (section 1).
+1. **Expressions in markup that spill over several lines.** Keep attribute
+   expressions short; logic goes to the script (section 1).
 2. **`$effect` used to synchronise state.** Writes to state inside an effect,
    shadow copies to detect changes, watchers for transitions the store itself
    causes. It is a `$derived`, an event handler, or a store method (section 5).
@@ -42,18 +42,22 @@ handful of ways. If you remember nothing else:
 
 ## 1. Markup expressions
 
-### 1.1 Prettier is the arbiter of expression complexity in markup
+### 1.1 An attribute expression is one readable line
 
-If Prettier (`npm run format`, `.prettierrc`, 100 chars) would wrap an
-expression inside an attribute across several lines, the expression is too
-complex to live in markup. Move the long part into the script as a named
-function or `$derived`, so the attribute fits on one line again.
+A `{…}` expression inside an attribute (`class`, `style`, a prop) is written
+on one line and reads at a glance. If it needs to be broken across lines to
+be readable, or a reader has to scan back and forth to find where it ends,
+the expression is too complex for markup: move the logic into the script as
+a named function or `$derived`, and leave a short call or name in the
+attribute.
 
-Why: Prettier folds ternaries inside `class="…"` and `style="…"` into a shape
-that is unreadable. There is no Prettier or `prettier-plugin-svelte` option to
-turn this off, so the only fix is to keep attribute expressions short.
+There is no formatter in this repository (Prettier was removed on
+2026-10-12 because it rewrote deliberate formatting). The author formats by
+hand, and the shapes in this section are the reference. Line length is not
+a hard limit; readability is.
 
-Bad (`calendars/views/week/Day.svelte:226-229`, Prettier output):
+Bad (`calendars/views/week/Day.svelte:226-229`, AI-written and then
+machine-folded):
 
 ```svelte
 style="border-color: {item.calendar_color ??
@@ -76,8 +80,6 @@ style="
 with the `??` / ternary living inside the two helper functions.
 
 Check: any `{` inside an attribute whose matching `}` is on a different line.
-Note: hand-formatting a long attribute (as was done on lines 186-189) does not
-survive `npm run format`; `npm run lint` fails on it.
 
 ### 1.2 Conditionals in markup are allowed, but only short ones
 
@@ -96,8 +98,8 @@ Order of preference for a conditional class:
    ```svelte
    class={['relative grid', isMobile ? 'row-span-full' : 'h-full w-full', isDropTargetColumn && 'bg-d-lightblue/40']}
    ```
-   Prettier formats this one entry per line when it gets long, which is
-   readable. Keep it flat: no nested ternaries inside the array.
+   When it gets long, write one entry per line. Keep it flat: no nested
+   ternaries inside the array.
 3. A plain ternary inside `class="…"` only if it fits on one line (1.1).
 
 Bad (`Day.svelte:204-208`):
@@ -225,6 +227,48 @@ A condition with three or more `&&` terms over the same object is a named
 boolean or a store getter (`calendarDrag.isGhostVisible`). The fields the
 body needs are then read through short helpers (`ghostStyle()`), not by
 re-walking the object in every attribute.
+
+### 1.10 Formatting by hand
+
+With no formatter, these are the conventions the hand-written code follows
+(measured 2026-10-12 across `src/lib`); new code matches them:
+
+- Tabs for indentation, four wide. No space-indented lines exist.
+- Single quotes in TypeScript and in Svelte script blocks; double quotes
+  only for HTML attribute values.
+- Semicolons after every statement.
+- No trailing comma after the last element of an object, array or
+  parameter list.
+- One blank line between top-level declarations; none at the start or end
+  of a block.
+- A long call or signature breaks one argument per line, closing bracket on
+  its own line (`Todos.svelte.ts` constructor is the reference). A long
+  `style` attribute breaks one declaration per line (1.4). Related data
+  rows that read as a table may stay compact on one line each
+  (`i18n/en.ts`, the check-in labels), even when long.
+- Tailwind classes have no enforced order; keep the order you find in the
+  nearest hand-written component (layout, spacing, colour, state variants).
+
+### 1.10 Formatting by hand
+
+With no formatter, these are the conventions the hand-written code follows
+(measured 2026-10-12 across `src/lib`); new code matches them:
+
+- Tabs for indentation, four wide. No space-indented lines exist.
+- Single quotes in TypeScript and in Svelte script blocks; double quotes
+  only for HTML attribute values.
+- Semicolons after every statement.
+- No trailing comma after the last element of an object, array or
+  parameter list.
+- One blank line between top-level declarations; none at the start or end
+  of a block.
+- A long call or signature breaks one argument per line, closing bracket on
+  its own line (the `Todos.svelte.ts` constructor is the reference). A long
+  `style` attribute breaks one declaration per line (1.4). Related data
+  rows that read as a table may stay compact on one line each
+  (`i18n/en.ts`, the check-in labels), even when long.
+- Tailwind classes have no enforced order; keep the order you find in the
+  nearest hand-written component (layout, spacing, colour, state variants).
 
 ---
 
@@ -884,8 +928,22 @@ Reference case: `Calendars.loadEvents()` (`state/Calendars.svelte.ts:117-177`).
 `loadEvents(month: string | null = null, year: string | null = null)` reads
 neither; it uses `this.currentYear`/`this.currentMonth`. No caller passes
 them. A parameter that is not read is removed; a default that is never
-overridden is removed. `tsconfig.json` does not set `noUnusedParameters`,
-so this is on the author.
+overridden is removed.
+
+A function that implements a contract keeps the contract's parameters
+whether or not it reads them. A `KeyManager` handler is
+`(event: KeyboardEvent) => void` and is declared exactly that way; the same
+goes for any callback whose type is set by the thing that calls it.
+Dropping the parameter at the call site because "it compiles" is wrong: the
+signature is the contract, and the body not using it today is not a reason
+to hide it. If a contract parameter turns out to be unnecessary, it is
+removed from the contract and from every implementer in one change, never
+from individual implementers. This rule is about parameters a function
+invented for itself, not parameters it was given.
+
+Because of that exception, `tsconfig.json` deliberately does not set
+`noUnusedParameters` (tried on 2026-10-12: 49 of its 55 hits were contract
+parameters). This rule is on the author and the reviewer.
 
 ### 12.2 A `load*()` method is fetch, convert, assign
 
@@ -1144,8 +1202,31 @@ precedent).
   today, so adopting it is a deliberate choice, made because `class:` cannot
   express names with `/`.
 - Snippets are the tool for repeated markup within a file.
-- Prettier config stays as is; the rules adapt to it (see 1.1). No
-  `// prettier-ignore`.
+- No formatter. Prettier and its plugins were removed on 2026-10-12: it
+  rewrote deliberate formatting (multi-line `style` attributes, compact
+  i18n rows, one-line ternaries) and its output does not match how the
+  owner writes. `npm run lint` is `eslint .` only. Formatting is by hand,
+  following section 1 and the shapes of hand-written files.
+- ESLint runs the recommended `js`, `typescript-eslint` and `eslint-plugin-svelte`
+  sets with these adjustments, all made on 2026-10-13 while clearing the
+  233 errors the sets reported (see `eslint.config.js`):
+  - `no-unused-vars` with `args: 'none'` (contract parameters, 12.1) and
+    `ignoreRestSiblings` (the `const { [k]: _, ...rest }` idiom).
+  - `svelte/no-navigation-without-resolve` with `ignoreLinks: true`: an
+    `href` built from API data can never satisfy the rule. `goto()` targets
+    are `resolve(urls.x)`; a `goto` on a route taken from a list gets a
+    disable comment with the reason, since `resolve()` rejects a plain
+    string.
+  - `svelte/prefer-svelte-reactivity` off: it flags every `new Date/Map/Set/URL`
+    in a `.svelte` file, including throwaway locals, and has no options.
+    Rule 14.1 governs.
+  - `no-explicit-any` stays on. Snippets are typed `Snippet`, component
+    props `Component`, callbacks `() => void`; browser globals the shells
+    inject (`window.electronAPI`, `window.Capacitor`) are declared in
+    `src/app.d.ts`.
+  - `svelte/no-at-html-tags` stays on; the nine `{@html}` sites render
+    `DOMPurify.sanitize(...)` and carry a per-line disable saying so.
+  - `.claude/**` and `docs/**` are ignored.
 - `BEST_PRACTICES.md`'s "extract at three or more copies" is superseded.
   Cross-cutting browser/platform code is extracted on first write (2.4);
   everything else at the second copy.

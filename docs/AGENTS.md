@@ -62,8 +62,7 @@ Related files:
 - `npm run build` — production build via `vite build` (adapter-node, output in `build/`)
 - `npm run preview` — preview the production build locally
 - `npm run check` — type-check with `svelte-check` (a11y warnings selectively ignored)
-- `npm run lint` — `prettier --check .` + `eslint .`
-- `npm run format` — auto-format with `prettier --write .`
+- `npm run lint` — `eslint .` (there is no formatter; formatting follows `docs/STANDARDS.md` section 1)
 - `npm test` / `npm run test:watch` — run Vitest unit tests / watch mode
 - `make deploy` / `make audit` — Ansible deploy (external `deployment/` repo) / `npm audit` + `npm outdated`
 

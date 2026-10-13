@@ -17,10 +17,6 @@ independent of the chain and of each other; 10–13 in any order.
 
 ## Mechanical (grep, replace, done)
 
-- [ ] `tsconfig.json`: set `"noUnusedParameters": true` (rule 12.1). `tsc`
-      reports three hits: `Calendars.svelte.ts:117` (`month`, `year` of
-      `loadEvents`), `Notes.svelte.ts:392` (`note`). Then run `npm run check`
-      for hits inside `.svelte` scripts, count unknown.
 - [ ] `calendars/EventEdit.svelte:90`: remove leftover `console.log`.
 - [ ] `keyHandlers = $state<…>({…})` → plain `let` in 35 components
       (rule 3.6; target shape in 9.1).
@@ -39,9 +35,9 @@ independent of the chain and of each other; 10–13 in any order.
       and fix 38 imports (rule 11.1).
 - [ ] 16 ternaries inside `class="…"` strings → `class:` directive or array
       form (rule 1.3; grep `class="[^"]*{[^}]*$`).
-- [ ] `Day.svelte` and `CalendarMarks.svelte` fail `npm run lint` (hand-formatted
-      attributes). `CalendarMarks`: add the `INACTIVE` const (3.5). `Day.svelte`:
-      helpers for the style values (1.1).
+- [ ] `CalendarMarks.svelte:51,64`: class ternaries too long for one readable
+      line; add the `INACTIVE` const (3.5). `Day.svelte:226-229`: folded style
+      attribute; helpers for the style values (1.1).
 
 ## Extract to helpers (small, each removes several copies)
 
@@ -131,5 +127,16 @@ independent of the chain and of each other; 10–13 in any order.
       `calendars/dnd/CalendarDragState.svelte.ts` (6). `MusicTheory/*` is a
       separate question (domain math).
 
-## Decisions still to make (not code)
+## Found during the ESLint pass (2026-10-13)
 
+- [ ] `admin/StatisticWidget`, `ui/CardButton`, `ui/Card`,
+      `libraries/LibraryNavigationEntry` render a Lucide component with
+      `{@render icon({ class })}`. It works only because components and
+      snippets share a calling convention; the prop is typed `Component`, so
+      the markup should be `<Icon class="…" />` with the prop destructured as
+      `icon: Icon` (rule 1.5).
+- [ ] i18n key `enable_email_notifications` is orphaned in all four tables
+      since `ManageEmailNotifications.svelte` (no callers) was deleted.
+- [ ] `ui/BottomSheetConfirmationModal.svelte`: `width` is passed by two
+      callers through `ConfirmationModal` and not declared on mobile; left
+      as is (owner decision).
