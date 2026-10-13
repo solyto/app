@@ -1,6 +1,10 @@
-# Backlog: 12 Use SvelteDate only where a date is mutated in place
+# Brief: 12 Use SvelteDate only where a date is mutated in place
 
-created: 2026-10-12
+type: feature
+id: tune
+branch: feature/tune_12-use-sveltedate-only-where-a-date-is-mutated-in-place
+date: 2026-10-13
+author: Leander Muskalla
 
 ## What
 

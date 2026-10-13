@@ -12,7 +12,6 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { SvelteDate } from 'svelte/reactivity';
 
 	const checkInData = getCheckInData();
 	const ts = getTranslation();
@@ -23,8 +22,8 @@
 	let date = $state(page.params.date);
 	let dayData = $state(checkInData.getDayData());
 
-	const isToday = $derived(isDateToday(new SvelteDate(date)));
-	const isYesterday = $derived(isDateYesterday(new SvelteDate(date)));
+	const isToday = $derived(isDateToday(new Date(date as string)));
+	const isYesterday = $derived(isDateYesterday(new Date(date as string)));
 
 	$effect(() => {
 		date = page.params.date;

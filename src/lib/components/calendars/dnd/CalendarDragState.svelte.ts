@@ -1,4 +1,3 @@
-import { SvelteDate } from 'svelte/reactivity';
 import type { CalendarEvent } from '$lib/types/calendar';
 
 export interface CalendarDragGhost {
@@ -107,7 +106,7 @@ export function parseDateSlug(slug: string): Date | null {
 	const month = parseInt(parts[1], 10);
 	const year = parseInt(parts[2], 10);
 	if (!day || !month || !year) return null;
-	return new SvelteDate(year, month - 1, day);
+	return new Date(year, month - 1, day);
 }
 
 export interface CalendarDragControllerOptions {

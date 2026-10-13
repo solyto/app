@@ -16,7 +16,7 @@
 		auth: Auth;
 	}>();
 
-	let date = new SvelteDate();
+	let date = new Date();
 	let time = new SvelteDate();
 	let forecast = $derived(weather.forecast);
 	let temperatureUnit = $derived(auth?.user?.settings?.temperature_unit);

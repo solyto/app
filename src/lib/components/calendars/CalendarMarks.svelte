@@ -6,7 +6,6 @@
 	import { urls } from '$lib/config/urls';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { SvelteDate } from 'svelte/reactivity';
 	import { getUrlFormat, isDateInTheFuture } from '$lib/helpers/DateHelper';
 
 	let {
@@ -16,7 +15,7 @@
 		size = 14,
 		class: extraClass = ''
 	} = $props<{
-		date: SvelteDate;
+		date: Date;
 		showJournal: boolean;
 		showCheckIn: boolean;
 		size?: number;

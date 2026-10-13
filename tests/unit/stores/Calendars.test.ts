@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Calendars } from '$lib/state/Calendars.svelte';
 import { api, storage, resetStoreMocks } from '../setup/storeMocks';
 import { todo } from '../helpers/factories';
@@ -33,6 +33,10 @@ function event(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
 
 beforeEach(() => {
 	resetStoreMocks();
+});
+
+afterEach(() => {
+	vi.useRealTimers();
 });
 
 describe('Calendars store', () => {
@@ -342,6 +346,24 @@ describe('Calendars store', () => {
 					`/calendars/events/${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
 				)
 			);
+		});
+
+		it('goToToday navigates to a pinned system date', async () => {
+			vi.useFakeTimers({ toFake: ['Date'] });
+			vi.setSystemTime(new Date(2026, 2, 4, 12, 0));
+
+			const c = new Calendars();
+			c.currentDate = new Date(2020, 0, 1);
+			c.currentWeek = 1;
+			c.currentMonth = 1;
+			c.currentYear = 2020;
+			await c.goToToday();
+
+			expect(c.currentYear).toBe(2026);
+			expect(c.currentMonth).toBe(3);
+			expect(c.currentWeek).toBe(10);
+			expect(c.currentDate).toEqual(new Date(2026, 2, 4, 12, 0));
+			expect(api.list).toHaveBeenCalledWith(expect.stringContaining('/calendars/events/2026-03'));
 		});
 	});
 

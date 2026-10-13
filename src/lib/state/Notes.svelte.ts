@@ -18,7 +18,6 @@ import ApiService from '$lib/services/ApiService';
 import JournalService from '$lib/services/JournalService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import { SvelteDate } from 'svelte/reactivity';
 
 export class NotesSvelte {
 	static readonly LS_COLLAPSED_CATEGORIES_KEY: string = 'notes.collapsedCategories';
@@ -179,7 +178,7 @@ export class NotesSvelte {
 		return this.getVisibleNotes()
 			.sort(
 				(a, b) =>
-					new SvelteDate(b.updated_at).getTime() - new SvelteDate(a.updated_at).getTime()
+					new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
 			)
 			.slice(0, 5);
 	}
@@ -188,7 +187,7 @@ export class NotesSvelte {
 		return this.getVisibleNotes()
 			.sort(
 				(a, b) =>
-					new SvelteDate(b.created_at).getTime() - new SvelteDate(a.created_at).getTime()
+					new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
 			)
 			.slice(0, 5);
 	}

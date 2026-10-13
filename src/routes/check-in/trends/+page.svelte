@@ -5,7 +5,6 @@
 	import TrendChart from '$lib/components/check-in/stats/TrendChart.svelte';
 	import type { CheckIn, CheckInType } from '$lib/types/check_in';
 	import { onMount } from 'svelte';
-	import { SvelteDate } from 'svelte/reactivity';
 	import { getUrlFormat } from '$lib/helpers/DateHelper';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import IconSmile from '@lucide/svelte/icons/smile';
@@ -42,7 +41,7 @@
 		if (selectedRange === 'all') return checkInData.data;
 
 		const days = selectedRange === '30d' ? 30 : selectedRange === '3m' ? 90 : 180;
-		const cutoff = new SvelteDate();
+		const cutoff = new Date();
 		cutoff.setDate(cutoff.getDate() - days);
 		const cutoffStr = getUrlFormat(cutoff);
 

@@ -6,7 +6,6 @@ import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { getUrlFormat } from '$lib/helpers/DateHelper';
 import { page } from '$app/state';
-import { SvelteDate } from 'svelte/reactivity';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
 export interface HistoryMonth {
@@ -20,7 +19,7 @@ export class CheckInData {
 	loaded = $state<boolean>(false);
 	data = $state<CheckIn[]>([]);
 	settings = $state<CheckInSettings>({ enabledTrackers: [...ALL_CHECK_IN_TRACKERS], selectedSports: [...DEFAULT_SPORTS] });
-	historyMonth = $state<HistoryMonth>({ year: new SvelteDate().getFullYear(), month: new SvelteDate().getMonth() });
+	historyMonth = $state<HistoryMonth>({ year: new Date().getFullYear(), month: new Date().getMonth() });
 	localStorage = new LocalStorageService();
 	scoredTrackers = $state<CheckInType[]>(this.loadScoredTrackers());
 	activeTrackers = $derived(ALL_CHECK_IN_TRACKERS.filter((t) => this.settings.enabledTrackers.includes(t)));
@@ -77,24 +76,24 @@ export class CheckInData {
 	}
 
 	prevMonth(): void {
-		const d = new SvelteDate(this.historyMonth.year, this.historyMonth.month - 1, 1);
+		const d = new Date(this.historyMonth.year, this.historyMonth.month - 1, 1);
 		this.historyMonth = { year: d.getFullYear(), month: d.getMonth() };
 	}
 
 	nextMonth(): void {
-		const d = new SvelteDate(this.historyMonth.year, this.historyMonth.month + 1, 1);
+		const d = new Date(this.historyMonth.year, this.historyMonth.month + 1, 1);
 		this.historyMonth = { year: d.getFullYear(), month: d.getMonth() };
 	}
 
 	isCurrentMonth(): boolean {
-		const now = new SvelteDate();
+		const now = new Date();
 		return this.historyMonth.year === now.getFullYear() && this.historyMonth.month === now.getMonth();
 	}
 
 	getDayData(day?: string): CheckIn | null {
 		if (!day)
 			return (
-				this.data.find((t) => t.date === getUrlFormat(new SvelteDate(this.selectedDate))) ??
+				this.data.find((t) => t.date === getUrlFormat(new Date(this.selectedDate as string))) ??
 				null
 			);
 

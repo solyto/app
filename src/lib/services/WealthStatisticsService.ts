@@ -1,5 +1,4 @@
 import type { WealthField } from '$lib/types/finance';
-import { SvelteDate } from 'svelte/reactivity';
 import { getUrlFormat } from '$lib/helpers/DateHelper';
 
 export default class WealthStatisticsService {
@@ -10,7 +9,7 @@ export default class WealthStatisticsService {
 	}
 
 	getGraphValues(): { date: string; values: { field: string; value: number }[] }[] {
-		const currentDate = new SvelteDate();
+		const currentDate = new Date();
 		const lastValues: Record<number, number> = {};
 
 		for (const field of this.data) {
@@ -23,13 +22,13 @@ export default class WealthStatisticsService {
 
 		const refinedResult: { date: string; values: { field: string; value: number }[] }[] = [];
 
-		const startDate = new SvelteDate(currentDate);
+		const startDate = new Date(currentDate);
 		startDate.setMonth(startDate.getMonth() - 11);
 
 		const currentFieldValues: Record<number, number> = {};
 
 		for (const field of this.data) {
-			const pastValues = field.values.filter((v) => new SvelteDate(v.date) < startDate);
+			const pastValues = field.values.filter((v) => new Date(v.date) < startDate);
 			pastValues.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 			if (pastValues.length > 0) {
@@ -40,7 +39,7 @@ export default class WealthStatisticsService {
 		}
 
 		for (let i = 11; i >= 0; i--) {
-			const date = new SvelteDate(currentDate);
+			const date = new Date(currentDate);
 			date.setMonth(date.getMonth() - i);
 			const monthStr = getUrlFormat(date).substring(0, 7); // YYYY-MM
 
@@ -51,7 +50,7 @@ export default class WealthStatisticsService {
 
 			for (const field of this.data) {
 				const valuesInThisMonth = field.values.filter((v) =>
-					getUrlFormat(new SvelteDate(v.date)).startsWith(monthStr)
+					getUrlFormat(new Date(v.date)).startsWith(monthStr)
 				);
 
 				if (valuesInThisMonth.length > 0) {

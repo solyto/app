@@ -19,7 +19,7 @@ import { apiRoutes } from '$lib/config/apiRoutes';
 import ApiService from '$lib/services/ApiService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { SessionMonitor } from '$lib/state/SessionMonitor';
-import { SvelteDate, SvelteMap } from 'svelte/reactivity';
+import { SvelteMap } from 'svelte/reactivity';
 import {
 	formatDate,
 	formatDateTime,
@@ -61,7 +61,7 @@ export class Auth {
 
 		if (!authToken || !user) return;
 
-		const expiresAt = new SvelteDate(authToken.expires_at).getTime();
+		const expiresAt = new Date(authToken.expires_at as string).getTime();
 
 		if (expiresAt > Date.now()) {
 			this.user = user;
@@ -215,7 +215,7 @@ export class Auth {
 
 		if (!savedAuth?.authToken?.token || !savedAuth.user) return false;
 		if (savedAuth.authToken.token === this.getToken()) return false;
-		if (new SvelteDate(savedAuth.authToken.expires_at).getTime() <= Date.now()) return false;
+		if (new Date(savedAuth.authToken.expires_at as string).getTime() <= Date.now()) return false;
 
 		this.user = savedAuth.user;
 		this.authToken = savedAuth.authToken;
@@ -229,7 +229,7 @@ export class Auth {
 		if (!this.loggedIn || !this.authToken) return;
 
 		try {
-			const expiresAt = new SvelteDate(this.authToken.expires_at).getTime();
+			const expiresAt = new Date(this.authToken.expires_at as string).getTime();
 
 			if (expiresAt <= Date.now() || this.shouldRefresh(expiresAt)) {
 				const outcome = await this.refresh();

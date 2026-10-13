@@ -2,11 +2,10 @@
 	import { slide } from 'svelte/transition';
 	import Select from '$lib/components/forms/Select.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
-	import type { SvelteDate } from 'svelte/reactivity';
 
 	let { recurrenceRule = $bindable(), startDate } = $props<{
 		recurrenceRule: string | null;
-		startDate: SvelteDate;
+		startDate: Date;
 	}>();
 
 	let type = $state<string>('daily');

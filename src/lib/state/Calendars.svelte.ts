@@ -16,7 +16,6 @@ import { getContext, setContext, tick } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import { SvelteDate } from 'svelte/reactivity';
 import {
 	formatDate,
 	getCalendarMonth,
@@ -42,11 +41,11 @@ export class Calendars {
 	currentWeek = $state<number>(0);
 	currentMonth = $state<number>(0);
 	currentYear = $state<number>(0);
-	currentDate = $state<SvelteDate>(new SvelteDate());
+	currentDate = $state<Date>(new Date());
 	auth = getAuth();
 	loaded = $state<boolean>(false);
 	editSidebar = $state<boolean>(false);
-	selectedDate = $state<SvelteDate | null>(null);
+	selectedDate = $state<Date | null>(null);
 	isSyncing = $state<boolean>(false);
 	lastSync = $state<number | null>(null);
 	view = $state<'month' | 'week' | 'day' | 'list'>('month');
@@ -61,8 +60,8 @@ export class Calendars {
 	syncModal = $state<boolean>(false);
 	manageModal = $state<boolean>(false);
 	hiddenCalendars = $state<number[]>([]);
-	mobileSelectedDate = $state<SvelteDate>(new SvelteDate());
-	mobileWeekStart = $state<SvelteDate>(new SvelteDate());
+	mobileSelectedDate = $state<Date>(new Date());
+	mobileWeekStart = $state<Date>(new Date());
 	shareModal = $state<boolean>(false);
 	shareCalendarTarget = $state<Calendar | null>(null);
 	pendingMove = $state<{ event: CalendarEvent; request: UpdateEventRequest } | null>(null);
@@ -83,7 +82,7 @@ export class Calendars {
 	constructor() {
 		this.apiService = this.auth.apiService;
 
-		const today = new SvelteDate();
+		const today = new Date();
 		this.currentWeek = getWeekNumber(today);
 		this.currentMonth = today.getMonth() + 1;
 		this.currentYear = today.getFullYear();
@@ -128,10 +127,10 @@ export class Calendars {
 		const newSortedEvents: Record<string, CalendarEvent[]> = {};
 
 		for (const item of res.data as CalendarEvent[]) {
-			const start_date = item.start_date ? new SvelteDate(item.start_date) : null;
-			const end_date = item.end_date ? new SvelteDate(item.end_date) : null;
-			const recurrence_end = item.recurrence_end ? new SvelteDate(item.recurrence_end) : null;
-			const original_start_date = item.original_start_date ? new SvelteDate(item.original_start_date) : null;
+			const start_date = item.start_date ? new Date(item.start_date) : null;
+			const end_date = item.end_date ? new Date(item.end_date) : null;
+			const recurrence_end = item.recurrence_end ? new Date(item.recurrence_end) : null;
+			const original_start_date = item.original_start_date ? new Date(item.original_start_date) : null;
 
 			const itemWithDates = {
 				...item,
@@ -157,9 +156,9 @@ export class Calendars {
 					end_date !== null &&
 					getDateDiffInMinutes(start_date, end_date) > 1440
 				) {
-					let currentDate = new SvelteDate(start_date);
+					let currentDate = new Date(start_date);
 					while (currentDate < end_date) {
-						currentDate = new SvelteDate(
+						currentDate = new Date(
 							currentDate.setDate(currentDate.getDate() + 1)
 						);
 						const dateSlug = formatDate(currentDate);
@@ -259,7 +258,7 @@ export class Calendars {
 
 		this.currentWeek++;
 		const weekDays = getCalendarWeek(this.currentYear, this.currentWeek);
-		this.mobileWeekStart = new SvelteDate(weekDays[0].date);
+		this.mobileWeekStart = new Date(weekDays[0].date);
 	}
 
 	lastWeek(): void {
@@ -271,34 +270,34 @@ export class Calendars {
 
 		this.currentWeek--;
 		const weekDays = getCalendarWeek(this.currentYear, this.currentWeek);
-		this.mobileWeekStart = new SvelteDate(weekDays[0].date);
+		this.mobileWeekStart = new Date(weekDays[0].date);
 	}
 
 	nextDay(): void {
-		this.currentDate = new SvelteDate(this.currentDate.setDate(this.currentDate.getDate() + 1));
+		this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate() + 1));
 	}
 
 	lastDay(): void {
-		this.currentDate = new SvelteDate(this.currentDate.setDate(this.currentDate.getDate() - 1));
+		this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate() - 1));
 	}
 
 	selectMobileDate(date: Date): void {
-		this.mobileSelectedDate = new SvelteDate(date);
+		this.mobileSelectedDate = new Date(date);
 	}
 
 	setMobileWeekStart(date: Date): void {
-		this.mobileWeekStart = new SvelteDate(date);
+		this.mobileWeekStart = new Date(date);
 		this.currentWeek = getWeekNumber(date);
 	}
 
 	async goToToday(): Promise<void> {
-		const today = new SvelteDate();
+		const today = new Date();
 		this.currentDate = today;
 		this.currentWeek = getWeekNumber(today);
 		this.currentMonth = today.getMonth() + 1;
 		this.currentYear = today.getFullYear();
-		this.mobileSelectedDate = new SvelteDate(today);
-		this.mobileWeekStart = new SvelteDate(today);
+		this.mobileSelectedDate = new Date(today);
+		this.mobileWeekStart = new Date(today);
 		this.loadMonth();
 		await this.loadEvents();
 		await this.loadMarks();
@@ -340,7 +339,7 @@ export class Calendars {
 
 	getTodosForDate(date: Date): Todo[] {
 		return this.todos.filter((t) => {
-			const due_date = new SvelteDate(t.due_at);
+			const due_date = new Date(t.due_at);
 
 			return (
 				due_date.getFullYear() === date.getFullYear() &&
@@ -370,7 +369,7 @@ export class Calendars {
 	): Promise<void> {
 		this.hideSidebar();
 		await tick();
-		this.selectedDate = new SvelteDate(selectedDate);
+		this.selectedDate = new Date(selectedDate as Date);
 		this.activeEvent = selectedEntry;
 		this.editSidebar = true;
 		if (selectedEntry) {
