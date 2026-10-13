@@ -28,6 +28,9 @@ vite.config.ts.timestamp-*
 
 # Manigot
 .manigot
+.mcp.json
+CLAUDE.md
+AGENTS.md
 
 # manigot job transcripts and token accounting
 docs/jobs/**/session.log
