@@ -10,7 +10,6 @@
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import type { Library } from '$lib/types/library';
 	import Recommendation from '$lib/components/libraries/shared/Recommendation.svelte';
-	import ApiService from '$lib/services/ApiService';
 	import { apiRoutes } from '$lib/config/apiRoutes';
 
 	const ts = getTranslation();
@@ -56,7 +55,7 @@
 		if (recommendation === null) return;
 
 		if (recommendation.id === null) {
-			const apiService = new ApiService(auth.getToken());
+			const apiService = auth.apiService;
 			const query = encodeURIComponent(`${recommendation.creator} ${recommendation.title}`);
 			const res = await apiService.list(`${apiRoutes.libraries.music.search}/deezer/${query}`);
 			if (res !== null && res.data.length > 0) {

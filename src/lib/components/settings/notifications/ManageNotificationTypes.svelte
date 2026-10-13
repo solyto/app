@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import ApiService from '$lib/services/ApiService';
 	import { onMount } from 'svelte';
 	import { apiRoutes } from '$lib/config/apiRoutes';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -14,7 +13,7 @@
 	import type { Connection } from '$lib/types/telegram_bot_connection';
 
 	const auth = getAuth();
-	const apiService = new ApiService(auth.getToken());
+	const apiService = auth.apiService;
 	const ts = getTranslation();
 
 	let settings = $state<NotificationSettings | null>(null);

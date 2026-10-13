@@ -232,6 +232,17 @@ describe('file uploads', () => {
 });
 
 describe('image', () => {
+	it('sends a GET with the bearer headers to the given endpoint', async () => {
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse(null));
+		vi.stubGlobal('fetch', fetchMock);
+
+		await new ApiService('tok').image('/export/7/download');
+
+		expect(fetchMock).toHaveBeenCalledWith('/export/7/download', {
+			headers: { Authorization: 'Bearer tok', Accept: 'application/json' }
+		});
+	});
+
 	it('returns the blob on success and null on failure', async () => {
 		const okResponse = { ok: true, blob: vi.fn().mockResolvedValue(new Blob(['x'])) };
 		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(okResponse));
@@ -300,5 +311,91 @@ describe('401 recovery', () => {
 		await expect(service.list('/todos')).rejects.toThrow('offline');
 		expect(handler).not.toHaveBeenCalled();
 		expect(fetchMock).toHaveBeenCalledTimes(1);
+	});
+});
+
+describe('401 recovery retry headers', () => {
+	function recoveringService(nextToken: string | null): ApiService {
+		const service = new ApiService('old');
+		service.setUnauthorizedHandler(async () => {
+			service.updateAuthToken(nextToken);
+			return true;
+		});
+		return service;
+	}
+
+	function unauthorizedThenOk() {
+		return vi
+			.fn()
+			.mockResolvedValueOnce(jsonResponse(null, false, 401))
+			.mockResolvedValueOnce(jsonResponse({ data: {} }));
+	}
+
+	it('rebuilds the JSON body headers with the fresh token', async () => {
+		const fetchMock = unauthorizedThenOk();
+		vi.stubGlobal('fetch', fetchMock);
+
+		const body = { title: 'Buy milk' };
+		await recoveringService('new').create('/todos', body);
+
+		expect(fetchMock.mock.calls[1]).toEqual([
+			'/todos',
+			{
+				method: 'POST',
+				headers: {
+					Authorization: 'Bearer new',
+					'Content-Type': 'application/json',
+					Accept: 'application/json'
+				},
+				body: JSON.stringify(body)
+			}
+		]);
+	});
+
+	it('rebuilds the bodyless headers with the fresh token', async () => {
+		const fetchMock = unauthorizedThenOk();
+		vi.stubGlobal('fetch', fetchMock);
+
+		await recoveringService('new').list('/todos');
+
+		expect(fetchMock.mock.calls[1]).toEqual([
+			'/todos',
+			{ headers: { Authorization: 'Bearer new', Accept: 'application/json' } }
+		]);
+	});
+
+	it('rebuilds the auth-only headers of a form upload with the fresh token', async () => {
+		const fetchMock = unauthorizedThenOk();
+		vi.stubGlobal('fetch', fetchMock);
+
+		const formData = new FormData();
+		await recoveringService('new').postFormData('/upload', formData);
+
+		expect(fetchMock.mock.calls[1][1]).toEqual({
+			method: 'POST',
+			headers: { Authorization: 'Bearer new' },
+			body: formData
+		});
+	});
+
+	it('drops the Authorization header from JSON body headers when recovery leaves no token', async () => {
+		const fetchMock = unauthorizedThenOk();
+		vi.stubGlobal('fetch', fetchMock);
+
+		await recoveringService(null).create('/todos', {});
+
+		expect(fetchMock.mock.calls[1][1].headers).toEqual({
+			'Content-Type': 'application/json',
+			Accept: 'application/json'
+		});
+	});
+
+	it('drops the Authorization header from bodyless headers when recovery leaves no token', async () => {
+		const fetchMock = unauthorizedThenOk();
+		vi.stubGlobal('fetch', fetchMock);
+
+		await recoveringService(null).list('/todos');
+
+		expect(fetchMock.mock.calls[1][1].headers).toEqual({ Accept: 'application/json' });
 	});
 });

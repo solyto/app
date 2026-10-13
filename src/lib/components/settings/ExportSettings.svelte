@@ -2,7 +2,6 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
-	import ApiService from '$lib/services/ApiService';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import { onMount } from 'svelte';
@@ -12,7 +11,7 @@
 	const ts = getTranslation();
 	const auth = getAuth();
 	const uiNotifications = getUiNotifications();
-	const apiService = new ApiService(auth.getToken());
+	const apiService = auth.apiService;
 
 	const FEATURES = [
 		{ key: 'todos', label: 'Todos' },
@@ -95,15 +94,13 @@
 
 	async function downloadExport() {
 		if (!exportStatus) return;
-		const url = apiRoutes.export.download.replace('%s', String(exportStatus.id));
-		const res = await fetch(url, {
-			headers: { Authorization: 'Bearer ' + auth.getToken(), Accept: 'application/zip' }
-		});
-		if (!res.ok) {
+		const blob = await apiService.image(
+			apiRoutes.export.download.replace('%s', String(exportStatus.id))
+		);
+		if (!blob) {
 			uiNotifications.error('Download failed.');
 			return;
 		}
-		const blob = await res.blob();
 		const a = document.createElement('a');
 		a.href = URL.createObjectURL(blob);
 		a.download = 'export_' + exportStatus.id + '.zip';

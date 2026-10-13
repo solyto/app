@@ -6,7 +6,6 @@
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { apiRoutes, API_USER_STORAGE_URL } from '$lib/config/apiRoutes.js';
-	import ApiService from '$lib/services/ApiService.js';
 	import type { Friend } from '$lib/types/friend.js';
 	import type { Calendar, CalendarSharee } from '$lib/types/calendar.js';
 	import IconUserPlus from '@lucide/svelte/icons/user-plus';
@@ -27,7 +26,7 @@
 	let sharing = $state<string | null>(null);
 	let revoking = $state<string | null>(null);
 
-	const apiService = new ApiService(auth.getToken());
+	const apiService = auth.apiService;
 
 	const sharedUserIds = $derived(new Set(sharees.map((s) => s.user_id)));
 	const unsharedFriends = $derived(friends.filter((f) => !sharedUserIds.has(f.id)));

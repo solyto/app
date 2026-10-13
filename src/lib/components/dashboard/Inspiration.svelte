@@ -11,7 +11,6 @@
 	import { blur } from 'svelte/transition';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import ApiService from '$lib/services/ApiService';
 	import { apiRoutes } from '$lib/config/apiRoutes';
 	import MusicReleasesWidget from '$lib/components/dashboard/widgets/MusicReleasesWidget.svelte';
 	import BookReleasesWidget from '$lib/components/dashboard/widgets/BookReleasesWidget.svelte';
@@ -21,7 +20,7 @@
 
 	const auth = getAuth();
 	const ts = getTranslation();
-	const apiService = new ApiService(auth.getToken());
+	const apiService = auth.apiService;
 
 	let quote = $state<Quote | null>(null);
 	let musicReleases = $state<MusicRelease[]>([]);

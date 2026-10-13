@@ -4,7 +4,7 @@ import type { User, AuthToken, LoginResponse } from '$lib/types/auth';
 
 // The Auth module itself must NOT be mocked — only its service dependencies.
 
-const { api, storage } = vi.hoisted(() => {
+const { api, storage, monitor } = vi.hoisted(() => {
 	const api = {
 		post: vi.fn(),
 		postWithStatus: vi.fn(),
@@ -23,8 +23,21 @@ const { api, storage } = vi.hoisted(() => {
 		get: vi.fn(),
 		set: vi.fn()
 	};
-	return { api, storage };
+	const monitor = {
+		check: null as (() => void) | null,
+		destroy: vi.fn()
+	};
+	return { api, storage, monitor };
 });
+
+vi.mock('$lib/state/SessionMonitor', () => ({
+	SessionMonitor: class FakeSessionMonitor {
+		destroy = monitor.destroy;
+		constructor(check: () => void) {
+			monitor.check = check;
+		}
+	}
+}));
 
 vi.mock('$lib/services/ApiService', () => ({
 	default: class FakeApi {
@@ -324,6 +337,102 @@ describe('Auth store', () => {
 
 			await expect(callValidateSession(auth)).resolves.toBeUndefined();
 			expect(auth.loggedIn).toBe(true);
+		});
+	});
+
+	describe('session expired event', () => {
+		async function loggedInAuth(expiresInMs = 6 * 24 * 3600 * 1000): Promise<Auth> {
+			const expiresAt = new Date(Date.now() + expiresInMs).toISOString();
+			storage.getJson.mockReturnValue({ user: user(), authToken: authToken(expiresAt) });
+			const auth = new Auth();
+			await flushAsync();
+			storage.getJson.mockReturnValue(null);
+			return auth;
+		}
+
+		async function callValidateSession(auth: Auth): Promise<void> {
+			await (auth as unknown as { validateSession: () => Promise<void> }).validateSession();
+		}
+
+		it('fires once when 401 recovery is rejected', async () => {
+			const auth = await loggedInAuth();
+			const handler = vi.fn();
+			auth.setSessionExpiredHandler(handler);
+			api.postWithStatus.mockResolvedValue({ ok: false, status: 401, data: null });
+
+			await auth.recoverFromUnauthorized();
+
+			expect(handler).toHaveBeenCalledTimes(1);
+			expect(auth.loggedIn).toBe(false);
+		});
+
+		it('fires once when the resume check is rejected', async () => {
+			const auth = await loggedInAuth(1000);
+			const handler = vi.fn();
+			auth.setSessionExpiredHandler(handler);
+			api.postWithStatus.mockResolvedValue({ ok: false, status: 403, data: null });
+
+			await callValidateSession(auth);
+
+			expect(handler).toHaveBeenCalledTimes(1);
+			expect(auth.loggedIn).toBe(false);
+		});
+
+		it('does not fire on a transient refresh failure', async () => {
+			const auth = await loggedInAuth(1000);
+			const handler = vi.fn();
+			auth.setSessionExpiredHandler(handler);
+			api.postWithStatus.mockResolvedValue({ ok: false, status: 503, data: null });
+
+			await auth.recoverFromUnauthorized();
+			await callValidateSession(auth);
+
+			expect(handler).not.toHaveBeenCalled();
+		});
+
+		it('does not fire when the refresh request rejects (offline)', async () => {
+			const auth = await loggedInAuth(1000);
+			const handler = vi.fn();
+			auth.setSessionExpiredHandler(handler);
+			api.postWithStatus.mockRejectedValue(new Error('offline'));
+
+			await auth.recoverFromUnauthorized();
+			await callValidateSession(auth);
+
+			expect(handler).not.toHaveBeenCalled();
+		});
+
+		it('does not fire on an explicit logout', async () => {
+			const auth = await loggedInAuth();
+			const handler = vi.fn();
+			auth.setSessionExpiredHandler(handler);
+
+			auth.logout();
+
+			expect(handler).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('session monitor', () => {
+		it('validates the session when the monitor runs its check', async () => {
+			const expiresAt = new Date(Date.now() + 6 * 24 * 3600 * 1000).toISOString();
+			storage.getJson.mockReturnValue({ user: user(), authToken: authToken(expiresAt) });
+			new Auth();
+			await flushAsync();
+			api.get.mockClear();
+
+			monitor.check?.();
+			await flushAsync();
+
+			expect(api.get).toHaveBeenCalledTimes(1);
+		});
+
+		it('destroy() tears the monitor down', () => {
+			const auth = new Auth();
+
+			auth.destroy();
+
+			expect(monitor.destroy).toHaveBeenCalledTimes(1);
 		});
 	});
 

@@ -3,14 +3,13 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onMount } from 'svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import ApiService from '$lib/services/ApiService';
 	import { apiRoutes } from '$lib/config/apiRoutes';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 
 	const ts = getTranslation();
 	const auth = getAuth();
 	const notifications = getUiNotifications();
-	const apiService = new ApiService(auth.getToken());
+	const apiService = auth.apiService;
 
 	let checked = $state<boolean>(false);
 	let isLoading = $state<boolean>(false);

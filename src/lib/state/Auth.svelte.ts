@@ -14,11 +14,11 @@ import type {
 	Passkey
 } from '$lib/types/auth';
 import { IS_NATIVE, PLATFORM } from '$lib/config/platform';
-import { browser } from '$app/environment';
 import { setContext, getContext } from 'svelte';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import ApiService from '$lib/services/ApiService';
 import LocalStorageService from '$lib/services/LocalStorageService';
+import { SessionMonitor } from '$lib/state/SessionMonitor';
 import { SvelteDate, SvelteMap } from 'svelte/reactivity';
 import {
 	formatDate,
@@ -29,13 +29,6 @@ import {
 	formatTimeWithSeconds
 } from '$lib/helpers/DateHelper';
 
-// How often a visible, permanently-open app re-validates its session.
-const SESSION_CHECK_INTERVAL_MS = 60 * 60 * 1000;
-
-// Outcome of a refresh attempt:
-// - refreshed: a new token was obtained.
-// - transient: the server/network failed (5xx, 429, offline) — keep the session.
-// - rejected: the refresh endpoint definitively rejected the token (401/403).
 type RefreshOutcome = 'refreshed' | 'transient' | 'rejected';
 
 export class Auth {
@@ -49,17 +42,14 @@ export class Auth {
 	profileCache = new SvelteMap<string, User>();
 	private refreshInFlight: Promise<RefreshOutcome> | null = null;
 	private recoveryInFlight: Promise<boolean> | null = null;
-	private sessionCheckInterval: ReturnType<typeof setInterval> | null = null;
-	private visibilityHandler: (() => void) | null = null;
-	private onlineHandler: (() => void) | null = null;
+	private sessionMonitor: SessionMonitor;
+	private sessionExpiredHandler: (() => void) | null = null;
 
 	constructor() {
 		this.apiService = new ApiService(null);
-		// ApiService asks back here when any request hits a 401; the handler
-		// adopts another tab's token or refreshes this session, last resort logout.
 		this.apiService.setUnauthorizedHandler(() => this.recoverFromUnauthorized());
 		this.load().then();
-		this.startSessionMonitor();
+		this.sessionMonitor = new SessionMonitor(() => this.validateSession());
 	}
 
 	private async load(): Promise<void> {
@@ -110,8 +100,6 @@ export class Auth {
 		this.user = null;
 		this.authToken = null;
 		this.loggedIn = false;
-		// Every store shares this ApiService instance, so clearing it here makes
-		// sure no request keeps sending the revoked token.
 		this.apiService.updateAuthToken(null);
 	}
 
@@ -143,8 +131,6 @@ export class Auth {
 	}
 
 	async refresh(): Promise<RefreshOutcome> {
-		// Single-flight: concurrent 401 recoveries and the resume check share one
-		// refresh request instead of racing each other with the same token.
 		if (this.refreshInFlight) return this.refreshInFlight;
 
 		this.refreshInFlight = this.performRefresh().finally(() => {
@@ -159,13 +145,10 @@ export class Auth {
 		const res = await this.apiService.postWithStatus(apiRoutes.auth.refresh, {});
 
 		if (!res.ok) {
-			// Only 401/403 means the session is really over. A 5xx/429 (or any
-			// other non-auth status) is a transient backend failure and must not
-			// destroy the stored session — resume/online re-checks will retry.
 			return res.status === 401 || res.status === 403 ? 'rejected' : 'transient';
 		}
 
-		const refresh = res.data?.data as LoginResponse;
+		const refresh = res.data.data as LoginResponse;
 
 		this.user = refresh.user;
 		this.authToken = {
@@ -185,10 +168,19 @@ export class Auth {
 		this.clear();
 	}
 
-	/**
-	 * Recovery ladder for a 401 from a non-auth endpoint, invoked by ApiService.
-	 * Returns true when the request is worth retrying with the (new) token.
-	 */
+	setSessionExpiredHandler(handler: () => void): void {
+		this.sessionExpiredHandler = handler;
+	}
+
+	private expireSession(): void {
+		this.logout();
+		this.sessionExpiredHandler?.();
+	}
+
+	destroy(): void {
+		this.sessionMonitor.destroy();
+	}
+
 	async recoverFromUnauthorized(): Promise<boolean> {
 		if (this.recoveryInFlight) return this.recoveryInFlight;
 
@@ -200,23 +192,20 @@ export class Auth {
 	}
 
 	private async performRecovery(): Promise<boolean> {
-		// (a) Another tab may already have refreshed the persisted session;
-		// adopt its token rather than racing it with our own refresh.
 		if (this.adoptExternalSession()) return true;
 
-		// (b) Refresh this session (single-flight).
-		try {
-			const outcome = await this.refresh();
-			if (outcome === 'refreshed') return true;
-			// (c) Only a definitive auth rejection ends the session; a transient
-			// backend failure keeps it and the resume/online checks retry.
-			if (outcome === 'rejected') this.logout();
-		} catch {
-			// Transient network error while refreshing: keep the session, the
-			// resume/online checks re-validate once the network is back.
-		}
+		const outcome = await this.refreshOrTransient();
+		if (outcome === 'rejected') this.expireSession();
 
-		return false;
+		return outcome === 'refreshed';
+	}
+
+	private async refreshOrTransient(): Promise<RefreshOutcome> {
+		try {
+			return await this.refresh();
+		} catch {
+			return 'transient';
+		}
 	}
 
 	private adoptExternalSession(): boolean {
@@ -236,49 +225,6 @@ export class Auth {
 		return true;
 	}
 
-	private startSessionMonitor(): void {
-		if (!browser || this.visibilityHandler) return;
-
-		this.visibilityHandler = () => {
-			if (document.hidden) {
-				this.stopSessionCheckInterval();
-			} else {
-				this.validateSession();
-				this.startSessionCheckInterval();
-			}
-		};
-
-		this.onlineHandler = () => {
-			this.validateSession();
-		};
-
-		document.addEventListener('visibilitychange', this.visibilityHandler);
-		window.addEventListener('online', this.onlineHandler);
-
-		if (!document.hidden) this.startSessionCheckInterval();
-	}
-
-	private startSessionCheckInterval(): void {
-		this.stopSessionCheckInterval();
-		this.sessionCheckInterval = setInterval(
-			() => this.validateSession(),
-			SESSION_CHECK_INTERVAL_MS
-		);
-	}
-
-	private stopSessionCheckInterval(): void {
-		if (this.sessionCheckInterval !== null) {
-			clearInterval(this.sessionCheckInterval);
-			this.sessionCheckInterval = null;
-		}
-	}
-
-	/**
-	 * Re-validates the session when the app resumes (visibility/online) and on a
-	 * low-frequency interval. The routine case is a local date comparison; only a
-	 * near/expired token triggers a network refresh, followed by a user re-fetch
-	 * so the in-memory profile (incl. the image path) stays current.
-	 */
 	private async validateSession(): Promise<void> {
 		if (!this.loggedIn || !this.authToken) return;
 
@@ -288,21 +234,17 @@ export class Auth {
 			if (expiresAt <= Date.now() || this.shouldRefresh(expiresAt)) {
 				const outcome = await this.refresh();
 
-				// Only a definitive auth rejection ends the session here.
 				if (outcome === 'rejected') {
-					this.logout();
+					this.expireSession();
 					return;
 				}
 
-				// Transient backend failure — leave the session alone, re-check on
-				// the next resume/online event.
 				if (outcome === 'transient') return;
 			}
 
 			await this.loadAdditionalData();
 		} catch {
-			// Offline or a rejected fetch while resuming: transient, never log out.
-			// The `online` event (and the next resume) re-runs this check.
+			// Offline is transient and must never log out; the `online` event re-checks.
 		}
 	}
 

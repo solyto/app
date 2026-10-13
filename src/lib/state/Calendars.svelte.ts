@@ -523,17 +523,14 @@ export class Calendars {
 	}
 
 	async deleteOccurrence(entry: CalendarEvent, occurrenceDate: Date): Promise<boolean> {
-		const occDateStr = occurrenceDate.toISOString();
-		const url = apiRoutes.calendars.deleteOccurrence
-			.replace('%d', entry.calendar_id.toString())
-			.replace('%s', entry.uri)
-			.replace('%s', encodeURIComponent(occDateStr));
-		const res = await fetch(url, {
-			method: 'DELETE',
-			headers: { Authorization: 'Bearer ' + this.auth.getToken(), Accept: 'application/json' }
-		});
-		if (res.ok) await this.loadEvents();
-		return res.ok;
+		const res = await this.apiService.delete(
+			apiRoutes.calendars.deleteOccurrence
+				.replace('%d', entry.calendar_id.toString())
+				.replace('%s', entry.uri),
+			encodeURIComponent(occurrenceDate.toISOString())
+		);
+		if (res) await this.loadEvents();
+		return res;
 	}
 
 	async createCalendar(request: CreateCalendarRequest): Promise<boolean> {
@@ -607,24 +604,16 @@ export class Calendars {
 	}
 
 	async revokeShare(calendarId: number, userId: string): Promise<boolean> {
-		const url = apiRoutes.calendars.revokeShare
-			.replace('%d', calendarId.toString())
-			.replace('%s', userId);
-		const res = await fetch(url, {
-			method: 'DELETE',
-			headers: { Authorization: 'Bearer ' + this.auth.getToken(), Accept: 'application/json' }
-		});
-		return res.ok;
+		return this.apiService.delete(
+			apiRoutes.calendars.revokeShare.replace('%d', calendarId.toString()),
+			userId
+		);
 	}
 
 	async unsubscribeFromCalendar(calendarId: number): Promise<boolean> {
-		const url = apiRoutes.calendars.unsubscribe.replace('%d', calendarId.toString());
-		const res = await fetch(url, {
-			method: 'DELETE',
-			headers: { Authorization: 'Bearer ' + this.auth.getToken(), Accept: 'application/json' }
-		});
-		if (res.ok) await this.loadCalendars();
-		return res.ok;
+		const res = await this.apiService.delete(apiRoutes.calendars.unsubscribe, calendarId);
+		if (res) await this.loadCalendars();
+		return res;
 	}
 
 	async acceptInvite(token: string): Promise<boolean> {

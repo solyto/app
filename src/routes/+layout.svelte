@@ -11,7 +11,7 @@
 	import { setLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getKeyManager, setKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getUiNotifications, setUiNotifications } from '$lib/state/UiNotifications.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { afterNavigate, goto } from '$app/navigation';
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
@@ -61,26 +61,8 @@
 
 	let innerHeight = $state<number>(0);
 
-	// The onMount guard below only runs once. A session that expires while the app
-	// stays open (resume check / 401 recovery) flips loggedIn to false mid-session;
-	// react to that transition so the user is not left on a dead page.
-	let wasLoggedIn = false;
-
-	$effect(() => {
-		if (!browser) return;
-
-		if (auth.loggedIn) {
-			wasLoggedIn = true;
-			return;
-		}
-
-		if (isAuthRoute() || isSetupRoute()) {
-			wasLoggedIn = false;
-			return;
-		}
-
-		if (!wasLoggedIn) return;
-		wasLoggedIn = false;
+	function handleSessionExpired(): void {
+		if (isAuthRoute() || isSetupRoute()) return;
 
 		notifications.error(ts.get.auth.session_expired);
 
@@ -89,7 +71,9 @@
 		} else {
 			goto(resolve(urls.login));
 		}
-	});
+	}
+
+	auth.setSessionExpiredHandler(handleSessionExpired);
 
 	onMount(async () => {
 		theme.load();
@@ -108,6 +92,8 @@
 
 		ts.loadLanguage();
 	});
+
+	onDestroy(() => auth.destroy());
 
 	afterNavigate(() => {
 		const feature = getPageFeature();

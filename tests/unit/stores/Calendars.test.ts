@@ -5,6 +5,7 @@ import { todo } from '../helpers/factories';
 import { SvelteDate } from 'svelte/reactivity';
 import { getWeekNumber } from '$lib/helpers/DateHelper';
 import type { Calendar, CalendarEvent } from '$lib/types/calendar';
+import { apiRoutes } from '$lib/config/apiRoutes';
 
 function event(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
 	return {
@@ -560,6 +561,61 @@ describe('Calendars store', () => {
 			c.cancelPendingMove();
 			expect(c.pendingMove).toBeNull();
 			expect(api.update).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('calendar deletes go through the shared ApiService', () => {
+		it('deleteOccurrence deletes the encoded occurrence and reloads events', async () => {
+			api.delete.mockResolvedValue(true);
+			api.list.mockResolvedValue({ data: [] });
+			const c = new Calendars();
+			const occurrence = new Date(Date.UTC(2026, 7, 10, 10, 0));
+
+			const ok = await c.deleteOccurrence(event(), occurrence);
+
+			expect(ok).toBe(true);
+			expect(api.delete).toHaveBeenCalledWith(
+				apiRoutes.calendars.deleteOccurrence.replace('%d', '1').replace('%s', 'event-1'),
+				encodeURIComponent('2026-08-10T10:00:00.000Z')
+			);
+			expect(api.list).toHaveBeenCalledWith(expect.stringContaining('/calendars/events/'));
+		});
+
+		it('deleteOccurrence does not reload events on failure', async () => {
+			api.delete.mockResolvedValue(false);
+			const c = new Calendars();
+
+			await expect(c.deleteOccurrence(event(), new Date())).resolves.toBe(false);
+			expect(api.list).not.toHaveBeenCalled();
+		});
+
+		it('revokeShare deletes the share of the given user', async () => {
+			api.delete.mockResolvedValue(true);
+			const c = new Calendars();
+
+			await expect(c.revokeShare(3, 'user-9')).resolves.toBe(true);
+			expect(api.delete).toHaveBeenCalledWith(
+				apiRoutes.calendars.revokeShare.replace('%d', '3'),
+				'user-9'
+			);
+		});
+
+		it('unsubscribeFromCalendar unsubscribes and reloads calendars', async () => {
+			api.delete.mockResolvedValue(true);
+			api.list.mockResolvedValue({ data: [] });
+			const c = new Calendars();
+
+			await expect(c.unsubscribeFromCalendar(3)).resolves.toBe(true);
+			expect(api.delete).toHaveBeenCalledWith(apiRoutes.calendars.unsubscribe, 3);
+			expect(api.list).toHaveBeenCalledWith(apiRoutes.calendars.listCalendars);
+		});
+
+		it('unsubscribeFromCalendar does not reload calendars on failure', async () => {
+			api.delete.mockResolvedValue(false);
+			const c = new Calendars();
+
+			await expect(c.unsubscribeFromCalendar(3)).resolves.toBe(false);
+			expect(api.list).not.toHaveBeenCalled();
 		});
 	});
 });
