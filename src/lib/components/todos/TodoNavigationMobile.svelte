@@ -58,6 +58,11 @@
 		}
 		close();
 	}
+
+	function currentSection(): TodoNavigationSection | undefined {
+		const header = sectionHeaders.find((h) => h.key === current)?.label;
+		return sections.find((s: TodoNavigationSection) => s.header === header);
+	}
 </script>
 
 <HamburgerButton onclick={() => (open = true)} top={6} />
@@ -183,7 +188,6 @@
 							{/if}
 						</div>
 					{:else}
-						{@const section = sections.find((s: TodoNavigationSection) => s.header === sectionHeaders.find((h) => h.key === current)?.label)}
 						<div class="flex shrink-0 items-center justify-between border-b border-c-neutral-2 p-4 dark:border-s-dark-3">
 							<div class="flex items-center gap-3">
 								<button
@@ -192,21 +196,19 @@
 								>
 									<IconArrowLeft size={22} />
 								</button>
-								<span class="text-xl font-semibold">{section?.header ?? current}</span>
+								<span class="text-xl font-semibold">{currentSection()?.header ?? current}</span>
 							</div>
 							<CloseButton onClick={close} inModal={false} />
 						</div>
 						<div class="flex-1 overflow-y-auto">
-							{#if section}
-								{#each section.items as item (item.filter ? item.filter.type + '-' + item.filter.value : item.label)}
-									<button
-										class="flex w-full cursor-pointer items-center border-b border-c-neutral-1 px-4 py-4 text-left hover:bg-c-neutral-1 dark:border-s-dark-3 dark:hover:bg-s-dark-3 {item.filter && todos.isFilterActive(item.filter) ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}"
-										onclick={() => { if (item.filter) applyFilter(item.filter); }}
-									>
-										<span class="text-base">{item.label}</span>
-									</button>
-								{/each}
-							{/if}
+							{#each currentSection()?.items ?? [] as item (item.filter ? item.filter.type + '-' + item.filter.value : item.label)}
+								<button
+									class="flex w-full cursor-pointer items-center border-b border-c-neutral-1 px-4 py-4 text-left hover:bg-c-neutral-1 dark:border-s-dark-3 dark:hover:bg-s-dark-3 {item.filter && todos.isFilterActive(item.filter) ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}"
+									onclick={() => { if (item.filter) applyFilter(item.filter); }}
+								>
+									<span class="text-base">{item.label}</span>
+								</button>
+							{/each}
 						</div>
 					{/if}
 				</div>

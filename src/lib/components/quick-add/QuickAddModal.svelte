@@ -23,6 +23,8 @@
 	import IconRss from '@lucide/svelte/icons/rss';
 	import IconClipboard from '@lucide/svelte/icons/clipboard';
 	import { type QuickAddContentType } from '$lib/types/quick_add';
+	import QuickAddTypeButton from '$lib/components/quick-add/QuickAddTypeButton.svelte';
+	import QuickAddDetectedType from '$lib/components/quick-add/QuickAddDetectedType.svelte';
 
 	const quickAdd = getQuickAdd();
 	const ts = getTranslation();
@@ -121,32 +123,21 @@
 			<p class="text-lg font-bold">{ts.get.quick_add.select_type}</p>
 			<div class="grid grid-cols-3 gap-2 max-md:grid-cols-2">
 				{#each availableTypes() as type (type)}
-					{@const Icon = TYPE_ICONS[type]}
-					<button
-						class="group flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border-1 border-c-neutral-2 bg-c-bg-elevated px-3 py-3.5 text-c-heading transition-colors hover:border-c-btn hover:shadow-sm dark:border-s-dark-3 dark:text-c-primary"
-						onclick={() => quickAdd.selectType(type)}
-					>
-						<Icon class="size-6 text-c-neutral-5 transition-colors group-hover:text-c-btn" />
-						<span class="text-sm font-bold">{ts.get.quick_add.content_types[type]}</span>
-					</button>
+					<QuickAddTypeButton
+						label={ts.get.quick_add.content_types[type]}
+						icon={TYPE_ICONS[type]}
+						onClick={() => quickAdd.selectType(type)}
+					/>
 				{/each}
 			</div>
 		</div>
 	{:else if quickAdd.needsConfirmation && quickAdd.detectedType}
-		{@const DetectedIcon = TYPE_ICONS[quickAdd.detectedType]}
 		<div class="flex flex-col gap-5">
-			<div class="flex w-full items-center gap-4 rounded-xl border-1 border-c-neutral-2 p-4 dark:border-s-dark-3">
-				<DetectedIcon class="h-8 w-8 shrink-0 text-c-neutral-5" />
-				<div class="flex flex-1 flex-col gap-1.5">
-					<span class="text-lg font-bold">{ts.get.quick_add.content_types[quickAdd.detectedType]}</span>
-					<div class="flex items-center gap-2">
-						<div class="h-1.5 flex-1 overflow-hidden rounded-full bg-c-neutral-2 dark:bg-s-dark-3">
-							<div class="h-full rounded-full bg-c-btn transition-all" style="width: {confidencePercent()}%"></div>
-						</div>
-						<span class="text-xs text-c-neutral-5">{confidencePercent()}%</span>
-					</div>
-				</div>
-			</div>
+			<QuickAddDetectedType
+				label={ts.get.quick_add.content_types[quickAdd.detectedType]}
+				icon={TYPE_ICONS[quickAdd.detectedType]}
+				confidencePercent={confidencePercent()}
+			/>
 			{#if metadataEntries().length > 0}
 				<div class="flex flex-col gap-2">
 					{#each metadataEntries() as [key, value] (key)}

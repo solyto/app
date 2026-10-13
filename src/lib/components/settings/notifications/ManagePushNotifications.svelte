@@ -25,7 +25,6 @@
 
 	async function checkPushSubscription() {
 		try {
-			// Only check subscription if we have permission
 			if (Notification.permission !== 'granted') {
 				checked = false;
 				return;
@@ -57,7 +56,6 @@
 		} catch (error) {
 			console.error('Push notification error:', error);
 			notifications.error(ts.get.settings.push_notification_error);
-			// checked stays at its original value
 		} finally {
 			isLoading = false;
 		}
@@ -82,10 +80,8 @@
 			applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
 		});
 
-		// Convert subscription to JSON format that matches Laravel expectations
 		const subscriptionData = sub.toJSON();
 
-		// Send subscription to backend
 		const res = await apiService.create(
 			apiRoutes.notifications.push.subscribe,
 			subscriptionData
@@ -103,14 +99,12 @@
 		if (sub) {
 			await sub.unsubscribe();
 
-			// Send endpoint to backend for deletion
 			await apiService.create(apiRoutes.notifications.push.unsubscribe, {
 				endpoint: sub.endpoint
 			});
 		}
 	}
 
-	// Helper function to convert VAPID key
 	function urlBase64ToUint8Array(base64String: string) {
 		const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
 		const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');

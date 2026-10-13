@@ -49,13 +49,10 @@
 	<div
 		class="nav-mobile gradient-right flex h-full w-full flex-row items-center justify-center rounded-md p-1 text-c-neutral-8 drop-shadow-xl dark:text-c-neutral-2"
 	>
-		{#each nav.mobileOrder.slice(0, mobileVisibleCount) as slug (slug)}
-			{@const item = navItems[slug]}
-			{#if item.featureFlag === null || nav.features[item.featureFlag]}
-				<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} dataTour={item.dataTour} onSelect={select}>
-					<NavEntryIcon type={item.iconType} />
-				</NavEntry>
-			{/if}
+		{#each nav.enabledItems(nav.mobileOrder.slice(0, mobileVisibleCount)) as item (item.slug)}
+			<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} dataTour={item.dataTour} onSelect={select}>
+				<NavEntryIcon type={item.iconType} />
+			</NavEntry>
 		{/each}
 		<div
 			class="relative flex h-full items-center justify-center rounded-sm"
@@ -91,13 +88,10 @@
 					style="bottom:80px; right:15px;"
 					transition:fly={{ x: 50, duration: 200 }}
 				>
-					{#each nav.mobileOrder.slice(mobileVisibleCount) as slug (slug)}
-						{@const item = navItems[slug]}
-						{#if item.featureFlag === null || nav.features[item.featureFlag]}
-							<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} onSelect={select}>
-								<NavEntryIcon type={item.iconType} />
-							</NavEntry>
-						{/if}
+					{#each nav.enabledItems(nav.mobileOrder.slice(mobileVisibleCount)) as item (item.slug)}
+						<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} onSelect={select}>
+							<NavEntryIcon type={item.iconType} />
+						</NavEntry>
 					{/each}
 					<NavEntry
 						slug="settings"

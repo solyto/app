@@ -20,7 +20,9 @@ independent of the chain and of each other; 10–13 in any order.
 - [ ] `calendars/EventEdit.svelte:90`: remove leftover `console.log`.
 - [ ] `keyHandlers = $state<…>({…})` → plain `let` in 35 components
       (rule 3.6; target shape in 9.1).
-- [ ] `{@const Icon = x.icon}` → `<x.icon />` wherever it appears (rule 1.5).
+- [x] `{@const Icon = x.icon}` → `<x.icon />` wherever it appears (rule 1.5).
+      Done in job 13. Indexed lookups (`TYPE_ICONS[type]`, `sportIcons[id]`)
+      pass the icon to a child component as a prop (`icon: Icon`).
 - [ ] 7 uses of `$derived(() => …)` → `$derived.by` or a plain function
       (`time-tracking/DashboardView`, `time-tracking/StatisticsView`, …).
 - [ ] 26 stores with field-initialiser collaborators (`auth = getAuth();`,
@@ -105,7 +107,7 @@ independent of the chain and of each other; 10–13 in any order.
 - [ ] Calendar drag feature: `state/CalendarDrag.svelte.ts` store instead of the
       module-level `$state`; `use:draggableEvent` action for the pointer wiring;
       `Object.assign(this, INITIAL)` reset (rules 11.1–11.3).
-- [ ] `libraries/shared/SpineView.svelte` and `LibrarySearchModal.svelte`:
+- [x] `libraries/shared/SpineView.svelte` and `LibrarySearchModal.svelte`:
       the `@const` stacks become child components (rule 1.5).
 - [ ] `SvelteDate` cleanup: 16 importing files; keep it only where a setter is
       called on the value (14.1).
@@ -125,7 +127,9 @@ independent of the chain and of each other; 10–13 in any order.
       `services/ApiService.ts` (13), `state/Notes.svelte.ts` (6),
       `settings/notifications/ManagePushNotifications.svelte` (6),
       `calendars/dnd/CalendarDragState.svelte.ts` (6). `MusicTheory/*` is a
-      separate question (domain math).
+      separate question (domain math). Partly done (job 13): `Notes` and
+      `ManagePushNotifications` are through. `Auth` and `ApiService` are left
+      to backlog 09, `CalendarDragState` to backlog 06.
 
 ## Found during the ESLint pass (2026-10-13)
 

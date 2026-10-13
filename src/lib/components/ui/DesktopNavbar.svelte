@@ -5,7 +5,7 @@
 	import logo from '$lib/assets/logo_cut.png';
 
 	import { urls } from '$lib/config/urls';
-	import { navItems, desktopOrder } from '$lib/config/navigation';
+	import { desktopOrder } from '$lib/config/navigation';
 	import { slide } from 'svelte/transition';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import UserNotifications from '$lib/components/ui/user-notifications/UserNotifications.svelte';
@@ -28,15 +28,12 @@
 		</div>
 
 		<div class="flex flex-1 flex-col items-center justify-center">
-			{#each desktopOrder as slug (slug)}
-				{@const item = navItems[slug]}
-				{#if item.featureFlag === null || nav.features[item.featureFlag]}
-					<div data-tour={item.dataTour} class="w-full">
-						<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug}>
-							<NavEntryIcon type={item.iconType} />
-						</NavEntry>
-					</div>
-				{/if}
+			{#each nav.enabledItems(desktopOrder) as item (item.slug)}
+				<div data-tour={item.dataTour} class="w-full">
+					<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug}>
+						<NavEntryIcon type={item.iconType} />
+					</NavEntry>
+				</div>
 			{/each}
 		</div>
 

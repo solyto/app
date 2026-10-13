@@ -2,7 +2,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getThemeState } from '$lib/state/Theme.svelte';
 	import SettingsSection from '$lib/components/settings/SettingsSection.svelte';
-	import { themes } from '$lib/config/themes';
+	import { themes, type Theme } from '$lib/config/themes';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 
 	const ts = getTranslation();
@@ -13,16 +13,19 @@
 		{ value: 'light' as const, label: ts.get.settings.appearance_light },
 		{ value: 'dark' as const, label: ts.get.settings.appearance_dark }
 	]);
+
+	function isActive(theme: Theme): boolean {
+		return themeState.theme.id === theme.id;
+	}
 </script>
 
 <div class="flex flex-col gap-6">
 	<SettingsSection label={ts.get.settings.theme}>
 		<div class="mt-2 flex flex-wrap items-stretch gap-3">
 			{#each themes as t (t.id)}
-				{@const active = themeState.theme.id === t.id}
 				<button
 					class="cursor-pointer overflow-hidden rounded-lg border-2 transition-all"
-					style="border-color: {active ? t.previewAccent : 'transparent'};"
+					style="border-color: {isActive(t) ? t.previewAccent : 'transparent'};"
 					onclick={() => themeState.setTheme(t)}
 				>
 					<div

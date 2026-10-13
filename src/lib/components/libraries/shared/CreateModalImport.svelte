@@ -40,8 +40,7 @@
 						{#if typeof entry.icon === 'string'}
 							<img src={entry.icon} alt={entry.label} class="size-4" />
 						{:else}
-							{@const Icon = entry.icon}
-							<Icon class="size-4" />
+							<entry.icon class="size-4" />
 						{/if}
 					</div>
 					<span>{entry.label}</span>

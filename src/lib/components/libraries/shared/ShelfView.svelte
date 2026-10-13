@@ -99,6 +99,10 @@
 		].join('; ');
 	}
 
+	function isOnStage(index: number): boolean {
+		return Math.abs(index - activeIndex) <= 3;
+	}
+
 	function coverUrl(entry: ShelfEntry): string {
 		return `${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${entry.cover}`;
 	}
@@ -113,14 +117,12 @@
 		ontouchend={onTouchEnd}
 	>
 		{#each entries as entry, index (entry.id)}
-			{@const offset = index - activeIndex}
-			{@const abs = Math.abs(offset)}
-			{#if abs <= 3}
+			{#if isOnStage(index)}
 				<button
 					class="absolute top-1/2 left-1/2 -translate-y-1/2 cursor-pointer"
 					style={itemStyle(index)}
 					onclick={() => handleClick(index)}
-					tabindex={offset === 0 ? 0 : -1}
+					tabindex={index === activeIndex ? 0 : -1}
 					aria-label={entry.title}
 				>
 					<div
@@ -129,7 +131,7 @@
 						class:h-56={isSquare}
 						class:w-44={!isSquare}
 						class:h-64={!isSquare}
-						style={offset === 0
+						style={index === activeIndex
 							? 'box-shadow: 0 25px 60px rgba(0,0,0,0.45), 0 10px 20px rgba(0,0,0,0.3)'
 							: 'box-shadow: 0 8px 24px rgba(0,0,0,0.25)'}
 					>

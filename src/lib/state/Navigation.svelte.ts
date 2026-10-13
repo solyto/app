@@ -1,7 +1,7 @@
 import { getContext, setContext } from 'svelte';
 import { getAuth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
-import type { FeatureType, FeatureUsage } from '$lib/config/navigation';
+import type { FeatureType, FeatureUsage, NavItem } from '$lib/config/navigation';
 import { env } from '$env/dynamic/public';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { mobileDefaultOrder, mobileVisibleCount, navItems } from '$lib/config/navigation';
@@ -46,6 +46,12 @@ export class Navigation {
 	addUsage(feature: FeatureType): void {
 		this.usage[feature] = (this.usage[feature] ?? 0) + 1;
 		this.saveUsage();
+	}
+
+	enabledItems(slugs: string[]): NavItem[] {
+		return slugs
+			.map((slug) => navItems[slug])
+			.filter((item) => item.featureFlag === null || this.features[item.featureFlag]);
 	}
 
 	async loadMobileOrder(): Promise<void> {

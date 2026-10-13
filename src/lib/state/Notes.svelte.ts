@@ -316,7 +316,6 @@ export class NotesSvelte {
 		}
 
 		if (!res) {
-			// Keep the modal and the user's input intact (see create()).
 			this.notifications.error(this.ts.get.notes.create_folder_error);
 			this.rightClickMenuOpen = false;
 			return null;
@@ -339,9 +338,8 @@ export class NotesSvelte {
 	async saveContent(): Promise<boolean> {
 		if (this.activeNote === null) return false;
 
-		// A journal day opens as a draft; persist it only once it has content,
-		// so browsing days never creates empty entries. Creating is two calls
-		// because the create contract does not accept content.
+		// A journal draft is persisted only once it has content. Creating takes
+		// two calls because the create contract does not accept content.
 		if (this.isJournalDraft(this.activeNote)) {
 			if (!this.journalService.hasContent(this.activeNote.content)) return true;
 

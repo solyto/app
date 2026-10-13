@@ -111,10 +111,9 @@
 	>
 		<div class="flex flex-col gap-16 pb-24">
 			{#each sections as section (section.id)}
-				{@const Section = section.component}
 				<section id={sectionId(section.id)} class="relative scroll-mt-24 lg:scroll-mt-8">
 					<Heading title={section.title} my={0} mb={6} />
-					<Section />
+					<section.component />
 				</section>
 			{/each}
 		</div>

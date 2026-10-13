@@ -58,6 +58,10 @@
 		);
 	}
 
+	function categoryTextColor(cat: TimeTrackingCategory): string {
+		return getReadableTextColor(categoryColor(cat));
+	}
+
 	$effect(() => {
 		if (tt.loaded && !project) {
 			goto(resolve(urls.timeTracking));
@@ -131,10 +135,12 @@
 						{#if project.categories.length > 0}
 							<div class="mt-1 flex flex-row flex-wrap gap-1">
 								{#each project.categories as cat (cat.id)}
-									{@const color = categoryColor(cat)}
 									<span
 										class="rounded-sm px-1.5 py-0.5 text-xs"
-										style="background-color: {color}; color: {getReadableTextColor(color)}"
+										style="
+											background-color: {categoryColor(cat)};
+											color: {categoryTextColor(cat)};
+										"
 									>
 										{cat.title}
 									</span>

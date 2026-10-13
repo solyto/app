@@ -26,8 +26,16 @@
 	// the current month and future days stay disabled.
 	let canGoNext = $derived(viewYear * 12 + viewMonth < currentMonthIndex);
 
-	function isFuture(key: string): boolean {
-		return key > todayKey;
+	function isFuture(date: Date): boolean {
+		return getUrlFormat(date) > todayKey;
+	}
+
+	function isSelected(date: Date): boolean {
+		return getUrlFormat(date) === selectedKey;
+	}
+
+	function isMarked(date: Date): boolean {
+		return markedDates.includes(getUrlFormat(date));
 	}
 
 	function previousMonth(): void {
@@ -89,21 +97,20 @@
 		{/each}
 
 		{#each days as day (getUrlFormat(day.date))}
-			{@const key = getUrlFormat(day.date)}
 			{#if day.is_grayed_out}
 				<span></span>
 			{:else}
 				<button
 					type="button"
-					disabled={isFuture(key)}
+					disabled={isFuture(day.date)}
 					onclick={() => onSelect(day.date)}
 					class="relative flex h-8 w-8 items-center justify-center justify-self-center rounded-full text-sm transition-all hover:bg-c-neutral-1 disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-s-dark-3"
-					class:bg-c-primary={key === selectedKey}
-					class:text-white={key === selectedKey}
-					class:font-bold={key === selectedKey}
+					class:bg-c-primary={isSelected(day.date)}
+					class:text-white={isSelected(day.date)}
+					class:font-bold={isSelected(day.date)}
 				>
 					{day.number}
-					{#if markedDates.includes(key)}
+					{#if isMarked(day.date)}
 						<span
 							class="absolute bottom-0.5 h-1 w-1 rounded-full bg-c-action"
 							aria-hidden="true"
