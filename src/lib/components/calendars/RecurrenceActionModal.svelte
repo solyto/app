@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { scale, fade, blur } from 'svelte/transition';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
@@ -16,7 +16,7 @@
 	}>();
 
 	let visible = $state<boolean>(false);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Escape: null };
 
 	onMount(() => {
 		setTimeout(() => {

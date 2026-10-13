@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onDestroy } from 'svelte';
 
 	const keyManager = getKeyManager();
@@ -24,7 +24,7 @@
 	);
 
 	let menu = $state<boolean>(false);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null };
 
 	function onOpen(): void {
 		menu = true;

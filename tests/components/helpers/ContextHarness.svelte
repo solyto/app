@@ -2,7 +2,7 @@
 	import type { AnyComponent } from './context';
 	import { setAuth } from '$lib/state/Auth.svelte';
 	import { setTranslation } from '$lib/state/Translation.svelte';
-	import { setKeyManager } from '$lib/KeyManager.svelte';
+	import { setKeyManager } from '$lib/state/KeyManager.svelte';
 	import { setTodos } from '$lib/state/Todos.svelte';
 	import { setLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { setUiNotifications } from '$lib/state/UiNotifications.svelte';

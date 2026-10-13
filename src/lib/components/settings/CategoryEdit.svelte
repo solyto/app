@@ -5,7 +5,7 @@
 	import IconPen from '@lucide/svelte/icons/pen';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
@@ -20,7 +20,7 @@
 	let editing = $state<boolean>(false);
 	let title = $state<string>('');
 	let input = $state<HTMLInputElement | null>(null);
-	let keyHandlers = $state<Record<string, string | null>>({ Enter: null, Escape: null });
+	let keyHandlers: Record<string, string | null> = { Enter: null, Escape: null };
 
 	async function onDelete(category: TodoCategory): Promise<void> {
 		loadingIndicator.start();

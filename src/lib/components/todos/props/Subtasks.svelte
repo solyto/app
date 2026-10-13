@@ -3,7 +3,7 @@
 	import { onDestroy, tick } from 'svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Subtask from '$lib/components/todos/props/Subtask.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
@@ -22,7 +22,7 @@
 	let addSubtaskVisible = $state<boolean>(false);
 	let subtaskInput = $state<HTMLInputElement | null>(null);
 	let subtaskValue = $state<string>('');
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 

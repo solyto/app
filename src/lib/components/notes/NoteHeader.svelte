@@ -5,7 +5,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import NoteTags from '$lib/components/notes/NoteTags.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onDestroy, onMount, tick } from 'svelte';
 	import IconStar from '@lucide/svelte/icons/star';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
@@ -28,11 +28,11 @@
 	let titleInput = $state<HTMLInputElement | null>(null);
 	let titleValue = $state<string>(notes.activeNote!.title);
 	let lastSaved = $state<Date | null>(null);
-	let keyHandlers = $state<{ [key: string]: string | null }>({
+	let keyHandlers: { [key: string]: string | null } = {
 		CtrlS: null,
 		Enter: null,
 		Escape: null
-	});
+	};
 
 	let isDraft = $derived(notes.isJournalDraft(notes.activeNote));
 

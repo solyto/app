@@ -3,7 +3,7 @@
 	import IconSearch from '@lucide/svelte/icons/search';
 	import IconCircleX from '@lucide/svelte/icons/circle-x';
 	import { onDestroy, onMount, tick } from 'svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import type { Library } from '$lib/types/library';
 
 	const keyManager = getKeyManager();
@@ -13,7 +13,7 @@
 	let inputExpanded = $state<boolean>(false);
 	let searchInput = $state<HTMLInputElement | null>(null);
 	let searchTerm = $state<string>('');
-	let keyHandlers = $state<{ [key: string]: string | null }>({ f: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { f: null, Escape: null };
 
 	onMount(
 		() =>

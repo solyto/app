@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { getAuth } from '$lib/state/Auth.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import MissingCover from '$lib/components/libraries/shared/MissingCover.svelte';
 	import type { Library } from '$lib/types/library';
 	import type { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
@@ -23,6 +24,7 @@
 	}
 
 	const auth = getAuth();
+	const keyManager = getKeyManager();
 	let { library } = $props<{ library: Library }>();
 
 	let entries = $derived(library.filteredEntries as ShelfEntry[]);
@@ -59,11 +61,6 @@
 		}
 	}
 
-	function onKeydown(e: KeyboardEvent) {
-		if (e.key === 'ArrowLeft') navigate(-1);
-		else if (e.key === 'ArrowRight') navigate(1);
-	}
-
 	function onTouchStart(e: TouchEvent) {
 		touchStartX = e.touches[0].clientX;
 	}
@@ -73,8 +70,16 @@
 		if (Math.abs(diff) > 50) navigate(diff > 0 ? 1 : -1);
 	}
 
-	onMount(() => window.addEventListener('keydown', onKeydown));
-	onDestroy(() => window.removeEventListener('keydown', onKeydown));
+	let keyHandlers: { [key: string]: string | null } = {
+		ArrowLeft: keyManager.registerKeyDown('ArrowLeft', () => navigate(-1), {
+			preventDefault: false
+		}),
+		ArrowRight: keyManager.registerKeyDown('ArrowRight', () => navigate(1), {
+			preventDefault: false
+		})
+	};
+
+	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 
 	function itemStyle(index: number): string {
 		const offset = index - activeIndex;

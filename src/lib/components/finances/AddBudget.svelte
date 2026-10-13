@@ -3,7 +3,7 @@
 	import { onDestroy, tick } from 'svelte';
 	import { getFinances } from '$lib/state/Finances.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import type { BudgetType, CreateBudgetRequest } from '$lib/types/finance';
 	import IconPlus from '@lucide/svelte/icons/plus';
@@ -24,7 +24,7 @@
 	let titleValue = $state<string>('');
 	let valueInput = $state<HTMLInputElement | null>(null);
 	let valueValue = $state<number | null>(null);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
 	async function toggleForm() {
 		formOpen = !formOpen;

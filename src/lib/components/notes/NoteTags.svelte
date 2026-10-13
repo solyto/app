@@ -3,7 +3,7 @@
 	import TagFlexList from '$lib/components/tags/TagFlexList.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { onDestroy, tick } from 'svelte';
 	import { getNotes } from '$lib/state/Notes.svelte';
@@ -19,7 +19,7 @@
 	let addTagVisible = $state<boolean>(false);
 	let addTagInput = $state<HTMLInputElement | null>(null);
 	let addTagName = $state<string>('');
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
 	async function toggleAddTags(): Promise<void> {
 		addTagVisible = !addTagVisible;

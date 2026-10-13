@@ -11,7 +11,7 @@
 	import { API_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { onDestroy, tick } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { nl2br } from '$lib/helpers/FormatHelper';
 	import DOMPurify from 'dompurify';
 	import Author from '$lib/components/dev-requests/Author.svelte';
@@ -41,11 +41,11 @@
 	let descriptionValue = $state<string>(entry.description);
 	let changeTitle = $state<boolean>(false);
 	let changeDescription = $state<boolean>(false);
-	let keyHandlers = $state<{ [key: string]: string | null }>({
+	let keyHandlers: { [key: string]: string | null } = {
 		Enter: null,
 		EnterNewLine: null,
 		Escape: null
-	});
+	};
 
 	async function toggleChange(toggleType: 'title' | 'description'): Promise<void> {
 		if (toggleType === 'title') {

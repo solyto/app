@@ -9,7 +9,7 @@
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onDestroy, tick } from 'svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
@@ -40,7 +40,7 @@
 	let titleValue = $state<string>('');
 	let urlValue = $state<string>('');
 	let titleInput = $state<HTMLInputElement | null>(null);
-	let keyHandlers = $state<{ Enter: string | null; Escape: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { Enter: string | null; Escape: string | null } = { Enter: null, Escape: null };
 
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 

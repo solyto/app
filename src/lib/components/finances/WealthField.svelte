@@ -2,7 +2,7 @@
 	import type { WealthField } from '$lib/types/finance';
 	import NumberInput from '$lib/components/forms/NumberInput.svelte';
 	import { onDestroy, tick } from 'svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
 	import IconTrash from '@lucide/svelte/icons/trash-2';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -20,7 +20,7 @@
 	let formOpen = $state<boolean>(false);
 	let valueInput = $state<HTMLInputElement | null>(null);
 	let valueValue = $state<number>(wealth.currentValue ? wealth.currentValue.value : 0);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
 	async function toggleForm() {
 		formOpen = !formOpen;

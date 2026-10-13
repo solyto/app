@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onMount, onDestroy } from 'svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
@@ -25,7 +25,7 @@
 	let userInput = $state<string>('');
 	let input = $state<HTMLInputElement | null>(null);
 	let autocompleteOpen = $state<boolean>(false);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
 	function getDueDateSuggestions(): { label: string; value: string }[] {
 		const today = new Date();

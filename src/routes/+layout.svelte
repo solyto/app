@@ -9,7 +9,7 @@
 	import { setAuth, getAuth } from '$lib/state/Auth.svelte';
 	import { getTranslation, setTranslation } from '$lib/state/Translation.svelte';
 	import { setLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getKeyManager, setKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager, setKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getUiNotifications, setUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { onMount } from 'svelte';
 	import { afterNavigate, goto } from '$app/navigation';

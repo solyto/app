@@ -15,6 +15,8 @@ export class KeyManager {
 		Enter: KeyDownHandler[];
 		Escape: KeyDownHandler[];
 		Space: KeyDownHandler[];
+		ArrowLeft: KeyDownHandler[];
+		ArrowRight: KeyDownHandler[];
 		e: KeyDownHandler[];
 		f: KeyDownHandler[];
 		s: KeyDownHandler[];
@@ -24,6 +26,8 @@ export class KeyManager {
 		Enter: [],
 		Escape: [],
 		Space: [],
+		ArrowLeft: [],
+		ArrowRight: [],
 		e: [],
 		f: [],
 		s: [],
@@ -39,7 +43,7 @@ export class KeyManager {
 		Shift: false,
 		Alt: false
 	});
-	primaryKeys: PrimaryKey[] = ['Enter', 'Escape', 'Space'];
+	primaryKeys: PrimaryKey[] = ['Enter', 'Escape', 'Space', 'ArrowLeft', 'ArrowRight'];
 	characterKeys: CharacterKey[] = ['e', 'f', 's', 'n'];
 	helperKeys: HelperKey[] = ['Shift', 'Alt', 'Control'];
 	functionKeys: FunctionKey[] = ['F1'];

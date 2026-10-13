@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getQuickAdd } from '$lib/state/QuickAdd.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onDestroy, onMount, tick } from 'svelte';
 	import IconLink from '@lucide/svelte/icons/link';
 	import IconArrowLeft from '@lucide/svelte/icons/arrow-left';
@@ -29,7 +29,7 @@
 	const keyManager = getKeyManager();
 	const viewPoint = getViewPoint();
 
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Escape: null, Enter: null });
+	let keyHandlers: { [key: string]: string | null } = { Escape: null, Enter: null };
 	let contentInput: HTMLInputElement | null = $state(null);
 	let isMobile = $state<boolean | null>(null);
 

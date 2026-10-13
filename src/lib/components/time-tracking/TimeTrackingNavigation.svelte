@@ -13,7 +13,7 @@
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onDestroy } from 'svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import { urls } from '$lib/config/urls';

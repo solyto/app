@@ -5,7 +5,7 @@
 	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
 	import IconSearch from '@lucide/svelte/icons/search';
 	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onDestroy, onMount, tick } from 'svelte';
 	import type { Component, Snippet } from 'svelte';
@@ -46,7 +46,7 @@
 	let results = $state<(NormalizedSearchResult[] | null)[]>([]);
 	let searched = $state(false);
 	let importingId = $state<string | null>(null);
-	let keyHandlers = $state<{ Enter: string | null; Escape: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { Enter: string | null; Escape: string | null } = { Enter: null, Escape: null };
 
 	onMount(async () => {
 		await tick();

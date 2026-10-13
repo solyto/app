@@ -4,7 +4,7 @@
 	import type { Todo, TodoSubtask } from '$lib/types/todo.js';
 	import { onDestroy, tick } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
@@ -25,7 +25,7 @@
 	let changeTitle = $state<boolean>(false);
 	let titleInput = $state<HTMLInputElement | null>(null);
 	let titleValue = $state<string>(subtask.title);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 	let showExplanationBox = $state<boolean>(false);
 	let explanationBoxX = $state<number>(0);
 	let explanationBoxY = $state<number>(0);

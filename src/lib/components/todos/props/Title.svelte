@@ -2,7 +2,7 @@
 	import type { Todo } from '$lib/types/todo';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onDestroy, tick } from 'svelte';
 	import MovableHoverBox from '$lib/components/ui/MovableHoverBox.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -17,7 +17,7 @@
 	let changeTitle = $state<boolean>(false);
 	let titleInput = $state<HTMLInputElement | null>(null);
 	let titleValue = $state<string>(todo.title);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 	let showExplanationBox = $state<boolean>(false);
 	let explanationBoxX = $state<number>(0);
 	let explanationBoxY = $state<number>(0);

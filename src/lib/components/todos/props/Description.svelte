@@ -3,7 +3,7 @@
 	import { onDestroy, tick } from 'svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { markdownToHtml } from '$lib/helpers/FormatHelper';
 	import { nl2br } from '$lib/helpers/FormatHelper.js';
 	import DOMPurify from 'dompurify';
@@ -27,13 +27,13 @@
 	let showExplanationBox = $state<boolean>(false);
 	let explanationBoxX = $state<number>(0);
 	let explanationBoxY = $state<number>(0);
-	let keyHandlers = $state<{ [key: string]: string | null }>({
+	let keyHandlers: { [key: string]: string | null } = {
 		EnterSave: null,
 		EnterNewLine: null,
 		EnterSubtask: null,
 		EscapeSubtask: null,
 		Escape: null
-	});
+	};
 
 	async function toggleChangeDescription(): Promise<void> {
 		changeDescription = !changeDescription;

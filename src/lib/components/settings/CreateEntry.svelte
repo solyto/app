@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { tick, onDestroy } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
@@ -24,7 +24,7 @@
 	let formOpen = $state<boolean>(false);
 	let title = $state<string>('');
 	let input = $state<HTMLInputElement | null>(null);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
 	async function toggleForm(): Promise<void> {
 		formOpen = !formOpen;

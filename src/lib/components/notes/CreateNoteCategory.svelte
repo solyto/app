@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconFolderPlus from '@lucide/svelte/icons/folder-plus';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getNotes } from '$lib/state/Notes.svelte';
 	import { onDestroy, tick } from 'svelte';
@@ -16,7 +16,7 @@
 	let formOpen = $state<boolean>(false);
 	let userInput = $state<string>('');
 	let input = $state<HTMLInputElement | null>(null);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 

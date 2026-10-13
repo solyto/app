@@ -1,6 +1,6 @@
 <script lang="ts">
 	import IconPlus from '@lucide/svelte/icons/plus';
-	import { getKeyManager } from '$lib/KeyManager.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
@@ -23,7 +23,7 @@
 	let visible = $state<boolean>(false);
 	let value = $state<string>('');
 	let input = $state<HTMLInputElement | null>(null);
-	let keyHandlers = $state<{ [key: string]: string | null }>({ Enter: null, Escape: null });
+	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
 	async function toggle(): Promise<void> {
 		visible = !visible;
