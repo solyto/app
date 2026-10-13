@@ -104,7 +104,7 @@ independent of the chain and of each other; 10–13 in any order.
       parent; no effects; `{#each}` over the day options; all labels through
       `ts.get` (section 13, rules 5.1, 8.1). Note the current version drops
       `INTERVAL`/`UNTIL` from existing rules on open, which is a data bug.
-- [ ] Calendar drag feature: `state/CalendarDrag.svelte.ts` store instead of the
+- [x] Calendar drag feature: `state/CalendarDrag.svelte.ts` store instead of the
       module-level `$state`; `use:draggableEvent` action for the pointer wiring;
       `Object.assign(this, INITIAL)` reset (rules 11.1–11.3).
 - [x] `libraries/shared/SpineView.svelte` and `LibrarySearchModal.svelte`:
@@ -129,7 +129,7 @@ independent of the chain and of each other; 10–13 in any order.
       `calendars/dnd/CalendarDragState.svelte.ts` (6). `MusicTheory/*` is a
       separate question (domain math). Partly done (job 13): `Notes` and
       `ManagePushNotifications` are through. `Auth` and `ApiService` are left
-      to backlog 09, `CalendarDragState` to backlog 06.
+      to backlog 09. `CalendarDragState` is done (backlog 06: file removed).
 
 ## Found during the ESLint pass (2026-10-13)
 

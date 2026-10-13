@@ -8,14 +8,9 @@
 	import type { ClassValue } from 'svelte/elements';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarDragService from '$lib/services/CalendarDragService';
-	import {
-		calendarDrag,
-		consumeCalendarDragClick,
-		createCalendarDragController,
-		findCalendarDayElement,
-		getCalendarEventKey
-	} from '$lib/components/calendars/dnd/CalendarDragState.svelte';
-	import type { CalendarDragTarget } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
+	import { getCalendarDrag } from '$lib/state/CalendarDrag.svelte';
+	import type { CalendarDragTarget } from '$lib/state/CalendarDrag.svelte';
+	import { createDraggableEvent, findCalendarDayElement } from '$lib/helpers/CalendarDragHelper';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -24,6 +19,7 @@
 	const notifications = getUiNotifications();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
+	const drag = getCalendarDrag();
 	const dragService = new CalendarDragService();
 	const hours = getHoursOfDay();
 	const desktopRows = '10% repeat(24, calc(100% / 27))';
@@ -67,17 +63,17 @@
 	const dragEnabled = $derived(!isMobile);
 	const dateSlug = $derived(formatDate(date));
 	const isDropTargetColumn = $derived(
-		dragEnabled && calendarDrag.active && calendarDrag.target !== null
-			? formatDate(calendarDrag.target.date) === dateSlug
+		dragEnabled && drag.active && drag.target !== null
+			? formatDate(drag.target.date) === dateSlug
 			: false
 	);
 	const indicatorTop = $derived.by(() => {
-		const target = calendarDrag.target;
+		const target = drag.target;
 		if (!target) return 0;
 		return (3 / 30 + (target.hour + target.minute / 60) * (1 / 27)) * 100;
 	});
 	const indicatorHeight = $derived.by(() => {
-		const item = calendarDrag.event;
+		const item = drag.event;
 		if (!item) return (1 / 27) * 100;
 		const durationMinutes = item.end_date
 			? (item.end_date.getTime() - item.start_date.getTime()) / 60000
@@ -131,7 +127,7 @@
 		}
 	}
 
-	const drag = createCalendarDragController({
+	const draggableEvent = createDraggableEvent(drag, {
 		enabled: () => dragEnabled,
 		sourceDateSlug: () => dateSlug,
 		computeTarget,
@@ -139,15 +135,11 @@
 	});
 
 	function isDragged(item: CalendarEvent): boolean {
-		return (
-			dragEnabled &&
-			calendarDrag.active &&
-			calendarDrag.sourceKey === getCalendarEventKey(item)
-		);
+		return dragEnabled && drag.isDragged(item);
 	}
 
 	async function onEventClick(item: CalendarEvent): Promise<void> {
-		if (consumeCalendarDragClick()) return;
+		if (drag.consumeClick()) return;
 		await calendars.showSidebar(null, item);
 	}
 </script>
@@ -163,10 +155,7 @@
 		style:top
 		style:height
 		onclick={() => onEventClick(item)}
-		onpointerdown={(e) => drag.onPointerDown(e, item)}
-		onpointermove={drag.onPointerMove}
-		onpointerup={drag.onPointerUp}
-		onpointercancel={drag.onPointerCancel}
+		use:draggableEvent={item}
 		in:blur
 	>
 		<span class="text-left">{item.title}</span>
@@ -221,8 +210,8 @@
 			{/if}
 		</div>
 	{/each}
-	{#if isDropTargetColumn && calendarDrag.event}
-		{#if calendarDrag.event.is_all_day}
+	{#if isDropTargetColumn && drag.event}
+		{#if drag.event.is_all_day}
 			<div
 				class="pointer-events-none absolute inset-x-0 top-0 z-40 h-3/30 border-2 border-dashed border-c-action bg-d-lightblue/60"
 			></div>

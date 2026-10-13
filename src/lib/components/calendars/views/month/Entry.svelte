@@ -4,14 +4,9 @@
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
 	import type { CalendarEvent } from '$lib/types/calendar';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
-	import {
-		calendarDrag,
-		consumeCalendarDragClick,
-		createCalendarDragController,
-		findCalendarDayElement,
-		getCalendarEventKey
-	} from '$lib/components/calendars/dnd/CalendarDragState.svelte';
-	import type { CalendarDragTarget } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
+	import { getCalendarDrag } from '$lib/state/CalendarDrag.svelte';
+	import type { CalendarDragTarget } from '$lib/state/CalendarDrag.svelte';
+	import { createDraggableEvent, findCalendarDayElement } from '$lib/helpers/CalendarDragHelper';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -20,12 +15,12 @@
 	const notifications = getUiNotifications();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
+	const drag = getCalendarDrag();
 
 	let { item, date } = $props<{ item: CalendarEvent; date: Date }>();
 
 	const dateSlug = $derived(formatDate(date));
 
-	// --- drag & drop (month view is desktop-only) ---
 	function computeTarget(x: number, y: number): CalendarDragTarget | null {
 		const cell = findCalendarDayElement(x, y);
 		if (!cell) return null;
@@ -49,19 +44,15 @@
 		}
 	}
 
-	const drag = createCalendarDragController({
+	const draggableEvent = createDraggableEvent(drag, {
 		enabled: () => true,
 		sourceDateSlug: () => dateSlug,
 		computeTarget,
 		onDrop: commitMove
 	});
 
-	function isDragged(): boolean {
-		return calendarDrag.active && calendarDrag.sourceKey === getCalendarEventKey(item);
-	}
-
 	async function onEntryClick(): Promise<void> {
-		if (consumeCalendarDragClick()) return;
+		if (drag.consumeClick()) return;
 		await calendars.showSidebar(null, item);
 	}
 </script>
@@ -74,12 +65,9 @@
 			background-color: {item.is_all_day ? getEventBackgroundColor(item.calendar_color) : ''};
 		"
 		class:!border-l-0={item.is_all_day && item.start_date < date}
-		class:opacity-40={isDragged()}
+		class:opacity-40={drag.isDragged(item)}
 		onclick={onEntryClick}
-		onpointerdown={(e) => drag.onPointerDown(e, item)}
-		onpointermove={drag.onPointerMove}
-		onpointerup={drag.onPointerUp}
-		onpointercancel={drag.onPointerCancel}
+		use:draggableEvent={item}
 		transition:blur
 	>
 		{#if !item.is_all_day}

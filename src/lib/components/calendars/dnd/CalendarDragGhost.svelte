@@ -1,13 +1,15 @@
 <script lang="ts">
-	import { calendarDrag } from './CalendarDragState.svelte';
+	import { getCalendarDrag } from '$lib/state/CalendarDrag.svelte';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
 
+	const drag = getCalendarDrag();
+
 	function isGhostVisible(): boolean {
-		return calendarDrag.active && calendarDrag.event !== null && calendarDrag.ghost !== null;
+		return drag.active && drag.event !== null && drag.ghost !== null;
 	}
 
 	function ghostStyle(): string {
-		const { ghost, event } = calendarDrag;
+		const { ghost, event } = drag;
 		if (!ghost || !event) return '';
 
 		return [
@@ -26,6 +28,6 @@
 		class="pointer-events-none fixed z-[100] flex items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm shadow-lg select-none"
 		style={ghostStyle()}
 	>
-		<span class="truncate text-left">{calendarDrag.event?.title}</span>
+		<span class="truncate text-left">{drag.event?.title}</span>
 	</div>
 {/if}

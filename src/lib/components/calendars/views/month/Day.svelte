@@ -5,17 +5,18 @@
 	import { formatDate, isDateToday } from '$lib/helpers/DateHelper';
 	import type { CalendarDay } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
-	import { calendarDrag } from '$lib/components/calendars/dnd/CalendarDragState.svelte';
+	import { getCalendarDrag } from '$lib/state/CalendarDrag.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 
 	const calendars = getCalendars();
+	const drag = getCalendarDrag();
 
 	let { day } = $props<{ day: CalendarDay }>();
 
 	const dateSlug = $derived(formatDate(day.date));
 	const isDropTargetCell = $derived(
-		calendarDrag.active && calendarDrag.target !== null
-			? formatDate(calendarDrag.target.date) === dateSlug
+		drag.active && drag.target !== null
+			? formatDate(drag.target.date) === dateSlug
 			: false
 	);
 </script>
