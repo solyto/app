@@ -21,8 +21,6 @@
 	const ts = getTranslation();
 	const auth = getAuth();
 
-	let journalEnabled = $derived(auth.user?.settings?.journal_enabled ?? false);
-
 	let open = $state<boolean>(false);
 	let stack = $state<(NoteCategory | 'journal' | 'favorites')[]>([]);
 	let direction = $state<'forward' | 'back'>('forward');
@@ -37,13 +35,9 @@
 		return date && notes.journalService.isEntryTitle(date) ? date : null;
 	});
 
-	let journalSelectedDate = $derived(
-		notes.journalService.parseEntryTitle(page.params.date ?? '') ?? new Date()
-	);
-
-	let otherActive = $derived(
-		otherOpen || (activeKey !== null && activeKey !== todayKey && activeKey !== yesterdayKey)
-	);
+	function isOtherActive(): boolean {
+		return otherOpen || (activeKey !== null && activeKey !== todayKey && activeKey !== yesterdayKey);
+	}
 
 	function openOtherDate(date: Date): void {
 		otherOpen = false;
@@ -102,7 +96,7 @@
 							</div>
 						</div>
 						<div class="flex-1 overflow-y-auto">
-							{#if journalEnabled}
+							{#if auth.user?.settings?.journal_enabled}
 								<button
 									class="flex w-full cursor-pointer items-center justify-between border-b border-c-neutral-1 px-4 py-4 text-left hover:bg-c-neutral-1 dark:border-s-dark-3 dark:hover:bg-s-dark-3"
 									onclick={() => selectSection('journal')}
@@ -174,7 +168,7 @@
 							<div class="relative">
 								<button
 									type="button"
-									class="flex w-full cursor-pointer items-center border-b border-c-neutral-1 px-4 py-4 text-left hover:bg-c-neutral-1 dark:border-s-dark-3 dark:hover:bg-s-dark-3 {otherActive ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}"
+									class="flex w-full cursor-pointer items-center border-b border-c-neutral-1 px-4 py-4 text-left hover:bg-c-neutral-1 dark:border-s-dark-3 dark:hover:bg-s-dark-3 {isOtherActive() ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}"
 									onclick={() => (otherOpen = !otherOpen)}
 								>
 									<span class="text-base">{ts.get.notes.other}</span>
@@ -182,7 +176,7 @@
 								{#if otherOpen}
 									<div class="absolute top-full left-0 z-30 rounded-lg bg-c-bg shadow-lg">
 										<JournalArchivePicker
-											selectedDate={journalSelectedDate}
+											selectedDate={notes.journalService.parseEntryTitle(page.params.date ?? '') ?? new Date()}
 											markedDates={notes.getJournalEntryDates()}
 											onSelect={openOtherDate}
 										/>

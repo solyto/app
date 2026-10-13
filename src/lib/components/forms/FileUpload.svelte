@@ -15,16 +15,11 @@
 
 	const ts = getTranslation();
 
-	let fileInput = $state<HTMLInputElement | null>(null);
 	let selectedFile = $state<File | null>(null);
 	let isUploading = $state(false);
 	let uploadProgress = $state(0);
 	let uploadError = $state<string | null>(null);
 	let uploadSuccess = $state(false);
-
-	$effect(() => {
-		input = fileInput;
-	});
 
 	async function handleFileChange(event: Event) {
 		const inputElement = event.target as HTMLInputElement;
@@ -93,7 +88,7 @@
 		<input
 			id="file-upload"
 			type="file"
-			bind:this={fileInput}
+			bind:this={input}
 			onchange={handleFileChange}
 			class="block w-full text-sm text-c-neutral-5
              file:mr-4 file:rounded-md file:border-0

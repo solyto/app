@@ -21,7 +21,7 @@
 			.slice(0, 10)
 	);
 
-	let weekBreakdown = $derived(() => {
+	let weekBreakdown = $derived.by(() => {
 		const now = new Date();
 		const startOfWeek = new Date(now);
 		startOfWeek.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1));
@@ -32,9 +32,7 @@
 		return groupingService.groupByProject(filtered, tt.projects);
 	});
 
-	let weekTotal = $derived(() => weekBreakdown().reduce((s, c) => s + c.minutes, 0));
-
-	let todayBreakdown = $derived(() => {
+	let todayBreakdown = $derived.by(() => {
 		const now = new Date();
 		const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 		const filtered = tt.entries.filter(
@@ -42,8 +40,6 @@
 		);
 		return groupingService.groupByProject(filtered, tt.projects);
 	});
-
-	let todayTotal = $derived(() => todayBreakdown().reduce((s, c) => s + c.minutes, 0));
 </script>
 
 <div class="flex flex-col gap-8">
@@ -55,13 +51,13 @@
 		</div>
 		<TimeBreakdownWidget
 			title={ts.get.timeTracking.today}
-			breakdown={todayBreakdown()}
-			total={todayTotal()}
+			breakdown={todayBreakdown}
+			total={todayBreakdown.reduce((s, c) => s + c.minutes, 0)}
 		/>
 		<TimeBreakdownWidget
 			title={ts.get.timeTracking.this_week}
-			breakdown={weekBreakdown()}
-			total={weekTotal()}
+			breakdown={weekBreakdown}
+			total={weekBreakdown.reduce((s, c) => s + c.minutes, 0)}
 		/>
 	</div>
 

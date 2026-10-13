@@ -18,18 +18,16 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 
-	let save = $state<CreateCheckInRequest | null>(null);
-	let date = $state(page.params.date);
-	let dayData = $state(checkInData.getDayData());
+	let save = $derived.by((): CreateCheckInRequest | null => {
+		void page.params.date;
+		void checkInData.data;
+		return null;
+	});
+	let date = $derived(page.params.date);
+	let dayData = $derived(checkInData.getDayData());
 
 	const isToday = $derived(isDateToday(new Date(date as string)));
 	const isYesterday = $derived(isDateYesterday(new Date(date as string)));
-
-	$effect(() => {
-		date = page.params.date;
-		dayData = checkInData.getDayData();
-		save = null;
-	});
 
 	async function onChange(type: CheckInType, value: number): Promise<void> {
 		if (save === null) {

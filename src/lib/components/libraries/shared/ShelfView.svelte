@@ -28,17 +28,15 @@
 	let { library } = $props<{ library: Library }>();
 
 	let entries = $derived(library.filteredEntries as ShelfEntry[]);
-	let activeIndex = $state(0);
+	let activeIndex = $derived.by(() => {
+		void entries.length;
+		return 0;
+	});
 	let activeEntry = $derived(entries[activeIndex] ?? null);
 	let subtitle = $derived(activeEntry?.artist ?? activeEntry?.author ?? '');
 	let touchStartX = $state(0);
 
 	const isSquare = $derived(library.config.type === 'music');
-
-	$effect(() => {
-		void entries.length;
-		activeIndex = 0;
-	});
 
 	function navigate(dir: -1 | 1) {
 		const next = activeIndex + dir;

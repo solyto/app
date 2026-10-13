@@ -23,9 +23,9 @@
 		class?: string;
 	}>();
 
-	let chartContainer = $state<HTMLDivElement | null>(null);
-	let myChart = $state<ECharts | null>(null);
-	let isInitialized = $state<boolean>(false);
+	let chartContainer: HTMLDivElement | null = null;
+	let myChart: ECharts | null = null;
+	let isInitialized = false;
 
 	// echarts renders to canvas, so CSS variables like var(--color-c-success) must be
 	// resolved to a concrete color value before being passed to the chart options.
@@ -138,7 +138,6 @@
 		}
 	});
 
-	// Only update when data actually changes, not on every render
 	$effect(() => {
 		if (!isInitialized && chartContainer) {
 			createChart();

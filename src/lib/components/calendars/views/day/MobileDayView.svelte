@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { getHoursOfDay, isOffHour } from '$lib/helpers/DateHelper';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
@@ -18,7 +19,7 @@
 	});
 
 	let contentEl: HTMLDivElement;
-	$effect(() => { if (contentEl) swipe.setTarget(contentEl); });
+	onMount(() => swipe.setTarget(contentEl));
 </script>
 
 <div

@@ -39,8 +39,6 @@
 
 	let filteredProjects = $derived(tt.statistics?.by_project ?? []);
 
-	let filteredTotal = $derived(filteredProjects.reduce((sum, p) => sum + p.total_minutes, 0));
-
 	let projectDonutData = $derived(
 		filteredProjects.map((p) => ({
 			value: p.total_minutes,
@@ -49,7 +47,7 @@
 		}))
 	);
 
-	let categoryBreakdown = $derived(() => {
+	let categoryBreakdown = $derived.by(() => {
 		const map = new Map<number, { title: string; minutes: number }>();
 		for (const stat of filteredProjects) {
 			const project = tt.projects.find((p) => p.id === stat.project_id);
@@ -63,8 +61,7 @@
 		return [...map.values()].sort((a, b) => b.minutes - a.minutes);
 	});
 
-	let categoryChartLabels = $derived(categoryBreakdown().map((c) => c.title));
-	let categoryChartValues = $derived(categoryBreakdown().map((c) => c.minutes));
+	let categoryChartLabels = $derived(categoryBreakdown.map((c) => c.title));
 
 	onMount(async () => {
 		await loadStats();
@@ -145,7 +142,7 @@
 				{ts.get.timeTracking.total_time}:
 			</span>
 			<span class="text-lg font-bold text-c-primary">
-				{tt.formatDuration(filteredTotal)}
+				{tt.formatDuration(filteredProjects.reduce((sum, p) => sum + p.total_minutes, 0))}
 			</span>
 		</div>
 
@@ -165,7 +162,7 @@
 					<span class="text-lg font-medium">{ts.get.timeTracking.categories}</span>
 					<BarChart
 						categories={categoryChartLabels}
-						values={categoryChartValues}
+						values={categoryBreakdown.map((c) => c.minutes)}
 						valueFormatter={(v) => tt.formatDuration(v)}
 					/>
 				</div>

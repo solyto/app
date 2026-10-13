@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { blur } from 'svelte/transition';
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
@@ -13,24 +14,16 @@
 	const ts = getTranslation();
 	const weekdays = Array.from({ length: 7 }, (_, i) => i + 1);
 
-	let selectedDate = $derived(calendars.mobileSelectedDate);
-	let allDayEvents = $derived(calendars.getAllDayEventsForDate(selectedDate));
-	let nonAllDayEvents = $derived(calendars.getNonAllDayEventsForDate(selectedDate));
-	let todos = $derived(calendars.getTodosForDate(selectedDate));
-	let hasEvents = $derived(
-		allDayEvents.length > 0 || nonAllDayEvents.length > 0 || todos.length > 0
-	);
-
 	const swipe = new SwipeNavigate({
 		onLeft: () => calendars.nextMonth(),
 		onRight: () => calendars.lastMonth()
 	});
 
 	let contentEl: HTMLDivElement;
-	$effect(() => { if (contentEl) swipe.setTarget(contentEl); });
+	onMount(() => swipe.setTarget(contentEl));
 
 	function isSelected(date: Date): boolean {
-		return formatDate(date) === formatDate(selectedDate);
+		return formatDate(date) === formatDate(calendars.mobileSelectedDate);
 	}
 
 	function hasEventsOnDate(date: Date): boolean {
@@ -130,26 +123,26 @@
 			class="sticky top-0 z-10 flex items-center justify-between border-b border-c-neutral-1 bg-c-bg-surface px-4 py-2 dark:border-s-dark"
 		>
 			<span class="text-sm font-bold text-c-heading dark:text-c-primary">
-				{formatDate(selectedDate)}
+				{formatDate(calendars.mobileSelectedDate)}
 			</span>
 			<div class="flex items-center gap-3">
 				<CalendarMarks 
-					date={selectedDate} 
+					date={calendars.mobileSelectedDate} 
 					showJournal={calendars.journalMarksEnabled} 
 					showCheckIn={calendars.checkInMarksEnabled} 
 					size={20}
 				/>
 				<button
 					class="cursor-pointer rounded-full p-2 transition-all hover:bg-c-primary hover:text-white"
-					onclick={async () => await calendars.showSidebar(selectedDate)}
+					onclick={async () => await calendars.showSidebar(calendars.mobileSelectedDate)}
 				>
 					<IconPlus class="size-4" />
 				</button>
 			</div>
 		</div>
-		{#if hasEvents}
+		{#if hasEventsOnDate(calendars.mobileSelectedDate)}
 			<div class="flex flex-col px-2">
-				{#each allDayEvents as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+				{#each calendars.getAllDayEventsForDate(calendars.mobileSelectedDate) as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
 					{#if !calendars.isCalendarHidden(item.calendar_id)}
 						<button
 							class="my-0.5 flex w-full cursor-pointer items-center justify-start border-l-4 px-3 py-2.5 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
@@ -164,10 +157,10 @@
 						</button>
 					{/if}
 				{/each}
-				{#each todos as todo (todo.id)}
+				{#each calendars.getTodosForDate(calendars.mobileSelectedDate) as todo (todo.id)}
 					<TodoEntry {todo} />
 				{/each}
-				{#each nonAllDayEvents as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+				{#each calendars.getNonAllDayEventsForDate(calendars.mobileSelectedDate) as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
 					{#if !calendars.isCalendarHidden(item.calendar_id)}
 						<button
 							class="my-0.5 flex w-full cursor-pointer items-center justify-start border-l-4 px-3 py-2.5 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"

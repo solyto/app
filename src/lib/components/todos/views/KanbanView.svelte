@@ -14,15 +14,11 @@
 	const flipDurationMs = 200;
 
 	let { handleCheck } = $props<{ handleCheck: (event: Event, todo: Todo) => Promise<void> }>();
-	let groups: GroupedTodos[] = [];
+	let groups = $derived<GroupedTodos[]>(todos.groupedTodos);
 	let firstTick = $state<boolean>(true);
 
 	onMount(() => {
 		todos.groupByStatus();
-	});
-
-	$effect(() => {
-		groups = todos.groupedTodos;
 	});
 
 	function getStatusLabel(status: TodoStatus): string {

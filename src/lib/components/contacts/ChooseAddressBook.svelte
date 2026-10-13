@@ -11,11 +11,7 @@
 	const ts = getTranslation();
 
 	let menuOpen = $state<boolean>(false);
-	let selectedAddressBook = $derived(getSelected(addressBook) ?? availableAddressBooks[0]);
-
-	$effect(() => {
-		addressBook = selectedAddressBook.id;
-	});
+	let selectedAddressBook = $derived(getSelected(addressBook));
 
 	function getSelected(id: number): AddressBook | null {
 		if (!id) return null;

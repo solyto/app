@@ -14,7 +14,7 @@
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 
-	let openedKey = $state<string | null>(null);
+	let openedKey: string | null = null;
 
 	let date = $derived(notes.journalService.parseEntryTitle(page.params.date ?? ''));
 	let isToday = $derived(date !== null && isDateToday(date));

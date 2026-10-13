@@ -17,7 +17,7 @@
 
 	let loaded = $state(false);
 
-	let weekBreakdown = $derived(() => {
+	let weekBreakdown = $derived.by(() => {
 		const now = new Date();
 		const startOfWeek = new Date(now);
 		startOfWeek.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1));
@@ -28,7 +28,7 @@
 		return groupingService.groupByProject(filtered, tt.projects);
 	});
 
-	let weekTotal = $derived(() => weekBreakdown().reduce((s, c) => s + c.minutes, 0));
+	let weekTotal = $derived(weekBreakdown.reduce((s, c) => s + c.minutes, 0));
 
 	onMount(async () => {
 		loadingIndicator.start();
@@ -52,10 +52,10 @@
 					{ts.get.timeTracking.this_week}
 				</span>
 				<span class="text-xs font-medium tabular-nums text-c-primary">
-					{tt.formatDuration(weekTotal())}
+					{tt.formatDuration(weekTotal)}
 				</span>
 			</div>
-			{#each weekBreakdown() as category (category.projectId)}
+			{#each weekBreakdown as category (category.projectId)}
 				<div class="flex flex-col gap-0.5">
 					<div class="flex items-center justify-between">
 						<div class="flex items-center gap-1.5">
@@ -72,7 +72,7 @@
 					<div class="h-1 w-full rounded-full bg-c-neutral-1 dark:bg-s-dark-3">
 						<div
 							class="h-1 rounded-full"
-							style="width: {weekTotal() > 0 ? (category.minutes / weekTotal()) * 100 : 0}%; background-color: {category.color}"
+							style="width: {weekTotal > 0 ? (category.minutes / weekTotal) * 100 : 0}%; background-color: {category.color}"
 						></div>
 					</div>
 				</div>

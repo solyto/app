@@ -16,9 +16,9 @@
 		valueFormatter?: (value: number) => string;
 	}>();
 
-	let chartContainer = $state<HTMLDivElement | null>(null);
-	let myChart = $state<ECharts | null>(null);
-	let isInitialized = $state<boolean>(false);
+	let chartContainer: HTMLDivElement | null = null;
+	let myChart: ECharts | null = null;
+	let isInitialized = false;
 
 	function createChart() {
 		if (!chartContainer || !values?.length) return;
@@ -116,7 +116,6 @@
 		}
 	});
 
-	// Only update when data actually changes, not on every render
 	$effect(() => {
 		if (!isInitialized && chartContainer) {
 			createChart();

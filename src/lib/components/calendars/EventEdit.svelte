@@ -48,7 +48,7 @@
 	let form = $state<EventForm>({
 		calendar_id: calendars.activeEvent && calendars.activeEvent.calendar_id ?
 			Number(calendars.activeEvent.calendar_id) :
-			0,
+			(calendars.calendars[0]?.id ?? 0),
 		title: calendars.activeEvent ? calendars.activeEvent.title : '',
 		description: calendars.activeEvent ? calendars.activeEvent.description : '',
 		location: calendars.activeEvent ? calendars.activeEvent.location : '',

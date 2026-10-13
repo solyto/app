@@ -20,8 +20,6 @@
 	const notes = getNotes();
 	const auth = getAuth();
 
-	let journalEnabled = $derived(auth.user?.settings?.journal_enabled ?? false);
-
 	let favorites = $derived(notes.getFavorites());
 	let otherOpen = $state(false);
 
@@ -32,12 +30,10 @@
 		const date = page.params.date;
 		return date && notes.journalService.isEntryTitle(date) ? date : null;
 	});
-	let journalSelectedDate = $derived(
-		notes.journalService.parseEntryTitle(page.params.date ?? '') ?? new Date()
-	);
-	let otherActive = $derived(
-		otherOpen || (activeKey !== null && activeKey !== todayKey && activeKey !== yesterdayKey)
-	);
+
+	function isOtherActive(): boolean {
+		return otherOpen || (activeKey !== null && activeKey !== todayKey && activeKey !== yesterdayKey);
+	}
 
 	function openOtherDate(date: Date): void {
 		otherOpen = false;
@@ -55,7 +51,7 @@
 		<AddNoteButton onClick={() => notes.openModal('note')} />
 		<AddFolderButton onClick={() => notes.openModal('category')} />
 	</div>
-	{#if journalEnabled}
+	{#if auth.user?.settings?.journal_enabled}
 		<div class="mb-4 flex flex-col gap-1">
 			<NavHeading title={ts.get.notes.journal} class="mb-1" />
 			<a
@@ -75,7 +71,7 @@
 			<div class="relative">
 				<button
 					type="button"
-					class="flex w-full cursor-pointer items-center space-x-2 rounded-lg px-2 py-1 text-left hover:bg-c-neutral dark:hover:bg-s-dark-3 {otherActive ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}"
+					class="flex w-full cursor-pointer items-center space-x-2 rounded-lg px-2 py-1 text-left hover:bg-c-neutral dark:hover:bg-s-dark-3 {isOtherActive() ? 'bg-c-neutral-1 dark:bg-s-dark-3' : ''}"
 					onclick={() => (otherOpen = !otherOpen)}
 				>
 					<span>{ts.get.notes.other}</span>
@@ -83,7 +79,7 @@
 				{#if otherOpen}
 					<div class="absolute top-full left-0 z-30 mt-1 rounded-lg bg-c-bg shadow-lg">
 						<JournalArchivePicker
-							selectedDate={journalSelectedDate}
+							selectedDate={notes.journalService.parseEntryTitle(page.params.date ?? '') ?? new Date()}
 							markedDates={notes.getJournalEntryDates()}
 							onSelect={openOtherDate}
 						/>

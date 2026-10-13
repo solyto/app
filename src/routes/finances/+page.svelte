@@ -20,16 +20,13 @@
 	let colorLoaded = $state<boolean>(false);
 	const setActivePage = (type: FinancePage) => (finances.activePage = type);
 	const statisticsService = new WealthStatisticsService();
-	let statistics = $state<{ date: string; values: { field: string; value: number }[] }[]>([]);
-
-	$effect(() => {
-		if (finances.wealthLoaded) {
-			statisticsService.setData(finances.wealth);
-			statistics = statisticsService.getGraphValues() as unknown as {
-				date: string;
-				values: { field: string; value: number }[];
-			}[];
-		}
+	let statistics = $derived.by(() => {
+		if (!finances.wealthLoaded) return [];
+		statisticsService.setData(finances.wealth);
+		return statisticsService.getGraphValues() as unknown as {
+			date: string;
+			values: { field: string; value: number }[];
+		}[];
 	});
 
 	onMount(() => {

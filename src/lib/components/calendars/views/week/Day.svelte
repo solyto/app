@@ -27,13 +27,11 @@
 	let { date, isMobile = false } = $props<{ date: Date; isMobile?: boolean }>();
 
 	let entries = $derived(calendars.getEventsForDate(date));
-	let allDayEntries = $derived(entries.filter((e) => e.is_all_day));
-	let nonAllDayEntries = $derived(entries.filter((e) => !e.is_all_day));
 	let entriesByHour = $derived(
 		hours.map((hour) => ({
 			hour: parseInt(hour),
-			entries: nonAllDayEntries.filter(
-				(entry) => entry.start_date?.getHours() === parseInt(hour)
+			entries: entries.filter(
+				(entry) => !entry.is_all_day && entry.start_date?.getHours() === parseInt(hour)
 			)
 		}))
 	);
@@ -60,26 +58,28 @@
 		return h > 65 ? h + '%' : '65%';
 	}
 
-	const dragEnabled = $derived(!isMobile);
+	const dragEnabled = !isMobile;
 	const dateSlug = $derived(formatDate(date));
 	const isDropTargetColumn = $derived(
 		dragEnabled && drag.active && drag.target !== null
 			? formatDate(drag.target.date) === dateSlug
 			: false
 	);
-	const indicatorTop = $derived.by(() => {
+
+	function getIndicatorTop(): number {
 		const target = drag.target;
 		if (!target) return 0;
 		return (3 / 30 + (target.hour + target.minute / 60) * (1 / 27)) * 100;
-	});
-	const indicatorHeight = $derived.by(() => {
+	}
+
+	function getIndicatorHeight(): number {
 		const item = drag.event;
 		if (!item) return (1 / 27) * 100;
 		const durationMinutes = item.end_date
 			? (item.end_date.getTime() - item.start_date.getTime()) / 60000
 			: 60;
 		return Math.max((durationMinutes / 60) * (1 / 27) * 100, 2);
-	});
+	}
 
 	function computeTarget(
 		x: number,
@@ -180,7 +180,7 @@
 		{#each calendars.getTodosForDate(date) as todo (todo.id)}
 			<TodoEntry {todo} />
 		{/each}
-		{#each allDayEntries as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+		{#each entries.filter((e) => e.is_all_day) as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
 			{#if !calendars.isCalendarHidden(item.calendar_id)}
 				{@render eventButton(item, ['w-full', item.start_date < date && '!border-l-0'])}
 			{/if}
@@ -218,7 +218,7 @@
 		{:else}
 			<div
 				class="pointer-events-none absolute inset-x-0 z-40 border-2 border-dashed border-c-action bg-d-lightblue/60"
-				style="top: {indicatorTop}%; height: {indicatorHeight}%;"
+				style="top: {getIndicatorTop()}%; height: {getIndicatorHeight()}%;"
 			></div>
 		{/if}
 	{/if}
