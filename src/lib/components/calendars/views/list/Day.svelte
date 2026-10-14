@@ -2,6 +2,7 @@
 	import { blur } from 'svelte/transition';
 	import { formatDate, formatTime } from '$lib/helpers/DateHelper';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
+	import { getCalendarEventKey } from '$lib/helpers/CalendarEventHelper';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 
@@ -20,7 +21,7 @@
 			<TodoEntry {todo} checkboxRight={false} />
 		{/each}
 
-		{#each allDayEvents as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+		{#each allDayEvents as item (getCalendarEventKey(item))}
 			{#if !calendars.isCalendarHidden(item.calendar_id)}
 				<button
 					class="flex w-full cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
@@ -40,7 +41,7 @@
 				</button>
 			{/if}
 		{/each}
-		{#each nonAllDayEvents as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+		{#each nonAllDayEvents as item (getCalendarEventKey(item))}
 			{#if !calendars.isCalendarHidden(item.calendar_id)}
 				<button
 					class="flex w-full cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"

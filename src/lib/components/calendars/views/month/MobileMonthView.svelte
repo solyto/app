@@ -6,6 +6,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { isDateToday, formatDate, formatTime } from '$lib/helpers/DateHelper';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
+	import { getCalendarEventKey } from '$lib/helpers/CalendarEventHelper';
 	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
@@ -142,7 +143,7 @@
 		</div>
 		{#if hasEventsOnDate(calendars.mobileSelectedDate)}
 			<div class="flex flex-col px-2">
-				{#each calendars.getAllDayEventsForDate(calendars.mobileSelectedDate) as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+				{#each calendars.getAllDayEventsForDate(calendars.mobileSelectedDate) as item (getCalendarEventKey(item))}
 					{#if !calendars.isCalendarHidden(item.calendar_id)}
 						<button
 							class="my-0.5 flex w-full cursor-pointer items-center justify-start border-l-4 px-3 py-2.5 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
@@ -160,7 +161,7 @@
 				{#each calendars.getTodosForDate(calendars.mobileSelectedDate) as todo (todo.id)}
 					<TodoEntry {todo} />
 				{/each}
-				{#each calendars.getNonAllDayEventsForDate(calendars.mobileSelectedDate) as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+				{#each calendars.getNonAllDayEventsForDate(calendars.mobileSelectedDate) as item (getCalendarEventKey(item))}
 					{#if !calendars.isCalendarHidden(item.calendar_id)}
 						<button
 							class="my-0.5 flex w-full cursor-pointer items-center justify-start border-l-4 px-3 py-2.5 text-sm transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"

@@ -1,5 +1,6 @@
 import { setContext, getContext } from 'svelte';
 import type { CalendarEvent } from '$lib/types/calendar';
+import { getCalendarEventKey } from '$lib/helpers/CalendarEventHelper';
 
 export interface CalendarDragGhost {
 	x: number;
@@ -23,10 +24,6 @@ const INITIAL = {
 	target: null,
 	suppressClick: false
 };
-
-export function getCalendarEventKey(item: CalendarEvent): string {
-	return item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime();
-}
 
 export class CalendarDrag {
 	active = $state<boolean>(INITIAL.active);

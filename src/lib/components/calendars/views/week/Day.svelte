@@ -11,6 +11,7 @@
 	import { getCalendarDrag } from '$lib/state/CalendarDrag.svelte';
 	import type { CalendarDragTarget } from '$lib/state/CalendarDrag.svelte';
 	import { createDraggableEvent, findCalendarDayElement } from '$lib/helpers/CalendarDragHelper';
+	import { getCalendarEventKey } from '$lib/helpers/CalendarEventHelper';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -180,7 +181,7 @@
 		{#each calendars.getTodosForDate(date) as todo (todo.id)}
 			<TodoEntry {todo} />
 		{/each}
-		{#each entries.filter((e) => e.is_all_day) as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+		{#each entries.filter((e) => e.is_all_day) as item (getCalendarEventKey(item))}
 			{#if !calendars.isCalendarHidden(item.calendar_id)}
 				{@render eventButton(item, ['w-full', item.start_date < date && '!border-l-0'])}
 			{/if}
@@ -202,7 +203,7 @@
 				<IconPlus class="size-3" />
 			</button>
 			{#if entriesByHour[parseInt(hour)].entries.length > 0}
-				{#each entriesByHour[parseInt(hour)].entries as item, i (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+				{#each entriesByHour[parseInt(hour)].entries as item, i (getCalendarEventKey(item))}
 					{#if !calendars.isCalendarHidden(item.calendar_id)}
 						{@render eventButton(item, ['absolute z-40 w-2/3 shadow-sm', i === 0 ? 'left-0' : 'right-0'], getTop(item), getHeight(item))}
 					{/if}

@@ -3,6 +3,7 @@
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import Entry from '$lib/components/calendars/views/month/Entry.svelte';
 	import { formatDate, isDateToday } from '$lib/helpers/DateHelper';
+	import { getCalendarEventKey } from '$lib/helpers/CalendarEventHelper';
 	import type { CalendarDay } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import { getCalendarDrag } from '$lib/state/CalendarDrag.svelte';
@@ -59,10 +60,10 @@
 			{#each calendars.getTodosForDate(day.date) as todo (todo.id)}
 				<TodoEntry {todo} />
 			{/each}
-			{#each calendars.getAllDayEventsForDate(day.date) as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+			{#each calendars.getAllDayEventsForDate(day.date) as item (getCalendarEventKey(item))}
 				<Entry {item} date={day.date} />
 			{/each}
-			{#each calendars.getNonAllDayEventsForDate(day.date) as item (item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime())}
+			{#each calendars.getNonAllDayEventsForDate(day.date) as item (getCalendarEventKey(item))}
 				<Entry {item} date={day.date} />
 			{/each}
 		</div>
