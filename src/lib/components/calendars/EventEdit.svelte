@@ -45,7 +45,7 @@
 		end_hours: 13,
 		end_minutes: 0
 	};
-	let form = $state<EventForm>({
+	const initialForm: EventForm = {
 		calendar_id: calendars.activeEvent && calendars.activeEvent.calendar_id ?
 			Number(calendars.activeEvent.calendar_id) :
 			(calendars.calendars[0]?.id ?? 0),
@@ -62,9 +62,10 @@
 		end_date: getEndDate(),
 		end_hours: calendars.activeEvent ? calendars.activeEvent.end_date.getHours() : 13,
 		end_minutes: calendars.activeEvent ? calendars.activeEvent.end_date.getMinutes() : 0
-	});
+	};
+	let form = $state<EventForm>(initialForm);
 	let recurrence = $state<RecurrenceSelection | null>(
-		recurrenceRuleService.parse(form.recurrence_rule, form.start_date)
+		recurrenceRuleService.parse(initialForm.recurrence_rule, initialForm.start_date)
 	);
 	let titleInput = $state<HTMLInputElement | null>(null);
 	let showRecurrenceModal = $state<'edit' | 'delete' | null>(null);
