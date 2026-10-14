@@ -264,6 +264,26 @@ describe('BookLibrary', () => {
 		expect(s.ratingFilter).toBeNull();
 	});
 
+	it('moves the shelf back to the first entry whenever the list is refiltered', async () => {
+		api.list.mockResolvedValue({ data: [book()] });
+		const s = new BookLibrary();
+		s.entries = [book({ id: '1' }), book({ id: '2' })];
+		const actions = [
+			() => s.load(),
+			() => s.search(),
+			() => s.filterByGenreAndRating(),
+			() => s.filterByWishlist(),
+			() => s.filterByLent(),
+			() => s.clearFilters()
+		];
+
+		for (const action of actions) {
+			s.shelfIndex = 1;
+			await action();
+			expect(s.shelfIndex).toBe(0);
+		}
+	});
+
 	it('restores the persisted view and switches between views', () => {
 		storage.get.mockReturnValue('list');
 		const s = new BookLibrary();
@@ -312,6 +332,25 @@ describe('MusicLibrary', () => {
 		s.clearFilters();
 		s.filterByWishlist();
 		expect(s.filteredEntries.map((m) => m.id)).toEqual(['2']);
+	});
+
+	it('moves the shelf back to the first entry whenever the list is refiltered', async () => {
+		api.list.mockResolvedValue({ data: [music()] });
+		const s = new MusicLibrary();
+		s.entries = [music({ id: '1' }), music({ id: '2' })];
+		const actions = [
+			() => s.load(),
+			() => s.search(),
+			() => s.filterByGenreAndRating(),
+			() => s.filterByWishlist(),
+			() => s.clearFilters()
+		];
+
+		for (const action of actions) {
+			s.shelfIndex = 1;
+			await action();
+			expect(s.shelfIndex).toBe(0);
+		}
 	});
 
 	it('restores the persisted view', () => {

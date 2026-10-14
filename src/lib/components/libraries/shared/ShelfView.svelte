@@ -7,7 +7,6 @@
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import MissingCover from '$lib/components/libraries/shared/MissingCover.svelte';
-	import type { Library } from '$lib/types/library';
 	import type { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
 	import type { BookLibrary } from '$lib/state/BookLibrary.svelte';
 	import type { Music } from '$lib/types/library_music';
@@ -25,26 +24,22 @@
 
 	const auth = getAuth();
 	const keyManager = getKeyManager();
-	let { library } = $props<{ library: Library }>();
+	let { library } = $props<{ library: MusicLibrary | BookLibrary }>();
 
 	let entries = $derived(library.filteredEntries as ShelfEntry[]);
-	let activeIndex = $derived.by(() => {
-		void entries.length;
-		return 0;
-	});
-	let activeEntry = $derived(entries[activeIndex] ?? null);
+	let activeEntry = $derived(entries[library.shelfIndex] ?? null);
 	let subtitle = $derived(activeEntry?.artist ?? activeEntry?.author ?? '');
 	let touchStartX = $state(0);
 
 	const isSquare = $derived(library.config.type === 'music');
 
 	function navigate(dir: -1 | 1) {
-		const next = activeIndex + dir;
-		if (next >= 0 && next < entries.length) activeIndex = next;
+		const next = library.shelfIndex + dir;
+		if (next >= 0 && next < entries.length) library.shelfIndex = next;
 	}
 
 	function handleClick(index: number) {
-		if (index === activeIndex) {
+		if (index === library.shelfIndex) {
 			if (library.config.type === 'music') {
 				(library as MusicLibrary).openDetailModal(
 					library.filteredEntries[index] as unknown as Music
@@ -55,7 +50,7 @@
 				);
 			}
 		} else {
-			activeIndex = index;
+			library.shelfIndex = index;
 		}
 	}
 
@@ -80,7 +75,7 @@
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 
 	function itemStyle(index: number): string {
-		const offset = index - activeIndex;
+		const offset = index - library.shelfIndex;
 		const abs = Math.abs(offset);
 		const sign = Math.sign(offset);
 
@@ -98,7 +93,7 @@
 	}
 
 	function isOnStage(index: number): boolean {
-		return Math.abs(index - activeIndex) <= 3;
+		return Math.abs(index - library.shelfIndex) <= 3;
 	}
 
 	function coverUrl(entry: ShelfEntry): string {
@@ -120,7 +115,7 @@
 					class="absolute top-1/2 left-1/2 -translate-y-1/2 cursor-pointer"
 					style={itemStyle(index)}
 					onclick={() => handleClick(index)}
-					tabindex={index === activeIndex ? 0 : -1}
+					tabindex={index === library.shelfIndex ? 0 : -1}
 					aria-label={entry.title}
 				>
 					<div
@@ -129,7 +124,7 @@
 						class:h-56={isSquare}
 						class:w-44={!isSquare}
 						class:h-64={!isSquare}
-						style={index === activeIndex
+						style={index === library.shelfIndex
 							? 'box-shadow: 0 25px 60px rgba(0,0,0,0.45), 0 10px 20px rgba(0,0,0,0.3)'
 							: 'box-shadow: 0 8px 24px rgba(0,0,0,0.25)'}
 					>
@@ -153,18 +148,18 @@
 	<div class="flex items-center gap-6">
 		<button
 			onclick={() => navigate(-1)}
-			disabled={activeIndex === 0}
+			disabled={library.shelfIndex === 0}
 			class="rounded-full p-2 transition-all hover:bg-c-neutral-1 disabled:opacity-25 dark:hover:bg-s-dark-3"
 			aria-label="Previous"
 		>
 			<ChevronLeft size={22} />
 		</button>
 		<span class="w-20 text-center text-sm tabular-nums text-c-neutral-5 dark:text-c-neutral-4">
-			{activeIndex + 1} / {entries.length}
+			{library.shelfIndex + 1} / {entries.length}
 		</span>
 		<button
 			onclick={() => navigate(1)}
-			disabled={activeIndex === entries.length - 1}
+			disabled={library.shelfIndex === entries.length - 1}
 			class="rounded-full p-2 transition-all hover:bg-c-neutral-1 disabled:opacity-25 dark:hover:bg-s-dark-3"
 			aria-label="Next"
 		>
@@ -174,10 +169,10 @@
 
 	<!-- Info panel -->
 	{#if activeEntry}
-		{#key activeIndex}
+		{#key library.shelfIndex}
 			<button
 				class="flex max-w-sm flex-col items-center gap-1 text-center"
-				onclick={() => handleClick(activeIndex)}
+				onclick={() => handleClick(library.shelfIndex)}
 				in:fade={{ duration: 180 }}
 			>
 				<div class="text-xl font-bold">{activeEntry.title}</div>

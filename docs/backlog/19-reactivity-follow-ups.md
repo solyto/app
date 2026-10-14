@@ -8,7 +8,6 @@ created: 2026-10-14
 - `routes/time-tracking/[id]/+page.svelte`: the redirect effect `if (tt.loaded && !project) goto(…)` (job 11 open question 4).
 - `tour/WelcomeTour.svelte`: the effect that writes `targetRect`/`transitioning` via `untrack` (5.1).
 - The four `charts/*.svelte` wrappers: the effect has no reactive dependency left and runs once, so make it `onMount` like `MobileDayView`/`MobileMonthView`.
-- The writable-`$derived` reset idiom (`void dep; return …`) in `libraries/shared/ShelfView.svelte`: reset `activeIndex` explicitly where the change happens. Owner decision: explicit resets, not the idiom and not `{#key}`.
 - `calendars/EventEdit.svelte:67`: the `state_referenced_locally` warning from `svelte-check`, so the gate is back to 0 warnings.
 
 ## Why

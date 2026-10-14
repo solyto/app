@@ -13,6 +13,8 @@
 	import MissingCover from '$lib/components/libraries/shared/MissingCover.svelte';
 	import CoverImage from '$lib/components/libraries/shared/CoverImage.svelte';
 	import type { Library } from '$lib/types/library';
+	import type { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
+	import type { BookLibrary } from '$lib/state/BookLibrary.svelte';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { getAuth } from '$lib/state/Auth.svelte';
 
@@ -29,7 +31,7 @@
 </script>
 
 {#if view === 'shelf'}
-	<ShelfView {library} />
+	<ShelfView library={library as MusicLibrary | BookLibrary} />
 {:else if view === 'spine'}
 	<SpineView {library} />
 {/if}
