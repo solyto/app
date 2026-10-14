@@ -229,7 +229,22 @@ const settings: SettingsRecords = {
 	calendar_life_marks: 'Journal et indicateurs du calendrier',
 	journal_enabled: 'Activer le journal',
 	journal_calendar_mark: 'Indicateur du journal dans le calendrier',
-	check_in_calendar_mark: 'Indicateur de test quotidien dans le calendrier'
+	check_in_calendar_mark: 'Indicateur de test quotidien dans le calendrier',
+	ai_plugin_description: 'Utilisez votre propre fournisseur et votre clé API. Les recommandations IA pour les livres et la musique utilisent ces paramètres.',
+	ai_plugin_enabled: 'Activer les fonctionnalités IA',
+	ai_plugin_provider: 'Fournisseur',
+	ai_plugin_select_provider: 'Choisir un fournisseur',
+	ai_plugin_model: 'Modèle',
+	ai_plugin_select_model: 'Choisir un modèle',
+	ai_plugin_model_unavailable: "Le modèle choisi n'est plus disponible. Veuillez en choisir un nouveau.",
+	ai_plugin_api_key: 'Clé API',
+	ai_plugin_api_key_placeholder: 'Collez votre clé API',
+	ai_plugin_api_key_replace_placeholder: 'Saisissez une nouvelle clé pour remplacer celle enregistrée',
+	ai_plugin_api_key_stored: 'Une clé API est enregistrée. Laissez le champ vide pour la conserver.',
+	ai_plugin_api_key_required: 'Une clé API est nécessaire pour enregistrer les paramètres IA.',
+	ai_plugin_saved: 'Paramètres IA enregistrés.',
+	ai_plugin_save_error: "Les paramètres IA n'ont pas pu être enregistrés.",
+	ai_plugin_load_error: "Les paramètres IA n'ont pas pu être chargés."
 };
 
 const todos: TodoRecords = {
@@ -639,7 +654,9 @@ const libraries: LibraryRecords = {
 		favorite: 'Un favori',
 		random: 'Quelque chose au hasard',
 		unrated: 'Quelque chose que je n\'ai jamais vu',
-		new: 'Quelque chose de nouveau'
+		new: 'Quelque chose de nouveau',
+		ai_plugin_hint: 'Aucune recommandation disponible. Pour recommander quelque chose de nouveau, le plugin IA est nécessaire ; vous pouvez le configurer dans les paramètres.',
+		open_settings: 'Ouvrir les paramètres'
 	},
 	navigation: {
 		music: 'Musique',

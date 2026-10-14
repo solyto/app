@@ -40,6 +40,16 @@ export const apiRoutes = {
 			updateJournal: API_URL + '/users/me/settings/journal',
 			updateJournalCalendarMark: API_URL + '/users/me/settings/journal-calendar-mark',
 			updateCheckInCalendarMark: API_URL + '/users/me/settings/check-in-calendar-mark'
+		},
+		plugins: {
+			list: API_URL + '/users/me/plugins',
+			get: API_URL + '/users/me/plugins/%s',
+			update: API_URL + '/users/me/plugins/%s'
+		}
+	},
+	plugins: {
+		ai: {
+			providers: API_URL + '/plugins/ai/providers'
 		}
 	},
 	todos: {

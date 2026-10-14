@@ -9,6 +9,7 @@
 	import NotificationSettings from '$lib/components/settings/notifications/NotificationSettings.svelte';
 	import LocalizationSettings from '$lib/components/settings/LocalizationSettings.svelte';
 	import FeatureSettings from '$lib/components/settings/FeatureSettings.svelte';
+	import AiPluginSettings from '$lib/components/settings/AiPluginSettings.svelte';
 	import AppearanceSettings from '$lib/components/settings/AppearanceSettings.svelte';
 	import AppSettings from '$lib/components/settings/AppSettings.svelte';
 	import ExportSettings from '$lib/components/settings/ExportSettings.svelte';
@@ -33,6 +34,7 @@
 		{ id: 2, title: ts.get.settings.tags, component: TagSettings },
 		{ id: 3, title: ts.get.settings.localization, component: LocalizationSettings },
 		{ id: 4, title: ts.get.settings.features, component: FeatureSettings },
+		{ id: 10, title: ts.get.settings.ai, component: AiPluginSettings },
 		{ id: 5, title: ts.get.settings.notifications, component: NotificationSettings },
 		{ id: 6, title: ts.get.settings.appearance, component: AppearanceSettings },
 		{ id: 7, title: ts.get.settings.app, component: AppSettings },

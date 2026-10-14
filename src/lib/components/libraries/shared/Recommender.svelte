@@ -11,6 +11,9 @@
 	import type { Library } from '$lib/types/library';
 	import Recommendation from '$lib/components/libraries/shared/Recommendation.svelte';
 	import { apiRoutes } from '$lib/config/apiRoutes';
+	import { urls } from '$lib/config/urls';
+	import { resolve } from '$app/paths';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
 	const ts = getTranslation();
 	const auth = getAuth();
@@ -43,6 +46,10 @@
 		selection = type;
 
 		await loadRecommendation();
+	}
+
+	function showsAiPluginHint(): boolean {
+		return selection === 'new' && recommendationLoaded && recommendation === null;
 	}
 
 	async function loadRecommendation(): Promise<void> {
@@ -101,6 +108,12 @@
 							<IconRotateCcw />
 							{ts.get.libraries.recommendations.not_satisfied}
 						</button>
+					</div>
+				{/if}
+				{#if showsAiPluginHint()}
+					<div class="mx-2 flex flex-col items-start gap-4" in:fade>
+						<p class="text-sm">{ts.get.libraries.recommendations.ai_plugin_hint}</p>
+						<TextButton title={ts.get.libraries.recommendations.open_settings} type="primary" href={resolve(urls.settings)} />
 					</div>
 				{/if}
 			{/if}

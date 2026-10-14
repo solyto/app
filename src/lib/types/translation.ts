@@ -146,6 +146,21 @@ export interface SettingsRecords {
 	journal_enabled: string;
 	journal_calendar_mark: string;
 	check_in_calendar_mark: string;
+	ai_plugin_description: string;
+	ai_plugin_enabled: string;
+	ai_plugin_provider: string;
+	ai_plugin_select_provider: string;
+	ai_plugin_model: string;
+	ai_plugin_select_model: string;
+	ai_plugin_model_unavailable: string;
+	ai_plugin_api_key: string;
+	ai_plugin_api_key_placeholder: string;
+	ai_plugin_api_key_replace_placeholder: string;
+	ai_plugin_api_key_stored: string;
+	ai_plugin_api_key_required: string;
+	ai_plugin_saved: string;
+	ai_plugin_save_error: string;
+	ai_plugin_load_error: string;
 }
 
 export interface AuthRecords {
@@ -622,6 +637,8 @@ export interface LibraryRecords {
 		random: string;
 		unrated: string;
 		new: string;
+		ai_plugin_hint: string;
+		open_settings: string;
 	};
 	navigation: {
 		music: string;

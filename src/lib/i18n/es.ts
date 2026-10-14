@@ -230,7 +230,22 @@ const settings: SettingsRecords = {
 	calendar_life_marks: 'Diario y marcas del calendario',
 	journal_enabled: 'Activar diario',
 	journal_calendar_mark: 'Marca del diario en el calendario',
-	check_in_calendar_mark: 'Marca de check-in en el calendario'
+	check_in_calendar_mark: 'Marca de check-in en el calendario',
+	ai_plugin_description: 'Usa tu propio proveedor y clave de API. Las recomendaciones de IA para libros y música usan estos ajustes.',
+	ai_plugin_enabled: 'Activar funciones de IA',
+	ai_plugin_provider: 'Proveedor',
+	ai_plugin_select_provider: 'Selecciona un proveedor',
+	ai_plugin_model: 'Modelo',
+	ai_plugin_select_model: 'Selecciona un modelo',
+	ai_plugin_model_unavailable: 'El modelo elegido ya no está disponible. Por favor, elige uno nuevo.',
+	ai_plugin_api_key: 'Clave de API',
+	ai_plugin_api_key_placeholder: 'Pega tu clave de API',
+	ai_plugin_api_key_replace_placeholder: 'Introduce una nueva clave para reemplazar la guardada',
+	ai_plugin_api_key_stored: 'Hay una clave de API guardada. Deja el campo vacío para conservarla.',
+	ai_plugin_api_key_required: 'Se necesita una clave de API para guardar los ajustes de IA.',
+	ai_plugin_saved: 'Ajustes de IA guardados.',
+	ai_plugin_save_error: 'No se pudieron guardar los ajustes de IA.',
+	ai_plugin_load_error: 'No se pudieron cargar los ajustes de IA.'
 };
 
 const todos: TodoRecords = {
@@ -640,7 +655,9 @@ const libraries: LibraryRecords = {
 		favorite: 'Un favorito',
 		random: 'Algo al azar',
 		unrated: 'Algo que no he visto',
-		new: 'Algo nuevo'
+		new: 'Algo nuevo',
+		ai_plugin_hint: 'No hay ninguna recomendación disponible. Para recomendar algo nuevo se necesita el plugin de IA, que puedes configurar en los ajustes.',
+		open_settings: 'Abrir ajustes'
 	},
 	navigation: {
 		music: 'Música',

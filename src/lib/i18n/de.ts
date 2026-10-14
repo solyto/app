@@ -231,7 +231,22 @@ const settings: SettingsRecords = {
 	calendar_life_marks: 'Journal & Kalender-Markierungen',
 	journal_enabled: 'Journal aktivieren',
 	journal_calendar_mark: 'Journal-Markierung im Kalender',
-	check_in_calendar_mark: 'Check-in-Markierung im Kalender'
+	check_in_calendar_mark: 'Check-in-Markierung im Kalender',
+	ai_plugin_description: 'Nutze deinen eigenen Anbieter und API-Schlüssel. KI-Empfehlungen für Bücher und Musik verwenden diese Einstellungen.',
+	ai_plugin_enabled: 'KI-Funktionen aktivieren',
+	ai_plugin_provider: 'Anbieter',
+	ai_plugin_select_provider: 'Anbieter auswählen',
+	ai_plugin_model: 'Modell',
+	ai_plugin_select_model: 'Modell auswählen',
+	ai_plugin_model_unavailable: 'Das gewählte Modell ist nicht mehr verfügbar. Bitte wähle ein neues aus.',
+	ai_plugin_api_key: 'API-Schlüssel',
+	ai_plugin_api_key_placeholder: 'API-Schlüssel einfügen',
+	ai_plugin_api_key_replace_placeholder: 'Neuen Schlüssel eingeben, um den gespeicherten zu ersetzen',
+	ai_plugin_api_key_stored: 'Ein API-Schlüssel ist gespeichert. Lass das Feld leer, um ihn zu behalten.',
+	ai_plugin_api_key_required: 'Zum Speichern der KI-Einstellungen wird ein API-Schlüssel benötigt.',
+	ai_plugin_saved: 'KI-Einstellungen gespeichert.',
+	ai_plugin_save_error: 'KI-Einstellungen konnten nicht gespeichert werden.',
+	ai_plugin_load_error: 'KI-Einstellungen konnten nicht geladen werden.'
 };
 
 const todos: TodoRecords = {
@@ -641,7 +656,9 @@ const libraries: LibraryRecords = {
 		favorite: 'Ein Favorit',
 		random: 'Einfach etwas Zufälliges',
 		unrated: 'Etwas, das ich noch nicht gesehen habe',
-		new: 'Etwas Neues'
+		new: 'Etwas Neues',
+		ai_plugin_hint: 'Keine Empfehlung verfügbar. Für neue Empfehlungen wird das KI-Plugin benötigt, das du in den Einstellungen einrichten kannst.',
+		open_settings: 'Einstellungen öffnen'
 	},
 	navigation: {
 		music: 'Musik',

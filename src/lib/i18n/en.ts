@@ -230,7 +230,22 @@ const settings: SettingsRecords = {
 	calendar_life_marks: 'Journal & Calendar Marks',
 	journal_enabled: 'Enable journal',
 	journal_calendar_mark: 'Journal mark in calendar',
-	check_in_calendar_mark: 'Check-in mark in calendar'
+	check_in_calendar_mark: 'Check-in mark in calendar',
+	ai_plugin_description: 'Bring your own provider and API key. AI recommendations for books and music use these settings.',
+	ai_plugin_enabled: 'Enable AI features',
+	ai_plugin_provider: 'Provider',
+	ai_plugin_select_provider: 'Select a provider',
+	ai_plugin_model: 'Model',
+	ai_plugin_select_model: 'Select a model',
+	ai_plugin_model_unavailable: 'The model you chose is no longer available. Please pick a new one.',
+	ai_plugin_api_key: 'API key',
+	ai_plugin_api_key_placeholder: 'Paste your API key',
+	ai_plugin_api_key_replace_placeholder: 'Enter a new key to replace the stored one',
+	ai_plugin_api_key_stored: 'An API key is stored. Leave the field empty to keep it.',
+	ai_plugin_api_key_required: 'An API key is required to save the AI settings.',
+	ai_plugin_saved: 'AI settings saved.',
+	ai_plugin_save_error: 'AI settings could not be saved.',
+	ai_plugin_load_error: 'AI settings could not be loaded.'
 };
 
 const todos: TodoRecords = {
@@ -640,7 +655,9 @@ const libraries: LibraryRecords = {
 		favorite: 'A favorite',
 		random: 'Just something random',
 		unrated: "Something I haven't seen before",
-		new: 'Something new'
+		new: 'Something new',
+		ai_plugin_hint: 'No recommendation available. Recommending something new needs the AI plugin, which you can set up in the settings.',
+		open_settings: 'Open settings'
 	},
 	navigation: {
 		music: 'Music',
