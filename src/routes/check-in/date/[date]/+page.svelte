@@ -3,6 +3,7 @@
 	import DailyCheckIn from '$lib/components/check-in/daily/DailyCheckIn.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { page } from '$app/state';
+	import { afterNavigate } from '$app/navigation';
 	import {
 		formatDate,
 		isDateToday,
@@ -18,16 +19,16 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 
-	let save = $derived.by((): CreateCheckInRequest | null => {
-		void page.params.date;
-		void checkInData.data;
-		return null;
-	});
+	let save = $state<CreateCheckInRequest | null>(null);
 	let date = $derived(page.params.date);
 	let dayData = $derived(checkInData.getDayData());
 
 	const isToday = $derived(isDateToday(new Date(date as string)));
 	const isYesterday = $derived(isDateYesterday(new Date(date as string)));
+
+	afterNavigate(() => {
+		save = null;
+	});
 
 	async function onChange(type: CheckInType, value: number): Promise<void> {
 		if (save === null) {
@@ -40,7 +41,7 @@
 	async function onSave(): Promise<void> {
 		if (save === null || save.date === null) return;
 		loadingIndicator.start();
-		await checkInData.save(save);
+		if (await checkInData.save(save)) save = null;
 		loadingIndicator.stop();
 		notifications.success(ts.get.checkIn.save_success);
 	}

@@ -69,9 +69,11 @@ export class CheckInData {
 		}
 	}
 
-	async save(request: CreateCheckInRequest): Promise<void> {
+	async save(request: CreateCheckInRequest): Promise<boolean> {
 		const ok = await this.apiService.create(apiRoutes.checkIn.create, request);
-		if (ok) await this.load();
+		if (!ok) return false;
+		await this.load();
+		return true;
 	}
 
 	async saveSettings(settings: CheckInSettings): Promise<void> {
