@@ -15,8 +15,12 @@
 		useAddButton={true}
 	/>
 </div>
-<div class="flex flex-row flex-wrap gap-2">
-	{#each tags.tags as tag (tag.id)}
-		<TagEdit {tag} />
-	{/each}
-</div>
+{#if tags.tags.length === 0}
+	<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.settings.no_tags}</p>
+{:else}
+	<div class="flex flex-row flex-wrap gap-2">
+		{#each tags.tags as tag (tag.id)}
+			<TagEdit {tag} />
+		{/each}
+	</div>
+{/if}

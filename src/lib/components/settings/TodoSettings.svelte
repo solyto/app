@@ -19,11 +19,15 @@
 				useAddButton={true}
 			/>
 		{/snippet}
-		<div class="flex flex-row flex-wrap gap-2">
-			{#each todos.categories as category (category.id)}
-				<CategoryEdit {category} />
-			{/each}
-		</div>
+		{#if todos.categories.length === 0}
+			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.settings.no_categories}</p>
+		{:else}
+			<div class="flex flex-row flex-wrap gap-2">
+				{#each todos.categories as category (category.id)}
+					<CategoryEdit {category} />
+				{/each}
+			</div>
+		{/if}
 	</SettingsSection>
 	<SettingsSection label={ts.get.settings.workspaces}>
 		{#snippet headerAction()}
@@ -33,10 +37,14 @@
 				useAddButton={true}
 			/>
 		{/snippet}
-		<div class="flex flex-row flex-wrap gap-4">
-			{#each todos.workspaces as workspace (workspace.id)}
-				<WorkspaceEdit {workspace} />
-			{/each}
-		</div>
+		{#if todos.workspaces.length === 0}
+			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.settings.no_workspaces}</p>
+		{:else}
+			<div class="flex flex-row flex-wrap gap-4">
+				{#each todos.workspaces as workspace (workspace.id)}
+					<WorkspaceEdit {workspace} />
+				{/each}
+			</div>
+		{/if}
 	</SettingsSection>
 </div>
