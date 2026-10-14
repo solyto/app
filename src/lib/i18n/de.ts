@@ -810,6 +810,7 @@ const calendar: CalendarRecords = {
 	recurrence_monthly_weekday: 'Monatlich am Wochentag',
 	recurrence_yearly: 'Jedes Jahr',
 	recurrence_on_the: 'am',
+	recurrence_not_editable: 'Diese Wiederholung kann hier nicht bearbeitet werden. Sie bleibt unverändert.',
 	recurrence_ordinals: {
 		1: '1.',
 		2: '2.',

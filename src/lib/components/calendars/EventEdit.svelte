@@ -256,6 +256,8 @@
 		{/if}
 		{#if form.is_recurring && recurrence}
 			<ChooseRecurrenceRule bind:selection={recurrence} startDate={form.start_date} />
+		{:else if form.is_recurring}
+			<p class="text-sm text-c-neutral-5">{ts.get.calendar.recurrence_not_editable}</p>
 		{/if}
 		<TextInput bind:value={form.description} placeholder={ts.get.calendar.description} />
 		<TextInput bind:value={form.location} placeholder={ts.get.calendar.location} />
