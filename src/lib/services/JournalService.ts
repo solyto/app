@@ -16,6 +16,38 @@ export default class JournalService {
 		return null;
 	}
 
+	mergeCategories(visible: NoteCategory[], hidden: NoteCategory[]): NoteCategory[] {
+		const merged = this.cloneCategories(visible);
+
+		for (const category of hidden) {
+			const parent = category.parent_id === null ? null : this.findCategory(merged, category.parent_id);
+			if (parent) {
+				parent.children.push(category);
+			} else {
+				merged.push(category);
+			}
+		}
+
+		return merged;
+	}
+
+	private cloneCategories(categories: NoteCategory[]): NoteCategory[] {
+		return categories.map((category) => ({
+			...category,
+			children: this.cloneCategories(category.children ?? [])
+		}));
+	}
+
+	private findCategory(categories: NoteCategory[], id: number): NoteCategory | null {
+		for (const category of categories) {
+			if (category.id === id) return category;
+			const child = this.findCategory(category.children ?? [], id);
+			if (child) return child;
+		}
+
+		return null;
+	}
+
 	getEntryTitle(date: Date): string {
 		return getUrlFormat(date);
 	}

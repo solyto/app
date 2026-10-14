@@ -63,6 +63,26 @@ function category(id: number, title: string, overrides: Partial<NoteCategory> = 
 	};
 }
 
+interface Lists {
+	notes?: Note[];
+	hiddenNotes?: Note[];
+	categories?: NoteCategory[];
+	hiddenCategories?: NoteCategory[];
+}
+
+function mockLists(lists: Lists): void {
+	const byUrl: [string, unknown[] | undefined][] = [
+		['/notes/categories/hidden', lists.hiddenCategories],
+		['/notes/categories', lists.categories],
+		['/notes/hidden', lists.hiddenNotes],
+		['/notes', lists.notes]
+	];
+	api.list.mockImplementation((url: string) => {
+		const data = byUrl.find(([suffix]) => url.endsWith(suffix))?.[1];
+		return Promise.resolve(data === undefined ? null : { data });
+	});
+}
+
 beforeEach(() => {
 	resetStoreMocks();
 	pageState.pathname = '/notes';
@@ -232,7 +252,7 @@ describe('Notes store', () => {
 
 		it('creates a note, reloads and navigates to it', async () => {
 			api.create.mockResolvedValue({ data: note({ id: 'n9', title: 'Draft' }) });
-			api.list.mockResolvedValue({ data: [note({ id: 'n9' })] });
+			mockLists({ notes: [note({ id: 'n9' })], hiddenNotes: [] });
 
 			const n = new NotesSvelte();
 			n.inputValue = 'Draft';
@@ -299,8 +319,9 @@ describe('Notes store', () => {
 		}
 
 		it('loadCategories resolves the journal folder and keeps it out of the tree', async () => {
-			api.list.mockResolvedValue({
-				data: [category(1, 'Work'), journal, category(2, 'Private')]
+			mockLists({
+				categories: [category(1, 'Work'), category(2, 'Private')],
+				hiddenCategories: [journal]
 			});
 
 			const n = new NotesSvelte();
@@ -308,6 +329,55 @@ describe('Notes store', () => {
 
 			expect(n.journalCategory?.id).toBe(9);
 			expect(n.categories.map((c) => c.id)).toEqual([1, 2]);
+		});
+
+		it('loadCategories keeps a hidden user folder in the tree', async () => {
+			const hiddenFolder = category(5, 'Secret', { parent_id: 1, is_hidden: true });
+			mockLists({
+				categories: [category(1, 'Work')],
+				hiddenCategories: [journal, hiddenFolder]
+			});
+
+			const n = new NotesSvelte();
+			await n.loadCategories();
+
+			expect(n.journalCategory?.id).toBe(9);
+			expect(n.categories.map((c) => c.id)).toEqual([1]);
+			expect(n.categories[0].children.map((c) => c.id)).toEqual([5]);
+		});
+
+		it('loadCategories keeps the previous state when the hidden call fails', async () => {
+			mockLists({ categories: [category(1, 'Work')] });
+
+			const n = withJournal();
+			n.categories = [category(2, 'Private')];
+			await n.loadCategories();
+
+			expect(n.journalCategory?.id).toBe(9);
+			expect(n.categories.map((c) => c.id)).toEqual([2]);
+		});
+
+		it('load finds journal entries that only come from the hidden notes', async () => {
+			const entry = note({ id: 'j1', title: '2026-08-04', category_id: 9 });
+			const hiddenFolderNote = note({ id: 'h1', title: 'Secret', category_id: 5 });
+			mockLists({ notes: [note({ id: 'o1' })], hiddenNotes: [entry, hiddenFolderNote] });
+
+			const n = withJournal();
+			await n.load();
+
+			expect(n.getJournalEntry(new Date(2026, 7, 4))?.id).toBe('j1');
+			expect(n.getVisibleNotes().map((x) => x.id)).toEqual(['o1', 'h1']);
+		});
+
+		it('load keeps the previous notes when the hidden call fails', async () => {
+			mockLists({ notes: [note({ id: 'o1' })] });
+
+			const n = new NotesSvelte();
+			n.notes = [note({ id: 'old' })];
+			await n.load();
+
+			expect(n.loaded).toBe(false);
+			expect(n.notes.map((x) => x.id)).toEqual(['old']);
 		});
 
 		it('getJournalEntry finds the day entry in the journal folder', () => {
@@ -369,8 +439,9 @@ describe('Notes store', () => {
 			api.update.mockResolvedValue({
 				data: note({ id: 'j5', title: '2026-08-04', category_id: 9 })
 			});
-			api.list.mockResolvedValue({
-				data: [note({ id: 'j5', title: '2026-08-04', category_id: 9 })]
+			mockLists({
+				notes: [],
+				hiddenNotes: [note({ id: 'j5', title: '2026-08-04', category_id: 9 })]
 			});
 
 			const n = withJournal();
@@ -452,11 +523,12 @@ describe('Notes store', () => {
 				updated_at: '2026-01-01T00:00:00'
 			});
 
-			api.list.mockImplementation((url: string) =>
-				url.includes('/notes/categories')
-					? Promise.resolve({ data: [journal] })
-					: Promise.resolve({ data: [entry, ordinary] })
-			);
+			mockLists({
+				notes: [ordinary],
+				hiddenNotes: [entry],
+				categories: [],
+				hiddenCategories: [journal]
+			});
 
 			const n = new NotesSvelte();
 			// Worst case: the notes resolve before the categories, so the journal
@@ -524,13 +596,14 @@ describe('Notes store', () => {
 
 		it('reloads the categories after creating one', async () => {
 			api.create.mockResolvedValue({ data: category(3, 'Ideas') });
-			api.list.mockResolvedValue({ data: [category(3, 'Ideas')] });
+			mockLists({ categories: [category(3, 'Ideas')], hiddenCategories: [] });
 
 			const n = new NotesSvelte();
 			n.inputValue = 'Ideas';
 			await n.createCategory();
 
-			expect(api.list).toHaveBeenCalledWith(expect.stringContaining('/notes/categories'));
+			expect(api.list).toHaveBeenCalledWith(expect.stringMatching(/\/notes\/categories$/));
+			expect(api.list).toHaveBeenCalledWith(expect.stringMatching(/\/notes\/categories\/hidden$/));
 			expect(n.categories).toHaveLength(1);
 		});
 

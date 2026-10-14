@@ -66,10 +66,13 @@ export class NotesSvelte {
 	}
 
 	async load(): Promise<void> {
-		const res = await this.apiService.list(apiRoutes.notes.list);
-		if (res) {
+		const [res, hiddenRes] = await Promise.all([
+			this.apiService.list(apiRoutes.notes.list),
+			this.apiService.list(apiRoutes.notes.listHidden)
+		]);
+		if (res && hiddenRes) {
 			this.loaded = true;
-			this.notes = res.data as Note[];
+			this.notes = [...(res.data as Note[]), ...(hiddenRes.data as Note[])];
 			this.newestNotes = this.getNewestNotes();
 			this.lastUpdatedNotes = this.getLastUpdatedNotes();
 			this.favoriteNotes = this.getFavorites();
@@ -96,9 +99,15 @@ export class NotesSvelte {
 	}
 
 	async loadCategories(): Promise<void> {
-		const res = await this.apiService.list(apiRoutes.notes.listCategories);
-		if (res) {
-			const all = res.data as NoteCategory[];
+		const [res, hiddenRes] = await Promise.all([
+			this.apiService.list(apiRoutes.notes.listCategories),
+			this.apiService.list(apiRoutes.notes.listHiddenCategories)
+		]);
+		if (res && hiddenRes) {
+			const all = this.journalService.mergeCategories(
+				res.data as NoteCategory[],
+				hiddenRes.data as NoteCategory[]
+			);
 			this.journalCategory = this.journalService.findJournalCategory(all);
 			this.categories = all.filter((c) => !c.is_system);
 			this.newestNotes = this.getNewestNotes();

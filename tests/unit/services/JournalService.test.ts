@@ -54,6 +54,64 @@ describe('findJournalCategory', () => {
 	});
 });
 
+describe('mergeCategories', () => {
+	it('adds a hidden root category as a root', () => {
+		const journal = category(3, { title: '.journal', is_system: true, is_hidden: true });
+		const merged = service.mergeCategories([category(1), category(2)], [journal]);
+		expect(merged.map((c) => c.id)).toEqual([1, 2, 3]);
+		expect(merged[2]).toBe(journal);
+	});
+
+	it('grafts a hidden category under its visible parent', () => {
+		const hidden = category(5, { parent_id: 2, is_hidden: true });
+		const merged = service.mergeCategories([category(1), category(2)], [hidden]);
+		expect(merged.map((c) => c.id)).toEqual([1, 2]);
+		expect(merged[1].children).toEqual([hidden]);
+	});
+
+	it('grafts a hidden category under a nested visible parent', () => {
+		const hidden = category(7, { parent_id: 4, is_hidden: true });
+		const visible = [category(1, { children: [category(4, { parent_id: 1 })] })];
+		const merged = service.mergeCategories(visible, [hidden]);
+		expect(merged[0].children[0].children).toEqual([hidden]);
+	});
+
+	it('keeps the children of a hidden category nested under it', () => {
+		const child = category(6, { parent_id: 5 });
+		const hidden = category(5, { is_hidden: true, children: [child] });
+		const merged = service.mergeCategories([category(1)], [hidden]);
+		expect(merged[1].children).toEqual([child]);
+	});
+
+	it('falls back to a root when the parent is unknown', () => {
+		const hidden = category(5, { parent_id: 99, is_hidden: true });
+		const merged = service.mergeCategories([category(1)], [hidden]);
+		expect(merged.map((c) => c.id)).toEqual([1, 5]);
+	});
+
+	it('finds the journal in the merged tree', () => {
+		const journal = category(3, { title: '.journal', is_system: true, is_hidden: true });
+		const merged = service.mergeCategories([category(1)], [journal]);
+		expect(service.findJournalCategory(merged)).toBe(journal);
+	});
+
+	it('does not mutate its inputs', () => {
+		const visible = [category(1, { children: [category(4, { parent_id: 1 })] })];
+		const hidden = [category(7, { parent_id: 4, is_hidden: true })];
+		const before = structuredClone(visible);
+		service.mergeCategories(visible, hidden);
+		expect(visible).toEqual(before);
+		expect(hidden).toHaveLength(1);
+	});
+
+	it('returns a copy of the visible tree when nothing is hidden', () => {
+		const visible = [category(1)];
+		const merged = service.mergeCategories(visible, []);
+		expect(merged).toEqual(visible);
+		expect(merged).not.toBe(visible);
+	});
+});
+
 describe('getEntryTitle', () => {
 	it('formats a date as YYYY-MM-DD', () => {
 		expect(service.getEntryTitle(new Date(2026, 7, 4))).toBe('2026-08-04');

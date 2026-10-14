@@ -78,6 +78,7 @@ export const apiRoutes = {
 	},
 	notes: {
 		list: API_URL + '/notes',
+		listHidden: API_URL + '/notes/hidden',
 		get: API_URL + '/notes/%s',
 		create: API_URL + '/notes',
 		update: API_URL + '/notes/%s',
@@ -86,6 +87,7 @@ export const apiRoutes = {
 		import: API_URL + '/notes/import',
 		export: API_URL + '/notes/export',
 		listCategories: API_URL + '/notes/categories',
+		listHiddenCategories: API_URL + '/notes/categories/hidden',
 		createCategory: API_URL + '/notes/categories',
 		updateCategory: API_URL + '/notes/categories/%d',
 		updateCategoryHidden: API_URL + '/notes/categories/%d/hidden',
