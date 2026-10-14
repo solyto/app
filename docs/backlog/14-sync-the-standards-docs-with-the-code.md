@@ -10,7 +10,6 @@ Bring the documents that describe the code back in line with it after jobs 01–
 - `docs/STANDARDS_BACKLOG.md`: tick the items that are done (about 26 of the 34 open boxes), fix the intro that describes the old 01–13 grouping, and point it at the current entries.
 - `docs/TESTING.md` §7: `DateHelperExtended.test.ts` no longer fails.
 - `.claude/CLAUDE.md`: `tests/components/` now has nine suites and a `ContextHarness.svelte`, so "no component or integration tests" is wrong.
-- `docs/CLAUDE.md` is an unfilled template (`# [Project Name]`); `.claude/CLAUDE.md` is the real one.
 
 ## Why
 
@@ -22,4 +21,4 @@ Changing any rule's content. Code changes.
 
 ## Notes
 
-Re-run each rule's "Check:" grep (the audit report's appendix lists them) and use those numbers, not the report's. Whether `docs/CLAUDE.md` is deleted or filled is the owner's call; ask. Docs only, so the safety check is `git diff` review.
+Re-run each rule's "Check:" grep (the audit report's appendix lists them) and use those numbers, not the report's. Docs only, so the safety check is `git diff` review.

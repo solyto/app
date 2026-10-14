@@ -340,8 +340,6 @@ so repeatedly ("left for the owner"). Concretely:
 - `docs/TESTING.md` §7 still says `DateHelperExtended.test.ts` fails.
 - `.claude/CLAUDE.md` says "no component or integration tests"; `tests/components/`
   has nine suites and a `ContextHarness.svelte`.
-- `docs/CLAUDE.md` is an unfilled template (`# [Project Name]`), while
-  `.claude/CLAUDE.md` is the real one. One of them should go.
 
 This matters more than it sounds: the standard's value is that a reviewer can
 say "line X violates rule Y and here is the grep". Stale counts and paths make
