@@ -16,9 +16,7 @@ export interface UserSettings {
 	date_format: string;
 	time_format: string;
 	widgets: string;
-	ai_enabled: boolean;
 	navigation: string;
-	openai_api_key: string | null;
 	first_visit: boolean;
 	temperature_unit: 'c' | 'f';
 	journal_enabled: boolean;

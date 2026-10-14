@@ -90,7 +90,6 @@ export interface SettingsRecords {
 	telegram_bot: string;
 	telegram_bot_notifications: string;
 	enable_telegram_bot_notifications: string;
-	openai_token: string;
 	features: string;
 	timezone: string;
 	date_format: string;

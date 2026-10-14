@@ -175,7 +175,6 @@ const settings: SettingsRecords = {
 	telegram_bot: 'Telegram Bot',
 	telegram_bot_notifications: 'Telegram Bot Benachrichtigungen',
 	enable_telegram_bot_notifications: 'Telegram Bot Benachrichtigungen aktivieren',
-	openai_token: 'OpenAI Token',
 	features: 'Funktionen',
 	timezone: 'Zeitzone',
 	date_format: 'Datumsformat',

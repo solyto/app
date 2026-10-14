@@ -32,7 +32,6 @@ export const apiRoutes = {
 			updateTimezone: API_URL + '/users/me/settings/timezone',
 			updateDateFormat: API_URL + '/users/me/settings/date-format',
 			updateTimeFormat: API_URL + '/users/me/settings/time-format',
-			updateOpenaiApiKey: API_URL + '/users/me/settings/openai-api-key',
 			updateLanguage: API_URL + '/users/me/settings/language',
 			completeOnboarding: API_URL + '/users/me/settings/complete-onboarding',
 			updateWeatherCity: API_URL + '/users/me/settings/weather-city',

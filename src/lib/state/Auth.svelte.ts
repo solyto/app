@@ -407,12 +407,6 @@ export class Auth {
 		return Promise.resolve(res);
 	}
 
-	async setOpenaiApiKey(key: string | null): Promise<boolean> {
-		const res = await this.apiService.put(apiRoutes.users.settings.updateOpenaiApiKey, { key });
-		await this.loadAdditionalData();
-		return Promise.resolve(res);
-	}
-
 	async setProfileImage(file: File): Promise<boolean> {
 		if (!file.type.startsWith('image/')) {
 			return Promise.resolve(false);
