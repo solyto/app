@@ -15,11 +15,11 @@
 
 	const columnWidth = 'calc((100vw - 2rem) / 3)';
 
-	let week = $derived(getCalendarWeek(calendars.currentYear, calendars.currentWeek));
+	let week = $derived(getCalendarWeek(calendars.currentWeekYear, calendars.currentWeek));
 
 	onMount(() => {
 		const iso = getISODateInfo(new Date());
-		calendars.currentYear = iso.year;
+		calendars.currentWeekYear = iso.year;
 		calendars.currentWeek = iso.week;
 	});
 </script>

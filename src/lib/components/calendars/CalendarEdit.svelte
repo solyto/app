@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getCalendars } from '$lib/state/Calendars.svelte';
+	import { getCalendarSharing } from '$lib/state/CalendarSharing.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import ColorPicker from 'svelte-awesome-color-picker';
@@ -12,6 +13,7 @@
 	import IconEyeOff from '@lucide/svelte/icons/eye-off';
 
 	const calendars = getCalendars();
+	const calendarSharing = getCalendarSharing();
 	const loadingIndicator = getLoadingIndicator();
 	const ts = getTranslation();
 	const notifications = getUiNotifications();
@@ -36,12 +38,12 @@
 	}
 
 	function onShare(): void {
-		calendars.openShareModal(calendar);
+		calendarSharing.openShareModal(calendar);
 	}
 
 	async function onUnsubscribe(): Promise<void> {
 		loadingIndicator.start();
-		const success = await calendars.unsubscribeFromCalendar(calendar.id);
+		const success = await calendarSharing.unsubscribeFromCalendar(calendar.id);
 		if (success) {
 			notifications.add({
 				type: 'success',

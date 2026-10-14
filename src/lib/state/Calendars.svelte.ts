@@ -7,11 +7,7 @@ import type {
 	UpdateCalendarRequest,
 	CreateEventRequest,
 	UpdateEventRequest,
-	CreateCalendarRequest,
-	ImportRequest,
-	SelectImportCalendarsRequest,
-	ImportState,
-	ShareCalendarRequest
+	CreateCalendarRequest
 } from '$lib/types/calendar';
 import { getContext, setContext, tick } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
@@ -21,6 +17,8 @@ import {
 	formatDate,
 	getCalendarMonth,
 	getCalendarWeek,
+	getISODateInfo,
+	getISOWeeksInYear,
 	getUrlFormat,
 	getWeekNumber
 } from '$lib/helpers/DateHelper';
@@ -40,6 +38,7 @@ export class Calendars {
 	todos = $state<Todo[]>([]);
 	month = $state<CalendarMonth>({ weeks: [] });
 	currentWeek = $state<number>(0);
+	currentWeekYear = $state<number>(0);
 	currentMonth = $state<number>(0);
 	currentYear = $state<number>(0);
 	currentDate = $state<Date>(new Date());
@@ -57,14 +56,11 @@ export class Calendars {
 	availableNotesLoaded = $state<boolean>(false);
 	selectedCalendar = $state<Calendar | null>(null);
 	deletionModal = $state<boolean>(false);
-	importModal = $state<boolean>(false);
 	syncModal = $state<boolean>(false);
 	manageModal = $state<boolean>(false);
 	hiddenCalendars = $state<number[]>([]);
 	mobileSelectedDate = $state<Date>(new Date());
 	mobileWeekStart = $state<Date>(new Date());
-	shareModal = $state<boolean>(false);
-	shareCalendarTarget = $state<Calendar | null>(null);
 	pendingMove = $state<{ event: CalendarEvent; request: UpdateEventRequest } | null>(null);
 	pendingInvites = $derived(this.calendars.filter((c) => c.invite_status === 'pending'));
 	ownedCalendars = $derived(this.calendars.filter((c) => c.invite_status === null));
@@ -91,7 +87,9 @@ export class Calendars {
 		this.localStorage = localStorage;
 
 		const today = new Date();
-		this.currentWeek = getWeekNumber(today);
+		const iso = getISODateInfo(today);
+		this.currentWeek = iso.week;
+		this.currentWeekYear = iso.year;
 		this.currentMonth = today.getMonth() + 1;
 		this.currentYear = today.getFullYear();
 
@@ -213,26 +211,26 @@ export class Calendars {
 	}
 
 	nextWeek(): void {
-		if (this.currentWeek === 53) {
+		if (this.currentWeek === getISOWeeksInYear(this.currentWeekYear)) {
 			this.currentWeek = 1;
-			this.currentMonth++;
-			this.currentYear++;
+			this.currentWeekYear++;
+		} else {
+			this.currentWeek++;
 		}
 
-		this.currentWeek++;
-		const weekDays = getCalendarWeek(this.currentYear, this.currentWeek);
+		const weekDays = getCalendarWeek(this.currentWeekYear, this.currentWeek);
 		this.mobileWeekStart = new Date(weekDays[0].date);
 	}
 
 	lastWeek(): void {
 		if (this.currentWeek === 1) {
-			this.currentWeek = 53;
-			this.currentMonth--;
-			this.currentYear--;
+			this.currentWeekYear--;
+			this.currentWeek = getISOWeeksInYear(this.currentWeekYear);
+		} else {
+			this.currentWeek--;
 		}
 
-		this.currentWeek--;
-		const weekDays = getCalendarWeek(this.currentYear, this.currentWeek);
+		const weekDays = getCalendarWeek(this.currentWeekYear, this.currentWeek);
 		this.mobileWeekStart = new Date(weekDays[0].date);
 	}
 
@@ -255,8 +253,10 @@ export class Calendars {
 
 	async goToToday(): Promise<void> {
 		const today = new Date();
+		const iso = getISODateInfo(today);
 		this.currentDate = today;
-		this.currentWeek = getWeekNumber(today);
+		this.currentWeek = iso.week;
+		this.currentWeekYear = iso.year;
 		this.currentMonth = today.getMonth() + 1;
 		this.currentYear = today.getFullYear();
 		this.mobileSelectedDate = new Date(today);
@@ -532,81 +532,11 @@ export class Calendars {
 		return res !== null;
 	}
 
-	async startImport(request: ImportRequest): Promise<boolean> {
-		return (await this.apiService.post(apiRoutes.calendars.startImport, request)) !== null;
-	}
-
-	async selectImportCalendars(request: SelectImportCalendarsRequest) {
-		return (
-			(await this.apiService.post(apiRoutes.calendars.selectImportCalendars, request)) !==
-			null
-		);
-	}
-
-	async getImportState(): Promise<ImportState | null> {
-		const res = await this.apiService.get(apiRoutes.calendars.getImportState, '');
-		if (res) return res.data as ImportState;
-		return null;
-	}
-
 	async changeTodoCompleted(todo: Todo, checked: boolean): Promise<boolean> {
 		const request: UpdateTodoRequest = { is_completed: checked };
 		const res = await this.apiService.update(apiRoutes.todos.update, todo.id, request);
 		if (res) await this.loadTodos();
 		return res;
-	}
-
-	async shareCalendar(calendarId: number, friendId: string): Promise<boolean> {
-		const request: ShareCalendarRequest = { friend_id: friendId };
-		const res = await this.apiService.post(
-			apiRoutes.calendars.shareCalendar.replace('%d', calendarId.toString()),
-			request
-		);
-		return res !== null;
-	}
-
-	async revokeShare(calendarId: number, userId: string): Promise<boolean> {
-		return this.apiService.delete(
-			apiRoutes.calendars.revokeShare.replace('%d', calendarId.toString()),
-			userId
-		);
-	}
-
-	async unsubscribeFromCalendar(calendarId: number): Promise<boolean> {
-		const res = await this.apiService.delete(apiRoutes.calendars.unsubscribe, calendarId);
-		if (res) await this.loadCalendars();
-		return res;
-	}
-
-	async acceptInvite(token: string): Promise<boolean> {
-		const res = await this.apiService.put(
-			apiRoutes.calendars.acceptInvite.replace('%s', token),
-			{}
-		);
-		if (res) {
-			await this.loadCalendars();
-			await this.loadEvents();
-		}
-		return res;
-	}
-
-	async declineInvite(token: string): Promise<boolean> {
-		const res = await this.apiService.put(
-			apiRoutes.calendars.declineInvite.replace('%s', token),
-			{}
-		);
-		if (res) await this.loadCalendars();
-		return res;
-	}
-
-	openShareModal(calendar: Calendar): void {
-		this.shareCalendarTarget = calendar;
-		this.shareModal = true;
-	}
-
-	closeShareModal(): void {
-		this.shareModal = false;
-		this.shareCalendarTarget = null;
 	}
 }
 

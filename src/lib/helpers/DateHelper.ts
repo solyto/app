@@ -348,6 +348,10 @@ export function getISODateInfo(date: Date): ISODateInfo {
 	};
 }
 
+export function getISOWeeksInYear(isoYear: number): number {
+	return getWeekNumber(new Date(isoYear, 11, 28));
+}
+
 export function getCalendarMonth(year?: number, month?: number): CalendarDay[] {
 	const now = new Date();
 	const targetYear = year ?? now.getFullYear();

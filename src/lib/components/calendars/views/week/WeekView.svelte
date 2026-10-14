@@ -12,11 +12,11 @@
 	const hours = getHoursOfDay();
 	const rows = '10% repeat(24, calc(100% / 27))';
 
-	let week = $derived(getCalendarWeek(calendars.currentYear, calendars.currentWeek));
+	let week = $derived(getCalendarWeek(calendars.currentWeekYear, calendars.currentWeek));
 
 	onMount(() => {
 		const iso = getISODateInfo(new Date());
-		calendars.currentYear = iso.year;
+		calendars.currentWeekYear = iso.year;
 		calendars.currentWeek = iso.week;
 	});
 </script>

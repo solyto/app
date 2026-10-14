@@ -352,41 +352,131 @@ describe('Calendars store', () => {
 	describe('week navigation', () => {
 		it('nextWeek advances the week and updates the mobile week start', () => {
 			const c = new Calendars();
-			c.currentYear = 2026;
+			c.currentWeekYear = 2026;
 			c.currentWeek = 32;
 			c.nextWeek();
 			expect(c.currentWeek).toBe(33);
 			expect(c.mobileWeekStart.getFullYear()).toBe(2026);
 		});
 
-		it('nextWeek wraps week 53 into the next year', () => {
-			const c = new Calendars();
-			c.currentYear = 2026;
-			c.currentMonth = 12;
-			c.currentWeek = 53;
-			c.nextWeek();
-			expect(c.currentYear).toBe(2027);
-			expect(c.currentMonth).toBe(13); // month is incremented without clamping (current behaviour)
-			expect(c.currentWeek).toBe(2);
-		});
-
 		it('lastWeek goes back a week', () => {
 			const c = new Calendars();
-			c.currentYear = 2026;
+			c.currentWeekYear = 2026;
 			c.currentWeek = 32;
 			c.lastWeek();
 			expect(c.currentWeek).toBe(31);
 		});
 
-		it('lastWeek wraps week 1 into the previous year', () => {
+		it('nextWeek wraps the last week of a 52-week year into week 1', () => {
 			const c = new Calendars();
-			c.currentYear = 2026;
-			c.currentMonth = 1;
+			c.currentWeekYear = 2025;
+			c.currentWeek = 52;
+			c.nextWeek();
+			expect(c.currentWeekYear).toBe(2026);
+			expect(c.currentWeek).toBe(1);
+			expect(c.mobileWeekStart).toEqual(new Date(2025, 11, 29));
+		});
+
+		it('nextWeek wraps week 53 of a 53-week year into week 1', () => {
+			const c = new Calendars();
+			c.currentWeekYear = 2026;
+			c.currentWeek = 53;
+			c.nextWeek();
+			expect(c.currentWeekYear).toBe(2027);
+			expect(c.currentWeek).toBe(1);
+		});
+
+		it('lastWeek wraps week 1 into the last week of a 52-week year', () => {
+			const c = new Calendars();
+			c.currentWeekYear = 2026;
 			c.currentWeek = 1;
 			c.lastWeek();
-			expect(c.currentYear).toBe(2025);
-			expect(c.currentMonth).toBe(0); // month is decremented without clamping (current behaviour)
+			expect(c.currentWeekYear).toBe(2025);
 			expect(c.currentWeek).toBe(52);
+			expect(c.mobileWeekStart).toEqual(new Date(2025, 11, 22));
+		});
+
+		it('lastWeek wraps week 1 into week 53 of a 53-week year', () => {
+			const c = new Calendars();
+			c.currentWeekYear = 2027;
+			c.currentWeek = 1;
+			c.lastWeek();
+			expect(c.currentWeekYear).toBe(2026);
+			expect(c.currentWeek).toBe(53);
+			expect(c.mobileWeekStart).toEqual(new Date(2026, 11, 28));
+		});
+
+		it('nextWeek and lastWeek leave the calendar year and month alone', () => {
+			const c = new Calendars();
+			c.currentYear = 2026;
+			c.currentMonth = 12;
+			c.currentWeekYear = 2026;
+			c.currentWeek = 53;
+			c.nextWeek();
+			expect(c.currentYear).toBe(2026);
+			expect(c.currentMonth).toBe(12);
+			c.lastWeek();
+			c.lastWeek();
+			expect(c.currentYear).toBe(2026);
+			expect(c.currentMonth).toBe(12);
+		});
+	});
+
+	describe('week-year around New Year', () => {
+		const days = [
+			{ date: new Date(2025, 11, 29, 12, 0), year: 2025, month: 12 },
+			{ date: new Date(2025, 11, 30, 12, 0), year: 2025, month: 12 },
+			{ date: new Date(2025, 11, 31, 12, 0), year: 2025, month: 12 },
+			{ date: new Date(2026, 0, 1, 12, 0), year: 2026, month: 1 },
+			{ date: new Date(2026, 0, 2, 12, 0), year: 2026, month: 1 },
+			{ date: new Date(2026, 0, 3, 12, 0), year: 2026, month: 1 },
+			{ date: new Date(2026, 0, 4, 12, 0), year: 2026, month: 1 }
+		];
+
+		for (const { date, year, month } of days) {
+			const label = date.toDateString();
+
+			it(`constructor on ${label} is in 2026-W1 and the calendar month`, () => {
+				vi.useFakeTimers({ toFake: ['Date'] });
+				vi.setSystemTime(date);
+
+				const c = new Calendars();
+
+				expect(c.currentWeekYear).toBe(2026);
+				expect(c.currentWeek).toBe(1);
+				expect(c.currentYear).toBe(year);
+				expect(c.currentMonth).toBe(month);
+			});
+
+			it(`goToToday on ${label} is in 2026-W1 and the calendar month`, async () => {
+				vi.useFakeTimers({ toFake: ['Date'] });
+				vi.setSystemTime(date);
+
+				const c = new Calendars();
+				c.currentWeekYear = 2020;
+				c.currentWeek = 10;
+				c.currentYear = 2020;
+				c.currentMonth = 3;
+				await c.goToToday();
+
+				expect(c.currentWeekYear).toBe(2026);
+				expect(c.currentWeek).toBe(1);
+				expect(c.currentYear).toBe(year);
+				expect(c.currentMonth).toBe(month);
+			});
+		}
+
+		it('goToToday on 2027-01-01 is in week 53 of 2026', async () => {
+			vi.useFakeTimers({ toFake: ['Date'] });
+			vi.setSystemTime(new Date(2027, 0, 1, 12, 0));
+
+			const c = new Calendars();
+			await c.goToToday();
+
+			expect(c.currentWeekYear).toBe(2026);
+			expect(c.currentWeek).toBe(53);
+			expect(c.currentYear).toBe(2027);
+			expect(c.currentMonth).toBe(1);
 		});
 	});
 
@@ -679,35 +769,6 @@ describe('Calendars store', () => {
 			const c = new Calendars();
 
 			await expect(c.deleteOccurrence(event(), new Date())).resolves.toBe(false);
-			expect(api.list).not.toHaveBeenCalled();
-		});
-
-		it('revokeShare deletes the share of the given user', async () => {
-			api.delete.mockResolvedValue(true);
-			const c = new Calendars();
-
-			await expect(c.revokeShare(3, 'user-9')).resolves.toBe(true);
-			expect(api.delete).toHaveBeenCalledWith(
-				apiRoutes.calendars.revokeShare.replace('%d', '3'),
-				'user-9'
-			);
-		});
-
-		it('unsubscribeFromCalendar unsubscribes and reloads calendars', async () => {
-			api.delete.mockResolvedValue(true);
-			api.list.mockResolvedValue({ data: [] });
-			const c = new Calendars();
-
-			await expect(c.unsubscribeFromCalendar(3)).resolves.toBe(true);
-			expect(api.delete).toHaveBeenCalledWith(apiRoutes.calendars.unsubscribe, 3);
-			expect(api.list).toHaveBeenCalledWith(apiRoutes.calendars.listCalendars);
-		});
-
-		it('unsubscribeFromCalendar does not reload calendars on failure', async () => {
-			api.delete.mockResolvedValue(false);
-			const c = new Calendars();
-
-			await expect(c.unsubscribeFromCalendar(3)).resolves.toBe(false);
 			expect(api.list).not.toHaveBeenCalled();
 		});
 	});

@@ -4,6 +4,7 @@
 	import CalendarNavigation from '$lib/components/calendars/CalendarNavigation.svelte';
 	import MobileCalendarHeader from '$lib/components/calendars/MobileCalendarHeader.svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
+	import { getCalendarSharing } from '$lib/state/CalendarSharing.svelte';
 	import DeleteModal from '$lib/components/calendars/DeleteModal.svelte';
 	import ImportModal from '$lib/components/calendars/ImportModal.svelte';
 	import SyncModal from '$lib/components/dav/SyncModal.svelte';
@@ -14,6 +15,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const calendars = getCalendars();
+	const calendarSharing = getCalendarSharing();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 	const ts = getTranslation();
@@ -52,10 +54,10 @@
 		{#if calendars.syncModal}
 			<SyncModal onClose={() => (calendars.syncModal = false)} />
 		{/if}
-		{#if calendars.shareModal && calendars.shareCalendarTarget}
+		{#if calendarSharing.shareModal && calendarSharing.shareCalendarTarget}
 			<ShareCalendarModal
-				calendar={calendars.shareCalendarTarget}
-				onClose={() => calendars.closeShareModal()}
+				calendar={calendarSharing.shareCalendarTarget}
+				onClose={() => calendarSharing.closeShareModal()}
 			/>
 		{/if}
 		{#if calendars.pendingMove}

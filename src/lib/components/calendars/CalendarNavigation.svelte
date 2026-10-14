@@ -14,6 +14,7 @@
 	import ListNavigation from '$lib/components/calendars/views/day/ListNavigation.svelte';
 	import IconList from '$lib/components/ui/icons/IconList.svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
+	import { getCalendarImport } from '$lib/state/CalendarImport.svelte';
 	import ImportButton from '$lib/components/ui/buttons/ImportButton.svelte';
 	import CloudButton from '$lib/components/ui/buttons/CloudButton.svelte';
 	import { page } from '$app/state';
@@ -21,6 +22,7 @@
 	let editMode = $state<boolean>(page.url.searchParams.has('invitations'));
 
 	const calendars = getCalendars();
+	const calendarImport = getCalendarImport();
 	const ts = getTranslation();
 
 	const activeCalendars = $derived([
@@ -114,7 +116,7 @@
 				/>
 				<ImportButton
 					onClick={() => {
-						calendars.importModal = true;
+						calendarImport.importModal = true;
 					}}
 					title={ts.get.calendar.import_calendars}
 				/>

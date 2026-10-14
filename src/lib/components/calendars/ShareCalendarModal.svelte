@@ -2,7 +2,7 @@
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getCalendars } from '$lib/state/Calendars.svelte';
+	import { getCalendarSharing } from '$lib/state/CalendarSharing.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { apiRoutes, API_USER_STORAGE_URL } from '$lib/config/apiRoutes.js';
@@ -14,7 +14,7 @@
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
-	const calendars = getCalendars();
+	const calendarSharing = getCalendarSharing();
 	const auth = getAuth();
 	const notifications = getUiNotifications();
 
@@ -47,7 +47,7 @@
 		sharing = friend.id;
 		loadingIndicator.start();
 
-		const success = await calendars.shareCalendar(calendar.id, friend.id);
+		const success = await calendarSharing.shareCalendar(calendar.id, friend.id);
 
 		if (success) {
 			sharees = [...sharees, { user_id: friend.id, user_name: friend.name, user_email: '', access: 3, status: 'pending' }];
@@ -64,7 +64,7 @@
 		revoking = sharee.user_id;
 		loadingIndicator.start();
 
-		const success = await calendars.revokeShare(calendar.id, sharee.user_id);
+		const success = await calendarSharing.revokeShare(calendar.id, sharee.user_id);
 
 		if (success) {
 			sharees = sharees.filter((s) => s.user_id !== sharee.user_id);

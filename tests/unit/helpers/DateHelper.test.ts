@@ -10,6 +10,7 @@ import {
 	getDateMinusDays,
 	getDatePlusDays,
 	getISOWeek,
+	getISOWeeksInYear,
 	getWeekNumber,
 	isDateAfter,
 	isDateInTheFuture,
@@ -204,6 +205,18 @@ describe('getISOWeek', () => {
 		const result = getISOWeek(new Date(2025, 11, 29));
 		expect(result.week).toBe(1);
 		expect(result.year).toBe(2026);
+	});
+});
+
+describe('getISOWeeksInYear', () => {
+	it('returns 53 for years with an ISO week 53', () => {
+		expect(getISOWeeksInYear(2020)).toBe(53);
+		expect(getISOWeeksInYear(2026)).toBe(53);
+	});
+
+	it('returns 52 for years without an ISO week 53', () => {
+		expect(getISOWeeksInYear(2025)).toBe(52);
+		expect(getISOWeeksInYear(2027)).toBe(52);
 	});
 });
 

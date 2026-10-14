@@ -14,12 +14,14 @@
 	import BottomSheetModal from '$lib/components/ui/BottomSheetModal.svelte';
 	import ManageCalendars from '$lib/components/calendars/ManageCalendars.svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
+	import { getCalendarImport } from '$lib/state/CalendarImport.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { formatDateWithoutYear } from '$lib/helpers/DateHelper';
 	import { page } from '$app/state';
 	import { slide } from 'svelte/transition';
 
 	const calendars = getCalendars();
+	const calendarImport = getCalendarImport();
 	const ts = getTranslation();
 
 	let calendarsExpanded = $state<boolean>(page.url.searchParams.has('invitations'));
@@ -140,7 +142,7 @@
 				</div>
 				<div class="flex flex-col items-center gap-2">
 					<ImportButton
-						onClick={() => (calendars.importModal = true)}
+						onClick={() => (calendarImport.importModal = true)}
 						title={ts.get.calendar.import_calendars}
 					/>
 					<span class="text-xs text-c-neutral-4">{ts.get.calendar.import_calendars}</span>
