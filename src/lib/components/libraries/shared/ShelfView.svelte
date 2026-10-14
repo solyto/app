@@ -102,7 +102,6 @@
 </script>
 
 <div class="flex w-full select-none flex-col items-center gap-10 py-10" in:fade>
-	<!-- Stage -->
 	<div
 		class="relative w-full overflow-x-hidden"
 		style="height: 420px;"
@@ -144,7 +143,6 @@
 		{/each}
 	</div>
 
-	<!-- Navigation -->
 	<div class="flex items-center gap-6">
 		<button
 			onclick={() => navigate(-1)}
@@ -167,7 +165,6 @@
 		</button>
 	</div>
 
-	<!-- Info panel -->
 	{#if activeEntry}
 		{#key library.shelfIndex}
 			<button
