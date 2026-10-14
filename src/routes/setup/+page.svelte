@@ -4,7 +4,7 @@
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import { setCustomApiUrl, dropCustomApiUrl } from '$lib/config/platform';
+	import { setCustomApiUrl, dropCustomApiUrl, CLIENT_VERSION } from '$lib/config/platform';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { urls } from '$lib/config/urls';
 
@@ -31,7 +31,9 @@
 		const baseUrl = customApiUrl.replace(/\/+$/, '');
 
 		try {
-			const res = await fetch(`${baseUrl}/api/v1/health`);
+			const res = await fetch(`${baseUrl}/api/v1/health`, {
+				headers: CLIENT_VERSION ? { 'X-Client-Version': CLIENT_VERSION } : {}
+			});
 			if (!res.ok) throw new Error();
 			const data = await res.json();
 			if (data?.app !== 'solyto' || !data?.version) throw new Error();

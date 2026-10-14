@@ -1,5 +1,6 @@
 import type { CreateResponse, GetResponse, ListResponse, PostResponse } from '$lib/types/api';
 import { apiRoutes } from '$lib/config/apiRoutes';
+import { CLIENT_VERSION } from '$lib/config/platform';
 
 // Endpoints where a 401 is a legitimate, expected auth failure (bad credentials,
 // expired refresh token, failed passkey authentication) rather than a stale
@@ -194,32 +195,48 @@ export default class ApiService {
 	async download(endpoint: string, accept: string): Promise<Blob | null> {
 		const res = await this.fetchWithRecovery(endpoint, {}, () => ({
 			Authorization: 'Bearer ' + this.authToken,
-			Accept: accept
+			Accept: accept,
+			...this.getClientVersionHeader()
 		}));
 		return res.ok ? await res.blob() : null;
 	}
 
 	private getAuthHeaderOnly(): HeadersInit {
-		return { Authorization: 'Bearer ' + this.authToken };
+		return { Authorization: 'Bearer ' + this.authToken, ...this.getClientVersionHeader() };
 	}
 
 	private getApiHeader(): HeadersInit {
 		if (!this.authToken) {
-			return { Accept: 'application/json' };
+			return { Accept: 'application/json', ...this.getClientVersionHeader() };
 		}
 
-		return { Authorization: 'Bearer ' + this.authToken, Accept: 'application/json' };
+		return {
+			Authorization: 'Bearer ' + this.authToken,
+			Accept: 'application/json',
+			...this.getClientVersionHeader()
+		};
 	}
 
 	private getApiHeaderWithBody(): HeadersInit {
 		if (!this.authToken) {
-			return { 'Content-Type': 'application/json', Accept: 'application/json' };
+			return {
+				'Content-Type': 'application/json',
+				Accept: 'application/json',
+				...this.getClientVersionHeader()
+			};
 		}
 
 		return {
 			Authorization: 'Bearer ' + this.authToken,
 			'Content-Type': 'application/json',
-			Accept: 'application/json'
+			Accept: 'application/json',
+			...this.getClientVersionHeader()
 		};
+	}
+
+	// The API records the version on the auth token. A missing value is ignored
+	// there, so the header is left out entirely when PUBLIC_VERSION is unset.
+	private getClientVersionHeader(): Record<string, string> {
+		return CLIENT_VERSION ? { 'X-Client-Version': CLIENT_VERSION } : {};
 	}
 }
