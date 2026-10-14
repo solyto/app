@@ -249,9 +249,9 @@ With no formatter, these are the conventions the hand-written code follows
 - Tailwind classes have no enforced order; keep the order you find in the
   nearest hand-written component (layout, spacing, colour, state variants).
 
-Check: `npm run lint`. The trailing-comma rule is enforced by ESLint
-(`comma-dangle: ['error', 'never']` in `eslint.config.js`, 64b4069); the
-others are by hand.
+Check: `npm run lint`. The trailing-comma and semicolon rules are enforced
+by ESLint (`comma-dangle: ['error', 'never']`, 64b4069, and
+`semi: ['error', 'always']` in `eslint.config.js`); the others are by hand.
 
 ---
 

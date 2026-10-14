@@ -57,7 +57,7 @@ export class Auth {
 
 		if (!savedAuth) return;
 
-		const { user, authToken } = savedAuth as { user: User; authToken: AuthToken }
+		const { user, authToken } = savedAuth as { user: User; authToken: AuthToken };
 
 		if (!authToken || !user) return;
 

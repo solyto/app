@@ -1,31 +1,31 @@
 <script lang="ts">
-	import { Editor } from '@tiptap/core'
-	import StarterKit from '@tiptap/starter-kit'
-	import Placeholder from '@tiptap/extension-placeholder'
-	import Typography from '@tiptap/extension-typography'
-	import Link from '@tiptap/extension-link'
-	import Image from '@tiptap/extension-image'
-	import { Table } from '@tiptap/extension-table'
-	import { TableRow } from '@tiptap/extension-table-row'
-	import { TableCell } from '@tiptap/extension-table-cell'
-	import { TableHeader } from '@tiptap/extension-table-header'
-	import BubbleMenu from '@tiptap/extension-bubble-menu'
-	import { marked } from 'marked'
-	import { onDestroy, onMount } from 'svelte'
-	import { getNotes } from '$lib/state/Notes.svelte'
-	import { getViewPoint } from '$lib/state/Viewpoint.svelte'
-	import EditorToolbar from './EditorToolbar.svelte'
-	import TableBubbleMenu from './TableBubbleMenu.svelte'
-	import type { ActiveStates } from './EditorToolbar.svelte'
+	import { Editor } from '@tiptap/core';
+	import StarterKit from '@tiptap/starter-kit';
+	import Placeholder from '@tiptap/extension-placeholder';
+	import Typography from '@tiptap/extension-typography';
+	import Link from '@tiptap/extension-link';
+	import Image from '@tiptap/extension-image';
+	import { Table } from '@tiptap/extension-table';
+	import { TableRow } from '@tiptap/extension-table-row';
+	import { TableCell } from '@tiptap/extension-table-cell';
+	import { TableHeader } from '@tiptap/extension-table-header';
+	import BubbleMenu from '@tiptap/extension-bubble-menu';
+	import { marked } from 'marked';
+	import { onDestroy, onMount } from 'svelte';
+	import { getNotes } from '$lib/state/Notes.svelte';
+	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
+	import EditorToolbar from './EditorToolbar.svelte';
+	import TableBubbleMenu from './TableBubbleMenu.svelte';
+	import type { ActiveStates } from './EditorToolbar.svelte';
 
-	const notes = getNotes()
-	const viewPoint = getViewPoint()
+	const notes = getNotes();
+	const viewPoint = getViewPoint();
 
 	let { autofocus = false } = $props<{ autofocus?: boolean }>();
 
-	let editorDiv = $state<HTMLDivElement | null>(null)
-	let tableBubbleRoot = $state<HTMLDivElement | null>(null)
-	let editor = $state<Editor | null>(null)
+	let editorDiv = $state<HTMLDivElement | null>(null);
+	let tableBubbleRoot = $state<HTMLDivElement | null>(null);
+	let editor = $state<Editor | null>(null);
 	let activeStates = $state<ActiveStates>({
 		bold: false,
 		italic: false,
@@ -39,14 +39,14 @@
 		orderedList: false,
 		blockquote: false,
 		link: false
-	})
+	});
 
 	function keyboardPadding() {
-		return viewPoint.isMobile && viewPoint.keyboardHeight ? `${viewPoint.keyboardHeight}px` : ''
+		return viewPoint.isMobile && viewPoint.keyboardHeight ? `${viewPoint.keyboardHeight}px` : '';
 	}
 
 	function syncActiveStates() {
-		if (!editor) return
+		if (!editor) return;
 		activeStates = {
 			bold: editor.isActive('bold'),
 			italic: editor.isActive('italic'),
@@ -60,34 +60,34 @@
 			orderedList: editor.isActive('orderedList'),
 			blockquote: editor.isActive('blockquote'),
 			link: editor.isActive('link')
-		}
+		};
 	}
 
 	function handlePaste(event: ClipboardEvent) {
-		const items = event.clipboardData?.items
-		if (!items || !editor) return
-		const instance = editor
+		const items = event.clipboardData?.items;
+		if (!items || !editor) return;
+		const instance = editor;
 		for (const item of items) {
 			if (item.type.startsWith('image/')) {
-				event.preventDefault()
-				const file = item.getAsFile()
-				if (!file) return
-				const reader = new FileReader()
+				event.preventDefault();
+				const file = item.getAsFile();
+				if (!file) return;
+				const reader = new FileReader();
 				reader.onload = (e) => {
-					const base64 = e.target?.result as string
-					if (base64) instance.chain().focus().setImage({ src: base64 }).run()
-				}
-				reader.readAsDataURL(file)
-				return
+					const base64 = e.target?.result as string;
+					if (base64) instance.chain().focus().setImage({ src: base64 }).run();
+				};
+				reader.readAsDataURL(file);
+				return;
 			}
 		}
 	}
 
 	onMount(async () => {
-		if (!editorDiv || !tableBubbleRoot) return
+		if (!editorDiv || !tableBubbleRoot) return;
 
-		const raw = notes.activeNote?.content ?? ''
-		const content = raw.trimStart().startsWith('<') ? raw : await marked(raw)
+		const raw = notes.activeNote?.content ?? '';
+		const content = raw.trimStart().startsWith('<') ? raw : await marked(raw);
 
 		const instance = new Editor({
 			element: editorDiv,
@@ -108,28 +108,28 @@
 			],
 			content,
 			onUpdate({ editor: e }) {
-				syncActiveStates()
+				syncActiveStates();
 				if (notes.activeNote) {
-					notes.activeNote.content = e.getHTML()
+					notes.activeNote.content = e.getHTML();
 				}
 			},
 			onSelectionUpdate() {
-				syncActiveStates()
+				syncActiveStates();
 			},
 			editorProps: {
 				attributes: { class: 'tiptap-editor' }
 			}
-		})
+		});
 
-		editor = instance
+		editor = instance;
 
-		if (autofocus) instance.commands.focus()
-	})
+		if (autofocus) instance.commands.focus();
+	});
 
 	onDestroy(() => {
-		editor?.destroy()
-		editor = null
-	})
+		editor?.destroy();
+		editor = null;
+	});
 </script>
 
 <TableBubbleMenu {editor} bind:root={tableBubbleRoot} />

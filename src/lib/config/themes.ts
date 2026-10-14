@@ -99,4 +99,4 @@ export const themes: Theme[] = [
 		previewText: '#ffffff',
 		previewAccent: '#ff6600'
 	}
-]
+];
