@@ -191,6 +191,14 @@ export default class ApiService {
 		return res.ok ? await res.blob() : null;
 	}
 
+	async download(endpoint: string, accept: string): Promise<Blob | null> {
+		const res = await this.fetchWithRecovery(endpoint, {}, () => ({
+			Authorization: 'Bearer ' + this.authToken,
+			Accept: accept
+		}));
+		return res.ok ? await res.blob() : null;
+	}
+
 	private getAuthHeaderOnly(): HeadersInit {
 		return { Authorization: 'Bearer ' + this.authToken };
 	}

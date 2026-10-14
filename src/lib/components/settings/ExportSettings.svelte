@@ -94,8 +94,9 @@
 
 	async function downloadExport() {
 		if (!exportStatus) return;
-		const blob = await apiService.image(
-			apiRoutes.export.download.replace('%s', String(exportStatus.id))
+		const blob = await apiService.download(
+			apiRoutes.export.download.replace('%s', String(exportStatus.id)),
+			'application/zip'
 		);
 		if (!blob) {
 			uiNotifications.error('Download failed.');

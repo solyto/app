@@ -236,9 +236,9 @@ describe('image', () => {
 		const fetchMock = vi.fn().mockResolvedValue(jsonResponse(null));
 		vi.stubGlobal('fetch', fetchMock);
 
-		await new ApiService('tok').image('/export/7/download');
+		await new ApiService('tok').image('/clipboard/7/image');
 
-		expect(fetchMock).toHaveBeenCalledWith('/export/7/download', {
+		expect(fetchMock).toHaveBeenCalledWith('/clipboard/7/image', {
 			headers: { Authorization: 'Bearer tok', Accept: 'application/json' }
 		});
 	});
@@ -250,6 +250,28 @@ describe('image', () => {
 
 		vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }));
 		await expect(new ApiService().image('/img')).resolves.toBeNull();
+	});
+});
+
+describe('download', () => {
+	it('sends a GET with the bearer token and the given Accept type', async () => {
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse(null));
+		vi.stubGlobal('fetch', fetchMock);
+
+		await new ApiService('tok').download('/export/7/download', 'application/zip');
+
+		expect(fetchMock).toHaveBeenCalledWith('/export/7/download', {
+			headers: { Authorization: 'Bearer tok', Accept: 'application/zip' }
+		});
+	});
+
+	it('returns the blob on success and null on failure', async () => {
+		const okResponse = { ok: true, blob: vi.fn().mockResolvedValue(new Blob(['x'])) };
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(okResponse));
+		await expect(new ApiService().download('/file', 'application/zip')).resolves.toBeInstanceOf(Blob);
+
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }));
+		await expect(new ApiService().download('/file', 'application/zip')).resolves.toBeNull();
 	});
 });
 
