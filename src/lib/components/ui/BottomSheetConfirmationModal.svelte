@@ -15,7 +15,7 @@
 		type = 'default',
 		children,
 		onConfirm,
-		onCancel,
+		onCancel
 	} = $props<{
 		title?: string;
 		description?: string;

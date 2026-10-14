@@ -868,7 +868,7 @@ const calendar: CalendarRecords = {
 	search_todo: 'Rechercher un todo',
 	search_note: 'Rechercher une note',
 	life_journal: 'Journal',
-	life_check_in: 'Suivi quotidien',
+	life_check_in: 'Suivi quotidien'
 };
 
 const contacts: ContactRecords = {

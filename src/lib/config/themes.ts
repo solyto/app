@@ -98,5 +98,5 @@ export const themes: Theme[] = [
 		previewSurface: '#0d0020',
 		previewText: '#ffffff',
 		previewAccent: '#ff6600'
-	},
+	}
 ]

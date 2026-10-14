@@ -26,7 +26,8 @@ export default ts.config(
 			'svelte/no-navigation-without-resolve': ['error', { ignoreLinks: true }],
 			// Flags every `new Date/Map/Set/URL` in .svelte files, including throwaway locals.
 			// STANDARDS.md 14.1 governs: SvelteDate only where a setter is called on a rendered value.
-			'svelte/prefer-svelte-reactivity': 'off'
+			'svelte/prefer-svelte-reactivity': 'off',
+			'comma-dangle': ['error', 'never']
 		}
 	},
 	{

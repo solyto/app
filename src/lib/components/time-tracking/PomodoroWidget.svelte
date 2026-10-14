@@ -25,7 +25,7 @@
 	let phaseLabel = $derived({
 		work: ts.get.timeTracking.work_session,
 		shortBreak: ts.get.timeTracking.short_break,
-		longBreak: ts.get.timeTracking.long_break,
+		longBreak: ts.get.timeTracking.long_break
 	}[phase]);
 
 	let accentColor = $derived(phase === 'work' ? 'teal' : 'amber');

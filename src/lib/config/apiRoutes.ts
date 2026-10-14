@@ -20,8 +20,8 @@ export const apiRoutes = {
 			authenticate: API_URL + '/auth/passkey/authenticate',
 			list: API_URL + '/auth/passkeys',
 			update: API_URL + '/auth/passkeys/%s',
-			delete: API_URL + '/auth/passkeys/%s',
-		},
+			delete: API_URL + '/auth/passkeys/%s'
+		}
 	},
 	users: {
 		get: API_URL + '/users/me',

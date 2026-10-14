@@ -37,7 +37,7 @@
 	const overflowOnlyItems: Record<string, { iconType: string }> = {
 		settings: { iconType: 'settings' },
 		profile: { iconType: 'profile' },
-		notifications: { iconType: 'notifications' },
+		notifications: { iconType: 'notifications' }
 	};
 	let activeInOverflow = $derived(
 		nav.mobileOrder.slice(mobileVisibleCount).some((slug) => slug === active) || active in overflowOnlyItems

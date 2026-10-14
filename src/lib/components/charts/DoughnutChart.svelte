@@ -71,7 +71,7 @@
 					radius: ['40%', '70%'],
 					avoidLabelOverlap: false,
 					itemStyle: {
-						borderRadius: 5,
+						borderRadius: 5
 					},
 					label: {
 						show: false,
