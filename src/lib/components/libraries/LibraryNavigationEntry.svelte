@@ -4,7 +4,7 @@
 	import { resolve } from '$app/paths';
 	import type { LibraryType } from '$lib/types/library.js';
 
-	let { type, title, url, icon, isActive, setActive } = $props<{
+	let { type, title, url, icon: Icon, isActive, setActive } = $props<{
 		type: LibraryType;
 		title: string;
 		url: string;
@@ -24,5 +24,5 @@
 	}}
 	{title}
 >
-	{@render icon({})}
+	<Icon />
 </button>

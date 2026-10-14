@@ -5,7 +5,7 @@
 		fixedWidth = true,
 		fullWidth = false,
 		href = null,
-		icon = null,
+		icon: Icon = null,
 		hover = true,
 		noShadowOnMobile = false,
 		children
@@ -25,13 +25,13 @@
 	{#if label !== null}
 		<div
 			class="flex flex-row items-center gap-4 pb-2 text-xl leading-loose tracking-wide text-c-heading dark:text-c-primary"
-			class:gap-2={!icon}
-			class:mt-[-10px]={!icon}
+			class:gap-2={!Icon}
+			class:mt-[-10px]={!Icon}
 			class:mb-2={children !== undefined}
 			class:pb-2={children !== undefined}
 		>
-			{#if icon !== null}
-				{@render icon({ class: 'w-6 h-6' })}
+			{#if Icon !== null}
+				<Icon class="w-6 h-6" />
 			{/if}
 			<span>{label}</span>
 		</div>

@@ -7,7 +7,7 @@
 		label,
 		number,
 		loadDelay,
-		icon,
+		icon: Icon,
 		color = 'teal'
 	} = $props<{
 		label: string;
@@ -35,7 +35,11 @@
 	in:scale={{ delay: loadDelay ?? 0, duration: 200 }}
 >
 	<div class="rounded-lg p-3 {colors.bg}">
-		<span class={colors.text}>{@render icon?.({ class: 'w-6 h-6' })}</span>
+		<span class={colors.text}>
+			{#if Icon}
+				<Icon class="w-6 h-6" />
+			{/if}
+		</span>
 	</div>
 	<div class="flex flex-col">
 		<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{label}</span>
