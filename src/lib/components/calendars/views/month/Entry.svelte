@@ -5,7 +5,7 @@
 	import type { CalendarEvent } from '$lib/types/calendar';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getCalendarDrag } from '$lib/state/CalendarDrag.svelte';
-	import type { CalendarDragTarget } from '$lib/state/CalendarDrag.svelte';
+	import type { CalendarDropTarget } from '$lib/services/CalendarDragService';
 	import { createDraggableEvent, findCalendarDayElement } from '$lib/helpers/CalendarDragHelper';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -21,7 +21,7 @@
 
 	const dateSlug = $derived(formatDate(date));
 
-	function computeTarget(x: number, y: number): CalendarDragTarget | null {
+	function computeTarget(x: number, y: number): CalendarDropTarget | null {
 		const cell = findCalendarDayElement(x, y);
 		if (!cell) return null;
 		// Grayed-out days belong to the adjacent month; drops there are rejected.
@@ -35,7 +35,7 @@
 		};
 	}
 
-	async function commitMove(moved: CalendarEvent, target: CalendarDragTarget): Promise<void> {
+	async function commitMove(moved: CalendarEvent, target: CalendarDropTarget): Promise<void> {
 		loadingIndicator.start();
 		const ok = await calendars.moveEvent(moved, target);
 		loadingIndicator.stop();

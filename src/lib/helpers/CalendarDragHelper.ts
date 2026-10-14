@@ -1,9 +1,6 @@
 import type { CalendarEvent } from '$lib/types/calendar';
-import type {
-	CalendarDrag,
-	CalendarDragGhost,
-	CalendarDragTarget
-} from '$lib/state/CalendarDrag.svelte';
+import type { CalendarDrag, CalendarDragGhost } from '$lib/state/CalendarDrag.svelte';
+import type { CalendarDropTarget } from '$lib/services/CalendarDragService';
 
 export type DraggableEventOptions = {
 	enabled: () => boolean;
@@ -13,8 +10,8 @@ export type DraggableEventOptions = {
 		y: number,
 		item: CalendarEvent,
 		grabOffsetY: number
-	) => CalendarDragTarget | null;
-	onDrop: (item: CalendarEvent, target: CalendarDragTarget) => void | Promise<void>;
+	) => CalendarDropTarget | null;
+	onDrop: (item: CalendarEvent, target: CalendarDropTarget) => void | Promise<void>;
 };
 
 export type DraggableEventAction = (

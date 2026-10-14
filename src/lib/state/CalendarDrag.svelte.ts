@@ -1,5 +1,6 @@
 import { setContext, getContext } from 'svelte';
 import type { CalendarEvent } from '$lib/types/calendar';
+import type { CalendarDropTarget } from '$lib/services/CalendarDragService';
 import { getCalendarEventKey } from '$lib/helpers/CalendarEventHelper';
 
 export interface CalendarDragGhost {
@@ -7,12 +8,6 @@ export interface CalendarDragGhost {
 	y: number;
 	width: number;
 	height: number;
-}
-
-export interface CalendarDragTarget {
-	date: Date;
-	hour: number;
-	minute: number;
 }
 
 const INITIAL = {
@@ -31,14 +26,14 @@ export class CalendarDrag {
 	sourceDateSlug = $state<string | null>(INITIAL.sourceDateSlug);
 	sourceKey = $state<string | null>(INITIAL.sourceKey);
 	ghost = $state<CalendarDragGhost | null>(INITIAL.ghost);
-	target = $state<CalendarDragTarget | null>(INITIAL.target);
+	target = $state<CalendarDropTarget | null>(INITIAL.target);
 	suppressClick = $state<boolean>(INITIAL.suppressClick);
 
 	begin(
 		event: CalendarEvent,
 		sourceDateSlug: string,
 		ghost: CalendarDragGhost,
-		target: CalendarDragTarget | null
+		target: CalendarDropTarget | null
 	): void {
 		Object.assign(this, INITIAL, {
 			active: true,
@@ -50,7 +45,7 @@ export class CalendarDrag {
 		});
 	}
 
-	update(ghost: CalendarDragGhost, target: CalendarDragTarget | null): void {
+	update(ghost: CalendarDragGhost, target: CalendarDropTarget | null): void {
 		if (!this.active) return;
 		this.ghost = ghost;
 		this.target = target;

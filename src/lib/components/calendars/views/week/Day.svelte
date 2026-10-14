@@ -9,7 +9,7 @@
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarDragService from '$lib/services/CalendarDragService';
 	import { getCalendarDrag } from '$lib/state/CalendarDrag.svelte';
-	import type { CalendarDragTarget } from '$lib/state/CalendarDrag.svelte';
+	import type { CalendarDropTarget } from '$lib/services/CalendarDragService';
 	import { createDraggableEvent, findCalendarDayElement } from '$lib/helpers/CalendarDragHelper';
 	import { getCalendarEventKey } from '$lib/helpers/CalendarEventHelper';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -87,7 +87,7 @@
 		y: number,
 		item: CalendarEvent,
 		grabOffsetY: number
-	): CalendarDragTarget | null {
+	): CalendarDropTarget | null {
 		const column = findCalendarDayElement(x, y);
 		if (!column) return null;
 		const targetDate = parseDateSlug(column.dataset.calendarDay ?? '');
@@ -119,7 +119,7 @@
 		return { date: targetDate, hour, minute };
 	}
 
-	async function commitMove(item: CalendarEvent, target: CalendarDragTarget): Promise<void> {
+	async function commitMove(item: CalendarEvent, target: CalendarDropTarget): Promise<void> {
 		loadingIndicator.start();
 		const ok = await calendars.moveEvent(item, target);
 		loadingIndicator.stop();
