@@ -128,23 +128,23 @@
 			>
 				<div class="flex items-center gap-1">
 					<div class="bg-c-neutral-1 px-2 py-1 dark:bg-s-dark-2">/</div>
-					<span>Category</span>
+					<span>{ts.get.todos.category}</span>
 				</div>
 				<div class="flex items-center gap-1">
 					<div class="bg-c-neutral-1 px-2 py-1 dark:bg-s-dark-2">#</div>
-					<span>Tag</span>
+					<span>{ts.get.todos.tag}</span>
 				</div>
 				<div class="flex items-center gap-1">
 					<div class="bg-c-neutral-1 px-2 py-1 dark:bg-s-dark-2">due:</div>
-					<span>Due Date</span>
+					<span>{ts.get.todos.due_date}</span>
 				</div>
 				<div class="flex items-center gap-1">
 					<div class="bg-c-neutral-1 px-2 py-1 dark:bg-s-dark-2">repeat:</div>
-					<span>Recurrence</span>
+					<span>{ts.get.todos.recurrence}</span>
 				</div>
 				<div class="flex items-center gap-1">
 					<div class="bg-c-neutral-1 px-2 py-1 dark:bg-s-dark-2">link:</div>
-					<span>Link</span>
+					<span>{ts.get.todos.link}</span>
 				</div>
 			</div>
 		{:else}

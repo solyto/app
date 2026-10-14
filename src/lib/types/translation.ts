@@ -116,6 +116,7 @@ export interface SettingsRecords {
 	export_rate_limited: string;
 	export_next_available: string;
 	export_expired: string;
+	export_download_failed: string;
 	export_expires_at: string;
 	export_no_exports: string;
 	security: string;
@@ -222,6 +223,7 @@ export interface TodoRecords {
 	priority_medium: string;
 	priority_low: string;
 	due_at: string;
+	due_date: string;
 	due_today: string;
 	due_tomorrow: string;
 	due_week: string;

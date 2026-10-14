@@ -99,7 +99,7 @@
 			'application/zip'
 		);
 		if (!blob) {
-			uiNotifications.error('Download failed.');
+			uiNotifications.error(ts.get.settings.export_download_failed);
 			return;
 		}
 		const a = document.createElement('a');
