@@ -183,8 +183,8 @@ function isOffHour(hour: string): boolean {
 ```
 
 Check: every hit of `grep -rn '{@const' src` has a bare member expression on
-the right and sits directly under an `{#if}` on the same value. 40 uses at
-the time of writing, one of them valid; see parking lot.
+the right and sits directly under an `{#if}` on the same value. One use
+today, the valid one above.
 
 ### 1.6 Repeated markup becomes a `{#snippet}` or a component
 
@@ -242,33 +242,16 @@ With no formatter, these are the conventions the hand-written code follows
 - One blank line between top-level declarations; none at the start or end
   of a block.
 - A long call or signature breaks one argument per line, closing bracket on
-  its own line (`Todos.svelte.ts` constructor is the reference). A long
-  `style` attribute breaks one declaration per line (1.4). Related data
-  rows that read as a table may stay compact on one line each
-  (`i18n/en.ts`, the check-in labels), even when long.
-- Tailwind classes have no enforced order; keep the order you find in the
-  nearest hand-written component (layout, spacing, colour, state variants).
-
-### 1.10 Formatting by hand
-
-With no formatter, these are the conventions the hand-written code follows
-(measured 2026-10-12 across `src/lib`); new code matches them:
-
-- Tabs for indentation, four wide. No space-indented lines exist.
-- Single quotes in TypeScript and in Svelte script blocks; double quotes
-  only for HTML attribute values.
-- Semicolons after every statement.
-- No trailing comma after the last element of an object, array or
-  parameter list.
-- One blank line between top-level declarations; none at the start or end
-  of a block.
-- A long call or signature breaks one argument per line, closing bracket on
   its own line (the `Todos.svelte.ts` constructor is the reference). A long
   `style` attribute breaks one declaration per line (1.4). Related data
   rows that read as a table may stay compact on one line each
   (`i18n/en.ts`, the check-in labels), even when long.
 - Tailwind classes have no enforced order; keep the order you find in the
   nearest hand-written component (layout, spacing, colour, state variants).
+
+Check: `npm run lint`. The trailing-comma rule is enforced by ESLint
+(`comma-dangle: ['error', 'never']` in `eslint.config.js`, 64b4069); the
+others are by hand.
 
 ---
 
@@ -515,7 +498,7 @@ third-party library instance (echarts, TipTap), timers, event listeners,
 subscriptions. Such an effect returns a cleanup function. If an effect has no
 cleanup and no external side effect, it should not exist.
 
-Check: `grep -rn '\$effect(' src` lists 29 files; each must be a 5.2 case.
+Check: `grep -rn '\$effect(' src` lists 10 files; each must be a 5.2 case.
 
 ### 5.3 An effect never writes state it reads
 
@@ -690,7 +673,7 @@ Good:
 ```
 
 Check: `grep -rl '<input' src --include='*.svelte' | grep -v /forms/` lists
-19 files today; each one is either a 7.4 case or a violation.
+8 files today; each one is either a 7.4 case or a violation.
 
 ---
 
@@ -734,9 +717,9 @@ attributes that are not a `{…}` expression.
 
 ## 9. Keyboard handling goes through `KeyManager`
 
-`src/lib/KeyManager.svelte.ts` is the one place that listens for keys. The
+`src/lib/state/KeyManager.svelte.ts` is the one place that listens for keys. The
 root layout forwards every `keydown` to it
-(`routes/+layout.svelte:169`), and 38 components register with it. It gives
+(`routes/+layout.svelte:155`), and 37 components register with it. It gives
 priorities, `preventOthers`, helper-key restrictions and central cleanup,
 none of which a private listener has.
 
@@ -767,14 +750,15 @@ without its matching release leaks across routes.
 ### 9.2 If `KeyManager` does not know the key, extend `KeyManager`
 
 `SupportedKey` in `src/lib/types/keydown.ts` is currently
-`Enter | Escape | Space | e | f | s | n | F1`. A component that needs
-`ArrowLeft`/`ArrowRight` adds them there and to the handler map in
+`Enter | Escape | Space | ArrowLeft | ArrowRight | e | f | s | n | F1`. A
+component that needs another key adds it there and to the handler map in
 `KeyManager`; it does not fall back to `window.addEventListener`. This is
 rule 7.2 applied to the key layer.
 
-Known violation: `libraries/shared/ShelfView.svelte:76-77` (arrow-key
-navigation on a raw `window` listener, almost certainly because arrows are
-not a `SupportedKey`).
+Reference: `libraries/shared/ShelfView.svelte` used a raw `window` listener
+for arrow-key navigation because arrows were not a `SupportedKey`; the arrows
+were added to `KeyManager` and the view now registers them like any other
+key.
 
 ### 9.3 Where a plain `onkeydown` is still right
 
@@ -860,8 +844,7 @@ Two shapes, one of them allowed outside `state/`:
 
 - **Shared state** (read by more than one component, or alive beyond one
   component): a context store in `src/lib/state/`. `KeyManager.svelte.ts`
-  is one of these and only its path is wrong (`src/lib/` instead of
-  `src/lib/state/`); backlog.
+  is one of these.
 - **A reactive helper class** that one component instantiates, with its own
   `$state`, no `setContext`/`getContext` and no module-level instance, may
   live in `src/lib/helpers/` as `.svelte.ts`. `helpers/SwipeNavigate.svelte.ts`
@@ -1062,7 +1045,7 @@ What it does not do:
 - It ignores `vi.setSystemTime` (see `TESTING.md` §7), so every unnecessary
   `SvelteDate` is a test that cannot pin "today".
 
-Check: every `import { SvelteDate }` (16 files today) should be in a
+Check: every `import { SvelteDate }` (4 files today) should be in a
 component or store that calls a setter on it.
 
 ---
@@ -1113,8 +1096,8 @@ constructor(
 ```
 
 Reference: `Todos`, `Finances`. The field-initialiser shape
-(`auth = getAuth();` at class level) is the old style; 26 stores still use
-it and are in the backlog. Do not write new stores that way.
+(`auth = getAuth();` at class level) is the old style; no store uses it any
+more. Do not write new stores that way.
 
 How this fits the context pattern: the defaults call `getX()`, which is
 `getContext`, so `new Todos()` is only ever executed by `setTodos()` at
@@ -1128,8 +1111,8 @@ defaults and needs no context at all.
 
 Every endpoint is a named entry in `src/lib/config/apiRoutes.ts` with
 `%s`/`%d` id slots. No store or component builds a URL string or calls
-`fetch`. Known violations in the backlog: `Calendars.svelte.ts` (3),
-`weather/ManageWeatherCity.svelte`, `settings/ExportSettings.svelte`. The
+`fetch`. Known violation in the backlog: `weather/ManageWeatherCity.svelte`
+(backlog 22). The
 pre-auth health check in `routes/setup/+page.svelte` is the one accepted
 direct call.
 
@@ -1227,6 +1210,12 @@ precedent).
   - `svelte/no-at-html-tags` stays on; the nine `{@html}` sites render
     `DOMPurify.sanitize(...)` and carry a per-line disable saying so.
   - `.claude/**` and `docs/**` are ignored.
+- "Reset X when Y changes" is an explicit reset where the change happens: in
+  the handler, in `afterNavigate`, or in the store's setter. It is not a
+  writable `$derived` that reads `void dep` only to re-run, and not a
+  `{#key}` block that remounts a subtree to throw state away. Decided by the
+  owner on 2026-10-14. Examples: the check-in draft (c4a6c12) and the
+  library `shelfIndex`, now held in each library store (828a402).
 - `BEST_PRACTICES.md`'s "extract at three or more copies" is superseded.
   Cross-cutting browser/platform code is extracted on first write (2.4);
   everything else at the second copy.
