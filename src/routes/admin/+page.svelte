@@ -46,7 +46,7 @@
 	});
 </script>
 
-<div class="flex h-full w-full flex-col gap-8 overflow-auto bg-c-neutral p-8 dark:bg-s-dark">
+<div class="flex h-full w-full flex-col gap-8 overflow-auto p-8">
 	<div class="flex items-center gap-3">
 		<div class="rounded-lg bg-c-primary/10 p-2 dark:bg-c-primary/20">
 			<IconLayoutDashboard class="h-6 w-6 text-c-primary" />

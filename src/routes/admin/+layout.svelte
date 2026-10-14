@@ -54,7 +54,7 @@
 	<div class="h-full">
 		<AdminNavbar />
 	</div>
-	<div class="h-full w-full grow overflow-auto bg-c-bg">
+	<div class="h-full w-full grow overflow-auto">
 		{@render children?.()}
 	</div>
 </div>
