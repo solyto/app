@@ -8,7 +8,7 @@ created: 2026-10-14
 - `routes/time-tracking/[id]/+page.svelte`: the redirect effect `if (tt.loaded && !project) goto(…)` (job 11 open question 4).
 - `tour/WelcomeTour.svelte`: the effect that writes `targetRect`/`transitioning` via `untrack` (5.1).
 - The four `charts/*.svelte` wrappers: the effect has no reactive dependency left and runs once, so make it `onMount` like `MobileDayView`/`MobileMonthView`.
-- The writable-`$derived` reset idiom (`void dep; return null`) in `routes/check-in/date/[date]/+page.svelte` and `libraries/shared/ShelfView.svelte`: replace it with `{#key}` or a reset in the navigation handler, or record it in `STANDARDS.md` as the house way.
+- The writable-`$derived` reset idiom (`void dep; return …`) in `libraries/shared/ShelfView.svelte`: reset `activeIndex` explicitly where the change happens. Owner decision: explicit resets, not the idiom and not `{#key}`.
 - `calendars/EventEdit.svelte:67`: the `state_referenced_locally` warning from `svelte-check`, so the gate is back to 0 warnings.
 
 ## Why
@@ -21,4 +21,4 @@ The seven legitimate 5.2 effects (`UpdateChecker`, `FeedView`, `CoverImage`, the
 
 ## Notes
 
-The idiom decision is the owner's; ask before choosing. Journal and time-tracking change navigation behaviour, so check them by hand (direct URL load, in-app navigation, back button). Rules: 5.1–5.6, 3.2.
+Journal and time-tracking change navigation behaviour, so check them by hand (direct URL load, in-app navigation, back button). Rules: 5.1–5.6, 3.2.

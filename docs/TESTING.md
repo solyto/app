@@ -94,8 +94,6 @@ context and are rendered directly.
   the native `Date` at module load, so fake timers never reach it. Code that
   reads "now" through `SvelteDate` must be asserted against the real
   `new Date()`; a hardcoded "today" only passes on the day it was written.
-  (`tests/unit/helpers/DateHelperExtended.test.ts` currently fails for this
-  reason; see `STANDARDS_BACKLOG.md`.)
 - Timers and `tick`: stores that use `setTimeout`/`setInterval` are tested
   with `vi.useFakeTimers()` and `await tick()`/`flushSync`.
 - `$app/state`'s `page` is a static mock in node; code that reacts to

@@ -14,6 +14,7 @@ The follow-ups and open questions jobs 04 and 06 left in the calendar:
 - `Calendars.getWidgetEvents`: route through `fromApi()` instead of `res.data as CalendarEvent[]` (job 04 follow-up).
 - `Calendars` next/previous day: `addDays(date, 1)` instead of mutate-and-rewrap (12.4).
 - `Calendars.goToToday()`: the ISO-year bug noted in job 03 (week 1 / week 52–53 around New Year).
+- `WeekView` and `MobileWeekView` `onMount` both set year/week by hand instead of calling `calendars.goToToday()`. The owner dropped this in job 03; confirm before doing it. If it is done, it depends on the ISO-year fix above.
 
 ## Why
 
@@ -21,7 +22,7 @@ These are the smaller problems the calendar jobs left behind. The duplicate key 
 
 ## Out of scope
 
-Splitting the `Calendars` store (backlog 18). Making `WeekView`/`MobileWeekView` call `goToToday()`, which the owner dropped in job 03.
+Splitting the `Calendars` store (backlog 18).
 
 ## Notes
 

@@ -53,7 +53,7 @@ The client for [solyto.app](https://solyto.app): a free, private, all-in-one per
 `docs/STANDARDS.md` is the single coding standard for this repository and is binding for every change, human or AI. Read it before writing code. Every rule in it comes from a real case in this repo and has a bad/good example and, where possible, a check. Start with "The recurring themes" at the top.
 
 Related files:
-- `docs/STANDARDS_BACKLOG.md` — known violations of the standard, as a fine-grained inventory; `docs/backlog/*.md` groups them into job briefs. Do not fix items from it unless asked; do not add new violations.
+- `docs/backlog/*.md` — known violations of the standard, as manigot backlog entries (one job brief each). Do not fix items from them unless asked; do not add new violations.
 - `docs/STANDARDS_WORKFLOW.md` — how the standard is extended (the owner brings an example, the agent investigates and writes the rule). Only relevant when asked to continue that work.
 - `docs/TESTING.md` — test setup and recipes ("test logic and contracts, not markup, not third-party internals").
 

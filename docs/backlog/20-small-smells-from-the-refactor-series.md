@@ -12,6 +12,7 @@ created: 2026-10-14
 - `NoteNavigationDesktop`/`NoteNavigationMobile` read `auth.user?.settings?.journal_enabled` in the component; it belongs on the store (3.3, job 11).
 - `getIcon`/`getBarColor`/`getBarColorFood` are duplicated across the check-in views (2.2, job 13).
 - `viewPoint.destroy()` is never called from the root layout (11.4, job 09).
+- `ui/BottomSheetConfirmationModal.svelte`: two callers pass `width` through `ConfirmationModal`, but the mobile variant does not declare it. The owner left it as is during the ESLint pass; confirm before changing it.
 
 ## Why
 

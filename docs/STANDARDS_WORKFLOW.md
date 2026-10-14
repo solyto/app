@@ -79,8 +79,8 @@ engineered well, and the style problems are listed on top of that.
 - **Open questions**: things waiting for the owner's answer, each with the
   data point that raised it.
 
-Concrete cleanups go to `docs/STANDARDS_BACKLOG.md` (a checkbox list,
-grouped by size, each item naming its rule), never into `STANDARDS.md`.
+Concrete cleanups go to backlog entries in `docs/backlog/` (one job brief
+each, naming the rules it serves), never into `STANDARDS.md`.
 
 The owner's own inconsistencies with a rule are recorded under open
 questions, not silently dropped and not silently turned into exceptions.
@@ -106,13 +106,13 @@ browser behaviour.
 
 Done later the same day: the four open questions were decided and folded
 into rules 1.5, 3.3, 3.6 and 11.1; the cleanups moved to
-`docs/STANDARDS_BACKLOG.md`.
+`docs/STANDARDS_BACKLOG.md` (since replaced by the entries in `docs/backlog/`).
 
 Still to do:
 
-1. Run the thirteen job entries in `docs/backlog/` (order and dependencies
-   at the top of `STANDARDS_BACKLOG.md`). Each entry says whether tests come
-   first (a logic seam exists) or the job relies on the gates plus a manual
-   run (markup only).
+1. Run the open entries in `docs/backlog/` (the thirteen original jobs are
+   done; the current ones came out of the 2026-10-14 audit in
+   `docs/reports/`). Each entry says whether tests come first (a logic seam
+   exists) or the job relies on the gates plus a manual run (markup only).
 3. Keep collecting examples whenever something new annoys the owner; most
    will now land on an existing rule, which is fine.

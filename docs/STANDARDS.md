@@ -13,9 +13,9 @@ Structure:
 - **Decisions** — choices the owner made that are not obvious from the code.
 - **Open questions** — things waiting for the owner's answer.
 
-Concrete cleanups found while writing the rules are tracked separately in
-`docs/STANDARDS_BACKLOG.md`, so this file stays a description of the target
-and never a todo list.
+Concrete cleanups found while writing the rules are tracked separately as
+backlog entries in `docs/backlog/`, so this file stays a description of the
+target and never a todo list.
 
 ## The recurring themes
 
