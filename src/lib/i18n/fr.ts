@@ -367,7 +367,11 @@ const checkIn: CheckInRecords = {
 	sport_yoga: 'Yoga',
 	sport_replace_with: 'Remplacer par...',
 	score: 'Score',
-	score_description: 'Calculer un score moyen pour ce type (compte également dans le score total)'
+	score_description: 'Calculer un score moyen pour ce type (compte également dans le score total)',
+	range_30_days: '30 jours',
+	range_3_months: '3 mois',
+	range_6_months: '6 mois',
+	range_all: 'Tout'
 };
 
 const checkInSummary: CheckInSummaryRecords = {

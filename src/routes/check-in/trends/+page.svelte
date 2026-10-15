@@ -29,10 +29,10 @@
 	let selectedRange = $state<Range>('30d');
 
 	const ranges: { label: string; value: Range }[] = [
-		{ label: '30 Days', value: '30d' },
-		{ label: '3 Months', value: '3m' },
-		{ label: '6 Months', value: '6m' },
-		{ label: 'All', value: 'all' }
+		{ label: ts.get.checkIn.range_30_days, value: '30d' },
+		{ label: ts.get.checkIn.range_3_months, value: '3m' },
+		{ label: ts.get.checkIn.range_6_months, value: '6m' },
+		{ label: ts.get.checkIn.range_all, value: 'all' }
 	];
 
 	const trackers = $derived(checkInData.activeTrackers.filter((t) => t !== 'sports'));

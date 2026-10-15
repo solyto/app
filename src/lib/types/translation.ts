@@ -339,6 +339,10 @@ export interface CheckInRecords {
 	sport_replace_with: string;
 	score: string;
 	score_description: string;
+	range_30_days: string;
+	range_3_months: string;
+	range_6_months: string;
+	range_all: string;
 }
 
 export interface CheckInSummaryRecords {
