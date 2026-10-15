@@ -12,6 +12,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import NavEntryIcon from '$lib/components/ui/NavEntryIcon.svelte';
 	import { getPageSlug } from '$lib/helpers/NavHelper';
+	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import { getNavigation } from '$lib/state/Navigation.svelte';
 	import { getUserNotifications } from '$lib/state/UserNotifications.svelte';
 
@@ -66,6 +67,7 @@
 			class:text-white={submenuVisible}
 			class:bg-c-nav-active={activeInOverflow && !submenuVisible}
 			class:text-c-nav-active-text={activeInOverflow && !submenuVisible}
+			use:clickOutside={select}
 		>
 			<button
 				class="cursor-pointer p-4"
