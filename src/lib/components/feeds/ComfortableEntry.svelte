@@ -3,17 +3,12 @@
 	import type { FeedItem } from '$lib/types/feed';
 	import { formatDateTime } from '$lib/helpers/DateHelper';
 	import { grabFaviconFromUrl } from '$lib/helpers/ImageHelper';
+	import { stripHtml, hasMeaningfulDescription } from '$lib/helpers/FormatHelper';
 	import SaveToLibraryButton from '$lib/components/feeds/SaveToLibraryButton.svelte';
 
 	let { item } = $props<{
 		item: FeedItem;
 	}>();
-
-	function stripHtml(html: string): string {
-		const div = document.createElement('div');
-		div.innerHTML = html;
-		return div.textContent ?? '';
-	}
 
 	let faviconUrl = $derived(grabFaviconFromUrl(item.link));
 	let formattedDate = $derived(formatDateTime(new Date(item.published_at)));
@@ -31,7 +26,7 @@
 				<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{formattedDate}</span>
 			</div>
 		</div>
-		{#if item.description}
+		{#if hasMeaningfulDescription(item.description)}
 			<p class="mt-1 line-clamp-2 text-sm text-c-neutral-6 dark:text-c-neutral-4">
 				{stripHtml(item.description)}
 			</p>

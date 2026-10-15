@@ -3,17 +3,12 @@
 	import type { FeedItem } from '$lib/types/feed';
 	import { formatDateTime } from '$lib/helpers/DateHelper';
 	import { grabFaviconFromUrl } from '$lib/helpers/ImageHelper';
+	import { stripHtml, hasMeaningfulDescription } from '$lib/helpers/FormatHelper';
 	import SaveToLibraryButton from '$lib/components/feeds/SaveToLibraryButton.svelte';
 
 	let { item } = $props<{
 		item: FeedItem;
 	}>();
-
-	function stripHtml(html: string): string {
-		const div = document.createElement('div');
-		div.innerHTML = html;
-		return div.textContent ?? '';
-	}
 
 	let faviconUrl = $derived(grabFaviconFromUrl(item.link));
 	let formattedDate = $derived(formatDateTime(new Date(item.published_at)));
@@ -47,19 +42,19 @@
 		</div>
 		<div class="flex flex-1 flex-col p-4">
 			<span class="mb-2 line-clamp-2 text-lg leading-tight font-bold">{item.title}</span>
-			{#if item.description}
-				<p class="line-clamp-4 flex-1 text-sm text-c-neutral-6 dark:text-c-neutral-4">
+			{#if hasMeaningfulDescription(item.description)}
+				<p class="line-clamp-4 text-sm text-c-neutral-6 dark:text-c-neutral-4">
 					{stripHtml(item.description)}
 				</p>
 			{/if}
-			<div
-				class="mt-3 flex items-center justify-between border-t border-c-neutral-1 pt-2 dark:border-s-dark"
-			>
-				<div class="flex items-center gap-1.5">
-					<img src={faviconUrl} alt="Favicon" class="h-4 w-4" />
-					<span class="text-xs text-c-neutral-5 dark:text-c-neutral-4">{formattedDate}</span>
+			<div class="mt-auto pt-3">
+				<div class="flex items-center justify-between border-t border-c-neutral-1 pt-2 dark:border-s-dark">
+					<div class="flex items-center gap-1.5">
+						<img src={faviconUrl} alt="Favicon" class="h-4 w-4" />
+						<span class="text-xs text-c-neutral-5 dark:text-c-neutral-4">{formattedDate}</span>
+					</div>
+					<SaveToLibraryButton {item} />
 				</div>
-				<SaveToLibraryButton {item} />
 			</div>
 		</div>
 	</div>
