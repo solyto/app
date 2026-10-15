@@ -273,6 +273,17 @@ export class Auth {
 		});
 	}
 
+	async changePassword(currentPassword: string, newPassword: string, newPasswordConfirmation: string): Promise<AuthActionResponse> {
+		const res = await this.apiService.putRaw<AuthActionResponse>(apiRoutes.users.changePassword, {
+			current_password: currentPassword,
+			new_password: newPassword,
+			new_password_confirmation: newPasswordConfirmation
+		});
+		// The API revokes every token on success, including the one that made this request.
+		if (res.success) this.logout();
+		return res;
+	}
+
 	async passkeyAuthenticationOptions(): Promise<PasskeyAuthenticationOptions | null> {
 		const res = await this.apiService.post(apiRoutes.auth.passkeys.authenticateOptions, {});
 		return (res?.data ?? null) as PasskeyAuthenticationOptions | null;

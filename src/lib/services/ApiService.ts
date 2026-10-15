@@ -185,6 +185,16 @@ export default class ApiService {
 		return await res.json() as Promise<T>;
 	}
 
+	async putRaw<T = object>(endpoint: string, body: object): Promise<T> {
+		const res = await this.fetchWithRecovery(
+			endpoint,
+			{ method: 'PUT', body: JSON.stringify(body) },
+			() => this.getApiHeaderWithBody()
+		);
+
+		return await res.json() as Promise<T>;
+	}
+
 	async put(endpoint: string, body: FormData | object): Promise<boolean> {
 		const res = await this.fetchWithRecovery(
 			endpoint,

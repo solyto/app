@@ -204,6 +204,28 @@ describe('post / postRaw / put', () => {
 		await expect(new ApiService().postRaw('/x', {})).resolves.toEqual({ hello: 'world' });
 	});
 
+	it('putRaw sends a PUT with the JSON body', async () => {
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse({ success: true }));
+		vi.stubGlobal('fetch', fetchMock);
+		const body = { current_password: 'a' };
+		await new ApiService('tok').putRaw('/x', body);
+		expect(fetchMock).toHaveBeenCalledWith('/x', {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer tok',
+				'Content-Type': 'application/json',
+				Accept: 'application/json'
+			},
+			body: JSON.stringify(body)
+		});
+	});
+
+	it('putRaw returns the parsed payload on failure too', async () => {
+		const errorBody = { success: false, errors: { current_password: ['wrong'] } };
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(errorBody, false, 422)));
+		await expect(new ApiService('tok').putRaw('/x', {})).resolves.toEqual(errorBody);
+	});
+
 	it('put returns the ok flag', async () => {
 		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(null, true, 200)));
 		await expect(new ApiService().put('/x', {})).resolves.toBe(true);

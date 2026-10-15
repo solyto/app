@@ -27,6 +27,7 @@ export const apiRoutes = {
 		get: API_URL + '/users/me',
 		updateProfileImage: API_URL + '/users/me/profile-image',
 		getPublicProfile: API_URL + '/users/%s/public-profile',
+		changePassword: API_URL + '/users/change-password',
 		settings: {
 			updateNavigationSettings: API_URL + '/users/me/settings/navigation',
 			updateTimezone: API_URL + '/users/me/settings/timezone',

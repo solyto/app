@@ -126,6 +126,17 @@ export interface SettingsRecords {
 	passkey_last_used: string;
 	passkey_never_used: string;
 	passkey_no_passkeys: string;
+	account: string;
+	change_password: string;
+	current_password: string;
+	new_password: string;
+	confirm_new_password: string;
+	change_password_submit: string;
+	current_password_required: string;
+	current_password_incorrect: string;
+	new_password_same_as_current: string;
+	password_changed: string;
+	password_change_error: string;
 	no_tags: string;
 	theme: string;
 	animations: string;
