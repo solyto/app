@@ -52,6 +52,7 @@ export const apiRoutes = {
 			providers: API_URL + '/plugins/ai/providers'
 		}
 	},
+	integrations: API_URL + '/integrations',
 	todos: {
 		list: API_URL + '/todos',
 		listDueDate: API_URL + '/todos/due-date',

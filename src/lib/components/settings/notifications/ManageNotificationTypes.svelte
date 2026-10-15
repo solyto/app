@@ -12,6 +12,8 @@
 	} from '$lib/types/notification_settings';
 	import type { Connection } from '$lib/types/telegram_bot_connection';
 
+	let { showTelegram } = $props<{ showTelegram: boolean }>();
+
 	const auth = getAuth();
 	const apiService = auth.apiService;
 	const ts = getTranslation();
@@ -82,6 +84,10 @@
 		}
 	}
 
+	function visibleChannels(): { key: NotificationChannel; label: string }[] {
+		return showTelegram ? channels : channels.filter((channel) => channel.key !== 'telegram');
+	}
+
 	function getSettingKey(
 		type: NotificationType,
 		channel: NotificationChannel
@@ -142,7 +148,7 @@
 			<thead>
 				<tr class="border-b border-c-neutral-2 dark:border-s-dark-2">
 					<th class="px-1 py-2 text-left font-semibold"></th>
-					{#each channels as channel (channel.key)}
+					{#each visibleChannels() as channel (channel.key)}
 						<th class="min-w-[60px] px-2 py-2 text-center font-semibold">
 							<span
 								class:opacity-40={!isChannelAvailable(channel.key)}
@@ -158,7 +164,7 @@
 				{#each notificationTypes as type (type.key)}
 					<tr class="border-b border-c-neutral-1 last:border-0 dark:border-s-dark-3">
 						<td class="px-1 py-3 text-left">{type.label}</td>
-						{#each channels as channel (channel.key)}
+						{#each visibleChannels() as channel (channel.key)}
 							<td class="px-2 py-3 text-center">
 								{#if isChannelAvailable(channel.key)}
 									<Checkbox
@@ -182,7 +188,7 @@
 			</tbody>
 		</table>
 
-		{#if !isChannelAvailable('telegram')}
+		{#if showTelegram && !isChannelAvailable('telegram')}
 			<p class="mt-4 text-xs text-c-neutral-5 dark:text-c-neutral-4">
 				{ts.get.settings.telegram_bot_not_connected}
 			</p>

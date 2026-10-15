@@ -23,6 +23,7 @@
 	import WelcomeTour from '$lib/components/tour/WelcomeTour.svelte';
 	import { setThemeState } from '$lib/state/Theme.svelte';
 	import { getQuickAdd, setQuickAdd } from '$lib/state/QuickAdd.svelte';
+	import { setIntegrations } from '$lib/state/Integrations.svelte';
 	import QuickAddFab from '$lib/components/quick-add/QuickAddFab.svelte';
 	import QuickAddModal from '$lib/components/quick-add/QuickAddModal.svelte';
 	import TitleBar from '$lib/components/desktop/TitleBar.svelte';
@@ -49,6 +50,7 @@
 	setPwaInstall();
 	setWelcomeTour();
 	setQuickAdd();
+	setIntegrations();
 
 	const theme = setThemeState();
 	const updateRequired = setUpdateRequired();
