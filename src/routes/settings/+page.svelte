@@ -2,14 +2,12 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
 	import { onMount } from 'svelte';
-	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import TodoSettings from '$lib/components/settings/TodoSettings.svelte';
 	import TagSettings from '$lib/components/settings/TagSettings.svelte';
 	import NotificationSettings from '$lib/components/settings/notifications/NotificationSettings.svelte';
 	import LocalizationSettings from '$lib/components/settings/LocalizationSettings.svelte';
 	import FeatureSettings from '$lib/components/settings/FeatureSettings.svelte';
-	import AiPluginSettings from '$lib/components/settings/AiPluginSettings.svelte';
+	import PluginSettings from '$lib/components/settings/PluginSettings.svelte';
 	import AppearanceSettings from '$lib/components/settings/AppearanceSettings.svelte';
 	import AppSettings from '$lib/components/settings/AppSettings.svelte';
 	import ExportSettings from '$lib/components/settings/ExportSettings.svelte';
@@ -20,29 +18,27 @@
 
 	const ts = getTranslation();
 	const tags = getTags();
-	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
 
 	onMount(async () => {
 		loadingIndicator.start();
-		await Promise.all([tags.load(), todos.loadCategories(), todos.loadWorkspaces()]);
+		await tags.load();
 		loadingIndicator.stop();
 	});
 
 	const sections = $derived([
-		{ id: 1, title: ts.get.settings.todos, component: TodoSettings },
-		{ id: 2, title: ts.get.settings.tags, component: TagSettings },
+		{ id: 6, title: ts.get.settings.appearance, component: AppearanceSettings },
 		{ id: 3, title: ts.get.settings.localization, component: LocalizationSettings },
 		{ id: 4, title: ts.get.settings.features, component: FeatureSettings },
-		{ id: 10, title: ts.get.settings.ai, component: AiPluginSettings },
 		{ id: 5, title: ts.get.settings.notifications, component: NotificationSettings },
-		{ id: 6, title: ts.get.settings.appearance, component: AppearanceSettings },
-		{ id: 7, title: ts.get.settings.app, component: AppSettings },
+		{ id: 2, title: ts.get.settings.tags, component: TagSettings },
+		{ id: 10, title: ts.get.settings.plugins, component: PluginSettings },
 		{ id: 8, title: ts.get.settings.security, component: SecuritySettings },
-		{ id: 9, title: ts.get.settings.export_data, component: ExportSettings }
+		{ id: 9, title: ts.get.settings.export_data, component: ExportSettings },
+		{ id: 7, title: ts.get.settings.app, component: AppSettings }
 	]);
 
-	let active = $state<number>(1);
+	let active = $state<number>(6);
 	let scrollContainer = $state<HTMLElement | null>(null);
 	let programmaticScroll = false;
 
@@ -111,7 +107,7 @@
 		bind:this={scrollContainer}
 		class="min-h-0 flex-1 overflow-auto p-4 max-md:pt-20 lg:px-8 lg:pt-5 2xl:pt-7"
 	>
-		<div class="flex flex-col gap-16 pb-24">
+		<div class="flex flex-col gap-16 pb-8">
 			{#each sections as section (section.id)}
 				<section id={sectionId(section.id)} class="relative scroll-mt-24 lg:scroll-mt-8">
 					<Heading title={section.title} my={0} mb={6} />

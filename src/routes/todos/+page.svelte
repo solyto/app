@@ -19,6 +19,7 @@
 	import SortByScore from '$lib/components/todos/actions/SortByScore.svelte';
 	import HideIt from '$lib/components/todos/actions/HideIt.svelte';
 	import TodoNavigation from '$lib/components/todos/TodoNavigation.svelte';
+	import TodoSettingsModal from '$lib/components/todos/TodoSettingsModal.svelte';
 
 	const viewPoint = getViewPoint();
 	const todos = getTodos();
@@ -58,6 +59,9 @@
 
 <div class="flex h-full w-full flex-row">
 	<TodoNavigation />
+	{#if todos.settingsModalVisible}
+		<TodoSettingsModal />
+	{/if}
 	<div class="relative max-h-full w-full overflow-y-auto p-4 lg:p-8">
 		<ViewSwitcher />
 		<TodoCreate />

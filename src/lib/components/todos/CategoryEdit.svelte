@@ -59,29 +59,29 @@
 </script>
 
 <div
-	class="lg:text-md flex cursor-pointer items-center gap-1 rounded-full border-1 border-c-neutral-2 px-5 py-2.5 text-sm font-semibold dark:border-0 dark:bg-s-dark-2"
+	class="group flex min-h-11 break-inside-avoid items-center gap-2 px-2 text-base md:mb-2 md:min-h-0 md:w-fit md:max-w-full md:gap-0 md:bg-c-neutral-1 md:py-1 md:text-sm md:dark:bg-c-neutral-7 md:dark:text-white"
 	in:fade
 >
 	{#if editing}
-		<div class="w-48">
+		<div class="w-full py-1 md:w-48 md:py-0">
 			<TextInput
 				bind:input
 				bind:value={title}
 				onblur={saveEdit}
-				placeholder={ts.get.settings.rename_category}
+				placeholder={ts.get.todos.rename_category}
 			/>
 		</div>
 	{:else}
-		<span>/{category.title}</span>
-		<div class="ml-2 flex items-center gap-1">
+		<span class="flex-1 truncate md:flex-none">/{category.title}</span>
+		<div class="flex items-center gap-5 overflow-hidden transition-all md:gap-1 pointer-fine:w-0 pointer-fine:opacity-0 pointer-fine:group-hover:ml-2 pointer-fine:group-hover:w-9 pointer-fine:group-hover:opacity-100">
 			<button
-				class="z-40 flex cursor-pointer items-center justify-center rounded-full text-c-neutral-3 transition-all hover:text-c-heading"
-				title={ts.get.settings.rename_category}
+				class="flex shrink-0 cursor-pointer items-center justify-center rounded-full text-c-neutral-3 transition-all hover:text-c-heading"
+				title={ts.get.todos.rename_category}
 				onclick={startEdit}
 			>
-				<IconPen class="size-5" />
+				<IconPen class="size-5 md:size-4" />
 			</button>
-			<DeleteButton onClick={() => onDelete(category)} inModal={false} buttonStyle="minimal" />
+			<DeleteButton onClick={() => onDelete(category)} inModal={false} buttonStyle="minimal" iconClass="size-5 md:size-4" />
 		</div>
 	{/if}
 </div>

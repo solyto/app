@@ -41,8 +41,12 @@
 		return [{ label: ts.get.settings.ai_plugin_select_model, value: '' }, ...options];
 	}
 
-	function onEnabled(value: boolean): void {
+	async function onEnabled(value: boolean): Promise<void> {
 		draft.enabled = value;
+		if (value || !plugins.ai?.enabled) return;
+
+		const saved = await save();
+		if (!saved) draft.enabled = true;
 	}
 
 	function onProvider(value: string): void {
@@ -54,9 +58,12 @@
 		draft.model = value === '' ? null : value;
 	}
 
-	async function save(): Promise<void> {
+	async function save(): Promise<boolean> {
 		const request = pluginService.buildRequest(draft);
-		if (request === null) return;
+		if (request === null) {
+			notifications.error(ts.get.settings.ai_plugin_save_error);
+			return false;
+		}
 
 		loadingIndicator.start();
 		const ok = await plugins.updateAi(request);
@@ -64,10 +71,11 @@
 
 		if (!ok) {
 			notifications.error(ts.get.settings.ai_plugin_save_error);
-			return;
+			return false;
 		}
 		draft = pluginService.toDraft(plugins.ai);
 		notifications.success(ts.get.settings.ai_plugin_saved);
+		return true;
 	}
 </script>
 
@@ -80,33 +88,35 @@
 			<span>{ts.get.settings.ai_plugin_enabled}</span>
 			<Toggle checked={draft.enabled} onchange={onEnabled} />
 		</div>
-		<SettingsSection label={ts.get.settings.ai_plugin_provider}>
-			<Select value={draft.provider ?? ''} options={providerOptions()} onchange={onProvider} />
-		</SettingsSection>
-		<SettingsSection label={ts.get.settings.ai_plugin_model}>
-			{#if plugins.ai?.model_available === false}
-				<p class="mb-2 text-sm text-c-danger">{ts.get.settings.ai_plugin_model_unavailable}</p>
-			{/if}
-			<Select value={draft.model ?? ''} options={modelOptions()} onchange={onModel} />
-		</SettingsSection>
-		<SettingsSection label={ts.get.settings.ai_plugin_api_key}>
-			{#if plugins.ai?.has_api_key}
-				<p class="mb-2 {HINT}">{ts.get.settings.ai_plugin_api_key_stored}</p>
-				<PasswordInput bind:value={draft.apiKey} placeholder={ts.get.settings.ai_plugin_api_key_replace_placeholder} />
-			{:else}
-				<PasswordInput bind:value={draft.apiKey} placeholder={ts.get.settings.ai_plugin_api_key_placeholder} />
-				{#if pluginService.needsApiKey(plugins.ai, draft)}
-					<p class="mt-2 {HINT}">{ts.get.settings.ai_plugin_api_key_required}</p>
+		{#if draft.enabled}
+			<SettingsSection label={ts.get.settings.ai_plugin_provider}>
+				<Select value={draft.provider ?? ''} options={providerOptions()} onchange={onProvider} />
+			</SettingsSection>
+			<SettingsSection label={ts.get.settings.ai_plugin_model}>
+				{#if plugins.ai?.model_available === false}
+					<p class="mb-2 text-sm text-c-danger">{ts.get.settings.ai_plugin_model_unavailable}</p>
 				{/if}
-			{/if}
-		</SettingsSection>
-		<div class="flex justify-end">
-			<TextButton
-				title={ts.get.layout.save}
-				type="primary"
-				disabled={!pluginService.canSave(plugins.ai, plugins.aiProviders, draft)}
-				onclick={save}
-			/>
-		</div>
+				<Select value={draft.model ?? ''} options={modelOptions()} onchange={onModel} />
+			</SettingsSection>
+			<SettingsSection label={ts.get.settings.ai_plugin_api_key}>
+				{#if plugins.ai?.has_api_key}
+					<p class="mb-2 {HINT}">{ts.get.settings.ai_plugin_api_key_stored}</p>
+					<PasswordInput bind:value={draft.apiKey} placeholder={ts.get.settings.ai_plugin_api_key_replace_placeholder} />
+				{:else}
+					<PasswordInput bind:value={draft.apiKey} placeholder={ts.get.settings.ai_plugin_api_key_placeholder} />
+					{#if pluginService.needsApiKey(plugins.ai, draft)}
+						<p class="mt-2 {HINT}">{ts.get.settings.ai_plugin_api_key_required}</p>
+					{/if}
+				{/if}
+			</SettingsSection>
+			<div class="flex justify-end">
+				<TextButton
+					title={ts.get.layout.save}
+					type="primary"
+					disabled={!pluginService.canSave(plugins.ai, plugins.aiProviders, draft)}
+					onclick={save}
+				/>
+			</div>
+		{/if}
 	</div>
 {/if}

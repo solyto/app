@@ -9,6 +9,7 @@
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import SettingsButton from '$lib/components/ui/buttons/SettingsButton.svelte';
 	import InlineAutocomplete from '$lib/components/forms/InlineAutocomplete.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import BottomSheetConfirmationModal from '$lib/components/ui/BottomSheetConfirmationModal.svelte';
@@ -163,6 +164,9 @@
 			</BottomSheetConfirmationModal>
 		{/if}
 	{:else}
-		<TextButton title={ts.get.todos.new_todo} onclick={toggleForm} />
+		<div class="flex items-center gap-2">
+			<SettingsButton title={ts.get.nav.settings} onclick={() => todos.openSettingsModal()} />
+			<TextButton title={ts.get.todos.new_todo} onclick={toggleForm} />
+		</div>
 	{/if}
 </div>

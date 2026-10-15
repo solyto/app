@@ -66,14 +66,8 @@ export interface SettingsRecords {
 	german: string;
 	french: string;
 	spanish: string;
-	todos: string;
 	tags: string;
 	new_tag: string;
-	categories: string;
-	new_category: string;
-	rename_category: string;
-	workspaces: string;
-	new_workspace: string;
 	localization: string;
 	language: string;
 	integrations: string;
@@ -87,6 +81,7 @@ export interface SettingsRecords {
 	nextcloud: string;
 	widgets: string;
 	ai: string;
+	plugins: string;
 	telegram_bot: string;
 	telegram_bot_notifications: string;
 	enable_telegram_bot_notifications: string;
@@ -131,8 +126,6 @@ export interface SettingsRecords {
 	passkey_last_used: string;
 	passkey_never_used: string;
 	passkey_no_passkeys: string;
-	no_categories: string;
-	no_workspaces: string;
 	no_tags: string;
 	theme: string;
 	animations: string;
@@ -234,7 +227,12 @@ export interface TodoRecords {
 	category_error: string;
 	workspaces: string;
 	workspace_hide_it: string;
-	workspace_hide_it_description: string;
+	new_category: string;
+	rename_category: string;
+	no_categories: string;
+	new_workspace: string;
+	no_workspaces: string;
+	workspaces_help: string;
 	priority: string;
 	priority_high: string;
 	priority_medium: string;

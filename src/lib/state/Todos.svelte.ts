@@ -51,6 +51,7 @@ export class Todos {
 	hideItActive = $state<boolean>(false);
 	recentlyCreated = $state<string | null>(null);
 	createModalOpen = $state<boolean>(false);
+	settingsModalVisible = $state<boolean>(false);
 	editingTodoId = $state<string | null>(null);
 
 	editingTodo = $derived(this.todos.find((t) => t.id === this.editingTodoId) ?? null);
@@ -133,6 +134,14 @@ export class Todos {
 	closeEdit(): void {
 		this.editingTodoId = null;
 		this.createModalOpen = false;
+	}
+
+	openSettingsModal(): void {
+		this.settingsModalVisible = true;
+	}
+
+	closeSettingsModal(): void {
+		this.settingsModalVisible = false;
 	}
 
 	toggleSortByScore(): void {

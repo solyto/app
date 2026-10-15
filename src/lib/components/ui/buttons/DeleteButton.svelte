@@ -4,11 +4,13 @@
 	let {
 		onClick,
 		inModal = true,
-		buttonStyle = 'default'
+		buttonStyle = 'default',
+		iconClass = 'size-5'
 	} = $props<{
 		onClick: () => void | Promise<void>;
 		inModal?: boolean;
 		buttonStyle?: 'default' | 'plain' | 'minimal';
+		iconClass?: string;
 	}>();
 </script>
 
@@ -27,5 +29,5 @@
 	class:right-4={inModal}
 	onclick={onClick}
 >
-	<IconTrash class="size-5" />
+	<IconTrash class={iconClass} />
 </button>
