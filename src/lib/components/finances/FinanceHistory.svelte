@@ -9,15 +9,19 @@
 	import { formatDate, getUrlFormat } from '$lib/helpers/DateHelper';
 	import { europeanFormat } from '$lib/helpers/NumberHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import DateInput from '$lib/components/forms/DateInput.svelte';
 	import NumberInput from '$lib/components/forms/NumberInput.svelte';
-	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
+	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import InlineEditButton from '$lib/components/ui/buttons/InlineEditButton.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import SmoothLineChart from '$lib/components/charts/SmoothLineChart.svelte';
 
 	const ts = getTranslation();
+	const keyManager = getKeyManager();
 	const history = new FinanceHistoryService();
 	const HINT = 'text-sm text-c-neutral-5';
 
@@ -40,6 +44,8 @@
 	let editingId = $state<number | null>(null);
 	let editForm = $state<FinanceValueForm>(history.emptyForm(new Date()));
 	let deleteCandidate = $state<FinanceValue | null>(null);
+	let addKeyHandlers: Record<string, string | null> = { Enter: null };
+	let editKeyHandlers: Record<string, string | null> = { Enter: null, Escape: null };
 
 	function replacesHint(): string | null {
 		const replaced = history.findByDate(values, addForm.date);
@@ -50,10 +56,6 @@
 		return editingId !== null && history.findOtherByDate(values, editForm.date, editingId) !== null;
 	}
 
-	function canSaveEdit(): boolean {
-		return history.toRequest(editForm) !== null && !isEditDateTaken();
-	}
-
 	async function add(): Promise<void> {
 		const request = history.toRequest(addForm);
 		if (request === null) return;
@@ -61,18 +63,22 @@
 	}
 
 	function startEdit(value: FinanceValue): void {
+		keyManager.unregisterAll(editKeyHandlers);
 		editForm = history.toForm(value);
 		editingId = value.id;
+		editKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => saveEdit(value), { priority: 2 });
+		editKeyHandlers.Escape = keyManager.registerKeyDown('Escape', () => cancelEdit(), { priority: 2 });
 	}
 
 	function cancelEdit(): void {
+		keyManager.unregisterAll(editKeyHandlers);
 		editingId = null;
 	}
 
 	async function saveEdit(value: FinanceValue): Promise<void> {
 		const request = history.toRequest(editForm);
 		if (request === null || isEditDateTaken()) return;
-		if (await onUpdate(value, request)) editingId = null;
+		if (await onUpdate(value, request)) cancelEdit();
 	}
 
 	function askDelete(value: FinanceValue): void {
@@ -89,6 +95,13 @@
 		deleteCandidate = null;
 		await onDelete(value);
 	}
+
+	onMount(() => (addKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => add(), { priority: 3 })));
+
+	onDestroy(() => {
+		keyManager.unregisterAll(addKeyHandlers);
+		keyManager.unregisterAll(editKeyHandlers);
+	});
 </script>
 
 <div class="flex w-full flex-col gap-6 md:w-2xl">
@@ -104,7 +117,7 @@
 		<div class="grid grid-cols-[1fr_1fr_auto] items-center gap-2">
 			<DateInput bind:value={addForm.date} max={today} />
 			<NumberInput bind:value={addForm.value} placeholder={ts.get.finances.amount} />
-			<TextButton title={ts.get.finances.add_entry} type="action" onclick={add} disabled={history.toRequest(addForm) === null} />
+			<SaveButton onClick={add} />
 		</div>
 		{#if replacesHint()}
 			<p class={HINT}>{replacesHint()}</p>
@@ -120,8 +133,8 @@
 						<div class="grid grid-cols-[1fr_1fr_auto_auto] items-center gap-2">
 							<DateInput bind:value={editForm.date} max={today} />
 							<NumberInput bind:value={editForm.value} placeholder={ts.get.finances.amount} />
-							<TextButton title={ts.get.layout.modal_cancel} type="plain" onclick={cancelEdit} />
-							<TextButton title={ts.get.layout.save} type="primary" onclick={() => saveEdit(value)} disabled={!canSaveEdit()} />
+							<CloseButton onClick={cancelEdit} inModal={false} />
+							<SaveButton onClick={() => saveEdit(value)} />
 						</div>
 						{#if isEditDateTaken()}
 							<p class={HINT}>{ts.get.finances.date_taken}</p>

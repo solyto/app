@@ -27,18 +27,10 @@
 	const finances = getFinances();
 	const statisticsService = new WealthStatisticsService();
 
-	let colorLoaded = $state<boolean>(false);
 	let statistics = $state<{ date: string; values: { field: string; value: number }[] }[]>([]);
 	let showHistory = $state<boolean>(false);
 	let historyFieldId = $state<number | null>(null);
 	let historyField = $derived(finances.wealth.find((field) => field.id === historyFieldId) ?? null);
-
-	async function onChangeValue(wealth: WealthField, value: number): Promise<void> {
-		loadingIndicator.start();
-		const request: StoreFinanceValueRequest = { value: value };
-		await finances.addWealthValue(wealth, request);
-		loadingIndicator.stop();
-	}
 
 	function openHistory(wealth: WealthField): void {
 		historyFieldId = wealth.id;
@@ -97,10 +89,6 @@
 	onMount(() => {
 		statisticsService.setData(finances.wealth);
 
-		setTimeout(() => {
-			colorLoaded = true;
-		}, 100);
-
 		statistics = statisticsService.getGraphValues() as unknown as {
 			date: string;
 			values: { field: string; value: number }[];
@@ -129,15 +117,9 @@
 		<div
 			class="relative w-full rounded-md p-4 shadow-sm dark:shadow-s-dark-shadow md:dark:bg-s-dark-2"
 		>
-			<div class="absolute top-[10px] bottom-[10px] left-[10px]">
-				<div
-					class="h-full w-1 rounded-full transition-all duration-900"
-					class:bg-c-success={colorLoaded}
-				></div>
-			</div>
-			<div class="flex w-full flex-row items-center justify-between pl-5">
-				<h2 class="text-2xl">{ts.get.finances.total}</h2>
-				<span class="text-xl md:text-3xl">{europeanFormat(finances.getWealthSum())}</span>
+			<div class="flex w-full flex-row items-center justify-between">
+				<h2 class="text-2xl font-semibold">{ts.get.finances.total}</h2>
+				<span class="text-xl tabular-nums md:text-3xl">{europeanFormat(finances.getWealthSum())}</span>
 			</div>
 			{#if showHistory}
 				<div class="mt-8 flex w-full flex-col items-center justify-center">
@@ -146,6 +128,7 @@
 						<SmoothLineChart
 							categories={statistics.map((stat) => stat.date)}
 							values={getTotalSeriesData(statistics)}
+							min={statisticsService.getTrendMin(getTotalSeriesData(statistics))}
 							filled={true}
 						/>
 					</div>
@@ -155,19 +138,13 @@
 		<div
 			class="relative w-full rounded-md p-4 shadow-sm dark:shadow-s-dark-shadow md:dark:bg-s-dark-2"
 		>
-			<div class="absolute top-[10px] bottom-[10px] left-[10px]">
-				<div
-					class="h-full w-1 rounded-full transition-all duration-900"
-					class:bg-c-success={colorLoaded}
-				></div>
-			</div>
-			<div class="mb-4 flex w-full flex-row items-center justify-between pl-5">
-				<h2 class="text-2xl">{ts.get.finances.positions}</h2>
+			<div class="mb-4 flex w-full flex-row items-center justify-between">
+				<h2 class="text-2xl font-semibold">{ts.get.finances.positions}</h2>
 				<AddWealthField />
 			</div>
-			<div class="flex flex-col gap-1 pl-5">
+			<div class="flex flex-col gap-1">
 				{#each finances.wealth as wealth (wealth.id)}
-					<WealthFieldDisplay {wealth} {onChangeValue} onOpenHistory={openHistory} />
+					<WealthFieldDisplay {wealth} sectionTotal={finances.getWealthSum()} onOpenHistory={openHistory} />
 				{/each}
 			</div>
 			{#if showHistory}

@@ -1,9 +1,10 @@
 <script lang="ts">
 	import IconPlus from '@lucide/svelte/icons/plus';
 
-	let { onClick, colorOnHover = false } = $props<{
+	let { onClick, colorOnHover = false, hoverColor = 'btn' } = $props<{
 		onClick: () => void;
 		colorOnHover?: boolean;
+		hoverColor?: 'btn' | 'success' | 'danger';
 	}>();
 </script>
 
@@ -13,7 +14,10 @@
 		onclick={onClick}
 	>
 		<div
-			class="absolute flex h-0 w-0 cursor-pointer items-center justify-center rounded-full bg-c-btn text-white transition-all group-hover:h-full group-hover:w-full hover:shadow-sm"
+			class="absolute flex h-0 w-0 cursor-pointer items-center justify-center rounded-full text-white transition-all group-hover:h-full group-hover:w-full hover:shadow-sm"
+			class:bg-c-btn={hoverColor === 'btn'}
+			class:bg-c-success={hoverColor === 'success'}
+			class:bg-c-danger={hoverColor === 'danger'}
 		>
 			<IconPlus class="size-5" />
 		</div>

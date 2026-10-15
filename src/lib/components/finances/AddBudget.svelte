@@ -6,7 +6,7 @@
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import type { BudgetType, CreateBudgetRequest } from '$lib/types/finance';
-	import IconPlus from '@lucide/svelte/icons/plus';
+	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import BottomSheetConfirmationModal from '../ui/BottomSheetConfirmationModal.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -95,13 +95,10 @@
 		{/if}
 	{/if}
 	{#if viewPoint.isMobile || !formOpen}
-		<button
-			class="cursor-pointer rounded-lg p-2 transition-all hover:text-white"
-			class:hover:bg-c-success={type === 'income'}
-			class:hover:bg-c-danger={type === 'expense'}
-			onclick={toggleForm}
-		>
-			<IconPlus />
-		</button>
+		<AddButton
+			colorOnHover={true}
+			hoverColor={type === 'income' ? 'success' : 'danger'}
+			onClick={toggleForm}
+		/>
 	{/if}
 </div>

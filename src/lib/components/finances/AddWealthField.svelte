@@ -5,7 +5,7 @@
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import type { CreateWealthFieldRequest } from '$lib/types/finance';
-	import IconPlus from '@lucide/svelte/icons/plus';
+	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import BottomSheetConfirmationModal from '../ui/BottomSheetConfirmationModal.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -81,8 +81,6 @@
 		{/if}
 	{/if}
 	{#if viewPoint.isMobile || !formOpen}
-		<button class="cursor-pointer rounded-lg p-2 transition-all" onclick={toggleForm}>
-			<IconPlus />
-		</button>
+		<AddButton colorOnHover={true} onClick={toggleForm} />
 	{/if}
 </div>

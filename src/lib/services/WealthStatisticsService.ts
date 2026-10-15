@@ -67,4 +67,13 @@ export default class WealthStatisticsService {
 
 		return refinedResult;
 	}
+
+	// Lower y-axis bound for trend charts: just below the lowest value, so changes stay
+	// visible instead of the line looking flat against an axis that starts at 0.
+	getTrendMin(values: number[]): number | undefined {
+		if (values.length === 0) return undefined;
+		const lowest = Math.min(...values);
+		if (lowest <= 0) return undefined;
+		return Math.floor((lowest * 0.95) / 1000) * 1000;
+	}
 }

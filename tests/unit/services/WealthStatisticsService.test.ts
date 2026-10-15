@@ -90,3 +90,18 @@ describe('getGraphValues', () => {
 		expect(last.values).toContainEqual({ field: 'Cash', value: 20 });
 	});
 });
+
+describe('WealthStatisticsService.getTrendMin', () => {
+	it('returns a bound just below the lowest value, rounded down to the thousand', () => {
+		expect(service.getTrendMin([205000, 195000, 200000])).toBe(185000);
+	});
+
+	it('returns undefined when there are no values', () => {
+		expect(service.getTrendMin([])).toBeUndefined();
+	});
+
+	it('returns undefined when the lowest value is zero or negative', () => {
+		expect(service.getTrendMin([1000, 0])).toBeUndefined();
+		expect(service.getTrendMin([1000, -500])).toBeUndefined();
+	});
+});

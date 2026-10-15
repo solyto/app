@@ -744,7 +744,7 @@ const dev: DevRecords = {
 
 const finances: FinanceRecords = {
 	wealth: 'Wealth',
-	budget: 'Income',
+	budget: 'Budget',
 	positions: 'Positions',
 	total: 'Total',
 	income: 'Income',
