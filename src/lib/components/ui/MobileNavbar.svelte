@@ -36,7 +36,7 @@
 
 	function itemIn(index: number): { y: number; duration: number; delay: number } {
 		const count = nav.mobileOverflowItems().length + (hasLegalUrls ? 4 : 3);
-		return { y: 20, duration: 250, delay: (count - 1 - index) * 40 };
+		return { y: 20, duration: 200, delay: (count - 1 - index) * 26 };
 	}
 
 	let active = $derived(getPageSlug());
