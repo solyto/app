@@ -86,6 +86,11 @@ export interface SettingsRecords {
 	telegram_bot_notifications: string;
 	enable_telegram_bot_notifications: string;
 	features: string;
+	navigation_order_desktop: string;
+	navigation_order_mobile: string;
+	navigation_order_hint: string;
+	navigation_order_more_menu: string;
+	navigation_order_reset: string;
 	timezone: string;
 	date_format: string;
 	time_format: string;

@@ -2,9 +2,11 @@ import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import type { FeatureType, FeatureUsage, NavItem } from '$lib/config/navigation';
+import type { NavigationLayout } from '$lib/types/navigation';
 import { env } from '$env/dynamic/public';
 import LocalStorageService from '$lib/services/LocalStorageService';
-import { mobileDefaultOrder, mobileVisibleCount, navItems } from '$lib/config/navigation';
+import NavigationSettingsService from '$lib/services/NavigationSettingsService';
+import { desktopOrder, mobileDefaultOrder, mobileVisibleCount, navItems, pinnedNavItem } from '$lib/config/navigation';
 
 export class Navigation {
 	static readonly LS_USAGE_KEY: string = 'navigation_usage';
@@ -26,9 +28,11 @@ export class Navigation {
 		timeTracking: true
 	});
 	usage = $state<FeatureUsage>({});
-	mobileOrder = $state<string[]>([...mobileDefaultOrder]);
+	autoMobileOrder = $state<string[]>([...mobileDefaultOrder]);
+	customOrders = $state<Record<NavigationLayout, string[] | null>>({ desktop: null, mobile: null });
 	apiService: ApiService;
 	localStorage: LocalStorageService;
+	settingsService = new NavigationSettingsService();
 
 	constructor(
 		auth: Auth = getAuth(),
@@ -39,6 +43,32 @@ export class Navigation {
 		this.apiService = apiService;
 		this.localStorage = localStorage;
 		void Promise.all([this.loadActiveFeatures(), this.loadUsage(), this.loadMobileOrder()]);
+	}
+
+	get desktopOrder(): string[] {
+		return this.customOrders.desktop ?? desktopOrder;
+	}
+
+	get mobileOrder(): string[] {
+		return this.customOrders.mobile ?? this.autoMobileOrder;
+	}
+
+	orderFor(layout: NavigationLayout): string[] {
+		return layout === 'desktop' ? this.desktopOrder : this.mobileOrder;
+	}
+
+	isOrderCustomised(layout: NavigationLayout): boolean {
+		return this.customOrders[layout] !== null;
+	}
+
+	async saveOrder(layout: NavigationLayout, order: string[]): Promise<void> {
+		this.customOrders[layout] = order;
+		await this.save();
+	}
+
+	async resetOrder(layout: NavigationLayout): Promise<void> {
+		this.customOrders[layout] = null;
+		await this.save();
 	}
 
 	async loadUsage(): Promise<void> {
@@ -62,19 +92,21 @@ export class Navigation {
 
 	async loadMobileOrder(): Promise<void> {
 		const saved = this.localStorage.getJson(Navigation.LS_MOBILE_ORDER_KEY) as string[] | null;
-		if (saved) this.mobileOrder = saved;
+		if (saved) this.autoMobileOrder = saved;
 	}
 
 	saveMobileOrder(): void {
-		this.localStorage.setJson(Navigation.LS_MOBILE_ORDER_KEY, this.mobileOrder);
+		this.localStorage.setJson(Navigation.LS_MOBILE_ORDER_KEY, this.autoMobileOrder);
 	}
 
 	promoteMobileItem(slug: string): void {
-		const order = [...this.mobileOrder];
+		if (this.isOrderCustomised('mobile')) return;
+
+		const order = [...this.autoMobileOrder];
 		const submenuIndex = order.indexOf(slug);
 		if (submenuIndex < mobileVisibleCount) return;
 
-		const barItems = order.slice(0, mobileVisibleCount).filter(s => s !== 'home');
+		const barItems = order.slice(0, mobileVisibleCount).filter(s => s !== pinnedNavItem);
 		const leastUsed = barItems.reduce((a, b) => {
 			const aUsage = navItems[a]?.featureFlag ? (this.usage[navItems[a].featureFlag!] ?? 0) : 0;
 			const bUsage = navItems[b]?.featureFlag ? (this.usage[navItems[b].featureFlag!] ?? 0) : 0;
@@ -85,28 +117,21 @@ export class Navigation {
 		order[leastUsedIndex] = slug;
 		order[submenuIndex] = leastUsed;
 
-		this.mobileOrder = order;
+		this.autoMobileOrder = order;
 		this.saveMobileOrder();
 	}
 
 	async loadActiveFeatures(): Promise<void> {
 		if (this.auth.user?.settings?.navigation !== undefined) {
-			const loadedFeatures: Record<FeatureType, boolean> = JSON.parse(
-				this.auth.user.settings.navigation
-			);
+			const settings = this.settingsService.parse(this.auth.user.settings.navigation, this.features);
 
-			if (!loadedFeatures) {
+			if (!settings) {
 				await this.save();
 				return;
 			}
 
-			for (const type of Object.keys(this.features)) {
-				if (!(type in loadedFeatures)) {
-					loadedFeatures[type as FeatureType] = true;
-				}
-			}
-
-			this.features = loadedFeatures;
+			this.features = settings.visible;
+			this.customOrders = { desktop: settings.desktop, mobile: settings.mobile };
 		}
 
 		if (env.PUBLIC_DISABLE_DEV_REQUESTS === 'true') {
@@ -115,9 +140,9 @@ export class Navigation {
 	}
 
 	async save(): Promise<void> {
-		const features = JSON.stringify(this.features);
-		this.auth.user!.settings.navigation = features;
-		await this.auth.updateNavigation(features);
+		const navigation = this.settingsService.build({ visible: this.features, ...this.customOrders });
+		this.auth.user!.settings.navigation = navigation;
+		await this.auth.updateNavigation(navigation);
 		await this.auth.loadAdditionalData();
 	}
 }
