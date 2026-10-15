@@ -5,13 +5,15 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconTrash from '@lucide/svelte/icons/trash-2';
+	import IconCalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import DatePicker from '$lib/components/forms/DatePicker.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { portalToBody } from '$lib/helpers/PortalHelper';
 
-	let { todo, portal = false } = $props<{
+	let { todo, portal = false, withIcon = false } = $props<{
 		todo: Todo;
 		portal?: boolean;
+		withIcon?: boolean;
 	}>();
 
 	const todos = getTodos();
@@ -38,12 +40,17 @@
 	<div class="group relative">
 		<button
 			bind:this={dateTrigger}
-			class="cursor-pointer text-sm"
+			class="cursor-pointer {withIcon ? 'flex items-center gap-2' : 'text-sm'}"
 			class:pr-4={(todos.view === 'list' || todos.view === 'grouped')}
 			class:ml-1={todos.view === 'kanban'}
 			onclick={toggleDatePicker}
 		>
-			{auth.getDateInUserPreferredFormat(todo.due_at)}
+			{#if withIcon}
+				<span>{auth.getDateInUserPreferredFormat(todo.due_at)}</span>
+				<IconCalendarClock class="size-4 shrink-0" />
+			{:else}
+				{auth.getDateInUserPreferredFormat(todo.due_at)}
+			{/if}
 		</button>
 		<button
 			class="absolute top-[-14px] right-[-14px] z-40 hidden size-[20px] cursor-pointer items-center justify-center rounded-full bg-c-danger text-white drop-shadow-md transition-all group-hover:flex hover:text-c-heading hover:drop-shadow-xl"

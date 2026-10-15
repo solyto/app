@@ -19,7 +19,6 @@
 	import Flags from '$lib/components/todos/props/Flags.svelte';
 	import Recurrence from '$lib/components/todos/props/Recurrence.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
-	import { getPriorityColorClass } from '$lib/helpers/TodoHelper';
 
 	let { todo, handleCheck } = $props<{
 		todo: Todo;
@@ -42,12 +41,11 @@
 	class:dark:bg-c-bg={todo.is_completed}
 	in:fade
 >
-	<div class="absolute top-0 left-0 h-full w-1 rounded-l-md {getPriorityColorClass(todo.priority)}"></div>
 	<ScoreBar {todo} />
-	<div class="ml-2 h-full w-14">
-		<Priority {todo} changePriority={true} {expanded} />
+	<div class="h-full w-14">
+		<Priority {todo} changePriority={true} {expanded} filled />
 	</div>
-	<div class="ml-1 w-[25%]">
+	<div class="ml-4 w-[25%]">
 		<Title {todo} />
 	</div>
 	<div class="group flex w-1/10 items-center">
@@ -65,13 +63,13 @@
 	<div class="group flex w-1/16 items-center">
 		<Progress {todo} />
 	</div>
-	<div class="group ml-auto flex w-1/16 items-center justify-center">
-		<DueDate {todo} />
+	<div class="group ml-auto flex w-1/16 items-center justify-end">
+		<DueDate {todo} withIcon />
 	</div>
 	<div class="ml-auto flex h-full w-auto flex-row items-center gap-2 pr-2 2xl:gap-4 2xl:pr-4">
 		<TodoDelete {todo} />
 		<IconChevronsUpDown
-			class="cursor-pointer text-c-action"
+			class="cursor-pointer text-c-neutral-3 transition-all hover:text-c-action"
 			onclick={() => (expanded = !expanded)}
 		/>
 		<Checkbox isChecked={todo.is_completed} onchange={(e: Event) => handleCheck(e, todo)} />

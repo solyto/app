@@ -71,7 +71,7 @@
 
 <div
 	bind:this={div}
-	class="h-2.5 w-full cursor-pointer rounded-full border-2 border-c-primary bg-c-neutral-1 dark:bg-s-dark-3"
+	class="h-2.5 w-full cursor-pointer rounded-full border-2 border-c-primary not-dark:bg-white"
 	{onmousemove}
 	{onmouseleave}
 	{onclick}

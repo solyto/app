@@ -12,7 +12,7 @@
 	const todos = getTodos();
 </script>
 
-<ContentModal rounded="2xl" p="4" width="4xl" onClose={() => todos.closeSettingsModal()}>
+<ContentModal rounded="2xl" p="6" width="4xl" onClose={() => todos.closeSettingsModal()}>
 	<div class="flex flex-col gap-8">
 		<section>
 			<div class="mb-4 flex min-h-10 items-center gap-4">

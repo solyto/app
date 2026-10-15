@@ -46,7 +46,11 @@
 	<div class="absolute top-0 left-0 h-full w-1 rounded-l-md {getPriorityColorClass(todo.priority)}"></div>
 	<ScoreBar {todo} />
 	<div class="flex items-center gap-3">
-		<span class="flex-1 truncate font-semibold" class:line-through={todo.is_completed}>
+		<span
+			class="flex-1 truncate"
+			class:font-semibold={!minimal}
+			class:line-through={todo.is_completed}
+		>
 			{todo.title}
 		</span>
 		<div class="flex shrink-0 items-center gap-2">

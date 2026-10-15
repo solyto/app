@@ -6,6 +6,7 @@
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';
+	import { getPriorityColorClass } from '$lib/helpers/TodoHelper';
 
 	let {
 		todo,
@@ -14,7 +15,8 @@
 		simple = false,
 		left = false,
 		portal = false,
-		compact = false
+		compact = false,
+		filled = false
 	} = $props<{
 		todo: Todo;
 		changePriority: boolean;
@@ -23,6 +25,7 @@
 		left?: boolean;
 		portal?: boolean;
 		compact?: boolean;
+		filled?: boolean;
 	}>();
 
 	const todos = getTodos();
@@ -43,13 +46,21 @@
 
 		loadingIndicator.stop();
 	}
+
+	function getIconClass(colorClass: string): string {
+		if (filled) {
+			return 'cursor-pointer text-white';
+		}
+
+		return `cursor-pointer rounded-full ${colorClass} hover:bg-c-neutral dark:hover:bg-s-dark-3`;
+	}
 </script>
 
 <div
 	bind:this={trigger}
 	class="
 		relative flex items-center rounded-l-md transition-all duration-300
-		max-2xl:rounded-full
+		max-2xl:rounded-full {filled ? getPriorityColorClass(todo.priority) : ''}
 	"
 	class:justify-center={!left}
 	class:justify-start={left}
@@ -62,17 +73,17 @@
 	{#if changePriority}
 		{#if todo.priority === 'high'}
 			<IconUp
-				class="cursor-pointer rounded-full text-c-danger hover:bg-c-neutral dark:hover:bg-s-dark-3"
+				class={getIconClass('text-c-danger')}
 				onclick={togglePriorityMenu}
 			/>
 		{:else if todo.priority === 'medium'}
 			<IconRight
-				class="cursor-pointer rounded-full text-c-btn hover:bg-c-neutral dark:hover:bg-s-dark-3"
+				class={getIconClass('text-c-btn')}
 				onclick={togglePriorityMenu}
 			/>
 		{:else if todo.priority === 'low'}
 			<IconDown
-				class="cursor-pointer rounded-full text-c-success hover:bg-c-neutral dark:hover:bg-s-dark-3"
+				class={getIconClass('text-c-success')}
 				onclick={togglePriorityMenu}
 			/>
 		{/if}
