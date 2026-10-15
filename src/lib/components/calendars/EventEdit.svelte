@@ -30,6 +30,10 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 	const recurrenceRuleService = new RecurrenceRuleService();
+	const newEventStartHour = calendars.newEventPreset.hour ?? 12;
+	const newEventEnd = new Date(
+		combineDateAndTime(calendars.selectedDate ?? new Date(), newEventStartHour, 0).getTime() + 60 * 60 * 1000
+	);
 	const emptyForm: EventForm = {
 		calendar_id: 0,
 		title: '',
@@ -53,15 +57,15 @@
 		title: calendars.activeEvent ? calendars.activeEvent.title : '',
 		description: calendars.activeEvent ? calendars.activeEvent.description : '',
 		location: calendars.activeEvent ? calendars.activeEvent.location : '',
-		is_all_day: calendars.activeEvent ? calendars.activeEvent.is_all_day : false,
+		is_all_day: calendars.activeEvent ? calendars.activeEvent.is_all_day : (calendars.newEventPreset.allDay ?? false),
 		is_recurring: calendars.activeEvent ? calendars.activeEvent.is_recurring : false,
 		recurrence_rule: calendars.activeEvent ? calendars.activeEvent.recurrence_rule : null,
 		recurrence_end: calendars.activeEvent ? calendars.activeEvent.recurrence_end : null,
 		start_date: getStartDate(),
-		start_hours: calendars.activeEvent ? calendars.activeEvent.start_date.getHours() : 12,
+		start_hours: calendars.activeEvent ? calendars.activeEvent.start_date.getHours() : newEventStartHour,
 		start_minutes: calendars.activeEvent ? calendars.activeEvent.start_date.getMinutes() : 0,
 		end_date: getEndDate(),
-		end_hours: calendars.activeEvent ? calendars.activeEvent.end_date.getHours() : 13,
+		end_hours: calendars.activeEvent ? calendars.activeEvent.end_date.getHours() : newEventEnd.getHours(),
 		end_minutes: calendars.activeEvent ? calendars.activeEvent.end_date.getMinutes() : 0
 	};
 	let form = $state<EventForm>(initialForm);
@@ -89,8 +93,7 @@
 
 	function getEndDate(): SvelteDate {
 		if (calendars.activeEvent) return new SvelteDate(calendars.activeEvent.end_date);
-		if (calendars.selectedDate) return new SvelteDate(calendars.selectedDate);
-		return new SvelteDate();
+		return new SvelteDate(newEventEnd);
 	}
 
 	function getStart(): Date {

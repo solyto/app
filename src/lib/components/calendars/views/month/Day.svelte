@@ -20,15 +20,21 @@
 			? formatDate(drag.target.date) === dateSlug
 			: false
 	);
+
+	async function onCellDoubleClick(event: MouseEvent): Promise<void> {
+		if ((event.target as HTMLElement).closest('button, a')) return;
+		await calendars.showSidebar(day.date);
+	}
 </script>
 
 <div
-	class="group relative flex w-1/7 flex-col overflow-y-auto border-1 border-c-neutral-1 dark:border-s-dark"
+	class="group relative flex w-1/7 flex-col overflow-y-auto border-1 border-c-neutral-1 select-none dark:border-s-dark"
 	class:bg-c-neutral={day.is_grayed_out}
 	class:bg-c-bg-surface={!day.is_grayed_out}
 	class:dark:bg-s-dark={day.is_grayed_out}
 	data-calendar-day={dateSlug}
 	data-grayed={day.is_grayed_out ? 'true' : 'false'}
+	ondblclick={onCellDoubleClick}
 >
 	<div class="flex w-full flex-col items-start justify-start">
 		<div class="flex w-full items-start justify-between">

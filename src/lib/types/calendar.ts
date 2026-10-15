@@ -145,6 +145,12 @@ export interface EventForm {
 	recurrence_end: Date | null;
 }
 
+/** What a new event is pre-filled with when created from a calendar cell. */
+export interface NewEventPreset {
+	hour?: number;
+	allDay?: boolean;
+}
+
 export interface ImportForm {
 	url: string;
 	username: string;

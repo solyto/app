@@ -7,7 +7,8 @@ import type {
 	UpdateCalendarRequest,
 	CreateEventRequest,
 	UpdateEventRequest,
-	CreateCalendarRequest
+	CreateCalendarRequest,
+	NewEventPreset
 } from '$lib/types/calendar';
 import { getContext, setContext, tick } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
@@ -46,6 +47,7 @@ export class Calendars {
 	loaded = $state<boolean>(false);
 	editSidebar = $state<boolean>(false);
 	selectedDate = $state<Date | null>(null);
+	newEventPreset = $state<NewEventPreset>({});
 	isSyncing = $state<boolean>(false);
 	lastSync = $state<number | null>(null);
 	view = $state<'month' | 'week' | 'day' | 'list'>('month');
@@ -328,11 +330,13 @@ export class Calendars {
 
 	async showSidebar(
 		selectedDate: Date | null = null,
-		selectedEntry: CalendarEvent | null = null
+		selectedEntry: CalendarEvent | null = null,
+		newEventPreset: NewEventPreset = {}
 	): Promise<void> {
 		this.hideSidebar();
 		await tick();
 		this.selectedDate = new Date(selectedDate as Date);
+		this.newEventPreset = newEventPreset;
 		this.activeEvent = selectedEntry;
 		this.editSidebar = true;
 		if (selectedEntry) {
@@ -344,6 +348,7 @@ export class Calendars {
 	hideSidebar(): void {
 		this.editSidebar = false;
 		this.selectedDate = null;
+		this.newEventPreset = {};
 		this.activeEventTodos = [];
 		this.activeEventNotes = [];
 	}

@@ -4,7 +4,7 @@
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { formatDate, getDateDiffInMinutes, getHoursOfDay, isOffHour, parseDateSlug } from '$lib/helpers/DateHelper';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
-	import type { CalendarEvent } from '$lib/types/calendar';
+	import type { CalendarEvent, NewEventPreset } from '$lib/types/calendar';
 	import type { ClassValue } from 'svelte/elements';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarDragService from '$lib/services/CalendarDragService';
@@ -143,6 +143,11 @@
 		if (drag.consumeClick()) return;
 		await calendars.showSidebar(null, item);
 	}
+
+	async function onCellDoubleClick(event: MouseEvent, preset: NewEventPreset): Promise<void> {
+		if (isMobile || (event.target as HTMLElement).closest('button, a')) return;
+		await calendars.showSidebar(date, null, preset);
+	}
 </script>
 
 {#snippet eventButton(item: CalendarEvent, variantClass: ClassValue, top?: string, height?: string)}
@@ -168,10 +173,10 @@
 	data-calendar-day={dateSlug}
 	style={isMobile ? 'grid-template-rows: subgrid' : `grid-template-rows: ${desktopRows}`}
 >
-	<div class="group relative w-full">
+	<div class="group relative w-full select-none" ondblclick={(e) => onCellDoubleClick(e, { allDay: true })}>
 		<button
 			onclick={async () => {
-				await calendars.showSidebar(date);
+				await calendars.showSidebar(date, null, { allDay: true });
 			}}
 			class="absolute top-0 right-0 z-50 cursor-pointer rounded-bl-lg border-r-1 border-b-1 border-c-neutral-1 p-2 font-bold opacity-0 transition-all group-hover:bg-c-btn group-hover:text-c-neutral group-hover:opacity-100 dark:border-s-dark
 			"
@@ -189,13 +194,14 @@
 	</div>
 	{#each hours as hour (hour)}
 		<div
-			class="group relative border-t-1 border-c-neutral-1 dark:border-s-dark"
+			class="group relative border-t-1 border-c-neutral-1 select-none dark:border-s-dark"
 			class:bg-c-neutral={isShadedHour(hour)}
 			class:dark:bg-s-dark-2={isShadedHour(hour)}
+			ondblclick={(e) => onCellDoubleClick(e, { hour: parseInt(hour) })}
 		>
 			<button
 				onclick={async () => {
-					await calendars.showSidebar(date);
+					await calendars.showSidebar(date, null, { hour: parseInt(hour) });
 				}}
 				class="absolute top-1 right-1 z-50 cursor-pointer rounded-full p-2 font-bold opacity-0 transition-all group-hover:opacity-100 hover:bg-c-btn hover:text-white
 			"
