@@ -35,3 +35,6 @@ AGENTS.md
 # manigot job transcripts and token accounting
 docs/jobs/**/session.log
 docs/jobs/**/tokens.json
+
+# Temporary screenshots
+docs/screenshots/
