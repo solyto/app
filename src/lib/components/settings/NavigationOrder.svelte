@@ -47,7 +47,10 @@
 	}
 
 	function isFirstInMoreMenu(index: number): boolean {
-		return layout === 'mobile' && index + 1 === mobileVisibleCount;
+		if (layout !== 'mobile' || !isEnabled(items[index].item)) return false;
+
+		const enabledBefore = items.slice(0, index).filter((orderItem) => isEnabled(orderItem.item)).length;
+		return enabledBefore + 1 === mobileVisibleCount;
 	}
 
 	function handleConsider(e: CustomEvent<DndEvent<OrderItem>>): void {

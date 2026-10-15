@@ -85,6 +85,36 @@ describe('Navigation store', () => {
 		});
 	});
 
+	describe('mobile bar split', () => {
+		it('fills the bar with five enabled items when a bar feature is disabled', () => {
+			const s = new Navigation();
+			s.features.calendar = false;
+
+			expect(s.mobileBarItems().map((item) => item.slug)).toEqual([
+				'home',
+				'todos',
+				'check-in',
+				'libraries',
+				'notes'
+			]);
+			expect(s.mobileOverflowItems()[0].slug).toBe('contacts');
+			expect(s.mobileOverflowItems().map((item) => item.slug)).not.toContain('calendar');
+		});
+
+		it('promotes based on enabled items only', () => {
+			const s = new Navigation();
+			s.features.calendar = false;
+			s.usage = { todos: 5, checkIn: 3, libraries: 2, notes: 4 };
+
+			s.promoteMobileItem('notes');
+			expect(storage.setJson).not.toHaveBeenCalled();
+
+			s.promoteMobileItem('contacts');
+			expect(s.mobileBarItems().map((item) => item.slug)).toContain('contacts');
+			expect(s.mobileBarItems().map((item) => item.slug)).not.toContain('libraries');
+		});
+	});
+
 	describe('mobile order persistence', () => {
 		it('loadMobileOrder restores a saved order', async () => {
 			storage.getJson.mockReturnValue(['home', 'notes', 'todos']);

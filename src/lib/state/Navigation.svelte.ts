@@ -57,6 +57,14 @@ export class Navigation {
 		return layout === 'desktop' ? this.desktopOrder : this.mobileOrder;
 	}
 
+	mobileBarItems(): NavItem[] {
+		return this.enabledItems(this.mobileOrder).slice(0, mobileVisibleCount);
+	}
+
+	mobileOverflowItems(): NavItem[] {
+		return this.enabledItems(this.mobileOrder).slice(mobileVisibleCount);
+	}
+
 	isOrderCustomised(layout: NavigationLayout): boolean {
 		return this.customOrders[layout] !== null;
 	}
@@ -102,17 +110,18 @@ export class Navigation {
 	promoteMobileItem(slug: string): void {
 		if (this.isOrderCustomised('mobile')) return;
 
-		const order = [...this.autoMobileOrder];
-		const submenuIndex = order.indexOf(slug);
-		if (submenuIndex < mobileVisibleCount) return;
+		const enabled = this.enabledItems(this.autoMobileOrder).map((item) => item.slug);
+		if (enabled.indexOf(slug) < mobileVisibleCount) return;
 
-		const barItems = order.slice(0, mobileVisibleCount).filter(s => s !== pinnedNavItem);
+		const barItems = enabled.slice(0, mobileVisibleCount).filter(s => s !== pinnedNavItem);
 		const leastUsed = barItems.reduce((a, b) => {
 			const aUsage = navItems[a]?.featureFlag ? (this.usage[navItems[a].featureFlag!] ?? 0) : 0;
 			const bUsage = navItems[b]?.featureFlag ? (this.usage[navItems[b].featureFlag!] ?? 0) : 0;
 			return aUsage <= bUsage ? a : b;
 		});
 
+		const order = [...this.autoMobileOrder];
+		const submenuIndex = order.indexOf(slug);
 		const leastUsedIndex = order.indexOf(leastUsed);
 		order[leastUsedIndex] = slug;
 		order[submenuIndex] = leastUsed;
