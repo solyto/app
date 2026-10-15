@@ -1,4 +1,5 @@
 # Report: CalDAV VTODO sync for solyto todos
+read: true
 
 Date: 2026-10-14
 Job: `state_report-caldav-vtodo`

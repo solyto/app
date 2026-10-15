@@ -1,3 +1,4 @@
+read: true
 # Code quality audit: the standards refactor series
 
 Date: 2026-10-14
