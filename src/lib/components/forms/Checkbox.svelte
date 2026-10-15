@@ -14,12 +14,12 @@
 	<label class="relative flex cursor-pointer items-center">
 		<input
 			type="checkbox"
-			class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-c-neutral-3 bg-c-bg-elevated shadow transition-all checked:border-c-success checked:bg-c-success hover:shadow-md dark:border-c-neutral-6 dark:checked:border-c-success"
+			class="checkbox-box peer h-5 w-5 cursor-pointer appearance-none rounded border border-c-neutral-3 bg-c-bg-elevated shadow transition-all checked:border-c-success checked:bg-c-success hover:shadow-md dark:border-c-neutral-6 dark:checked:border-c-success"
 			checked={isChecked}
 			{onchange}
 		/>
 		<span
-			class="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform text-white opacity-0 peer-checked:opacity-100"
+			class="checkbox-mark pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform text-white opacity-0 peer-checked:opacity-100"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

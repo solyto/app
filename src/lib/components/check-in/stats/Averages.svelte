@@ -56,7 +56,6 @@
 	<div class="flex flex-col gap-3">
 		{#each entries as entry, index (entry)}
 			<AverageRow
-				type={entry}
 				label={ts.get.checkIn[entry as keyof typeof ts.get.checkIn]}
 				value={getMeanValue(data, entry)}
 				position={index + 1}

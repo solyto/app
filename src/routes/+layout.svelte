@@ -118,7 +118,7 @@
 </svelte:head>
 
 <div 
-	class="flex w-screen flex-col overflow-hidden 2xl:flex-row bg-c-bg page-container"
+	class="flex w-screen flex-col overflow-hidden 2xl:flex-row bottom-nav:flex-col bg-c-bg page-container"
 	class:pt-6={IS_DESKTOP}
 	style="height: {innerHeight}px;"
 >
@@ -133,7 +133,7 @@
 		</div>
 	{:else}
 		{#if viewPoint.isDesktop && showNavbar() && (!browser || canAccessRoute)}
-			<div class="z-[100] hidden h-full 2xl:block">
+			<div class="z-[100] hidden h-full 2xl:block bottom-nav:order-last bottom-nav:h-auto">
 				<DesktopNavbar />
 			</div>
 		{/if}

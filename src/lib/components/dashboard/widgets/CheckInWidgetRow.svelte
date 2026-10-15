@@ -1,38 +1,16 @@
 <script lang="ts">
 	import type { Component } from 'svelte';
-	import type { CheckInType } from '$lib/types/check_in';
+	import { getScoreColor } from '$lib/helpers/CheckInHelper';
 
 	let {
-		type,
 		label,
 		value,
 		icon: Icon
 	} = $props<{
-		type: CheckInType;
 		label: string;
 		value: number;
 		icon: Component<{ class?: string }> | null;
 	}>();
-
-	function getBarColor(): string {
-		if (value >= 4) return 'bg-c-success';
-		if (value >= 3) return 'bg-c-btn';
-		if (value >= 2) return 'bg-c-warning';
-		if (value >= 1.5) return 'bg-c-action';
-		return 'bg-c-danger';
-	}
-
-	function getBarColorFood(): string {
-		if (value >= 3.5 && value < 4.5) return 'bg-c-success';
-		if (value >= 3) return 'bg-c-btn';
-		if (value >= 2) return 'bg-c-warning';
-		if (value >= 1.5) return 'bg-c-action';
-		return 'bg-c-danger';
-	}
-
-	function barColor(): string {
-		return type === 'food_amount' ? getBarColorFood() : getBarColor();
-	}
 </script>
 
 <div class="flex items-center gap-2.5">
@@ -56,7 +34,7 @@
 		</div>
 		<div class="h-1 overflow-hidden rounded-full bg-c-neutral-1 dark:bg-s-dark-3">
 			<div
-				class="h-full rounded-full transition-all duration-300 {barColor()}"
+				class="h-full rounded-full transition-all duration-300 {getScoreColor(value)}"
 				style="width: {isNaN(value) ? 0 : (value / 5) * 100}%"
 			></div>
 		</div>

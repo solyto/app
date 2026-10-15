@@ -5,6 +5,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import SettingsSection from '$lib/components/settings/SettingsSection.svelte';
+	import PasswordSettings from '$lib/components/settings/PasswordSettings.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
@@ -133,7 +134,8 @@
 	}
 </script>
 
-<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-8">
+<PasswordSettings />
 <SettingsSection label={ts.get.settings.passkeys}>
 	{#snippet headerAction()}
 		{#if !showNameInput}

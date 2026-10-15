@@ -6,10 +6,14 @@ export class ThemeState {
 	static readonly LS_THEME_KEY: string = 'theme';
 	static readonly LS_ANIMATIONS_KEY: string = 'animations';
 	static readonly LS_APPEARANCE_KEY: string = 'appearance';
+	static readonly LS_FLAT_NAVIGATION_KEY: string = 'flat_navigation';
+	static readonly LS_BOTTOM_NAVIGATION_KEY: string = 'bottom_navigation';
 
 	theme = $state<Theme>(themes[0]);
 	animations = $state<boolean>(true);
 	appearance = $state<'system' | 'light' | 'dark'>('system');
+	flatNavigation = $state<boolean>(false);
+	bottomNavigation = $state<boolean>(false);
 	link: HTMLLinkElement | null = null;
 	mediaQuery: MediaQueryList | null = null;
 	darkListener: ((e: MediaQueryListEvent) => void) | null = null;
@@ -20,6 +24,9 @@ export class ThemeState {
 		if (savedAppearance === 'light' || savedAppearance === 'dark') {
 			this.appearance = savedAppearance;
 		}
+
+		this.flatNavigation = this.localStorage.getBool(ThemeState.LS_FLAT_NAVIGATION_KEY) ?? false;
+		this.bottomNavigation = this.localStorage.getBool(ThemeState.LS_BOTTOM_NAVIGATION_KEY) ?? false;
 
 		const saved = this.localStorage.get(ThemeState.LS_THEME_KEY) ?? 'default';
 		this.apply(themes.find((t) => t.id === saved) ?? themes[0]);
@@ -41,6 +48,18 @@ export class ThemeState {
 			this.teardownDarkListener();
 			this.applyAppearance();
 		}
+	}
+
+	setFlatNavigation(enabled: boolean): void {
+		this.localStorage.setBool(ThemeState.LS_FLAT_NAVIGATION_KEY, enabled);
+		this.flatNavigation = enabled;
+		this.applyFlatNavigation();
+	}
+
+	setBottomNavigation(enabled: boolean): void {
+		this.localStorage.setBool(ThemeState.LS_BOTTOM_NAVIGATION_KEY, enabled);
+		this.bottomNavigation = enabled;
+		this.applyBottomNavigation();
 	}
 
 	setAnimations(enabled: boolean): void {
@@ -89,6 +108,8 @@ export class ThemeState {
 			!theme.supportsDarkMode && ThemeState.isDarkTheme(theme)
 		);
 
+		this.applyFlatNavigation();
+		this.applyBottomNavigation();
 		this.teardownDarkListener();
 
 		if (theme.supportsDarkMode) {
@@ -105,6 +126,14 @@ export class ThemeState {
 		const b = parseInt(hex.slice(4, 6), 16);
 		const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 		return luminance < 140;
+	}
+
+	private applyFlatNavigation(): void {
+		document.documentElement.classList.toggle('flat-nav', this.theme.supportsFlatNavigation && this.flatNavigation);
+	}
+
+	private applyBottomNavigation(): void {
+		document.documentElement.classList.toggle('bottom-nav', this.theme.supportsBottomNavigation && this.bottomNavigation);
 	}
 
 	applyDark(dark: boolean): void {

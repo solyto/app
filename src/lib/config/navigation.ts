@@ -55,3 +55,5 @@ export const mobileDefaultOrder: string[] = [
 ];
 
 export const mobileVisibleCount = 5;
+
+export const pinnedNavItem = 'home';

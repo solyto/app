@@ -7,7 +7,7 @@
 	import NavLegalEntry from '$lib/components/ui/NavLegalEntry.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import { urls } from '$lib/config/urls';
-	import { navItems, mobileVisibleCount } from '$lib/config/navigation';
+	import { navItems } from '$lib/config/navigation';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import NavEntryIcon from '$lib/components/ui/NavEntryIcon.svelte';
 	import { getPageSlug } from '$lib/helpers/NavHelper';
@@ -40,16 +40,16 @@
 		notifications: { iconType: 'notifications' }
 	};
 	let activeInOverflow = $derived(
-		nav.mobileOrder.slice(mobileVisibleCount).some((slug) => slug === active) || active in overflowOnlyItems
+		nav.mobileOverflowItems().some((item) => item.slug === active) || active in overflowOnlyItems
 	);
 	let activeOverflowItem = $derived(activeInOverflow ? (navItems[active] ?? overflowOnlyItems[active] ?? null) : null);
 </script>
 
-<div class="nav-mobile-container h-full p-1 bg-c-bg">
+<div class="nav-mobile-container h-full p-1 bg-c-bg flat-nav:p-0">
 	<div
-		class="nav-mobile gradient-right flex h-full w-full flex-row items-center justify-center rounded-md p-1 text-c-neutral-8 drop-shadow-xl dark:text-c-neutral-2"
+		class="nav-mobile gradient-right flex h-full w-full flex-row items-center justify-center rounded-md p-1 flat-nav:rounded-none text-c-neutral-8 drop-shadow-xl dark:text-c-neutral-2"
 	>
-		{#each nav.enabledItems(nav.mobileOrder.slice(0, mobileVisibleCount)) as item (item.slug)}
+		{#each nav.mobileBarItems() as item (item.slug)}
 			<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} dataTour={item.dataTour} onSelect={select}>
 				<NavEntryIcon type={item.iconType} />
 			</NavEntry>
@@ -88,7 +88,7 @@
 					style="bottom:80px; right:15px;"
 					transition:fly={{ x: 50, duration: 200 }}
 				>
-					{#each nav.enabledItems(nav.mobileOrder.slice(mobileVisibleCount)) as item (item.slug)}
+					{#each nav.mobileOverflowItems() as item (item.slug)}
 						<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} onSelect={select}>
 							<NavEntryIcon type={item.iconType} />
 						</NavEntry>

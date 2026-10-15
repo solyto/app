@@ -21,7 +21,7 @@
 	});
 </script>
 
-<div class="flex h-full w-full" style="background-color: color-mix(in srgb, var(--color-c-primary) 12%, var(--color-c-bg));">
+<div class="calendar-view flex h-full w-full" style="background-color: color-mix(in srgb, var(--color-c-primary) 12%, var(--color-c-bg));">
 	<div class="grid h-full w-8 pt-8" style="grid-template-rows: {rows};">
 		<div class="flex items-center justify-center">
 			

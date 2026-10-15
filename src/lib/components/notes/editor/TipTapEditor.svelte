@@ -332,38 +332,36 @@
 		cursor: col-resize;
 	}
 
-	@media (prefers-color-scheme: dark) {
-		:global(.tiptap-editor code) {
-			background-color: var(--color-s-dark-3, #2f3741);
-			color: #e5e7eb;
-		}
+	:global(html:is(.dark, .theme-dark) .tiptap-editor code) {
+		background-color: var(--color-s-dark-3, #2f3741);
+		color: #e5e7eb;
+	}
 
-		:global(.tiptap-editor hr) {
-			border-top-color: var(--color-s-dark-3, #2f3741);
-		}
+	:global(html:is(.dark, .theme-dark) .tiptap-editor hr) {
+		border-top-color: var(--color-s-dark-3, #2f3741);
+	}
 
-		:global(.tiptap-editor a) {
-			color: #b1b1b1;
-		}
+	:global(html:is(.dark, .theme-dark) .tiptap-editor a) {
+		color: #b1b1b1;
+	}
 
-		:global(.tiptap-editor h1),
-		:global(.tiptap-editor h2),
-		:global(.tiptap-editor h3) {
-			color: var(--color-s-teal, #1dbda5);
-		}
+	:global(html:is(.dark, .theme-dark) .tiptap-editor h1),
+	:global(html:is(.dark, .theme-dark) .tiptap-editor h2),
+	:global(html:is(.dark, .theme-dark) .tiptap-editor h3) {
+		color: var(--color-s-teal, #1dbda5);
+	}
 
-		:global(.tiptap-editor blockquote) {
-			background-color: var(--color-s-dark-3, #2f3741);
-			color: var(--color-c-neutral-4, #9ca3af);
-		}
+	:global(html:is(.dark, .theme-dark) .tiptap-editor blockquote) {
+		background-color: var(--color-s-dark-3, #2f3741);
+		color: var(--color-c-neutral-4, #9ca3af);
+	}
 
-		:global(.tiptap-editor th) {
-			background-color: var(--color-s-dark-3, #2f3741);
-		}
+	:global(html:is(.dark, .theme-dark) .tiptap-editor th) {
+		background-color: var(--color-s-dark-3, #2f3741);
+	}
 
-		:global(.tiptap-editor th),
-		:global(.tiptap-editor td) {
-			border-color: var(--color-s-dark, #121212);
-		}
+	:global(html:is(.dark, .theme-dark) .tiptap-editor th),
+	:global(html:is(.dark, .theme-dark) .tiptap-editor td) {
+		border-color: var(--color-s-dark, #121212);
 	}
 </style>

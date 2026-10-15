@@ -86,6 +86,11 @@ export interface SettingsRecords {
 	telegram_bot_notifications: string;
 	enable_telegram_bot_notifications: string;
 	features: string;
+	navigation_order_desktop: string;
+	navigation_order_mobile: string;
+	navigation_order_hint: string;
+	navigation_order_more_menu: string;
+	navigation_order_reset: string;
 	timezone: string;
 	date_format: string;
 	time_format: string;
@@ -126,7 +131,6 @@ export interface SettingsRecords {
 	passkey_last_used: string;
 	passkey_never_used: string;
 	passkey_no_passkeys: string;
-	account: string;
 	change_password: string;
 	current_password: string;
 	new_password: string;
@@ -141,6 +145,9 @@ export interface SettingsRecords {
 	theme: string;
 	animations: string;
 	animations_label: string;
+	flat_navigation: string;
+	flat_navigation_label: string;
+	bottom_navigation_label: string;
 	appearance: string;
 	color_mode: string;
 	appearance_system: string;
