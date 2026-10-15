@@ -26,10 +26,12 @@
 	import QuickAddFab from '$lib/components/quick-add/QuickAddFab.svelte';
 	import QuickAddModal from '$lib/components/quick-add/QuickAddModal.svelte';
 	import TitleBar from '$lib/components/desktop/TitleBar.svelte';
+	import UpdateRequiredScreen from '$lib/components/ui/UpdateRequiredScreen.svelte';
+	import { setUpdateRequired } from '$lib/state/UpdateRequired.svelte';
 	import { getNavigation, setNavigation } from '$lib/state/Navigation.svelte';
 	import { getPageFeature, isAuthRoute, isDashboard, isSetupRoute, showNavbar } from '$lib/helpers/NavHelper';
 	import { featureConfig } from '$lib/config/features';
-	import { IS_WEB, IS_DESKTOP } from '$lib/config/platform';
+	import { IS_WEB, IS_DESKTOP, CLIENT_VERSION } from '$lib/config/platform';
 	import { browser } from '$app/environment';
 	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
 
@@ -49,6 +51,7 @@
 	setQuickAdd();
 
 	const theme = setThemeState();
+	const updateRequired = setUpdateRequired();
 	const viewPoint = getViewPoint();
 	const auth = getAuth();
 	const keyManager = getKeyManager();
@@ -73,7 +76,12 @@
 		}
 	}
 
+	function handleUpgradeRequired(minVersion: string | null): void {
+		updateRequired.require(minVersion);
+	}
+
 	auth.setSessionExpiredHandler(handleSessionExpired);
+	auth.apiService.setUpgradeRequiredHandler(handleUpgradeRequired);
 
 	onMount(async () => {
 		theme.load();
@@ -117,30 +125,36 @@
 	{/if}
 	<LoadingIndicator />
 	<Notifications />
-	{#if viewPoint.isDesktop && showNavbar() && (!browser || canAccessRoute)}
-		<div class="z-[100] hidden h-full 2xl:block">
-			<DesktopNavbar />
+	{#if updateRequired.required}
+		<div class="min-h-0 w-full grow overflow-auto content-container">
+			<UpdateRequiredScreen minVersion={updateRequired.minVersion} clientVersion={CLIENT_VERSION} />
 		</div>
-	{/if}
-	<div class="min-h-0 w-full grow overflow-auto content-container">
-		{#if !browser || canAccessRoute}
-			{@render children?.()}
-		{:else}
-			<div class="flex h-full w-full items-center justify-center">
-				<IconLoaderCircle class="size-6 animate-spin text-c-btn" />
+	{:else}
+		{#if viewPoint.isDesktop && showNavbar() && (!browser || canAccessRoute)}
+			<div class="z-[100] hidden h-full 2xl:block">
+				<DesktopNavbar />
 			</div>
 		{/if}
-	</div>
-	{#if !viewPoint.isDesktop && showNavbar() && (!browser || canAccessRoute)}
-		<div class="z-[100] block h-16 w-full 2xl:hidden">
-			<MobileNavbar />
+		<div class="min-h-0 w-full grow overflow-auto content-container">
+			{#if !browser || canAccessRoute}
+				{@render children?.()}
+			{:else}
+				<div class="flex h-full w-full items-center justify-center">
+					<IconLoaderCircle class="size-6 animate-spin text-c-btn" />
+				</div>
+			{/if}
 		</div>
+		{#if !viewPoint.isDesktop && showNavbar() && (!browser || canAccessRoute)}
+			<div class="z-[100] block h-16 w-full 2xl:hidden">
+				<MobileNavbar />
+			</div>
+		{/if}
+		<WelcomeTour />
 	{/if}
-	<WelcomeTour />
 	{#if IS_WEB && !isAuthRoute()}
 		<CookieBanner />
 	{/if}
-	{#if showNavbar() && isDashboard()}
+	{#if !updateRequired.required && showNavbar() && isDashboard()}
 		<QuickAddFab />
 		{#if quickAdd.open}
 			<QuickAddModal />

@@ -25,7 +25,8 @@ import type {
 	CookieConsentRecords,
 	TimeTrackingRecords,
 	QuickAddRecords,
-	SetupRecords
+	SetupRecords,
+	UpdateRequiredRecords
 } from '$lib/types/translation';
 
 const layout: LayoutRecords = {
@@ -1254,6 +1255,17 @@ const setup: SetupRecords = {
 	url_error: 'Could not connect. Check the URL and try again.'
 };
 
+const update_required: UpdateRequiredRecords = {
+	title: 'Update required',
+	explanation: 'This version of solyto is no longer supported by the server.',
+	instruction_web: 'Reload the page to load the latest version.',
+	instruction_desktop: 'Quit and restart solyto so it can install the latest update.',
+	instruction_mobile: 'Update solyto from the app store or F-Droid, wherever you installed it from.',
+	reload: 'Load latest version',
+	required_version: 'Required version: %s',
+	your_version: 'Your version: %s'
+};
+
 export const en: LanguageFile = {
 	layout,
 	nav,
@@ -1280,5 +1292,6 @@ export const en: LanguageFile = {
 	cookie_consent,
 	timeTracking,
 	quick_add,
-	setup
+	setup,
+	update_required
 };

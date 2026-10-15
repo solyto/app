@@ -20,6 +20,7 @@ const AUTH_ENDPOINTS: string[] = [
 export default class ApiService {
 	authToken: string | null = null;
 	private unauthorizedHandler: (() => Promise<boolean>) | null = null;
+	private upgradeRequiredHandler: ((minVersion: string | null) => void) | null = null;
 
 	constructor(authToken: string | null = null) {
 		this.authToken = authToken;
@@ -31,6 +32,10 @@ export default class ApiService {
 
 	setUnauthorizedHandler(handler: () => Promise<boolean>): void {
 		this.unauthorizedHandler = handler;
+	}
+
+	setUpgradeRequiredHandler(handler: (minVersion: string | null) => void): void {
+		this.upgradeRequiredHandler = handler;
 	}
 
 	private isAuthEndpoint(endpoint: string): boolean {
@@ -46,6 +51,11 @@ export default class ApiService {
 	): Promise<Response> {
 		const res = await fetch(endpoint, { ...init, headers: buildHeaders() });
 
+		if (res.status === 426) {
+			await this.reportUpgradeRequired(res);
+			return res;
+		}
+
 		if (res.status !== 401 || !this.unauthorizedHandler || this.isAuthEndpoint(endpoint)) {
 			return res;
 		}
@@ -54,6 +64,23 @@ export default class ApiService {
 		if (!recovered) return res;
 
 		return fetch(endpoint, { ...init, headers: buildHeaders() });
+	}
+
+	private async reportUpgradeRequired(res: Response): Promise<void> {
+		if (!this.upgradeRequiredHandler) return;
+		this.upgradeRequiredHandler(await this.readMinClientVersion(res));
+	}
+
+	// Read from a clone so callers that parse the body themselves (postRaw) still
+	// can; a body that is not the API's error envelope must not break the request.
+	private async readMinClientVersion(res: Response): Promise<string | null> {
+		try {
+			const body = await res.clone().json();
+			const minVersion = body?.meta?.min_client_version;
+			return typeof minVersion === 'string' ? minVersion : null;
+		} catch {
+			return null;
+		}
 	}
 
 	async list(endpoint: string): Promise<ListResponse | null> {

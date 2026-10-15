@@ -421,3 +421,88 @@ describe('401 recovery retry headers', () => {
 		expect(fetchMock.mock.calls[1][1].headers).toEqual({ Accept: 'application/json' });
 	});
 });
+
+describe('426 upgrade required', () => {
+	function upgradeRequiredResponse(body: unknown) {
+		const json = typeof body === 'string'
+			? vi.fn().mockRejectedValue(new SyntaxError('not json'))
+			: vi.fn().mockResolvedValue(body);
+		const response = { ok: false, status: 426, json };
+		return { ...response, clone: vi.fn(() => ({ ...response })) };
+	}
+
+	const envelope = { message: 'Please update the app.', meta: { min_client_version: '2.4.0' } };
+
+	function serviceWithHandlers() {
+		const service = new ApiService('tok');
+		const upgradeHandler = vi.fn();
+		const unauthorizedHandler = vi.fn(async () => true);
+		service.setUpgradeRequiredHandler(upgradeHandler);
+		service.setUnauthorizedHandler(unauthorizedHandler);
+		return { service, upgradeHandler, unauthorizedHandler };
+	}
+
+	it('reports the minimum version from the error envelope', async () => {
+		const fetchMock = vi.fn().mockResolvedValue(upgradeRequiredResponse(envelope));
+		vi.stubGlobal('fetch', fetchMock);
+		const { service, upgradeHandler } = serviceWithHandlers();
+
+		await service.list('/todos');
+
+		expect(upgradeHandler).toHaveBeenCalledTimes(1);
+		expect(upgradeHandler).toHaveBeenCalledWith('2.4.0');
+	});
+
+	it('reports null when the body has no minimum version', async () => {
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(upgradeRequiredResponse({ message: 'x' })));
+		const { service, upgradeHandler } = serviceWithHandlers();
+
+		await service.list('/todos');
+
+		expect(upgradeHandler).toHaveBeenCalledWith(null);
+	});
+
+	it('reports null when the body is not JSON', async () => {
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(upgradeRequiredResponse('<html>')));
+		const { service, upgradeHandler } = serviceWithHandlers();
+
+		await expect(service.list('/todos')).resolves.toBeNull();
+		expect(upgradeHandler).toHaveBeenCalledWith(null);
+	});
+
+	it('never runs 401 recovery and never retries', async () => {
+		const fetchMock = vi.fn().mockResolvedValue(upgradeRequiredResponse(envelope));
+		vi.stubGlobal('fetch', fetchMock);
+		const { service, unauthorizedHandler } = serviceWithHandlers();
+
+		await service.update('/todos/%s', 'abc', {});
+
+		expect(unauthorizedHandler).not.toHaveBeenCalled();
+		expect(fetchMock).toHaveBeenCalledTimes(1);
+	});
+
+	it('keeps the failure results of the callers', async () => {
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(upgradeRequiredResponse(envelope)));
+		const { service } = serviceWithHandlers();
+
+		await expect(service.list('/todos')).resolves.toBeNull();
+		await expect(service.get('/todos/%s', 'abc')).resolves.toBeNull();
+		await expect(service.update('/todos/%s', 'abc', {})).resolves.toBe(false);
+		await expect(service.delete('/todos/%s', 'abc')).resolves.toBe(false);
+	});
+
+	it('leaves the body readable for postRaw', async () => {
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(upgradeRequiredResponse(envelope)));
+		const { service } = serviceWithHandlers();
+
+		await expect(service.postRaw('/x', {})).resolves.toEqual(envelope);
+	});
+
+	it('is a no-op without a handler', async () => {
+		const response = upgradeRequiredResponse(envelope);
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response));
+
+		await expect(new ApiService('tok').list('/todos')).resolves.toBeNull();
+		expect(response.clone).not.toHaveBeenCalled();
+	});
+});

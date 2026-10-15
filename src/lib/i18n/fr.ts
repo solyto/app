@@ -25,7 +25,8 @@ import type {
 	CookieConsentRecords,
 	TimeTrackingRecords,
 	QuickAddRecords,
-	SetupRecords
+	SetupRecords,
+	UpdateRequiredRecords
 } from '$lib/types/translation';
 
 const layout: LayoutRecords = {
@@ -1255,6 +1256,17 @@ const setup: SetupRecords = {
 	url_error: 'Impossible de se connecter. Vérifiez l\'URL et réessayez.'
 };
 
+const update_required: UpdateRequiredRecords = {
+	title: 'Mise à jour requise',
+	explanation: "Cette version de solyto n'est plus prise en charge par le serveur.",
+	instruction_web: 'Recharge la page pour charger la dernière version.',
+	instruction_desktop: 'Quitte puis relance solyto pour installer la dernière mise à jour.',
+	instruction_mobile: "Mets à jour solyto depuis la boutique d'applications ou F-Droid, selon l'endroit où tu l'as installé.",
+	reload: 'Charger la dernière version',
+	required_version: 'Version requise : %s',
+	your_version: 'Ta version : %s'
+};
+
 export const fr: LanguageFile = {
 	layout,
 	nav,
@@ -1281,5 +1293,6 @@ export const fr: LanguageFile = {
 	cookie_consent,
 	timeTracking,
 	quick_add,
-	setup
+	setup,
+	update_required
 };

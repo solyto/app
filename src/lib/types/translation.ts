@@ -1141,6 +1141,17 @@ export interface SetupRecords {
 	url_error: string;
 }
 
+export interface UpdateRequiredRecords {
+	title: string;
+	explanation: string;
+	instruction_web: string;
+	instruction_desktop: string;
+	instruction_mobile: string;
+	reload: string;
+	required_version: string;
+	your_version: string;
+}
+
 export interface LanguageFile {
 	layout: LayoutRecords;
 	nav: NavigationRecords;
@@ -1168,4 +1179,5 @@ export interface LanguageFile {
 	cookie_consent: CookieConsentRecords;
 	timeTracking: TimeTrackingRecords;
 	quick_add: QuickAddRecords;
+	update_required: UpdateRequiredRecords;
 }
