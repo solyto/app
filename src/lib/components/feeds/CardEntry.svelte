@@ -20,7 +20,7 @@
 	<div
 		class="flex h-full w-full flex-col overflow-hidden rounded-sm bg-c-bg-surface drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral hover:drop-shadow-xl dark:hover:bg-s-dark-3"
 	>
-		<div class="relative h-40 w-full overflow-hidden">
+		<div class="relative w-full overflow-hidden md:h-40">
 			{#if item.image_url && !imageFailed}
 				{#if !imageLoaded}
 					<div class="absolute inset-0 animate-pulse bg-c-neutral-1 dark:bg-s-dark-3"></div>
@@ -32,10 +32,10 @@
 					decoding="async"
 					onload={() => (imageLoaded = true)}
 					onerror={() => (imageFailed = true)}
-					class="h-full w-full object-cover transition-opacity duration-300 {imageLoaded ? 'opacity-100' : 'opacity-0'}"
+					class="h-40 w-full object-cover transition-opacity duration-300 {imageLoaded ? 'opacity-100' : 'opacity-0'}"
 				/>
 			{:else}
-				<div class="flex h-full w-full items-center justify-center bg-c-neutral-1 dark:bg-s-dark-3">
+				<div class="flex h-full w-full items-center justify-center bg-c-neutral-1 max-md:hidden dark:bg-s-dark-3">
 					<img src={faviconUrl} alt="" class="h-10 w-10 opacity-60" />
 				</div>
 			{/if}

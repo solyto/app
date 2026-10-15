@@ -20,7 +20,7 @@
 		<div class="flex w-full max-md:flex-col max-md:items-start md:flex-row md:items-center">
 			<img src={faviconUrl} alt="Favicon" class="mx-1 h-6 w-6 max-md:hidden" />
 			<div class="md:ml-2">
-				<div>{item.title}</div>
+				<div class="max-md:font-bold">{item.title}</div>
 			</div>
 			<div
 				class="mr-1 ml-auto flex flex-row items-center gap-1 text-sm text-c-neutral-5 max-md:mt-1 max-md:text-xs dark:text-c-neutral-4"
