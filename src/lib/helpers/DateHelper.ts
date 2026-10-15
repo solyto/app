@@ -69,6 +69,11 @@ export function formatDateWithoutYear(
 	return `${day}.${month}`;
 }
 
+export function formatMonth(input: string | Date, dateFormat: string | null = null): string {
+	const monthFormat = (dateFormat ?? 'dd.mm.YYYY').replace(/^dd[^a-zA-Z]|[^a-zA-Z]dd$/, '');
+	return formatDate(input, monthFormat);
+}
+
 export function formatTime(input: string | Date, timeFormat: string | null = null): string {
 	const date = typeof input === 'string' ? new Date(input) : input,
 		hours = date.getHours(),

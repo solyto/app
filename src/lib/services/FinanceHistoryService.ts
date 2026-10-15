@@ -3,7 +3,7 @@ import type {
 	FinanceValueForm,
 	StoreFinanceValueRequest
 } from '$lib/types/finance';
-import { getUrlFormat } from '$lib/helpers/DateHelper';
+import { formatDate, getUrlFormat } from '$lib/helpers/DateHelper';
 
 export default class FinanceHistoryService {
 	// The API sends `date` either as `Y-m-d` or as an ISO timestamp at midnight UTC;
@@ -46,8 +46,8 @@ export default class FinanceHistoryService {
 		return { value: form.value, date: form.date };
 	}
 
-	chartCategories(values: FinanceValue[]): string[] {
-		return this.sortOldestFirst(values).map((value) => this.toDateString(value));
+	chartCategories(values: FinanceValue[], dateFormat: string | null): string[] {
+		return this.sortOldestFirst(values).map((value) => formatDate(this.toLocalDate(value), dateFormat));
 	}
 
 	chartValues(values: FinanceValue[]): number[] {

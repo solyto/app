@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import { getFinances } from '$lib/state/Finances.svelte';
+	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
 	import AddBudget from '$lib/components/finances/AddBudget.svelte';
@@ -19,6 +20,7 @@
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const finances = getFinances();
+	const auth = getAuth();
 
 	let total = $derived(finances.getBudgetTotal());
 	let incomeTotal = $derived(finances.getBudgetIncomeTotal());
@@ -43,6 +45,15 @@
 		await finances.deleteBudget(historyBudget);
 		loadingIndicator.stop();
 		closeHistory();
+	}
+
+	async function renameHistoryBudget(title: string): Promise<boolean> {
+		if (historyBudget === null) return false;
+		loadingIndicator.start();
+		const ok = await finances.updateBudget(historyBudget, { title });
+		loadingIndicator.stop();
+		if (ok) historyBudget = { ...historyBudget, title };
+		return ok;
 	}
 
 	async function addHistoryValue(request: StoreFinanceValueRequest): Promise<boolean> {
@@ -134,7 +145,7 @@
 	</div>
 {/if}
 {#if historyBudget}
-	<ContentModal title={historyBudget.title} showTitleOnMobile={true} rounded="2xl" onClose={closeHistory}>
+	<ContentModal title={historyBudget.title} showTitleOnMobile={true} rounded="2xl" onClose={closeHistory} onRename={renameHistoryBudget}>
 		<FinanceHistory
 			values={finances.budgetValues}
 			minValues={1}
@@ -142,6 +153,7 @@
 			onUpdate={updateHistoryValue}
 			onDelete={deleteHistoryValue}
 			itemTitle={historyBudget.title}
+			dateFormat={auth.user?.settings?.date_format ?? null}
 			onDeleteItem={deleteHistoryBudget}
 		/>
 	</ContentModal>

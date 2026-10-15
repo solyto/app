@@ -5,6 +5,7 @@
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import AcceptButton from '$lib/components/ui/buttons/AcceptButton.svelte';
+	import ModalTitle from '$lib/components/ui/ModalTitle.svelte';
 
 	const viewPoint = getViewPoint();
 
@@ -12,12 +13,14 @@
 		onClose,
 		onDelete,
 		onComplete,
+		onRename,
 		children,
 		title = null
 	} = $props<{
 		onClose?: () => void | Promise<void>;
 		onDelete?: () => void | Promise<void>;
 		onComplete?: (event?: MouseEvent) => void | Promise<void>;
+		onRename?: (title: string) => Promise<boolean>;
 		children?: Snippet;
 		title?: string | null;
 	}>();
@@ -47,7 +50,9 @@
 		{/if}
 		<div class="relative z-30 w-full overflow-y-auto rounded-t-2xl bg-c-bg-modal p-6 shadow-md not-dark:border-t-1 not-dark:border-c-neutral-2 dark:shadow-s-dark-shadow max-h-[calc(100dvh-4rem)]">
 			{#if title}
-				<p class="mb-4 text-xl font-bold text-c-heading dark:text-c-primary">{title}</p>
+				<div class="mb-4 text-xl font-bold text-c-heading dark:text-c-primary">
+					<ModalTitle {title} {onRename} />
+				</div>
 			{/if}
 			{@render children?.()}
 		</div>

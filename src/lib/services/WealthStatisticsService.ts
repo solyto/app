@@ -1,5 +1,5 @@
 import type { WealthField } from '$lib/types/finance';
-import { getUrlFormat } from '$lib/helpers/DateHelper';
+import { formatMonth, getUrlFormat } from '$lib/helpers/DateHelper';
 
 export default class WealthStatisticsService {
 	data: WealthField[] = [];
@@ -66,6 +66,14 @@ export default class WealthStatisticsService {
 		}
 
 		return refinedResult;
+	}
+
+	// Points are dated `Y-m-d`; built as a local date so the month cannot shift with the timezone.
+	getMonthLabels(stats: { date: string }[], dateFormat: string | null): string[] {
+		return stats.map((stat) => {
+			const [year, month] = stat.date.split('-').map(Number);
+			return formatMonth(new Date(year, month - 1, 1), dateFormat);
+		});
 	}
 
 	// Lower y-axis bound for trend charts: just below the lowest value, so changes stay

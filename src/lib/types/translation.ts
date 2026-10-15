@@ -19,6 +19,7 @@ export interface LayoutRecords {
 	terms_of_service: string;
 	reload: string;
 	remove: string;
+	rename: string;
 }
 
 export interface NavigationRecords {
@@ -729,8 +730,6 @@ export interface FinanceRecords {
 	total: string;
 	income: string;
 	expenses: string;
-	show_history: string;
-	hide_history: string;
 	wealth_distribution: string;
 	income_vs_expenses: string;
 	wealth_trend: string;
@@ -742,6 +741,10 @@ export interface FinanceRecords {
 	replaces_value: string;
 	date_taken: string;
 	edit_value: string;
+	dashboard: string;
+	history_development: string;
+	history_composition: string;
+	new_entry: string;
 	delete_value_label: string;
 	delete_value_message: string;
 	delete_item: string;

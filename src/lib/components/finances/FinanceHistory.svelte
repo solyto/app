@@ -10,11 +10,12 @@
 	import { europeanFormat } from '$lib/helpers/NumberHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import DateInput from '$lib/components/forms/DateInput.svelte';
 	import NumberInput from '$lib/components/forms/NumberInput.svelte';
 	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconPen from '@lucide/svelte/icons/pen';
 	import IconTrash from '@lucide/svelte/icons/trash-2';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
@@ -28,6 +29,7 @@
 	let {
 		values,
 		itemTitle,
+		dateFormat,
 		minValues = 0,
 		onAdd,
 		onUpdate,
@@ -36,6 +38,7 @@
 	} = $props<{
 		values: FinanceValue[];
 		itemTitle: string;
+		dateFormat: string | null;
 		minValues?: number;
 		onAdd: (request: StoreFinanceValueRequest) => Promise<boolean>;
 		onUpdate: (value: FinanceValue, request: UpdateFinanceValueRequest) => Promise<boolean>;
@@ -44,12 +47,13 @@
 	}>();
 
 	let today = getUrlFormat(new Date());
+	let addOpen = $state<boolean>(false);
 	let addForm = $state<FinanceValueForm>(history.emptyForm(new Date()));
 	let editingId = $state<number | null>(null);
 	let editForm = $state<FinanceValueForm>(history.emptyForm(new Date()));
 	let deleteCandidate = $state<FinanceValue | null>(null);
 	let deleteItemConfirmOpen = $state<boolean>(false);
-	let addKeyHandlers: Record<string, string | null> = { Enter: null };
+	let addKeyHandlers: Record<string, string | null> = { Enter: null, Escape: null };
 	let editKeyHandlers: Record<string, string | null> = { Enter: null, Escape: null };
 
 	function replacesHint(): string | null {
@@ -61,10 +65,23 @@
 		return editingId !== null && history.findOtherByDate(values, editForm.date, editingId) !== null;
 	}
 
+	function openAdd(): void {
+		keyManager.unregisterAll(addKeyHandlers);
+		addForm = history.emptyForm(new Date());
+		addOpen = true;
+		addKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => add(), { priority: 3 });
+		addKeyHandlers.Escape = keyManager.registerKeyDown('Escape', () => closeAdd(), { priority: 3 });
+	}
+
+	function closeAdd(): void {
+		keyManager.unregisterAll(addKeyHandlers);
+		addOpen = false;
+	}
+
 	async function add(): Promise<void> {
 		const request = history.toRequest(addForm);
 		if (request === null) return;
-		if (await onAdd(request)) addForm = history.emptyForm(new Date());
+		if (await onAdd(request)) closeAdd();
 	}
 
 	function startEdit(value: FinanceValue): void {
@@ -106,8 +123,6 @@
 		await onDeleteItem();
 	}
 
-	onMount(() => (addKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => add(), { priority: 3 })));
-
 	onDestroy(() => {
 		keyManager.unregisterAll(addKeyHandlers);
 		keyManager.unregisterAll(editKeyHandlers);
@@ -117,22 +132,29 @@
 <div class="flex w-full flex-col gap-6 md:w-2xl">
 	{#if values.length > 1}
 		<SmoothLineChart
-			categories={history.chartCategories(values)}
+			categories={history.chartCategories(values, dateFormat)}
 			values={history.chartValues(values)}
 			filled={true}
 			class="h-56"
 		/>
 	{/if}
-	<div class="flex flex-col gap-2">
-		<div class="grid grid-cols-[1fr_1fr_auto] items-center gap-2">
-			<DateInput bind:value={addForm.date} max={today} />
-			<NumberInput bind:value={addForm.value} placeholder={ts.get.finances.amount} />
-			<SaveButton onClick={add} />
+	{#if addOpen}
+		<div class="flex flex-col gap-2">
+			<div class="grid grid-cols-[1fr_1fr_auto_auto] items-center gap-2">
+				<DateInput bind:value={addForm.date} max={today} />
+				<NumberInput bind:value={addForm.value} placeholder={ts.get.finances.amount} />
+				<CloseButton onClick={closeAdd} inModal={false} />
+				<SaveButton onClick={add} />
+			</div>
+			{#if replacesHint()}
+				<p class={HINT}>{replacesHint()}</p>
+			{/if}
 		</div>
-		{#if replacesHint()}
-			<p class={HINT}>{replacesHint()}</p>
-		{/if}
-	</div>
+	{:else}
+		<div class="flex justify-end">
+			<TextButton title={ts.get.finances.new_entry} onclick={openAdd} />
+		</div>
+	{/if}
 	{#if values.length === 0}
 		<p class={HINT}>{ts.get.finances.no_values}</p>
 	{:else}
@@ -151,7 +173,7 @@
 						{/if}
 					{:else}
 						<div class="flex items-center gap-4">
-							<span class="flex-1">{formatDate(history.toLocalDate(value))}</span>
+							<span class="flex-1">{formatDate(history.toLocalDate(value), dateFormat)}</span>
 							<span>{europeanFormat(value.value)}</span>
 							<button
 								type="button"

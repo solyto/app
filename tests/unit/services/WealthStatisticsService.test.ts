@@ -105,3 +105,11 @@ describe('WealthStatisticsService.getTrendMin', () => {
 		expect(service.getTrendMin([1000, -500])).toBeUndefined();
 	});
 });
+
+describe('getMonthLabels', () => {
+	it('labels each point with its month in the given date format', () => {
+		const stats = [{ date: '2025-11-01' }, { date: '2026-01-31' }];
+		expect(service.getMonthLabels(stats, null)).toEqual(['11.2025', '01.2026']);
+		expect(service.getMonthLabels(stats, 'YYYY-mm-dd')).toEqual(['2025-11', '2026-01']);
+	});
+});

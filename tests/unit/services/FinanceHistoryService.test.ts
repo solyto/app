@@ -83,12 +83,16 @@ describe('FinanceHistoryService', () => {
 
 	describe('chart series', () => {
 		it('builds categories and values oldest first', () => {
-			expect(service.chartCategories(values)).toEqual(['2026-03-01', '2026-07-20', '2026-10-15']);
+			expect(service.chartCategories(values, null)).toEqual(['01.03.2026', '20.07.2026', '15.10.2026']);
 			expect(service.chartValues(values)).toEqual([100, 200, 300]);
 		});
 
+		it('formats the dates in the given date format', () => {
+			expect(service.chartCategories(values, 'YYYY/mm/dd')).toEqual(['2026/03/01', '2026/07/20', '2026/10/15']);
+		});
+
 		it('returns empty series for an empty history', () => {
-			expect(service.chartCategories([])).toEqual([]);
+			expect(service.chartCategories([], null)).toEqual([]);
 			expect(service.chartValues([])).toEqual([]);
 		});
 	});

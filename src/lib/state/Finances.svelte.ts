@@ -1,20 +1,19 @@
 import type {
 	WealthField,
 	CreateWealthFieldRequest,
+	UpdateWealthFieldRequest,
 	StoreFinanceValueRequest,
 	UpdateFinanceValueRequest,
 	FinanceValue,
 	Budget,
 	BudgetValue,
 	CreateBudgetRequest,
-	UpdateBudgetRequest,
-	FinancePage
+	UpdateBudgetRequest
 } from '$lib/types/finance';
 import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import { page } from '$app/state';
 
 export class Finances {
 	budgetLoaded = $state<boolean>(false);
@@ -23,14 +22,12 @@ export class Finances {
 	expenses = $state<Budget[]>([]);
 	wealth = $state<WealthField[]>([]);
 	budgetValues = $state<BudgetValue[]>([]);
-	activePage = $state<FinancePage>(null);
 	auth: Auth;
 	apiService: ApiService;
 
 	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
 		this.auth = auth;
 		this.apiService = apiService;
-		this.activePage = this.getActivePage();
 	}
 
 	async loadIncome(): Promise<void> {
@@ -49,12 +46,6 @@ export class Finances {
 			this.wealth = res.data as WealthField[];
 			this.wealthLoaded = true;
 		}
-	}
-
-	getActivePage(): FinancePage {
-		if (page.url.pathname.includes('wealth')) return 'wealth';
-		if (page.url.pathname.includes('budget')) return 'budget';
-		return null;
 	}
 
 	getWealthSum(): number {
@@ -102,7 +93,7 @@ export class Finances {
 			request
 		);
 		if (res) await this.loadIncome();
-		return Promise.resolve(res !== null);
+		return Promise.resolve(res);
 	}
 
 	async loadBudgetValues(budget: Budget): Promise<boolean> {
@@ -180,6 +171,12 @@ export class Finances {
 			apiRoutes.finances.wealth.deleteValue.replace('%d', field.id.toString()),
 			value.id
 		);
+		if (res) await this.loadWealth();
+		return Promise.resolve(res);
+	}
+
+	async updateWealthField(field: WealthField, request: UpdateWealthFieldRequest): Promise<boolean> {
+		const res = await this.apiService.update(apiRoutes.finances.wealth.updateField, field.id, request);
 		if (res) await this.loadWealth();
 		return Promise.resolve(res);
 	}

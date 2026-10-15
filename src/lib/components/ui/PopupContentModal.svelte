@@ -5,12 +5,14 @@
 	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import AcceptButton from '$lib/components/ui/buttons/AcceptButton.svelte';
+	import ModalTitle from '$lib/components/ui/ModalTitle.svelte';
 
 	let {
 		onClose,
 		onEdit,
 		onDelete,
 		onComplete,
+		onRename,
 		children,
 		small = false,
 		rounded = null,
@@ -25,6 +27,7 @@
 		onEdit?: () => void | Promise<void>;
 		onDelete?: () => void | Promise<void>;
 		onComplete?: (event?: MouseEvent) => void | Promise<void>;
+		onRename?: (title: string) => Promise<boolean>;
 		children?: Snippet;
 		small?: boolean;
 		rounded?: string | null;
@@ -55,7 +58,7 @@
 				class:top-3={transparent}
 				class:left-15={transparent}
 			>
-				{title}
+				<ModalTitle {title} {onRename} />
 			</div>
 		{/if}
 		{#if onClose || onEdit || onComplete || onDelete}
@@ -90,7 +93,7 @@
 		>
 			{#if showTitleOnMobile}
 				<div class="text-2xl font-bold tracking-wide text-c-heading dark:text-c-primary md:hidden mb-6">
-					{title}
+					<ModalTitle {title} {onRename} />
 				</div>
 			{/if}
 			{@render children?.()}

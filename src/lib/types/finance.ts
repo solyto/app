@@ -1,4 +1,3 @@
-export type FinancePage = 'wealth' | 'budget' | null;
 export type BudgetType = 'income' | 'expense';
 
 export interface FinanceValue {

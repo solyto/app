@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
 	formatDate,
 	formatDateWithoutYear,
+	formatMonth,
 	formatDateTime,
 	formatTime,
 	formatTimeWithSeconds,
@@ -51,6 +52,21 @@ describe('formatDateWithoutYear', () => {
 
 	it('strips year and cleans trailing separator', () => {
 		expect(formatDateWithoutYear(AUG_15, 'dd/mm/YYYY')).toBe('15/08');
+	});
+});
+
+describe('formatMonth', () => {
+	it('returns mm.YYYY by default', () => {
+		expect(formatMonth(AUG_15)).toBe('08.2025');
+	});
+
+	it('drops a leading day', () => {
+		expect(formatMonth(AUG_15, 'dd.mm.YY')).toBe('08.25');
+	});
+
+	it('drops a trailing day', () => {
+		expect(formatMonth(AUG_15, 'YYYY/mm/dd')).toBe('2025/08');
+		expect(formatMonth(AUG_15, 'YYYY-mm-dd')).toBe('2025-08');
 	});
 });
 

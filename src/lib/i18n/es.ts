@@ -47,7 +47,8 @@ const layout: LayoutRecords = {
 	privacy_policy: 'Política de privacidad',
 	terms_of_service: 'Condiciones de uso',
 	reload: 'Recargar',
-	remove: 'Eliminar'
+	remove: 'Eliminar',
+	rename: 'Renombrar'
 };
 
 const nav: NavigationRecords = {
@@ -749,8 +750,6 @@ const finances: FinanceRecords = {
 	total: 'Total',
 	income: 'Ingresos',
 	expenses: 'Gastos',
-	show_history: 'Mostrar historial',
-	hide_history: 'Ocultar historial',
 	wealth_distribution: 'Distribución del patrimonio',
 	income_vs_expenses: 'Ingresos vs Gastos',
 	wealth_trend: 'Tendencia del patrimonio',
@@ -762,6 +761,10 @@ const finances: FinanceRecords = {
 	replaces_value: 'Sustituye la entrada existente de %s en esta fecha.',
 	date_taken: 'Ya existe una entrada en esta fecha.',
 	edit_value: 'Editar entrada',
+	dashboard: 'Panel',
+	history_development: 'Evolución',
+	history_composition: 'Composición',
+	new_entry: 'Nueva entrada',
 	delete_value_label: 'Eliminar entrada',
 	delete_value_message: '¿Seguro que quieres eliminar esta entrada?',
 	delete_item: 'Eliminar %s',

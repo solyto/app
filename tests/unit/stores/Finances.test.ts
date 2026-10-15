@@ -1,11 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { Finances } from '$lib/state/Finances.svelte';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import { api, pageState, resetStoreMocks } from '../setup/storeMocks';
+import { api, resetStoreMocks } from '../setup/storeMocks';
 
 beforeEach(() => {
 	resetStoreMocks();
-	pageState.pathname = '/finances';
 });
 
 function budget(type: 'income' | 'expense', value: number) {
@@ -13,19 +12,6 @@ function budget(type: 'income' | 'expense', value: number) {
 }
 
 describe('Finances store', () => {
-	describe('getActivePage', () => {
-		it('detects the active page from the pathname', () => {
-			pageState.pathname = '/finances/wealth';
-			expect(new Finances().activePage).toBe('wealth');
-
-			pageState.pathname = '/finances/budget';
-			expect(new Finances().activePage).toBe('budget');
-
-			pageState.pathname = '/finances';
-			expect(new Finances().activePage).toBeNull();
-		});
-	});
-
 	describe('loadIncome', () => {
 		it('splits budget entries into income and expenses', async () => {
 			api.list.mockResolvedValue({
