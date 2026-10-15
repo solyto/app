@@ -1,4 +1,5 @@
 <script lang="ts">
+	import NavIndicator from '$lib/components/ui/NavIndicator.svelte';
 	import { blur, fade } from 'svelte/transition';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import Divider from '$lib/components/ui/Divider.svelte';
@@ -54,48 +55,44 @@
 				<Divider />
 				<div class="flex w-full flex-col items-center justify-center">
 					<button
-						class="cursor-pointer border-r-2 p-4 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
-						class:border-c-border={calendars.view !== 'month'}
-						class:border-c-btn={calendars.view === 'month'}
+						class="relative flex w-full cursor-pointer justify-center p-4 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 						onclick={() => {
 							calendars.changeView('month');
 						}}
 						title={ts.get.calendar.month}
 					>
 						<IconMonth selected={calendars.view === 'month'} />
+						<NavIndicator active={calendars.view === 'month'} />
 					</button>
 					<button
-						class="cursor-pointer border-r-2 p-4 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
-						class:border-c-border={calendars.view !== 'week'}
-						class:border-c-btn={calendars.view === 'week'}
+						class="relative flex w-full cursor-pointer justify-center p-4 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 						onclick={() => {
 							calendars.changeView('week');
 						}}
 						title={ts.get.calendar.week}
 					>
 						<IconWeek selected={calendars.view === 'week'} />
+						<NavIndicator active={calendars.view === 'week'} />
 					</button>
 					<button
-						class="cursor-pointer border-r-2 p-4 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
-						class:border-c-border={calendars.view !== 'day'}
-						class:border-c-btn={calendars.view === 'day'}
+						class="relative flex w-full cursor-pointer justify-center p-4 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 						onclick={() => {
 							calendars.changeView('day');
 						}}
 						title={ts.get.calendar.day}
 					>
 						<IconDay selected={calendars.view === 'day'} />
+						<NavIndicator active={calendars.view === 'day'} />
 					</button>
 					<button
-						class="cursor-pointer border-r-2 p-4 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
-						class:border-c-border={calendars.view !== 'list'}
-						class:border-c-btn={calendars.view === 'list'}
+						class="relative flex w-full cursor-pointer justify-center p-4 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 						onclick={() => {
 							calendars.changeView('list');
 						}}
 						title={ts.get.calendar.list}
 					>
 						<IconList selected={calendars.view === 'list'} />
+						<NavIndicator active={calendars.view === 'list'} />
 					</button>
 				</div>
 			</div>

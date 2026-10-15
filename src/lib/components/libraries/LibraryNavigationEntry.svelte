@@ -1,4 +1,5 @@
 <script lang="ts">
+	import NavIndicator from '$lib/components/ui/NavIndicator.svelte';
 	import type { Component } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
@@ -15,9 +16,7 @@
 </script>
 
 <button
-	class="cursor-pointer border-r-2 p-4 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
-	class:border-c-border={!isActive}
-	class:border-c-btn={isActive}
+	class="relative flex w-full cursor-pointer justify-center p-4 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 	onclick={() => {
 		setActive(type);
 		goto(resolve(url));
@@ -25,4 +24,5 @@
 	{title}
 >
 	<Icon />
+	<NavIndicator active={isActive} />
 </button>
