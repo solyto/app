@@ -11,7 +11,6 @@
 	import AppearanceSettings from '$lib/components/settings/AppearanceSettings.svelte';
 	import AppSettings from '$lib/components/settings/AppSettings.svelte';
 	import ExportSettings from '$lib/components/settings/ExportSettings.svelte';
-	import AccountSettings from '$lib/components/settings/AccountSettings.svelte';
 	import SecuritySettings from '$lib/components/settings/SecuritySettings.svelte';
 	import SettingsNavigationMobile from '$lib/components/settings/SettingsNavigationMobile.svelte';
 	import SettingsNavigationDesktop from '$lib/components/settings/SettingsNavigationDesktop.svelte';
@@ -34,7 +33,6 @@
 		{ id: 5, title: ts.get.settings.notifications, component: NotificationSettings },
 		{ id: 2, title: ts.get.settings.tags, component: TagSettings },
 		{ id: 10, title: ts.get.settings.plugins, component: PluginSettings },
-		{ id: 11, title: ts.get.settings.account, component: AccountSettings },
 		{ id: 8, title: ts.get.settings.security, component: SecuritySettings },
 		{ id: 9, title: ts.get.settings.export_data, component: ExportSettings },
 		{ id: 7, title: ts.get.settings.app, component: AppSettings }

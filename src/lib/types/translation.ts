@@ -131,7 +131,6 @@ export interface SettingsRecords {
 	passkey_last_used: string;
 	passkey_never_used: string;
 	passkey_no_passkeys: string;
-	account: string;
 	change_password: string;
 	current_password: string;
 	new_password: string;

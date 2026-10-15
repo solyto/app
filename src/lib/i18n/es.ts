@@ -217,7 +217,6 @@ const settings: SettingsRecords = {
 	passkey_last_used: 'Último uso',
 	passkey_never_used: 'Nunca utilizada',
 	passkey_no_passkeys: 'Aún no hay claves de acceso registradas.',
-	account: 'Cuenta',
 	change_password: 'Cambiar contraseña',
 	current_password: 'Contraseña actual',
 	new_password: 'Nueva contraseña',
