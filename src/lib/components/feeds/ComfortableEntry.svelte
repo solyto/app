@@ -18,16 +18,16 @@
 	<div
 		class="flex w-full flex-col rounded-sm bg-c-bg-surface p-3 drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral hover:drop-shadow-xl dark:hover:bg-s-dark-3"
 	>
-		<div class="mb-1 flex min-w-0 items-start gap-2">
+		<div class="flex min-w-0 items-center gap-2">
 			<img src={faviconUrl} alt="Favicon" class="h-5 w-5 flex-shrink-0" />
 			<span class="flex-1 truncate font-bold">{item.title}</span>
-			<div class="flex flex-shrink-0 items-center gap-2">
+			<div class="flex flex-shrink-0 items-center gap-1">
 				<SaveToLibraryButton {item} />
-				<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{formattedDate}</span>
+				<span class="min-w-[15ch] text-right text-sm tabular-nums text-c-neutral-5 dark:text-c-neutral-4">{formattedDate}</span>
 			</div>
 		</div>
 		{#if hasMeaningfulDescription(item.description)}
-			<p class="mt-1 line-clamp-2 text-sm text-c-neutral-6 dark:text-c-neutral-4">
+			<p class="mt-2 line-clamp-2 text-sm text-c-neutral-6 dark:text-c-neutral-4">
 				{stripHtml(item.description)}
 			</p>
 		{/if}
