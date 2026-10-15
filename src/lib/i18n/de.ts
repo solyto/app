@@ -232,6 +232,8 @@ const settings: SettingsRecords = {
 	theme: 'Design',
 	animations: 'Animationen',
 	animations_label: 'Animationen und Übergänge aktivieren',
+	flat_navigation: 'Navigationsleiste',
+	flat_navigation_label: 'Flache Leiste am Fensterrand',
 	appearance: 'Darstellung',
 	color_mode: 'Farbmodus',
 	appearance_system: 'Auto',

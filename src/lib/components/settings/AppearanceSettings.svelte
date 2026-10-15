@@ -63,6 +63,17 @@
 			</div>
 		</SettingsSection>
 	{/if}
+	{#if themeState.theme.supportsFlatNavigation}
+		<SettingsSection label={ts.get.settings.flat_navigation}>
+			<div class="mt-2">
+				<Toggle
+					checked={themeState.flatNavigation}
+					label={ts.get.settings.flat_navigation_label}
+					onchange={(v) => themeState.setFlatNavigation(v)}
+				/>
+			</div>
+		</SettingsSection>
+	{/if}
 	<SettingsSection label={ts.get.settings.animations}>
 		<div class="mt-2">
 			<Toggle

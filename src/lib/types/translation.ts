@@ -145,6 +145,8 @@ export interface SettingsRecords {
 	theme: string;
 	animations: string;
 	animations_label: string;
+	flat_navigation: string;
+	flat_navigation_label: string;
 	appearance: string;
 	color_mode: string;
 	appearance_system: string;

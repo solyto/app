@@ -231,6 +231,8 @@ const settings: SettingsRecords = {
 	theme: 'Theme',
 	animations: 'Animations',
 	animations_label: 'Enable animations and transitions',
+	flat_navigation: 'Navigation bar',
+	flat_navigation_label: 'Flat bar along the window edge',
 	appearance: 'Appearance',
 	color_mode: 'Color Mode',
 	appearance_system: 'Auto',

@@ -18,9 +18,9 @@
 	let active = $derived(getPageSlug());
 </script>
 
-<div class="nav-desktop-container h-full bg-c-bg p-1" transition:slide={{ axis: 'x' }}>
+<div class="nav-desktop-container h-full bg-c-bg p-1 flat-nav:p-0" transition:slide={{ axis: 'x' }}>
 	<div
-		class="nav-desktop gradient-down flex h-full w-16 flex-col rounded-md p-1 text-c-neutral-8 drop-shadow-xl dark:text-c-neutral-2"
+		class="nav-desktop gradient-down flex h-full w-16 flex-col rounded-md p-1 flat-nav:rounded-none text-c-neutral-8 drop-shadow-xl dark:text-c-neutral-2"
 	>
 		<div class="relative mb-auto flex flex-col items-center">
 			<img src={logo} class="logo" alt="logo" />

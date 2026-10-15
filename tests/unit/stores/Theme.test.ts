@@ -195,6 +195,40 @@ describe('Theme store', () => {
 		});
 	});
 
+	describe('flat navigation', () => {
+		it('loads the saved preference and applies it to a supporting theme', () => {
+			const dom = setupDom();
+			storage.get.mockReturnValue('nord');
+			storage.getBool.mockReturnValue(true);
+
+			const s = new ThemeState();
+			s.load();
+
+			expect(s.flatNavigation).toBe(true);
+			expect(dom.classList.toggle).toHaveBeenCalledWith('flat-nav', true);
+		});
+
+		it('setFlatNavigation persists and applies the preference', () => {
+			const dom = setupDom();
+			const s = new ThemeState();
+			s.apply(nord);
+			s.setFlatNavigation(true);
+
+			expect(storage.setBool).toHaveBeenCalledWith(ThemeState.LS_FLAT_NAVIGATION_KEY, true);
+			expect(dom.classList.toggle).toHaveBeenLastCalledWith('flat-nav', true);
+		});
+
+		it('is not applied for themes that style their own navigation', () => {
+			const dom = setupDom();
+			const s = new ThemeState();
+			s.setFlatNavigation(true);
+			s.apply(themes.find((t) => t.id === 'skyrim')!);
+
+			expect(s.flatNavigation).toBe(true);
+			expect(dom.classList.toggle).toHaveBeenCalledWith('flat-nav', false);
+		});
+	});
+
 	describe('appearance', () => {
 		it('loads a saved forced appearance and does not follow the OS', () => {
 			const dom = setupDom();
