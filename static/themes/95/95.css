@@ -124,4 +124,15 @@ input:not(:checked) + .toggle-track { background-color: #808080; }
 ::-webkit-scrollbar-thumb { background: #c0c0c0; box-shadow: var(--t-bevel-raised); }
 ::-webkit-scrollbar-corner { background: #c0c0c0; }
 
+/* The quick-add button is fixed to the viewport; keep it above the bottom bar */
+@media (width >= 96rem) {
+	.bottom-nav .quick-add-fab {
+		bottom: calc(2.5rem + 72px);
+	}
+
+	.bottom-nav.flat-nav .quick-add-fab {
+		bottom: calc(2.5rem + 64px);
+	}
+}
+
 .logo { filter: none; }
