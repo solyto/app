@@ -37,6 +37,14 @@
 		historyBudget = null;
 	}
 
+	async function deleteHistoryBudget(): Promise<void> {
+		if (historyBudget === null) return;
+		loadingIndicator.start();
+		await finances.deleteBudget(historyBudget);
+		loadingIndicator.stop();
+		closeHistory();
+	}
+
 	async function addHistoryValue(request: StoreFinanceValueRequest): Promise<boolean> {
 		if (historyBudget === null) return false;
 		loadingIndicator.start();
@@ -133,6 +141,8 @@
 			onAdd={addHistoryValue}
 			onUpdate={updateHistoryValue}
 			onDelete={deleteHistoryValue}
+			itemTitle={historyBudget.title}
+			onDeleteItem={deleteHistoryBudget}
 		/>
 	</ContentModal>
 {/if}

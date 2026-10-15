@@ -763,7 +763,9 @@ const finances: FinanceRecords = {
 	date_taken: 'There is already an entry on this date.',
 	edit_value: 'Edit entry',
 	delete_value_label: 'Delete entry',
-	delete_value_message: 'Do you really want to delete this entry?'
+	delete_value_message: 'Do you really want to delete this entry?',
+	delete_item: 'Delete %s',
+	delete_item_message: 'Do you really want to delete %s and all its entries?'
 };
 
 

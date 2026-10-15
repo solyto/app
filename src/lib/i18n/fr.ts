@@ -762,7 +762,9 @@ const finances: FinanceRecords = {
 	date_taken: 'Il existe déjà une entrée à cette date.',
 	edit_value: 'Modifier l\'entrée',
 	delete_value_label: 'Supprimer l\'entrée',
-	delete_value_message: 'Voulez-vous vraiment supprimer cette entrée ?'
+	delete_value_message: 'Voulez-vous vraiment supprimer cette entrée ?',
+	delete_item: 'Supprimer %s',
+	delete_item_message: 'Voulez-vous vraiment supprimer %s et toutes ses entrées ?'
 };
 
 

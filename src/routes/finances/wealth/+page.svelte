@@ -40,6 +40,14 @@
 		historyFieldId = null;
 	}
 
+	async function deleteHistoryField(): Promise<void> {
+		if (historyField === null) return;
+		loadingIndicator.start();
+		await finances.deleteWealthField(historyField);
+		loadingIndicator.stop();
+		closeHistory();
+	}
+
 	async function addHistoryValue(request: StoreFinanceValueRequest): Promise<boolean> {
 		if (historyField === null) return false;
 		loadingIndicator.start();
@@ -168,6 +176,8 @@
 			onAdd={addHistoryValue}
 			onUpdate={updateHistoryValue}
 			onDelete={deleteHistoryValue}
+			itemTitle={historyField.title}
+			onDeleteItem={deleteHistoryField}
 		/>
 	</ContentModal>
 {/if}

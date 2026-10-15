@@ -744,6 +744,8 @@ export interface FinanceRecords {
 	edit_value: string;
 	delete_value_label: string;
 	delete_value_message: string;
+	delete_item: string;
+	delete_item_message: string;
 }
 
 
