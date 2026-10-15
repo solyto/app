@@ -21,6 +21,7 @@
 	import RecurrenceActionModal from '$lib/components/calendars/RecurrenceActionModal.svelte';
 	import EventAttachments from '$lib/components/calendars/EventAttachments.svelte';
 	import { formatFloatingDate } from '$lib/helpers/DateHelper';
+	import { adjustEventRange, combineDateAndTime } from '$lib/helpers/CalendarEventHelper';
 	import RecurrenceRuleService from '$lib/services/RecurrenceRuleService';
 	import type { RecurrenceSelection } from '$lib/services/RecurrenceRuleService';
 
@@ -67,6 +68,8 @@
 	let recurrence = $state<RecurrenceSelection | null>(
 		recurrenceRuleService.parse(initialForm.recurrence_rule, initialForm.start_date)
 	);
+	// Plain variable: only read inside afterSelect, never rendered.
+	let duration = getDuration();
 	let titleInput = $state<HTMLInputElement | null>(null);
 	let showRecurrenceModal = $state<'edit' | 'delete' | null>(null);
 
@@ -90,36 +93,29 @@
 		return new SvelteDate();
 	}
 
-	async function afterSelectStartDate(): Promise<void> {
-		await tick();
-
-		if (form.start_date.getTime() > form.end_date.getTime()) {
-			form.end_date = new SvelteDate(form.start_date);
-		}
+	function getStart(): Date {
+		return combineDateAndTime(form.start_date, form.start_hours, form.start_minutes);
 	}
 
-	async function afterSelectEndDate(): Promise<void> {
-		await tick();
-
-		if (form.end_date.getTime() < form.start_date.getTime()) {
-			form.start_date = new SvelteDate(form.end_date);
-		}
+	function getEnd(): Date {
+		return combineDateAndTime(form.end_date, form.end_hours, form.end_minutes);
 	}
 
-	async function afterSelectStartTime(): Promise<void> {
-		await tick();
-
-		if (form.start_date.getTime() === form.end_date.getTime() && form.start_hours > form.end_hours) {
-			form.end_hours = form.start_hours;
-		}
+	function getDuration(): number {
+		return Math.max(0, getEnd().getTime() - getStart().getTime());
 	}
 
-	async function afterSelectEndTime(): Promise<void> {
+	async function afterSelect(changed: 'start' | 'end'): Promise<void> {
 		await tick();
 
-		if (form.start_date.getTime() === form.end_date.getTime() && form.end_hours < form.start_hours) {
-			form.start_hours = form.end_hours;
-		}
+		const { start, end } = adjustEventRange(changed, getStart(), getEnd(), duration);
+		form.start_date = new SvelteDate(start);
+		form.start_hours = start.getHours();
+		form.start_minutes = start.getMinutes();
+		form.end_date = new SvelteDate(end);
+		form.end_hours = end.getHours();
+		form.end_minutes = end.getMinutes();
+		duration = getDuration();
 	}
 
 	function buildRequest(): CreateEventRequest | UpdateEventRequest {
@@ -233,24 +229,24 @@
 		</div>
 		{#if form.start_date}
 			<div class="flex w-full gap-2">
-				<SvelteDateInput bind:date={form.start_date} oninput={() => afterSelectStartDate()} />
+				<SvelteDateInput bind:date={form.start_date} oninput={() => afterSelect('start')} />
 				{#if !form.is_all_day}
 					<TimePicker
 						bind:hours={form.start_hours}
 						bind:minutes={form.start_minutes}
-						oninput={() => afterSelectStartTime()}
+						oninput={() => afterSelect('start')}
 					/>
 				{/if}
 			</div>
 		{/if}
 		{#if form.end_date}
 			<div class="flex w-full gap-2">
-				<SvelteDateInput bind:date={form.end_date} oninput={() => afterSelectEndDate()} />
+				<SvelteDateInput bind:date={form.end_date} oninput={() => afterSelect('end')} />
 				{#if !form.is_all_day}
 					<TimePicker
 						bind:hours={form.end_hours}
 						bind:minutes={form.end_minutes}
-						oninput={() => afterSelectEndTime()}
+						oninput={() => afterSelect('end')}
 					/>
 				{/if}
 			</div>
