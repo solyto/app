@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Component } from 'svelte';
 	import SmoothLineChart from '$lib/components/charts/SmoothLineChart.svelte';
+	import SubHeading from '$lib/components/ui/SubHeading.svelte';
 
 	let {
 		label,
@@ -16,24 +17,20 @@
 </script>
 
 {#if categories.length >= 2}
-	<div>
-		<div class="mb-2 flex items-center gap-3 px-1">
+	<div class="rounded-xl bg-c-bg-surface p-4 shadow-sm">
+		<div class="mb-8 flex items-center gap-2">
 			{#if Icon}
-				<Icon class="size-5 text-c-neutral-6 dark:text-c-neutral-4" />
+				<Icon class="size-4 text-c-neutral-6 dark:text-c-neutral-4" />
 			{/if}
-			<p class="text-xl font-semibold text-c-heading dark:text-c-primary">
-				{label}
-			</p>
+			<SubHeading title={label} my={0} />
 		</div>
-		<div class="rounded-xl bg-c-bg-surface p-4 shadow-sm">
-			<SmoothLineChart
-				{categories}
-				{values}
-				min={1}
-				max={5}
-				filled={true}
-				class="h-56"
-			/>
-		</div>
+		<SmoothLineChart
+			{categories}
+			{values}
+			min={1}
+			max={5}
+			filled={true}
+			class="h-56"
+		/>
 	</div>
 {/if}
