@@ -18,14 +18,15 @@
 	let faviconUrl = $derived(grabFaviconFromUrl(item.link));
 	let formattedDate = $derived(formatDateTime(new Date(item.published_at)));
 	let imageLoaded = $state(false);
+	let imageFailed = $state(false);
 </script>
 
 <a href={item.link} class="w-full" target="_blank" rel="external" in:fade>
 	<div
 		class="flex h-full w-full flex-col overflow-hidden rounded-sm bg-c-bg-surface drop-shadow-sm transition-all not-dark:border-1 not-dark:border-c-neutral-1 hover:bg-c-neutral hover:drop-shadow-xl dark:hover:bg-s-dark-3"
 	>
-		{#if item.image_url}
-			<div class="relative h-40 w-full overflow-hidden">
+		<div class="relative h-40 w-full overflow-hidden">
+			{#if item.image_url && !imageFailed}
 				{#if !imageLoaded}
 					<div class="absolute inset-0 animate-pulse bg-c-neutral-1 dark:bg-s-dark-3"></div>
 				{/if}
@@ -35,11 +36,15 @@
 					loading="lazy"
 					decoding="async"
 					onload={() => (imageLoaded = true)}
-					onerror={() => (imageLoaded = true)}
+					onerror={() => (imageFailed = true)}
 					class="h-full w-full object-cover transition-opacity duration-300 {imageLoaded ? 'opacity-100' : 'opacity-0'}"
 				/>
-			</div>
-		{/if}
+			{:else}
+				<div class="flex h-full w-full items-center justify-center bg-c-neutral-1 dark:bg-s-dark-3">
+					<img src={faviconUrl} alt="" class="h-10 w-10 opacity-60" />
+				</div>
+			{/if}
+		</div>
 		<div class="flex flex-1 flex-col p-4">
 			<span class="mb-2 line-clamp-2 text-lg leading-tight font-bold">{item.title}</span>
 			{#if item.description}
