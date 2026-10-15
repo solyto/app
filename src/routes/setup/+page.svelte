@@ -36,7 +36,8 @@
 			});
 			if (!res.ok) throw new Error();
 			const data = await res.json();
-			if (data?.app !== 'solyto' || !data?.version) throw new Error();
+			const health = data?.data ?? data;
+			if (health?.app !== 'solyto' || !health?.version) throw new Error();
 			setCustomApiUrl(baseUrl);
 			window.location.href = resolve(urls.login);
 		} catch {
