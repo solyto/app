@@ -270,9 +270,7 @@
 		color: var(--color-s-teal, #1dbda5);
 	}
 
-	@media (prefers-color-scheme: dark) {
-		:global(.toolbar-btn:hover) {
-			background-color: var(--color-s-dark-3, #2f3741);
-		}
+	:global(html:is(.dark, .theme-dark) .toolbar-btn:hover) {
+		background-color: var(--color-s-dark-3, #2f3741);
 	}
 </style>
