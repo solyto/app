@@ -49,4 +49,12 @@ export default class PluginService {
 
 		return request;
 	}
+
+	buildDisableRequest(plugin: UserPlugin | null): UpdateAiPluginRequest | null {
+		const provider = plugin?.settings?.provider ?? null;
+		const model = plugin?.settings?.model ?? null;
+		if (provider === null || model === null) return null;
+
+		return { enabled: false, provider, model };
+	}
 }

@@ -120,3 +120,23 @@ describe('buildRequest', () => {
 		expect(service.buildRequest(draft({ model: null }))).toBeNull();
 	});
 });
+
+describe('buildDisableRequest', () => {
+	it('disables with the stored provider and model', () => {
+		expect(service.buildDisableRequest(plugin())).toEqual({ enabled: false, provider: 'openai', model: 'gpt-4o' });
+	});
+
+	it('disables even when the stored model is no longer available', () => {
+		const unavailable = plugin({ settings: { provider: 'openai', model: 'gpt-3' }, model_available: false });
+		expect(service.buildDisableRequest(unavailable)).toEqual({ enabled: false, provider: 'openai', model: 'gpt-3' });
+	});
+
+	it('never sends a key', () => {
+		expect(service.buildDisableRequest(plugin())).not.toHaveProperty('api_key');
+	});
+
+	it('returns null when nothing is stored', () => {
+		expect(service.buildDisableRequest(plugin({ settings: null }))).toBeNull();
+		expect(service.buildDisableRequest(null)).toBeNull();
+	});
+});

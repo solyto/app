@@ -10,7 +10,7 @@
 	import Select from '$lib/components/forms/Select.svelte';
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import type { AiPluginDraft, AiProviderId } from '$lib/types/plugin';
+	import type { AiPluginDraft, AiProviderId, UpdateAiPluginRequest } from '$lib/types/plugin';
 
 	const ts = getTranslation();
 	const plugins = getPlugins();
@@ -45,7 +45,7 @@
 		draft.enabled = value;
 		if (value || !plugins.ai?.enabled) return;
 
-		const saved = await save();
+		const saved = await submit(pluginService.buildDisableRequest(plugins.ai));
 		if (!saved) draft.enabled = true;
 	}
 
@@ -59,7 +59,10 @@
 	}
 
 	async function save(): Promise<boolean> {
-		const request = pluginService.buildRequest(draft);
+		return submit(pluginService.buildRequest(draft));
+	}
+
+	async function submit(request: UpdateAiPluginRequest | null): Promise<boolean> {
 		if (request === null) {
 			notifications.error(ts.get.settings.ai_plugin_save_error);
 			return false;
