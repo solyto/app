@@ -152,6 +152,17 @@ describe('postWithStatus', () => {
 		// Refresh is an auth endpoint, so recovery must not run for it.
 		expect(fetchMock).toHaveBeenCalledTimes(1);
 	});
+	it('sends FormData as it is, without a JSON content type', async () => {
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse({}, false, 413));
+		vi.stubGlobal('fetch', fetchMock);
+		const formData = new FormData();
+		await new ApiService('tok').postWithStatus('/upload', formData);
+		expect(fetchMock.mock.calls[0][1].body).toBe(formData);
+		expect(fetchMock.mock.calls[0][1].headers).toEqual({
+			Authorization: 'Bearer tok',
+			Accept: 'application/json'
+		});
+	});
 });
 
 describe('delete', () => {

@@ -983,6 +983,8 @@ const clipboard: ClipboardRecords = {
 	delete_error: 'Échec de la suppression de l\'entrée',
 	image_save_success: 'Image enregistrée',
 	image_save_error: 'Échec de l\'enregistrement de l\'image',
+	image_too_large: 'L\'image n\'a pas pu être envoyée. Elle est peut-être trop volumineuse.',
+	image_reduce: 'Réduire la taille',
 	image_copy_success: 'Image copiée dans le presse-papiers',
 	image_copy_error: 'Échec de la copie de l\'image'
 };

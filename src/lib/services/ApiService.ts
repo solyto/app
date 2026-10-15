@@ -159,10 +159,11 @@ export default class ApiService {
 	): Promise<
 		{ ok: true; status: number; data: PostResponse } | { ok: false; status: number; data: null }
 	> {
+		const isFormData = body instanceof FormData;
 		const res = await this.fetchWithRecovery(
 			endpoint,
-			{ method: 'POST', body: typeof body === 'object' ? JSON.stringify(body) : body },
-			() => (typeof body === 'object' ? this.getApiHeaderWithBody() : this.getApiHeader())
+			{ method: 'POST', body: isFormData ? body : JSON.stringify(body) },
+			() => (isFormData ? this.getApiHeader() : this.getApiHeaderWithBody())
 		);
 
 		return res.ok

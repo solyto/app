@@ -982,6 +982,8 @@ const clipboard: ClipboardRecords = {
 	delete_error: 'Error al eliminar la entrada',
 	image_save_success: 'Imagen guardada',
 	image_save_error: 'Error al guardar la imagen',
+	image_too_large: 'No se pudo subir la imagen. Puede que sea demasiado grande.',
+	image_reduce: 'Reducir tamaño',
 	image_copy_success: 'Imagen copiada al portapapeles',
 	image_copy_error: 'Error al copiar la imagen'
 };

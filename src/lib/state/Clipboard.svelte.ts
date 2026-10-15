@@ -29,12 +29,20 @@ export class Clipboard {
 		return Promise.resolve(res !== null);
 	}
 
-	async createImage(file: File): Promise<boolean> {
+	async createImage(file: File): Promise<'ok' | 'too_large' | 'error'> {
 		const formData = new FormData();
 		formData.append('image', file);
-		const res = await this.apiService.postFormData(apiRoutes.clipboard.createImage, formData);
-		if (res) await this.load();
-		return res;
+		try {
+			const res = await this.apiService.postWithStatus(apiRoutes.clipboard.createImage, formData);
+			if (res.ok) {
+				await this.load();
+				return 'ok';
+			}
+			return res.status === 413 ? 'too_large' : 'error';
+		} catch {
+			// A server aborting an oversized upload can surface as a network error.
+			return 'too_large';
+		}
 	}
 
 	async delete(entry: ClipboardEntry): Promise<boolean> {

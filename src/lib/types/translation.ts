@@ -974,6 +974,8 @@ export interface ClipboardRecords {
 	delete_error: string;
 	image_save_success: string;
 	image_save_error: string;
+	image_too_large: string;
+	image_reduce: string;
 	image_copy_success: string;
 	image_copy_error: string;
 }

@@ -10,11 +10,6 @@ export function combineDateAndTime(date: Date, hours: number, minutes: number): 
 	return result;
 }
 
-/**
- * Keeps an event's start before its end while one side is edited.
- * A changed start always moves the end along, keeping the duration (like Google Calendar).
- * A changed end only moves the start when it now lies before it, again keeping the duration.
- */
 export function adjustEventRange(
 	changed: 'start' | 'end',
 	start: Date,

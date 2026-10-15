@@ -994,6 +994,8 @@ const clipboard: ClipboardRecords = {
 	delete_error: 'Eintrag konnte nicht gelöscht werden',
 	image_save_success: 'Bild gespeichert',
 	image_save_error: 'Bild konnte nicht gespeichert werden',
+	image_too_large: 'Das Bild konnte nicht hochgeladen werden. Möglicherweise ist es zu groß.',
+	image_reduce: 'Größe reduzieren',
 	image_copy_success: 'Bild in die Zwischenablage kopiert',
 	image_copy_error: 'Bild konnte nicht kopiert werden'
 };
