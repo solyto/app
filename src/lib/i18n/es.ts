@@ -375,7 +375,7 @@ const checkInSummary: CheckInSummaryRecords = {
 	dreams_1: 'tenido pesadillas terribles', dreams_2: 'tenido malos sueños', dreams_3: 'tenido sueños normales', dreams_4: 'tenido buenos sueños', dreams_5: 'tenido sueños excelentes',
 	water_1: 'apenas bebido', water_2: 'bebido poco', water_3: 'bebido suficiente', water_4: 'bebido bien', water_5: 'bien hidratado',
 	food_quality_1: 'comido muy mal', food_quality_2: 'comido mal', food_quality_3: 'comido aceptablemente', food_quality_4: 'comido bien', food_quality_5: 'comido excelente',
-	food_amount_1: 'comido muy poco', food_amount_2: 'comido demasiado poco', food_amount_3: 'comido una cantidad moderada', food_amount_4: 'comido una buena cantidad', food_amount_5: 'comido bastante',
+	food_amount_1: 'comido muy poco', food_amount_2: 'comido demasiado poco', food_amount_3: 'comido una cantidad moderada', food_amount_4: 'comido una buena cantidad', food_amount_5: 'comido demasiado',
 	work_1: 'tenido un día de trabajo terrible', work_2: 'tenido un día de trabajo duro', work_3: 'tenido un día de trabajo normal', work_4: 'tenido un buen día de trabajo', work_5: 'tenido un excelente día de trabajo',
 	alcohol_1: 'bebido mucho', alcohol_2: 'bebido bastante', alcohol_3: 'tomado unas copas', alcohol_4: 'tomado una o dos copas', alcohol_5: 'nada de alcohol',
 	smoking_1: 'fumado mucho', smoking_2: 'fumado bastante', smoking_3: 'fumado moderadamente', smoking_4: 'fumado poco', smoking_5: 'no fumado',

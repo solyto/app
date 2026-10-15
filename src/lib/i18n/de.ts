@@ -376,7 +376,7 @@ const checkInSummary: CheckInSummaryRecords = {
 	dreams_1: 'schreckliche Albträume gehabt', dreams_2: 'schlechte Träume gehabt', dreams_3: 'durchschnittliche Träume gehabt', dreams_4: 'gute Träume gehabt', dreams_5: 'tolle Träume gehabt',
 	water_1: 'kaum etwas getrunken', water_2: 'wenig getrunken', water_3: 'genug getrunken', water_4: 'viel getrunken', water_5: 'gut hydriert geblieben',
 	food_quality_1: 'sehr schlecht gegessen', food_quality_2: 'schlecht gegessen', food_quality_3: 'okay gegessen', food_quality_4: 'gut gegessen', food_quality_5: 'hervorragend gegessen',
-	food_amount_1: 'kaum etwas gegessen', food_amount_2: 'zu wenig gegessen', food_amount_3: 'eine normale Menge gegessen', food_amount_4: 'eine gute Menge gegessen', food_amount_5: 'reichlich gegessen',
+	food_amount_1: 'kaum etwas gegessen', food_amount_2: 'zu wenig gegessen', food_amount_3: 'eine normale Menge gegessen', food_amount_4: 'eine gute Menge gegessen', food_amount_5: 'zu viel gegessen',
 	work_1: 'schrecklichen Arbeitstag gehabt', work_2: 'anstrengenden Arbeitstag gehabt', work_3: 'normalen Arbeitstag gehabt', work_4: 'guten Arbeitstag gehabt', work_5: 'tollen Arbeitstag gehabt',
 	alcohol_1: 'viel Alkohol getrunken', alcohol_2: 'ziemlich viel getrunken', alcohol_3: 'ein paar Drinks gehabt', alcohol_4: 'ein oder zwei Drinks gehabt', alcohol_5: 'keinen Alkohol getrunken',
 	smoking_1: 'viel geraucht', smoking_2: 'ziemlich viel geraucht', smoking_3: 'mäßig geraucht', smoking_4: 'wenig geraucht', smoking_5: 'nicht geraucht',

@@ -374,7 +374,7 @@ const checkInSummary: CheckInSummaryRecords = {
 	dreams_1: "fait d'affreux cauchemars", dreams_2: 'fait de mauvais rêves', dreams_3: 'fait des rêves quelconques', dreams_4: 'fait de bons rêves', dreams_5: "fait d'excellents rêves",
 	water_1: 'à peine bu', water_2: 'peu bu', water_3: 'assez bu', water_4: 'bien bu', water_5: 'très bien hydraté',
 	food_quality_1: 'très mal mangé', food_quality_2: 'mal mangé', food_quality_3: 'mangé correctement', food_quality_4: 'bien mangé', food_quality_5: 'excellent repas',
-	food_amount_1: 'mangé très peu', food_amount_2: 'mangé trop peu', food_amount_3: 'mangé une quantité modérée', food_amount_4: 'mangé une bonne quantité', food_amount_5: 'mangé amplement',
+	food_amount_1: 'mangé très peu', food_amount_2: 'mangé trop peu', food_amount_3: 'mangé une quantité modérée', food_amount_4: 'mangé une bonne quantité', food_amount_5: 'mangé trop',
 	work_1: 'eu une terrible journée de travail', work_2: 'eu une dure journée de travail', work_3: 'eu une journée de travail ordinaire', work_4: 'eu une bonne journée de travail', work_5: 'eu une excellente journée de travail',
 	alcohol_1: 'beaucoup bu', alcohol_2: 'pas mal bu', alcohol_3: 'pris quelques verres', alcohol_4: 'pris un verre ou deux', alcohol_5: "pas d'alcool",
 	smoking_1: 'beaucoup fumé', smoking_2: 'pas mal fumé', smoking_3: 'fumé modérément', smoking_4: 'peu fumé', smoking_5: 'pas fumé',

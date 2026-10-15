@@ -72,7 +72,6 @@
 		<div class="flex flex-col gap-2.5">
 			{#each entries as entry (entry)}
 				<CheckInWidgetRow
-					type={entry}
 					label={ts.get.checkIn[entry]}
 					value={getMeanValue(checkInData.data, entry)}
 					icon={getIcon(entry)}
