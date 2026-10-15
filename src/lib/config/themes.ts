@@ -109,5 +109,15 @@ export const themes: Theme[] = [
 		previewSurface: '#0d0020',
 		previewText: '#ffffff',
 		previewAccent: '#ff6600'
+	},
+	{
+		id: 'win95',
+		name: 'Windows 95',
+		supportsDarkMode: false,
+		supportsFlatNavigation: true,
+		previewBg: '#c0c0c0',
+		previewSurface: '#ffffff',
+		previewText: '#000000',
+		previewAccent: '#000080'
 	}
 ];
