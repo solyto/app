@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { fly, scale } from 'svelte/transition';
+	import { scale } from 'svelte/transition';
+	import { backOut, cubicIn } from 'svelte/easing';
 	import { onMount, onDestroy } from 'svelte';
 	import IconEllipsisVertical from '@lucide/svelte/icons/ellipsis-vertical';
 	import NavEntry from '$lib/components/ui/NavEntry.svelte';
@@ -84,9 +85,10 @@
 			</button>
 			{#if submenuVisible}
 				<div
-					class="gradient-down absolute z-50 flex w-16 max-h-[calc(100dvh-8rem)] flex-col gap-2 overflow-y-auto rounded-lg p-1 text-c-neutral-8 shadow-lg dark:text-c-neutral-2"
+					class="gradient-down absolute z-50 flex origin-bottom w-16 max-h-[calc(100dvh-8rem)] flex-col gap-2 overflow-y-auto rounded-lg p-1 text-c-neutral-8 shadow-lg dark:text-c-neutral-2"
 					style="bottom:80px; right:15px;"
-					transition:fly={{ x: 50, duration: 200 }}
+					in:scale={{ start: 0.6, duration: 260, easing: backOut }}
+					out:scale={{ start: 0.8, duration: 150, easing: cubicIn }}
 				>
 					{#each nav.mobileOverflowItems() as item (item.slug)}
 						<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} onSelect={select}>
