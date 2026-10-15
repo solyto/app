@@ -4,7 +4,6 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { formatDateWithoutYear, getCalendarWeek, getISODateInfo, isDateToday, getHoursOfDay, isOffHour } from '$lib/helpers/DateHelper';
 	import Day from '$lib/components/calendars/views/week/Day.svelte';
-	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
@@ -30,7 +29,7 @@
 			<div class="sticky left-0 z-30 w-8 flex-shrink-0 bg-c-bg dark:bg-s-dark"></div>
 			{#each week as day (day.date.getTime())}
 				<div
-					class="flex h-8 flex-shrink-0 items-center justify-center relative"
+					class="flex h-8 flex-shrink-0 items-center justify-center"
 					style="
 						min-width: {columnWidth};
 						max-width: {columnWidth};
@@ -45,13 +44,6 @@
 						{ts.get.calendar.weekdays_short[day.weekday]}
 						{formatDateWithoutYear(day.date)}
 					</span>
-					<CalendarMarks
-						date={day.date}
-						showJournal={calendars.journalMarksEnabled}
-						showCheckIn={calendars.checkInMarksEnabled}
-						size={20}
-						class="absolute right-2"
-					/>
 				</div>
 			{/each}
 		</div>

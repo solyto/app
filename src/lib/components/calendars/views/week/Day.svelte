@@ -164,7 +164,7 @@
 {/snippet}
 
 <div
-	class={['relative grid', isMobile ? 'row-span-full' : 'h-full w-full', isDropTargetColumn && 'bg-d-lightblue/40']}
+	class={['relative grid grid-cols-1', isMobile ? 'row-span-full' : 'h-full w-full', isDropTargetColumn && 'bg-d-lightblue/40']}
 	data-calendar-day={dateSlug}
 	style={isMobile ? 'grid-template-rows: subgrid' : `grid-template-rows: ${desktopRows}`}
 >

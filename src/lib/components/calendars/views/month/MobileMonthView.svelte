@@ -159,7 +159,7 @@
 					{/if}
 				{/each}
 				{#each calendars.getTodosForDate(calendars.mobileSelectedDate) as todo (todo.id)}
-					<TodoEntry {todo} />
+					<TodoEntry {todo} wrap />
 				{/each}
 				{#each calendars.getNonAllDayEventsForDate(calendars.mobileSelectedDate) as item (getCalendarEventKey(item))}
 					{#if !calendars.isCalendarHidden(item.calendar_id)}

@@ -18,7 +18,7 @@
 	<div class="my-2 flex w-full flex-col gap-2">
 		<span class="text-xl font-bold text-c-heading dark:text-c-primary">{formatDate(day)}</span>
 		{#each calendars.getTodosForDate(day) as todo (todo.id)}
-			<TodoEntry {todo} checkboxRight={false} />
+			<TodoEntry {todo} checkboxRight={false} wrap />
 		{/each}
 
 		{#each allDayEvents as item (getCalendarEventKey(item))}
