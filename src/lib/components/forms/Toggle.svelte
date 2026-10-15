@@ -11,7 +11,7 @@
 </script>
 
 <label
-	class="flex items-center text-sm font-medium text-c-neutral-7 rtl:text-right dark:text-c-neutral-2"
+	class="flex w-fit items-center text-sm font-medium text-c-neutral-7 rtl:text-right dark:text-c-neutral-2"
 >
 	<input
 		type="checkbox"
