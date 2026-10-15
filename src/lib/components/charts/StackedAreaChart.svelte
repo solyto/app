@@ -34,12 +34,18 @@
 				text: title || ''
 			},
 			legend: {
+				type: 'scroll',
+				top: 0,
+				padding: 0,
+				left: 0,
+				right: 0,
 				data: dataPoints.map((p: { title: string; values: number[] }) => p.title)
 			},
 			grid: {
-				left: '3%',
-				right: '4%',
-				bottom: '10%',
+				top: 40,
+				left: 0,
+				right: 0,
+				bottom: 0,
 				containLabel: true
 			},
 			xAxis: {

@@ -66,9 +66,10 @@
 				trigger: 'axis'
 			},
 			grid: {
-				left: '3%',
-				right: '4%',
-				bottom: '10%',
+				top: title ? 60 : 8,
+				left: 0,
+				right: 0,
+				bottom: 0,
 				containLabel: true
 			},
 			xAxis: {

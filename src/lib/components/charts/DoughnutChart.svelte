@@ -33,9 +33,22 @@
 		const total = values.reduce((sum: number, item: { value: number; name: string; color?: string | null }) => sum + item.value, 0);
 
 		const options = {
-			title: {
-				text: title || ''
-			},
+			title: [
+				{
+					text: title || ''
+				},
+				{
+					text: centerFormatter(total),
+					left: 'center',
+					top: '44%',
+					textVerticalAlign: 'middle',
+					textStyle: {
+						color: '#333',
+						fontSize: 20,
+						fontWeight: 'bold'
+					}
+				}
+			],
 			tooltip: {
 				trigger: 'item',
 				formatter: (params: { name: string; value: number; percent: number }) =>
@@ -45,20 +58,6 @@
 				bottom: '0',
 				left: 'center'
 			},
-			graphic: [
-				{
-					type: 'text',
-					left: 'center',
-					top: 'middle',
-					style: {
-						text: centerFormatter(total),
-						textAlign: 'center',
-						fill: '#333',
-						fontSize: 20,
-						fontWeight: 'bold'
-					}
-				}
-			],
 			grid: {
 				left: '3%',
 				right: '4%',
@@ -68,7 +67,8 @@
 			series: [
 				{
 					type: 'pie',
-					radius: ['40%', '70%'],
+					radius: ['42%', '76%'],
+					center: ['50%', '44%'],
 					avoidLabelOverlap: false,
 					itemStyle: {
 						borderRadius: 5
