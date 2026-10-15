@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { init } from 'echarts';
 	import type { ECharts } from 'echarts';
-	import { onMount, onDestroy, tick } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	let {
 		title,
@@ -23,9 +23,8 @@
 		class?: string;
 	}>();
 
-	let chartContainer: HTMLDivElement | null = null;
+	let chartContainer = $state<HTMLDivElement | null>(null);
 	let myChart: ECharts | null = null;
-	let isInitialized = false;
 
 	// echarts renders to canvas, so CSS variables like var(--color-c-success) must be
 	// resolved to a concrete color value before being passed to the chart options.
@@ -48,12 +47,12 @@
 	}
 
 	function createChart() {
-		if (!chartContainer || !categories?.length || !values?.length) return;
-
 		if (myChart) {
 			myChart.dispose();
 			myChart = null;
 		}
+
+		if (!chartContainer || !categories?.length || !values?.length) return;
 
 		myChart = init(chartContainer);
 
@@ -112,12 +111,9 @@
 		};
 
 		myChart.setOption(options);
-		isInitialized = true;
 	}
 
 	onMount(() => {
-		tick().then(createChart);
-
 		const handleResize = () => {
 			if (myChart) {
 				myChart.resize();
@@ -139,7 +135,7 @@
 	});
 
 	$effect(() => {
-		if (!isInitialized && chartContainer) {
+		if (chartContainer) {
 			createChart();
 		}
 	});

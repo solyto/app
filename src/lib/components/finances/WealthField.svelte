@@ -12,9 +12,10 @@
 	const keyManager = getKeyManager();
 	const finances = getFinances();
 
-	let { wealth, onChangeValue } = $props<{
+	let { wealth, onChangeValue, onOpenHistory } = $props<{
 		wealth: WealthField;
 		onChangeValue: (wealth: WealthField, value: number) => void | Promise<void>;
+		onOpenHistory: (wealth: WealthField) => void;
 	}>();
 
 	let formOpen = $state<boolean>(false);
@@ -60,7 +61,7 @@
 
 <div class="group flex w-full flex-row items-center justify-between">
 	<div class="flex items-center gap-4 text-lg">
-		<span>{wealth.title}</span>
+		<button class="cursor-pointer hover:underline" onclick={() => onOpenHistory(wealth)}>{wealth.title}</button>
 		<button
 			class="cursor-pointer opacity-0 transition-all group-hover:opacity-100"
 			onclick={() => onDelete(wealth)}

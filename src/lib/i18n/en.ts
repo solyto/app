@@ -747,7 +747,16 @@ const finances: FinanceRecords = {
 	wealth_distribution: 'Wealth Distribution',
 	income_vs_expenses: 'Income vs Expenses',
 	wealth_trend: 'Wealth Trend',
-	add_entry: 'Add Entry'
+	add_entry: 'Add Entry',
+	history: 'History',
+	date: 'Date',
+	amount: 'Amount',
+	no_values: 'No entries yet.',
+	replaces_value: 'Replaces the existing entry of %s on this date.',
+	date_taken: 'There is already an entry on this date.',
+	edit_value: 'Edit entry',
+	delete_value_label: 'Delete entry',
+	delete_value_message: 'Do you really want to delete this entry?'
 };
 
 

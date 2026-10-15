@@ -748,7 +748,16 @@ const finances: FinanceRecords = {
 	wealth_distribution: 'Vermögensverteilung',
 	income_vs_expenses: 'Einkommen vs Ausgaben',
 	wealth_trend: 'Vermögensverlauf',
-	add_entry: 'Eintrag hinzufügen'
+	add_entry: 'Eintrag hinzufügen',
+	history: 'Verlauf',
+	date: 'Datum',
+	amount: 'Betrag',
+	no_values: 'Noch keine Einträge.',
+	replaces_value: 'Ersetzt den vorhandenen Eintrag von %s an diesem Datum.',
+	date_taken: 'An diesem Datum gibt es bereits einen Eintrag.',
+	edit_value: 'Eintrag bearbeiten',
+	delete_value_label: 'Eintrag löschen',
+	delete_value_message: 'Möchtest du diesen Eintrag wirklich löschen?'
 };
 
 

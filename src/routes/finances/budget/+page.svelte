@@ -5,9 +5,17 @@
 	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
 	import AddBudget from '$lib/components/finances/AddBudget.svelte';
 	import BudgetField from '$lib/components/finances/BudgetField.svelte';
-	import type { Budget, UpdateBudgetRequest } from '$lib/types/finance';
+	import type {
+		Budget,
+		FinanceValue,
+		StoreFinanceValueRequest,
+		UpdateBudgetRequest,
+		UpdateFinanceValueRequest
+	} from '$lib/types/finance';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onMount } from 'svelte';
+	import ContentModal from '$lib/components/ui/ContentModal.svelte';
+	import FinanceHistory from '$lib/components/finances/FinanceHistory.svelte';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
@@ -17,12 +25,48 @@
 	let incomeTotal = $derived(finances.getBudgetIncomeTotal());
 	let expenseTotal = $derived(finances.getBudgetExpenseTotal());
 	let colorLoaded = $state<boolean>(false);
+	let historyBudget = $state<Budget | null>(null);
 
 	async function onChangeValue(budget: Budget, value: number): Promise<void> {
 		loadingIndicator.start();
 		const request: UpdateBudgetRequest = { value: value };
 		await finances.updateBudget(budget, request);
 		loadingIndicator.stop();
+	}
+
+	async function openHistory(budget: Budget): Promise<void> {
+		loadingIndicator.start();
+		const ok = await finances.loadBudgetValues(budget);
+		loadingIndicator.stop();
+		if (ok) historyBudget = budget;
+	}
+
+	function closeHistory(): void {
+		historyBudget = null;
+	}
+
+	async function addHistoryValue(request: StoreFinanceValueRequest): Promise<boolean> {
+		if (historyBudget === null) return false;
+		loadingIndicator.start();
+		const ok = await finances.addBudgetValue(historyBudget, request);
+		loadingIndicator.stop();
+		return ok;
+	}
+
+	async function updateHistoryValue(value: FinanceValue, request: UpdateFinanceValueRequest): Promise<boolean> {
+		if (historyBudget === null) return false;
+		loadingIndicator.start();
+		const ok = await finances.updateBudgetValue(historyBudget, value, request);
+		loadingIndicator.stop();
+		return ok;
+	}
+
+	async function deleteHistoryValue(value: FinanceValue): Promise<boolean> {
+		if (historyBudget === null) return false;
+		loadingIndicator.start();
+		const ok = await finances.deleteBudgetValue(historyBudget, value);
+		loadingIndicator.stop();
+		return ok;
 	}
 
 	onMount(() => {
@@ -77,7 +121,7 @@
 			</div>
 			<div class="flex w-full flex-col gap-1 pl-5">
 				{#each finances.income as i (i.id)}
-					<BudgetField budget={i} {onChangeValue} />
+					<BudgetField budget={i} {onChangeValue} onOpenHistory={openHistory} />
 				{/each}
 			</div>
 		</div>
@@ -96,9 +140,20 @@
 			</div>
 			<div class="flex w-full flex-col gap-1 pl-5">
 				{#each finances.expenses as e (e.id)}
-					<BudgetField budget={e} {onChangeValue} />
+					<BudgetField budget={e} {onChangeValue} onOpenHistory={openHistory} />
 				{/each}
 			</div>
 		</div>
 	</div>
+{/if}
+{#if historyBudget}
+	<ContentModal title={historyBudget.title} showTitleOnMobile={true} rounded="2xl" onClose={closeHistory}>
+		<FinanceHistory
+			values={finances.budgetValues}
+			minValues={1}
+			onAdd={addHistoryValue}
+			onUpdate={updateHistoryValue}
+			onDelete={deleteHistoryValue}
+		/>
+	</ContentModal>
 {/if}

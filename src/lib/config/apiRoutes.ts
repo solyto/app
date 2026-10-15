@@ -223,13 +223,19 @@ export const apiRoutes = {
 			createField: API_URL + '/finances/wealth/fields',
 			updateField: API_URL + '/finances/wealth/fields/%d',
 			deleteField: API_URL + '/finances/wealth/fields/%d',
-			updateValue: API_URL + '/finances/wealth/fields/%d/value'
+			storeValue: API_URL + '/finances/wealth/fields/%d/value',
+			updateValue: API_URL + '/finances/wealth/fields/%d/values/%d',
+			deleteValue: API_URL + '/finances/wealth/fields/%d/values/%d'
 		},
 		budget: {
 			list: API_URL + '/finances/budget',
 			create: API_URL + '/finances/budget',
 			update: API_URL + '/finances/budget/%d',
-			delete: API_URL + '/finances/budget/%d'
+			delete: API_URL + '/finances/budget/%d',
+			listValues: API_URL + '/finances/budget/%d/values',
+			storeValue: API_URL + '/finances/budget/%d/values',
+			updateValue: API_URL + '/finances/budget/%d/values/%d',
+			deleteValue: API_URL + '/finances/budget/%d/values/%d'
 		}
 	},
 	feeds: {

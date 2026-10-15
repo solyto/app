@@ -4,7 +4,12 @@
 	import { getFinances } from '$lib/state/Finances.svelte';
 	import AddWealthField from '$lib/components/finances/AddWealthField.svelte';
 	import WealthFieldDisplay from '$lib/components/finances/WealthField.svelte';
-	import type { WealthField, UpdateWealthValueRequest } from '$lib/types/finance';
+	import type {
+		WealthField,
+		FinanceValue,
+		StoreFinanceValueRequest,
+		UpdateFinanceValueRequest
+	} from '$lib/types/finance';
 	import { europeanFormat } from '$lib/helpers/NumberHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import DoughnutChart from '$lib/components/charts/DoughnutChart.svelte';
@@ -14,6 +19,8 @@
 	import SmoothLineChart from '$lib/components/charts/SmoothLineChart.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import Divider from '$lib/components/ui/Divider.svelte';
+	import ContentModal from '$lib/components/ui/ContentModal.svelte';
+	import FinanceHistory from '$lib/components/finances/FinanceHistory.svelte';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
@@ -23,12 +30,46 @@
 	let colorLoaded = $state<boolean>(false);
 	let statistics = $state<{ date: string; values: { field: string; value: number }[] }[]>([]);
 	let showHistory = $state<boolean>(false);
+	let historyFieldId = $state<number | null>(null);
+	let historyField = $derived(finances.wealth.find((field) => field.id === historyFieldId) ?? null);
 
 	async function onChangeValue(wealth: WealthField, value: number): Promise<void> {
 		loadingIndicator.start();
-		const request: UpdateWealthValueRequest = { value: value };
+		const request: StoreFinanceValueRequest = { value: value };
 		await finances.addWealthValue(wealth, request);
 		loadingIndicator.stop();
+	}
+
+	function openHistory(wealth: WealthField): void {
+		historyFieldId = wealth.id;
+	}
+
+	function closeHistory(): void {
+		historyFieldId = null;
+	}
+
+	async function addHistoryValue(request: StoreFinanceValueRequest): Promise<boolean> {
+		if (historyField === null) return false;
+		loadingIndicator.start();
+		const ok = await finances.addWealthValue(historyField, request);
+		loadingIndicator.stop();
+		return ok;
+	}
+
+	async function updateHistoryValue(value: FinanceValue, request: UpdateFinanceValueRequest): Promise<boolean> {
+		if (historyField === null) return false;
+		loadingIndicator.start();
+		const ok = await finances.updateWealthValue(historyField, value, request);
+		loadingIndicator.stop();
+		return ok;
+	}
+
+	async function deleteHistoryValue(value: FinanceValue): Promise<boolean> {
+		if (historyField === null) return false;
+		loadingIndicator.start();
+		const ok = await finances.deleteWealthValue(historyField, value);
+		loadingIndicator.stop();
+		return ok;
 	}
 
 	function getSeriesData(stats: typeof statistics) {
@@ -126,7 +167,7 @@
 			</div>
 			<div class="flex flex-col gap-1 pl-5">
 				{#each finances.wealth as wealth (wealth.id)}
-					<WealthFieldDisplay {wealth} {onChangeValue} />
+					<WealthFieldDisplay {wealth} {onChangeValue} onOpenHistory={openHistory} />
 				{/each}
 			</div>
 			{#if showHistory}
@@ -142,4 +183,14 @@
 			{/if}
 		</div>
 	</div>
+{/if}
+{#if historyField}
+	<ContentModal title={historyField.title} showTitleOnMobile={true} rounded="2xl" onClose={closeHistory}>
+		<FinanceHistory
+			values={historyField.values}
+			onAdd={addHistoryValue}
+			onUpdate={updateHistoryValue}
+			onDelete={deleteHistoryValue}
+		/>
+	</ContentModal>
 {/if}

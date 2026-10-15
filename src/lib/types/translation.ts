@@ -728,6 +728,15 @@ export interface FinanceRecords {
 	income_vs_expenses: string;
 	wealth_trend: string;
 	add_entry: string;
+	history: string;
+	date: string;
+	amount: string;
+	no_values: string;
+	replaces_value: string;
+	date_taken: string;
+	edit_value: string;
+	delete_value_label: string;
+	delete_value_message: string;
 }
 
 

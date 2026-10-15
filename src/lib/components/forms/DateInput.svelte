@@ -5,7 +5,8 @@
 		placeholder,
 		onblur,
 		oninput,
-		id
+		id,
+		max
 	} = $props<{
 		input?: HTMLInputElement | null;
 		value: string;
@@ -13,6 +14,7 @@
 		onblur?: () => void;
 		oninput?: () => void;
 		id?: string;
+		max?: string;
 	}>();
 </script>
 
@@ -22,6 +24,7 @@
 	{id}
 	{onblur}
 	{oninput}
+	{max}
 	type="date"
 	class="w-full rounded-lg border-1 border-c-neutral-2 text-sm shadow-xs transition-all focus:ring-2 focus:ring-d-lightblue focus:outline-none dark:border-s-dark-2 dark:focus:ring-c-primary"
 	{placeholder}

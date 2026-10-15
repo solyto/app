@@ -746,7 +746,16 @@ const finances: FinanceRecords = {
 	wealth_distribution: 'Répartition du patrimoine',
 	income_vs_expenses: 'Revenus vs Dépenses',
 	wealth_trend: 'Tendance du patrimoine',
-	add_entry: 'Ajouter une entrée'
+	add_entry: 'Ajouter une entrée',
+	history: 'Historique',
+	date: 'Date',
+	amount: 'Montant',
+	no_values: 'Aucune entrée pour l\'instant.',
+	replaces_value: 'Remplace l\'entrée existante de %s à cette date.',
+	date_taken: 'Il existe déjà une entrée à cette date.',
+	edit_value: 'Modifier l\'entrée',
+	delete_value_label: 'Supprimer l\'entrée',
+	delete_value_message: 'Voulez-vous vraiment supprimer cette entrée ?'
 };
 
 
