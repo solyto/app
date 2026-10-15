@@ -90,7 +90,7 @@
 				<div class="flex items-center gap-1" animate:flip={{ duration: flipDurationMs }}>
 					<IconGripVertical
 						size={16}
-						class="shrink-0 cursor-grab text-c-neutral-3"
+						class="shrink-0 cursor-grab touch-none text-c-neutral-3"
 						onpointerdown={() => (dragDisabled = false)}
 						onpointerup={() => (dragDisabled = true)}
 					/>
