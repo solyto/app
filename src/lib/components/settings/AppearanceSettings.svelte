@@ -14,6 +14,10 @@
 		{ value: 'dark' as const, label: ts.get.settings.appearance_dark }
 	]);
 
+	function supportsNavigationOptions(): boolean {
+		return themeState.theme.supportsFlatNavigation || themeState.theme.supportsBottomNavigation;
+	}
+
 	function isActive(theme: Theme): boolean {
 		return themeState.theme.id === theme.id;
 	}
@@ -63,14 +67,23 @@
 			</div>
 		</SettingsSection>
 	{/if}
-	{#if themeState.theme.supportsFlatNavigation}
+	{#if supportsNavigationOptions()}
 		<SettingsSection label={ts.get.settings.flat_navigation}>
-			<div class="mt-2">
-				<Toggle
-					checked={themeState.flatNavigation}
-					label={ts.get.settings.flat_navigation_label}
-					onchange={(v) => themeState.setFlatNavigation(v)}
-				/>
+			<div class="mt-2 flex flex-col gap-2">
+				{#if themeState.theme.supportsFlatNavigation}
+					<Toggle
+						checked={themeState.flatNavigation}
+						label={ts.get.settings.flat_navigation_label}
+						onchange={(v) => themeState.setFlatNavigation(v)}
+					/>
+				{/if}
+				{#if themeState.theme.supportsBottomNavigation}
+					<Toggle
+						checked={themeState.bottomNavigation}
+						label={ts.get.settings.bottom_navigation_label}
+						onchange={(v) => themeState.setBottomNavigation(v)}
+					/>
+				{/if}
 			</div>
 		</SettingsSection>
 	{/if}

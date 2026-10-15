@@ -234,6 +234,7 @@ const settings: SettingsRecords = {
 	animations_label: 'Animationen und Übergänge aktivieren',
 	flat_navigation: 'Navigationsleiste',
 	flat_navigation_label: 'Flache Leiste am Fensterrand',
+	bottom_navigation_label: 'Leiste auf dem Desktop unten anzeigen',
 	appearance: 'Darstellung',
 	color_mode: 'Farbmodus',
 	appearance_system: 'Auto',

@@ -229,6 +229,28 @@ describe('Theme store', () => {
 		});
 	});
 
+	describe('bottom navigation', () => {
+		it('setBottomNavigation persists and applies the preference', () => {
+			const dom = setupDom();
+			const s = new ThemeState();
+			s.apply(themes.find((t) => t.id === '95')!);
+			s.setBottomNavigation(true);
+
+			expect(storage.setBool).toHaveBeenCalledWith(ThemeState.LS_BOTTOM_NAVIGATION_KEY, true);
+			expect(dom.classList.toggle).toHaveBeenLastCalledWith('bottom-nav', true);
+		});
+
+		it('is not applied for themes that do not support it', () => {
+			const dom = setupDom();
+			const s = new ThemeState();
+			s.setBottomNavigation(true);
+			s.apply(nord);
+
+			expect(s.bottomNavigation).toBe(true);
+			expect(dom.classList.toggle).toHaveBeenCalledWith('bottom-nav', false);
+		});
+	});
+
 	describe('appearance', () => {
 		it('loads a saved forced appearance and does not follow the OS', () => {
 			const dom = setupDom();

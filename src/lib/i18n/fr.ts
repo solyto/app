@@ -232,6 +232,7 @@ const settings: SettingsRecords = {
 	animations_label: 'Activer les animations et transitions',
 	flat_navigation: 'Barre de navigation',
 	flat_navigation_label: 'Barre plate collée au bord de la fenêtre',
+	bottom_navigation_label: 'Afficher la barre en bas sur ordinateur',
 	appearance: 'Apparence',
 	color_mode: 'Mode de couleur',
 	appearance_system: 'Auto',

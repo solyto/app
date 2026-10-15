@@ -18,15 +18,15 @@
 	let active = $derived(getPageSlug());
 </script>
 
-<div class="nav-desktop-container h-full bg-c-bg p-1 flat-nav:p-0" transition:slide={{ axis: 'x' }}>
+<div class="nav-desktop-container h-full bg-c-bg p-1 flat-nav:p-0 bottom-nav:h-auto" transition:slide={{ axis: 'x' }}>
 	<div
-		class="nav-desktop gradient-down flex h-full w-16 flex-col rounded-md p-1 flat-nav:rounded-none text-c-neutral-8 drop-shadow-xl dark:text-c-neutral-2"
+		class="nav-desktop gradient-down flex h-full w-16 flex-col rounded-md p-1 flat-nav:rounded-none bottom-nav:h-16 bottom-nav:w-full bottom-nav:flex-row text-c-neutral-8 drop-shadow-xl dark:text-c-neutral-2"
 	>
-		<div class="relative mb-auto flex flex-col items-center">
-			<img src={logo} class="logo" alt="logo" />
+		<div class="relative mb-auto flex flex-col items-center bottom-nav:mb-0 bottom-nav:h-full">
+			<img src={logo} class="logo bottom-nav:h-full bottom-nav:w-auto" alt="logo" />
 		</div>
 
-		<div class="flex flex-1 flex-col items-center justify-center">
+		<div class="flex flex-1 flex-col items-center justify-center bottom-nav:flex-row bottom-nav:[&>*]:w-14">
 			{#each nav.enabledItems(nav.desktopOrder) as item (item.slug)}
 				<div data-tour={item.dataTour} class="w-full">
 					<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug}>
@@ -36,7 +36,7 @@
 			{/each}
 		</div>
 
-		<div class="mt-auto flex flex-col items-center">
+		<div class="mt-auto flex flex-col items-center bottom-nav:mt-0 bottom-nav:flex-row bottom-nav:[&>*]:w-14">
 			<div data-tour="profile" class="w-full">
 				<NavProfileEntry active={active === 'profile'} />
 			</div>
