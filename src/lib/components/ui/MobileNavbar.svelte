@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { scale } from 'svelte/transition';
+	import { fly, scale } from 'svelte/transition';
 	import { backOut, cubicIn } from 'svelte/easing';
 	import { onMount, onDestroy } from 'svelte';
 	import IconEllipsisVertical from '@lucide/svelte/icons/ellipsis-vertical';
@@ -7,7 +7,7 @@
 	import NavProfileEntry from '$lib/components/ui/NavProfileEntry.svelte';
 	import NavLegalEntry from '$lib/components/ui/NavLegalEntry.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
-	import { urls } from '$lib/config/urls';
+	import { urls, hasLegalUrls } from '$lib/config/urls';
 	import { navItems } from '$lib/config/navigation';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import NavEntryIcon from '$lib/components/ui/NavEntryIcon.svelte';
@@ -32,6 +32,11 @@
 
 	function select(): void {
 		submenuVisible = false;
+	}
+
+	function itemIn(index: number): { y: number; duration: number; delay: number } {
+		const count = nav.mobileOverflowItems().length + (hasLegalUrls ? 4 : 3);
+		return { y: 20, duration: 250, delay: (count - 1 - index) * 40 };
 	}
 
 	let active = $derived(getPageSlug());
@@ -90,22 +95,26 @@
 					in:scale={{ start: 0.6, duration: 260, easing: backOut }}
 					out:scale={{ start: 0.8, duration: 150, easing: cubicIn }}
 				>
-					{#each nav.mobileOverflowItems() as item (item.slug)}
-						<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} onSelect={select}>
-							<NavEntryIcon type={item.iconType} />
-						</NavEntry>
+					{#each nav.mobileOverflowItems() as item, index (item.slug)}
+						<div in:fly|global={itemIn(index)}>
+							<NavEntry slug={item.slug} href={item.href} title={ts.get.nav[item.translationKey]} active={active === item.slug} mobile={true} onSelect={select}>
+								<NavEntryIcon type={item.iconType} />
+							</NavEntry>
+						</div>
 					{/each}
-					<NavEntry
-						slug="settings"
-						href={urls.settings}
-						title={ts.get.nav.settings}
-						active={active === 'settings'}
-						mobile={true}
-						onSelect={select}
-					>
-						<NavEntryIcon type="settings" />
-					</NavEntry>
-					<div class="relative">
+					<div in:fly|global={itemIn(nav.mobileOverflowItems().length)}>
+						<NavEntry
+							slug="settings"
+							href={urls.settings}
+							title={ts.get.nav.settings}
+							active={active === 'settings'}
+							mobile={true}
+							onSelect={select}
+						>
+							<NavEntryIcon type="settings" />
+						</NavEntry>
+					</div>
+					<div class="relative" in:fly|global={itemIn(nav.mobileOverflowItems().length + 1)}>
 						<NavEntry
 							slug="notifications"
 							href={urls.notifications}
@@ -125,8 +134,14 @@
 							/>
 						{/if}
 					</div>
-					<NavProfileEntry active={active === 'profile'} mobile={true} onSelect={select} />
-					<NavLegalEntry mobile={true} />
+					<div in:fly|global={itemIn(nav.mobileOverflowItems().length + 2)}>
+						<NavProfileEntry active={active === 'profile'} mobile={true} onSelect={select} />
+					</div>
+					{#if hasLegalUrls}
+						<div in:fly|global={itemIn(nav.mobileOverflowItems().length + 3)}>
+							<NavLegalEntry mobile={true} />
+						</div>
+					{/if}
 				</div>
 			{/if}
 		</div>
