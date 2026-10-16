@@ -387,13 +387,9 @@ export function getCalendarMonth(year?: number, month?: number): CalendarDay[] {
 export function getCalendarWeek(year: number, week: number): CalendarDay[] {
 	const days: CalendarDay[] = [];
 
-	const simple = new Date(year, 0, 1 + (week - 1) * 7);
-	const dayOfWeek = simple.getDay();
-	const isoThursday = new Date(simple);
-	isoThursday.setDate(simple.getDate() + (4 - (dayOfWeek === 0 ? 7 : dayOfWeek)));
-
-	const weekStart = new Date(isoThursday);
-	weekStart.setDate(isoThursday.getDate() - 3);
+	// ISO week 1 is the week containing January 4th; it starts on that week's Monday.
+	const jan4 = new Date(year, 0, 4);
+	const weekStart = new Date(year, 0, 4 - ((jan4.getDay() || 7) - 1) + (week - 1) * 7);
 
 	for (let i = 0; i < 7; i++) {
 		const date = new Date(weekStart);
