@@ -1302,7 +1302,8 @@ const update_required: UpdateRequiredRecords = {
 	instruction_mobile: 'Aktualisiere solyto über den App Store oder F-Droid, je nachdem, wo du es installiert hast.',
 	reload: 'Neueste Version laden',
 	required_version: 'Erforderliche Version: %s',
-	your_version: 'Deine Version: %s'
+	your_version: 'Deine Version: %s',
+	server_outdated: 'Dein Server läuft mit Version %server, diese App ist aber %app. Manches funktioniert eventuell erst, wenn der Server aktualisiert ist.'
 };
 
 export const de: LanguageFile = {

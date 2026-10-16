@@ -1300,7 +1300,8 @@ const update_required: UpdateRequiredRecords = {
 	instruction_mobile: "Mets à jour solyto depuis la boutique d'applications ou F-Droid, selon l'endroit où tu l'as installé.",
 	reload: 'Charger la dernière version',
 	required_version: 'Version requise : %s',
-	your_version: 'Ta version : %s'
+	your_version: 'Ta version : %s',
+	server_outdated: "Ton serveur utilise la version %server, mais cette application est en %app. Certaines fonctions peuvent ne pas marcher tant que le serveur n'est pas mis à jour."
 };
 
 export const fr: LanguageFile = {

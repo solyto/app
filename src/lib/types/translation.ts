@@ -1186,6 +1186,7 @@ export interface UpdateRequiredRecords {
 	reload: string;
 	required_version: string;
 	your_version: string;
+	server_outdated: string;
 }
 
 export interface LanguageFile {

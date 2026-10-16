@@ -16,10 +16,14 @@
 
 	// The service worker serves cached pages first, so a plain reload can bring
 	// back the old build; fetching the new worker first replaces its cache.
+	// The update fails when offline, which must not stop the reload.
 	async function reloadLatestVersion(): Promise<void> {
-		const registration = await navigator.serviceWorker?.getRegistration();
-		await registration?.update();
-		window.location.reload();
+		try {
+			const registration = await navigator.serviceWorker?.getRegistration();
+			await registration?.update();
+		} finally {
+			window.location.reload();
+		}
 	}
 </script>
 

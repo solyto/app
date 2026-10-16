@@ -29,6 +29,7 @@
 	import TitleBar from '$lib/components/desktop/TitleBar.svelte';
 	import UpdateRequiredScreen from '$lib/components/ui/UpdateRequiredScreen.svelte';
 	import { setUpdateRequired } from '$lib/state/UpdateRequired.svelte';
+	import { outdatedServerVersionToAnnounce } from '$lib/services/ServerVersionService';
 	import { getNavigation, setNavigation } from '$lib/state/Navigation.svelte';
 	import { getPageFeature, isAuthRoute, isDashboard, isSetupRoute, showNavbar } from '$lib/helpers/NavHelper';
 	import { featureConfig } from '$lib/config/features';
@@ -101,7 +102,22 @@
 		window.addEventListener('resize', updateHeight);
 
 		ts.loadLanguage();
+
+		if (!isSetupRoute()) announceOutdatedServer();
 	});
+
+	async function announceOutdatedServer(): Promise<void> {
+		const serverVersion = await outdatedServerVersionToAnnounce();
+		if (!serverVersion) return;
+
+		notifications.add({
+			type: 'warning',
+			message: ts.get.update_required.server_outdated
+				.replace('%server', serverVersion)
+				.replace('%app', CLIENT_VERSION),
+			timeout: 20000
+		});
+	}
 
 	onDestroy(() => auth.destroy());
 
