@@ -315,7 +315,7 @@
 <HamburgerButton onclick={() => (open = true)} top={6} />
 
 <div
-	class="secondary-nav-mobile-container relative hidden h-full max-h-screen w-64 shrink-0 flex-col gap-4 overflow-y-auto bg-c-bg p-4 lg:flex dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
+	class="secondary-nav-mobile-container relative hidden h-full max-h-screen w-64 shrink-0 flex-col gap-4 overflow-y-auto bg-c-bg p-4 drop-shadow-xl lg:flex dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 	in:fade
 >
 	{@render sidebar()}
