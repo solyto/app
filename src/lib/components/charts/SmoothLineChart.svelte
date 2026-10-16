@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { init } from 'echarts';
-	import type { ECharts } from 'echarts';
+	import { init } from './echarts';
+	import type { ECharts } from './echarts';
 	import { onMount, onDestroy } from 'svelte';
 
 	let {
