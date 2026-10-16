@@ -17,6 +17,16 @@ const AUTH_ENDPOINTS: string[] = [
 	apiRoutes.auth.passkeys.authenticate
 ];
 
+// A request that never got a response (offline, dropped connection, CORS
+// failure). Thrown instead of fetch's own TypeError so the root layout can tell
+// it apart from programming errors and stop the loading indicator.
+export class NetworkError extends Error {
+	constructor(cause: unknown) {
+		super(cause instanceof Error ? cause.message : 'Network request failed', { cause });
+		this.name = 'NetworkError';
+	}
+}
+
 export default class ApiService {
 	authToken: string | null = null;
 	private unauthorizedHandler: (() => Promise<boolean>) | null = null;
@@ -42,14 +52,14 @@ export default class ApiService {
 		return AUTH_ENDPOINTS.some((authEndpoint) => endpoint.startsWith(authEndpoint));
 	}
 
-	// Network errors (a rejected fetch) propagate untouched: they are transient
-	// and must never trigger recovery or logout.
+	// Network errors (a rejected fetch) propagate as NetworkError: they are
+	// transient and must never trigger recovery or logout.
 	private async fetchWithRecovery(
 		endpoint: string,
 		init: Omit<RequestInit, 'headers'>,
 		buildHeaders: () => HeadersInit
 	): Promise<Response> {
-		const res = await fetch(endpoint, { ...init, headers: buildHeaders() });
+		const res = await this.send(endpoint, init, buildHeaders);
 
 		if (res.status === 426) {
 			await this.reportUpgradeRequired(res);
@@ -63,7 +73,19 @@ export default class ApiService {
 		const recovered = await this.unauthorizedHandler();
 		if (!recovered) return res;
 
-		return fetch(endpoint, { ...init, headers: buildHeaders() });
+		return this.send(endpoint, init, buildHeaders);
+	}
+
+	private async send(
+		endpoint: string,
+		init: Omit<RequestInit, 'headers'>,
+		buildHeaders: () => HeadersInit
+	): Promise<Response> {
+		try {
+			return await fetch(endpoint, { ...init, headers: buildHeaders() });
+		} catch (error) {
+			throw new NetworkError(error);
+		}
 	}
 
 	private async reportUpgradeRequired(res: Response): Promise<void> {

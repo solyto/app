@@ -8,7 +8,7 @@
 	import { setViewPoint, getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import { setAuth, getAuth } from '$lib/state/Auth.svelte';
 	import { getTranslation, setTranslation } from '$lib/state/Translation.svelte';
-	import { setLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { getLoadingIndicator, setLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getKeyManager, setKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getUiNotifications, setUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { onDestroy, onMount } from 'svelte';
@@ -30,6 +30,7 @@
 	import UpdateRequiredScreen from '$lib/components/ui/UpdateRequiredScreen.svelte';
 	import { setUpdateRequired } from '$lib/state/UpdateRequired.svelte';
 	import { outdatedServerVersionToAnnounce } from '$lib/services/ServerVersionService';
+	import { createNetworkErrorHandler } from '$lib/helpers/NetworkErrorHelper';
 	import { getNavigation, setNavigation } from '$lib/state/Navigation.svelte';
 	import { getPageFeature, isAuthRoute, isDashboard, isSetupRoute, showNavbar } from '$lib/helpers/NavHelper';
 	import { featureConfig } from '$lib/config/features';
@@ -62,6 +63,7 @@
 	const notifications = getUiNotifications();
 	const quickAdd = getQuickAdd();
 	const nav = getNavigation();
+	const loadingIndicator = getLoadingIndicator();
 
 	const canAccessRoute = $derived(auth.loggedIn || isAuthRoute() || isSetupRoute());
 
@@ -83,6 +85,11 @@
 		updateRequired.require(minVersion);
 	}
 
+	const handleUnhandledRejection = createNetworkErrorHandler(
+		() => loadingIndicator.stop(),
+		() => notifications.error(ts.get.layout.network_error)
+	);
+
 	auth.setSessionExpiredHandler(handleSessionExpired);
 	auth.apiService.setUpgradeRequiredHandler(handleUpgradeRequired);
 
@@ -96,6 +103,8 @@
 				await goto(resolve(urls.login));
 			}
 		}
+
+		window.addEventListener('unhandledrejection', handleUnhandledRejection);
 
 		const updateHeight = () => { innerHeight = window.innerHeight; };
 		updateHeight();
@@ -119,7 +128,10 @@
 		});
 	}
 
-	onDestroy(() => auth.destroy());
+	onDestroy(() => {
+		auth.destroy();
+		if (browser) window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+	});
 
 	afterNavigate(() => {
 		const feature = getPageFeature();

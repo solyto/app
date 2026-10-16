@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import ApiService from '$lib/services/ApiService';
+import ApiService, { NetworkError } from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 
 function jsonResponse(data: unknown, ok = true, status = 200) {
@@ -366,6 +366,16 @@ describe('401 recovery', () => {
 		await expect(service.list('/todos')).rejects.toThrow('offline');
 		expect(handler).not.toHaveBeenCalled();
 		expect(fetchMock).toHaveBeenCalledTimes(1);
+	});
+
+	it('wraps a rejected fetch in a NetworkError that keeps the cause', async () => {
+		const cause = new TypeError('Failed to fetch');
+		vi.stubGlobal('fetch', vi.fn().mockRejectedValue(cause));
+
+		const error = await new ApiService('tok').list('/todos').catch((e) => e);
+
+		expect(error).toBeInstanceOf(NetworkError);
+		expect(error.cause).toBe(cause);
 	});
 });
 

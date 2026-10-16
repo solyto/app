@@ -48,7 +48,8 @@ const layout: LayoutRecords = {
 	terms_of_service: 'Condiciones de uso',
 	reload: 'Recargar',
 	remove: 'Eliminar',
-	rename: 'Renombrar'
+	rename: 'Renombrar',
+	network_error: 'Problema de conexión. Comprueba tu conexión e inténtalo de nuevo.'
 };
 
 const nav: NavigationRecords = {

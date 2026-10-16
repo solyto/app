@@ -20,6 +20,7 @@ export interface LayoutRecords {
 	reload: string;
 	remove: string;
 	rename: string;
+	network_error: string;
 }
 
 export interface NavigationRecords {

@@ -55,11 +55,11 @@
 	}
 
 	async function onsubmit(): Promise<void> {
-		loadingIndicator.start();
-
 		if (value.trim() === '') {
 			return;
 		}
+
+		loadingIndicator.start();
 
 		if (type === 'tag') {
 			await tags.create(value);
