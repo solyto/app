@@ -146,7 +146,7 @@ export class TimeTracking {
 
 	async loadStatistics(from: string, to: string, categoryIds: number[] = []): Promise<void> {
 		const params = [`from=${encodeURIComponent(from)}`, `to=${encodeURIComponent(to)}`];
-		for (const id of categoryIds) params.push(`category_ids=${encodeURIComponent(String(id))}`);
+		if (categoryIds.length > 0) params.push(`category_ids=${categoryIds.join(',')}`);
 		const res = await this.apiService.list(
 			apiRoutes.timeTracking.entries.statistics + `?${params.join('&')}`
 		);
