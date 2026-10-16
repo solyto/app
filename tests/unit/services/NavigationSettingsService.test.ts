@@ -37,6 +37,17 @@ describe('NavigationSettingsService', () => {
 			expect(settings!.visible.timeTracking).toBe(true);
 		});
 
+		it('ignores unknown and non-boolean keys in both formats', () => {
+			const legacy = service.parse(JSON.stringify({ calendar: false, tracker: true, plants: false }), defaults);
+			const nested = service.parse(
+				JSON.stringify({ visible: { notes: false, tracker: true, todos: 'yes' }, desktop: null }),
+				defaults
+			);
+
+			expect(legacy!.visible).toEqual({ ...defaults, calendar: false });
+			expect(nested!.visible).toEqual({ ...defaults, notes: false });
+		});
+
 		it('keeps a missing or null order as not customised', () => {
 			const settings = service.parse(JSON.stringify({ visible: {}, mobile: null }), defaults);
 

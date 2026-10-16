@@ -18,11 +18,11 @@ export default class NavigationSettingsService {
 		}
 
 		if (!('visible' in parsed)) {
-			return { visible: { ...defaults, ...parsed }, desktop: null, mobile: null };
+			return { visible: this.knownVisibility(parsed, defaults), desktop: null, mobile: null };
 		}
 
 		return {
-			visible: { ...defaults, ...parsed.visible },
+			visible: this.knownVisibility(parsed.visible, defaults),
 			desktop: this.completeOrder(parsed.desktop, desktopOrder),
 			mobile: this.completeOrder(parsed.mobile, mobileDefaultOrder)
 		};
@@ -30,6 +30,19 @@ export default class NavigationSettingsService {
 
 	build(settings: NavigationSettings): string {
 		return JSON.stringify(settings);
+	}
+
+	// Only features this build knows are kept: unknown keys would render as
+	// untitled toggles and be saved back.
+	private knownVisibility(
+		stored: LegacyNavigationSettings,
+		defaults: Record<FeatureType, boolean>
+	): Record<FeatureType, boolean> {
+		const visible = { ...defaults };
+		for (const feature of Object.keys(defaults) as FeatureType[]) {
+			if (typeof stored?.[feature] === 'boolean') visible[feature] = stored[feature];
+		}
+		return visible;
 	}
 
 	private completeOrder(saved: unknown, defaults: string[]): string[] | null {
