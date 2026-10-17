@@ -21,7 +21,7 @@
 	const cookieConsent = setCookieConsent();
 
 	let {
-		component,
+		component: ComponentToRender,
 		props = {},
 		stores = {},
 		onReady,
@@ -45,22 +45,25 @@
 		viewPoint,
 		cookieConsent
 	};
-	for (const [name, overrides] of Object.entries(stores)) {
-		const instance = instances[name];
-		if (instance) Object.assign(instance, overrides);
+	// Runs once at mount: the harness is set up per test and never re-rendered with new props
+	function setUp(): void {
+		for (const [name, overrides] of Object.entries(stores)) {
+			const instance = instances[name];
+			if (instance) Object.assign(instance, overrides);
+		}
+
+		// Let the test pass the created instances (e.g. ts/auth) into the props
+		if (prepare) {
+			const prepared = prepare(instances);
+			if (prepared) props = prepared;
+		}
 	}
 
-	// Let the test pass the created instances (e.g. ts/auth) into the props
-	if (prepare) {
-		const prepared = prepare(instances);
-		if (prepared) props = prepared;
-	}
+	setUp();
 
 	$effect(() => {
 		onReady?.(instances);
 	});
-
-	const ComponentToRender = component;
 </script>
 
 <ComponentToRender {...props} />
