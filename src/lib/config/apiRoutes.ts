@@ -6,6 +6,7 @@ export const API_STORAGE_URL = `${BASE_URL}/storage`;
 export const API_USER_STORAGE_URL = `${BASE_URL}/storage/user`;
 
 export const apiRoutes = {
+	health: API_URL + '/health',
 	auth: {
 		login: API_URL + '/auth/login',
 		refresh: API_URL + '/auth/refresh',

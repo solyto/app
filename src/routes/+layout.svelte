@@ -29,13 +29,6 @@
 	import TitleBar from '$lib/components/desktop/TitleBar.svelte';
 	import UpdateRequiredScreen from '$lib/components/ui/UpdateRequiredScreen.svelte';
 	import { setUpdateRequired } from '$lib/state/UpdateRequired.svelte';
-	import {
-		acceptsClientVersionHeader,
-		checkServerVersion,
-		outdatedServerVersionToAnnounce,
-		storedServerVersion
-	} from '$lib/services/ServerVersionService';
-	import { setClientVersionHeaderEnabled } from '$lib/services/ApiService';
 	import { createNetworkErrorHandler } from '$lib/helpers/NetworkErrorHelper';
 	import { getNavigation, setNavigation } from '$lib/state/Navigation.svelte';
 	import { getPageFeature, isAuthRoute, isDashboard, isSetupRoute, showNavbar } from '$lib/helpers/NavHelper';
@@ -45,8 +38,6 @@
 	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
 
 	let { children } = $props();
-
-	setClientVersionHeaderEnabled(acceptsClientVersionHeader(storedServerVersion()));
 
 	setViewPoint();
 	setAuth();
@@ -124,12 +115,10 @@
 	});
 
 	async function checkServer(): Promise<void> {
-		const serverVersion = await checkServerVersion();
+		const serverVersion = await auth.apiService.checkServerVersion();
 		if (!serverVersion) return;
 
-		setClientVersionHeaderEnabled(acceptsClientVersionHeader(serverVersion));
-
-		const outdatedVersion = outdatedServerVersionToAnnounce(serverVersion);
+		const outdatedVersion = auth.apiService.outdatedServerVersionToAnnounce(serverVersion);
 		if (!outdatedVersion) return;
 
 		notifications.add({

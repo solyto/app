@@ -18,3 +18,13 @@ export function compareVersions(a: string, b: string): number | null {
 export function isOlderVersion(version: string, than: string): boolean {
 	return compareVersions(version, than) === -1;
 }
+
+// Servers before this version reject X-Client-Version in their CORS preflight.
+const MIN_SERVER_VERSION_FOR_CLIENT_HEADER = '1.1.0';
+
+export function acceptsClientVersionHeader(serverVersion: string | null): boolean {
+	if (!serverVersion) return false;
+
+	const comparison = compareVersions(serverVersion, MIN_SERVER_VERSION_FOR_CLIENT_HEADER);
+	return comparison !== null && comparison >= 0;
+}

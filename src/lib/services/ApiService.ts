@@ -1,6 +1,8 @@
 import type { CreateResponse, GetResponse, ListResponse, PostResponse } from '$lib/types/api';
 import { apiRoutes } from '$lib/config/apiRoutes';
-import { CLIENT_VERSION } from '$lib/config/platform';
+import { CLIENT_VERSION, getApiUrl } from '$lib/config/platform';
+import { acceptsClientVersionHeader, isOlderVersion } from '$lib/helpers/VersionHelper';
+import LocalStorageService from '$lib/services/LocalStorageService';
 
 // Endpoints where a 401 is a legitimate, expected auth failure (bad credentials,
 // expired refresh token, failed passkey authentication) rather than a stale
@@ -27,21 +29,26 @@ export class NetworkError extends Error {
 	}
 }
 
-// Off until the server is known to accept X-Client-Version: servers up to
-// 1.0.15 reject it in their CORS preflight, which would fail every request.
-let clientVersionHeaderEnabled = false;
-
-export function setClientVersionHeaderEnabled(enabled: boolean): void {
-	clientVersionHeaderEnabled = enabled;
+interface StoredServerVersion {
+	apiUrl: string;
+	version: string;
 }
 
 export default class ApiService {
+	static readonly LS_SERVER_VERSION_KEY: string = 'server_version';
+	static readonly LS_SERVER_VERSION_NOTICE_SEEN_KEY: string = 'server_version_notice_seen';
+
 	authToken: string | null = null;
 	private unauthorizedHandler: (() => Promise<boolean>) | null = null;
 	private upgradeRequiredHandler: ((minVersion: string | null) => void) | null = null;
+	private localStorage = new LocalStorageService();
+	// Off until the server is known to accept X-Client-Version: servers up to
+	// 1.0.15 reject it in their CORS preflight, which would fail every request.
+	private clientVersionHeaderEnabled: boolean;
 
 	constructor(authToken: string | null = null) {
 		this.authToken = authToken;
+		this.clientVersionHeaderEnabled = acceptsClientVersionHeader(this.storedServerVersion());
 	}
 
 	updateAuthToken(authToken: string | null): void {
@@ -54,6 +61,51 @@ export default class ApiService {
 
 	setUpgradeRequiredHandler(handler: (minVersion: string | null) => void): void {
 		this.upgradeRequiredHandler = handler;
+	}
+
+	// Asks /health without custom headers, so servers that reject X-Client-Version
+	// still answer, and switches the header on or off for the reported version.
+	async checkServerVersion(): Promise<string | null> {
+		if (!CLIENT_VERSION) return null;
+
+		const version = await this.fetchServerVersion();
+		if (!version) return null;
+
+		const stored: StoredServerVersion = { apiUrl: getApiUrl(), version };
+		this.localStorage.setJson(ApiService.LS_SERVER_VERSION_KEY, stored);
+		this.clientVersionHeaderEnabled = acceptsClientVersionHeader(version);
+		return version;
+	}
+
+	// Returns the server version when it is older than this app and the notice
+	// for this server/app pair has not been shown yet; marks the pair as seen.
+	outdatedServerVersionToAnnounce(serverVersion: string): string | null {
+		if (!CLIENT_VERSION || !isOlderVersion(serverVersion, CLIENT_VERSION)) return null;
+
+		const pair = `${serverVersion}|${CLIENT_VERSION}`;
+		if (this.localStorage.get(ApiService.LS_SERVER_VERSION_NOTICE_SEEN_KEY) === pair) return null;
+
+		this.localStorage.set(ApiService.LS_SERVER_VERSION_NOTICE_SEEN_KEY, pair);
+		return serverVersion;
+	}
+
+	private async fetchServerVersion(): Promise<string | null> {
+		try {
+			const res = await fetch(apiRoutes.health);
+			if (!res.ok) return null;
+			const data = await res.json();
+			const health = data?.data ?? data;
+			return typeof health?.version === 'string' ? health.version : null;
+		} catch {
+			return null;
+		}
+	}
+
+	private storedServerVersion(): string | null {
+		const stored = this.localStorage.getJson(ApiService.LS_SERVER_VERSION_KEY) as Partial<StoredServerVersion> | null;
+		if (!stored || stored.apiUrl !== getApiUrl() || typeof stored.version !== 'string') return null;
+
+		return stored.version;
 	}
 
 	private isAuthEndpoint(endpoint: string): boolean {
@@ -306,6 +358,6 @@ export default class ApiService {
 	// there, so the header is left out when PUBLIC_VERSION is unset or the
 	// server is not known to accept it.
 	private getClientVersionHeader(): Record<string, string> {
-		return CLIENT_VERSION && clientVersionHeaderEnabled ? { 'X-Client-Version': CLIENT_VERSION } : {};
+		return CLIENT_VERSION && this.clientVersionHeaderEnabled ? { 'X-Client-Version': CLIENT_VERSION } : {};
 	}
 }

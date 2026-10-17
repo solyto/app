@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compareVersions, isOlderVersion } from '$lib/helpers/VersionHelper';
+import { acceptsClientVersionHeader, compareVersions, isOlderVersion } from '$lib/helpers/VersionHelper';
 
 describe('compareVersions', () => {
 	it('compares each part numerically', () => {
@@ -30,5 +30,20 @@ describe('isOlderVersion', () => {
 
 	it('is false when a version cannot be compared', () => {
 		expect(isOlderVersion('unknown', '1.1.0')).toBe(false);
+	});
+});
+
+describe('acceptsClientVersionHeader', () => {
+	it('accepts servers from 1.1.0 on', () => {
+		expect(acceptsClientVersionHeader('1.1.0')).toBe(true);
+		expect(acceptsClientVersionHeader('1.2.0')).toBe(true);
+		expect(acceptsClientVersionHeader('2.0')).toBe(true);
+	});
+
+	it('rejects older, unknown and malformed versions', () => {
+		expect(acceptsClientVersionHeader('1.0.15')).toBe(false);
+		expect(acceptsClientVersionHeader(null)).toBe(false);
+		expect(acceptsClientVersionHeader('')).toBe(false);
+		expect(acceptsClientVersionHeader('1.1.0-beta')).toBe(false);
 	});
 });
