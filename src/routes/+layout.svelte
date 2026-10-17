@@ -29,7 +29,13 @@
 	import TitleBar from '$lib/components/desktop/TitleBar.svelte';
 	import UpdateRequiredScreen from '$lib/components/ui/UpdateRequiredScreen.svelte';
 	import { setUpdateRequired } from '$lib/state/UpdateRequired.svelte';
-	import { outdatedServerVersionToAnnounce } from '$lib/services/ServerVersionService';
+	import {
+		acceptsClientVersionHeader,
+		checkServerVersion,
+		outdatedServerVersionToAnnounce,
+		storedServerVersion
+	} from '$lib/services/ServerVersionService';
+	import { setClientVersionHeaderEnabled } from '$lib/services/ApiService';
 	import { createNetworkErrorHandler } from '$lib/helpers/NetworkErrorHelper';
 	import { getNavigation, setNavigation } from '$lib/state/Navigation.svelte';
 	import { getPageFeature, isAuthRoute, isDashboard, isSetupRoute, showNavbar } from '$lib/helpers/NavHelper';
@@ -39,6 +45,8 @@
 	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
 
 	let { children } = $props();
+
+	setClientVersionHeaderEnabled(acceptsClientVersionHeader(storedServerVersion()));
 
 	setViewPoint();
 	setAuth();
@@ -112,17 +120,22 @@
 
 		ts.loadLanguage();
 
-		if (!isSetupRoute()) announceOutdatedServer();
+		if (!isSetupRoute()) checkServer();
 	});
 
-	async function announceOutdatedServer(): Promise<void> {
-		const serverVersion = await outdatedServerVersionToAnnounce();
+	async function checkServer(): Promise<void> {
+		const serverVersion = await checkServerVersion();
 		if (!serverVersion) return;
+
+		setClientVersionHeaderEnabled(acceptsClientVersionHeader(serverVersion));
+
+		const outdatedVersion = outdatedServerVersionToAnnounce(serverVersion);
+		if (!outdatedVersion) return;
 
 		notifications.add({
 			type: 'warning',
 			message: ts.get.update_required.server_outdated
-				.replace('%server', serverVersion)
+				.replace('%server', outdatedVersion)
 				.replace('%app', CLIENT_VERSION),
 			timeout: 20000
 		});

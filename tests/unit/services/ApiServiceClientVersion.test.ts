@@ -14,10 +14,15 @@ function jsonResponse(data: unknown, ok = true, status = 200) {
 	};
 }
 
-async function loadApiService(env: Record<string, string> = {}): Promise<typeof ApiServiceClass> {
+async function loadApiService(
+	env: Record<string, string> = {},
+	headerEnabled = true
+): Promise<typeof ApiServiceClass> {
 	vi.resetModules();
 	vi.doMock('$env/dynamic/public', () => ({ env }));
-	return (await import('$lib/services/ApiService')).default;
+	const module = await import('$lib/services/ApiService');
+	module.setClientVersionHeaderEnabled(headerEnabled);
+	return module.default;
 }
 
 function headersOf(fetchMock: ReturnType<typeof vi.fn>, call = 0): Record<string, string> {
@@ -135,6 +140,30 @@ describe('X-Client-Version without PUBLIC_VERSION', () => {
 
 	it('is not sent when PUBLIC_VERSION is empty', async () => {
 		const ApiService = await loadApiService({ PUBLIC_VERSION: '' });
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse({}));
+		vi.stubGlobal('fetch', fetchMock);
+
+		await new ApiService().create('/todos', {});
+
+		expect(headersOf(fetchMock)).not.toHaveProperty('X-Client-Version');
+	});
+});
+
+describe('X-Client-Version before the server is known to accept it', () => {
+	it('is not sent while the header is disabled', async () => {
+		const ApiService = await loadApiService({ PUBLIC_VERSION: '1.2.3' }, false);
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse({}));
+		vi.stubGlobal('fetch', fetchMock);
+
+		await new ApiService('tok').list('/todos');
+
+		expect(headersOf(fetchMock)).not.toHaveProperty('X-Client-Version');
+	});
+
+	it('is off by default', async () => {
+		vi.resetModules();
+		vi.doMock('$env/dynamic/public', () => ({ env: { PUBLIC_VERSION: '1.2.3' } }));
+		const ApiService = (await import('$lib/services/ApiService')).default;
 		const fetchMock = vi.fn().mockResolvedValue(jsonResponse({}));
 		vi.stubGlobal('fetch', fetchMock);
 

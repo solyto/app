@@ -27,6 +27,14 @@ export class NetworkError extends Error {
 	}
 }
 
+// Off until the server is known to accept X-Client-Version: servers up to
+// 1.0.15 reject it in their CORS preflight, which would fail every request.
+let clientVersionHeaderEnabled = false;
+
+export function setClientVersionHeaderEnabled(enabled: boolean): void {
+	clientVersionHeaderEnabled = enabled;
+}
+
 export default class ApiService {
 	authToken: string | null = null;
 	private unauthorizedHandler: (() => Promise<boolean>) | null = null;
@@ -295,8 +303,9 @@ export default class ApiService {
 	}
 
 	// The API records the version on the auth token. A missing value is ignored
-	// there, so the header is left out entirely when PUBLIC_VERSION is unset.
+	// there, so the header is left out when PUBLIC_VERSION is unset or the
+	// server is not known to accept it.
 	private getClientVersionHeader(): Record<string, string> {
-		return CLIENT_VERSION ? { 'X-Client-Version': CLIENT_VERSION } : {};
+		return CLIENT_VERSION && clientVersionHeaderEnabled ? { 'X-Client-Version': CLIENT_VERSION } : {};
 	}
 }
