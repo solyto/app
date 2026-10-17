@@ -8,11 +8,14 @@
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { goto } from '$app/navigation';
+	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
+	import IconExternalLink from '@lucide/svelte/icons/external-link';
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
 	const keyManager = getKeyManager();
 	const ts = getTranslation();
+	const viewPoint = getViewPoint();
 
 	let { todo }: { todo: Todo } = $props();
 
@@ -85,13 +88,30 @@
 			role="button"
 			tabindex="0"
 			ondblclick={toggleEdit}
+			onclick={() => viewPoint.isMobile && toggleEdit()}
 			onmouseover={() => (showExplanationBox = true)}
 			onmouseout={() => (showExplanationBox = false)}
 			onfocus={() => (showExplanationBox = true)}
 			onblur={() => (showExplanationBox = false)}
 			onmousemove={(e) => setExplanationBoxPosition(e)}
 		>
-			{#if todo.link}
+			{#if todo.link && viewPoint.isMobile}
+				<div class="flex items-center gap-2">
+					<span class="min-w-0 truncate text-sm text-c-action underline">{todo.link}</span>
+					<button
+						type="button"
+						class="shrink-0 cursor-pointer text-c-action hover:opacity-80"
+						aria-label={ts.get.todos.open_link}
+						title={ts.get.todos.open_link}
+						onclick={(e) => {
+							e.stopPropagation();
+							openLink();
+						}}
+					>
+						<IconExternalLink class="size-4" />
+					</button>
+				</div>
+			{:else if todo.link}
 				<button
 					type="button"
 					class="max-w-full cursor-pointer truncate text-sm text-c-action underline hover:opacity-80"

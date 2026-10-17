@@ -4,12 +4,14 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { portalToBody } from '$lib/helpers/PortalHelper';
+	import { clickOutside } from '$lib/helpers/ClickHelper';
+	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
+	import { scale } from 'svelte/transition';
 	import IconRepeat from '@lucide/svelte/icons/repeat';
 	import NumberInput from '$lib/components/forms/NumberInput.svelte';
 	import DateInput from '$lib/components/forms/DateInput.svelte';
 	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 
 	let { todo, portal = false }: {
 		todo: Todo;
@@ -19,6 +21,7 @@
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
 	const ts = getTranslation();
+	const viewPoint = getViewPoint();
 
 	let isOpen = $state<boolean>(false);
 	let selectedFrequency = $state<TodoRecurrenceFrequency | null>(todo.recurrence_frequency);
@@ -71,6 +74,7 @@
 		loadingIndicator.start();
 		await todos.changeRecurrence(todo, null);
 		loadingIndicator.stop();
+		close();
 	}
 
 	function open(): void {
@@ -86,10 +90,13 @@
 	}
 </script>
 
-<div bind:this={trigger} class="group relative flex items-center gap-1">
+<div bind:this={trigger} class="relative flex items-center gap-1">
 	{#if !hasDueDate}
-		<span class="cursor-not-allowed text-xs text-c-neutral-3 dark:text-c-neutral-6" title={ts.get.todos.recurrence_requires_due}>
+		<span class="flex cursor-not-allowed items-center gap-1 text-xs text-c-neutral-3 dark:text-c-neutral-6" title={ts.get.todos.recurrence_requires_due}>
 			<IconRepeat class="size-4" />
+			{#if viewPoint.isMobile}
+				<span>{ts.get.todos.recurrence_requires_due}</span>
+			{/if}
 		</span>
 	{:else if todo.recurrence_frequency}
 		<button
@@ -99,9 +106,6 @@
 			<IconRepeat class="size-4" />
 			<span>{recurrenceLabel()}</span>
 		</button>
-		<div class="hidden group-hover:flex">
-			<InlineDeleteButton onClick={remove} label={ts.get.todos.remove_recurrence} />
-		</div>
 	{:else}
 		<button
 			class="cursor-pointer text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
@@ -117,9 +121,11 @@
 		class="flex flex-col gap-3 rounded-lg border border-c-neutral-2 bg-c-bg-modal p-4 shadow-lg dark:border-s-dark"
 		class:absolute={!portal}
 		class:mt-1={!portal}
-		class:mt-6={portal}
+		class:mt-6={portal && !viewPoint.isMobile}
 		class:z-50={!portal}
 		role="dialog"
+		use:clickOutside={close}
+		in:scale|global={{ start: 0.9, duration: 150 }}
 	>
 		<SegmentedControl bind:value={selectedFrequency} options={frequencyOptions} />
 
@@ -136,7 +142,10 @@
 			<DateInput id="recurrence-ends-at" bind:value={selectedEndsAt} />
 		</div>
 
-		<div class="flex justify-end gap-2">
+		<div class="flex items-center justify-between gap-2">
+			{#if todo.recurrence_frequency}
+				<TextButton title={ts.get.layout.remove} type="plain" class="text-c-danger" onclick={remove} />
+			{/if}
 			<TextButton title={ts.get.layout.modal_cancel} type="plain" onclick={close} />
 			<TextButton title={ts.get.layout.save} type="primary" onclick={save} />
 		</div>
@@ -144,7 +153,13 @@
 {/snippet}
 
 {#if isOpen}
-	{#if portal}
+	{#if portal && viewPoint.isMobile}
+		<div class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center pr-16 pl-4">
+			<div class="pointer-events-auto">
+				{@render popover()}
+			</div>
+		</div>
+	{:else if portal}
 		<div use:portalToBody={{ target: trigger, closeOnScroll: true, onClose: close }}>
 			{@render popover()}
 		</div>

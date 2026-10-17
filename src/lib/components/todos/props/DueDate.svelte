@@ -9,17 +9,20 @@
 	import DatePicker from '$lib/components/forms/DatePicker.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { portalToBody } from '$lib/helpers/PortalHelper';
+	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 
-	let { todo, portal = false, withIcon = false }: {
+	let { todo, portal = false, withIcon = false, readonly = false }: {
 		todo: Todo;
 		portal?: boolean;
 		withIcon?: boolean;
+		readonly?: boolean;
 	} = $props();
 
 	const todos = getTodos();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const auth = getAuth();
+	const viewPoint = getViewPoint();
 
 	let isOpen = $state<boolean>(false);
 	let startDate = $state<Date | null>(new Date(todo.due_at));
@@ -36,7 +39,11 @@
 	}
 </script>
 
-{#if todo.due_at !== null}
+{#if readonly}
+	{#if todo.due_at !== null}
+		<span class="text-sm">{auth.getDateInUserPreferredFormat(todo.due_at)}</span>
+	{/if}
+{:else if todo.due_at !== null}
 	<div class="group relative">
 		<button
 			bind:this={dateTrigger}
@@ -73,7 +80,11 @@
 		>
 	</div>
 {/if}
-{#if portal}
+{#if portal && viewPoint.isMobile}
+	<div class="centered-datepicker">
+		<DatePicker bind:isOpen bind:startDate {onChange} />
+	</div>
+{:else if portal}
 	<div
 		use:portalToBody={{
 			target: dateTrigger,
@@ -88,3 +99,18 @@
 {:else}
 	<DatePicker bind:isOpen bind:startDate {onChange} />
 {/if}
+
+<style>
+	.centered-datepicker :global(.datepicker) {
+		--datepicker-container-position: fixed;
+		--datepicker-container-left: 1rem;
+		--datepicker-container-top: 0;
+	}
+
+	.centered-datepicker :global(.calendars-container) {
+		right: 4rem;
+		bottom: 0;
+		height: fit-content;
+		margin: auto;
+	}
+</style>

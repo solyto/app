@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
-	import { fade } from 'svelte/transition';
+	import { fade, scale } from 'svelte/transition';
 	import { portalToBody } from '$lib/helpers/PortalHelper';
 
 	let {
@@ -25,7 +25,8 @@
 	<div
 		use:clickOutside={onClose}
 		use:portalToBody={{ target, closeOnScroll: true, onClose }}
-		transition:fade={{ duration: 200 }}
+		in:scale|global={{ start: 0.9, duration: 150 }}
+		out:fade={{ duration: 200 }}
 		class="flex flex-col gap-2 rounded-lg border-1 border-c-neutral-2 bg-c-bg-modal p-4 drop-shadow-lg {className}"
 	>
 		{@render children?.()}
@@ -33,7 +34,8 @@
 {:else}
 	<div
 		use:clickOutside={onClose}
-		transition:fade={{ duration: 200 }}
+		in:scale|global={{ start: 0.9, duration: 150 }}
+		out:fade={{ duration: 200 }}
 		class="absolute top-0 z-50 flex flex-col gap-2 rounded-lg bg-c-bg-modal {p !== null ? 'p-' + p : 'p-4'} drop-shadow-lg {className}"
 	>
 		{@render children?.()}

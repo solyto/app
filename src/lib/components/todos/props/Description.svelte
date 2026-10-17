@@ -10,11 +10,13 @@
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import MovableHoverBox from '$lib/components/ui/MovableHoverBox.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
 	const keyManager = getKeyManager();
 	const ts = getTranslation();
+	const viewPoint = getViewPoint();
 
 	let { todo }: { todo: Todo } = $props();
 
@@ -151,6 +153,7 @@
 			role="button"
 			tabindex="0"
 			ondblclick={toggleChangeDescription}
+			onclick={() => viewPoint.isMobile && toggleChangeDescription()}
 			onmouseover={() => (showExplanationBox = true)}
 			onmouseout={() => (showExplanationBox = false)}
 			onfocus={() => (showExplanationBox = true)}

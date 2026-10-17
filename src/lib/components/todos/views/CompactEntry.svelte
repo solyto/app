@@ -3,6 +3,8 @@
 	import { fade } from 'svelte/transition';
 	import DueDate from '$lib/components/todos/props/DueDate.svelte';
 	import Category from '$lib/components/todos/props/Category.svelte';
+	import Status from '$lib/components/todos/props/Status.svelte';
+	import Progress from '$lib/components/todos/props/Progress.svelte';
 	import Tags from '$lib/components/todos/props/Tags.svelte';
 	import Flags from '$lib/components/todos/props/Flags.svelte';
 	import ScoreBar from '$lib/components/todos/ScoreBar.svelte';
@@ -15,11 +17,13 @@
 	let {
 		todo,
 		handleCheck,
-		minimal = true
+		minimal = true,
+		showStatus = true
 	}: {
 		todo: Todo;
 		handleCheck: (event: Event, todo: Todo) => Promise<void>;
 		minimal?: boolean;
+		showStatus?: boolean;
 	} = $props();
 
 	function openEdit(): void {
@@ -47,7 +51,9 @@
 	<ScoreBar {todo} />
 	<div class="flex items-center gap-3">
 		<span
-			class="flex-1 truncate"
+			class="flex-1"
+			class:truncate={minimal}
+			class:line-clamp-2={!minimal}
 			class:font-semibold={!minimal}
 			class:line-through={todo.is_completed}
 		>
@@ -61,12 +67,16 @@
 	</div>
 	{#if !minimal}
 		<div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+			{#if showStatus && todo.status !== 'pending'}
+				<Status {todo} changeStatus={false} />
+			{/if}
 			{#if todo.due_at}
-				<DueDate {todo} />
+				<DueDate {todo} readonly />
 			{/if}
 			<Category {todo} readonly />
 			<Tags {todo} readonly />
 		</div>
+		<Progress {todo} mobile />
 	{/if}
 	<Flags {todo} />
 </div>

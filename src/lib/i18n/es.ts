@@ -327,7 +327,6 @@ const todos: TodoRecords = {
 	recurrence_yearly: 'Anual',
 	recurrence_ends_at: 'Termina el',
 	add_recurrence: 'Añadir recurrencia',
-	remove_recurrence: 'Eliminar recurrencia',
 	recurrence_requires_due: 'Establece una fecha límite primero',
 	recurrence_every: 'Cada',
 	recurrence_unit_daily: 'día(s)',
@@ -337,6 +336,7 @@ const todos: TodoRecords = {
 	recurrence_unit_fallback: 'repetición(es)',
 	link: 'Enlace',
 	no_link: 'Sin enlace',
+	open_link: 'Abrir enlace',
 	add_link: 'Añadir enlace'
 };
 

@@ -327,7 +327,6 @@ const todos: TodoRecords = {
 	recurrence_yearly: 'Yearly',
 	recurrence_ends_at: 'Ends at',
 	add_recurrence: 'Add recurrence',
-	remove_recurrence: 'Remove recurrence',
 	recurrence_requires_due: 'Set a due date first',
 	recurrence_every: 'Every',
 	recurrence_unit_daily: 'day(s)',
@@ -337,6 +336,7 @@ const todos: TodoRecords = {
 	recurrence_unit_fallback: 'occurrence(s)',
 	link: 'Link',
 	no_link: 'No link',
+	open_link: 'Open link',
 	add_link: 'Add link'
 };
 

@@ -297,7 +297,6 @@ export interface TodoRecords {
 	recurrence_yearly: string;
 	recurrence_ends_at: string;
 	add_recurrence: string;
-	remove_recurrence: string;
 	recurrence_requires_due: string;
 	recurrence_every: string;
 	recurrence_unit_daily: string;
@@ -307,6 +306,7 @@ export interface TodoRecords {
 	recurrence_unit_fallback: string;
 	link: string;
 	no_link: string;
+	open_link: string;
 	add_link: string;
 }
 

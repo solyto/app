@@ -71,12 +71,13 @@
 		<Subtask {todo} {subtask} {handleCheckboxClick} />
 	{/each}
 	{#if addSubtaskVisible}
-		<div class="w-32 {todos.view === 'kanban' ? 'px-2 py-1 text-xs' : ''}">
+		<div class="w-full {todos.view === 'kanban' ? 'px-2 py-1 text-xs' : ''}" class:mt-2={subtasks.length > 0}>
 			<TextInput bind:input={subtaskInput} bind:value={subtaskValue} {onblur} />
 		</div>
 	{:else}
 		<button
 			class="cursor-pointer text-left text-xs text-c-neutral-4 transition-all hover:text-c-neutral-7 dark:hover:text-white"
+			class:mt-2={subtasks.length > 0}
 			onclick={toggleAddSubtask}>+ {ts.get.todos.add_subtask}</button
 		>
 	{/if}

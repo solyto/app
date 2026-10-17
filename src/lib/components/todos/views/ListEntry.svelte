@@ -54,7 +54,7 @@
 	<div class="group flex w-1/10 items-center">
 		<Category {todo} hoverReveal />
 	</div>
-	<div class="group flex w-1/5 items-center">
+	<div class="group flex w-1/6 items-center">
 		<Tags {todo} hoverReveal />
 	</div>
 	<div class="h-full w-14">
@@ -63,7 +63,7 @@
 	<div class="group flex w-1/16 items-center">
 		<Progress {todo} />
 	</div>
-	<div class="group ml-auto flex w-1/16 items-center justify-end">
+	<div class="group ml-auto flex w-32 shrink-0 items-center justify-end">
 		<DueDate {todo} withIcon />
 	</div>
 	<div class="ml-auto flex h-full w-auto flex-row items-center gap-2 pr-2 2xl:gap-4 2xl:pr-4">

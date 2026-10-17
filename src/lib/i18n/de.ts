@@ -328,7 +328,6 @@ const todos: TodoRecords = {
 	recurrence_yearly: 'Jährlich',
 	recurrence_ends_at: 'Endet am',
 	add_recurrence: 'Wiederholung hinzufügen',
-	remove_recurrence: 'Wiederholung entfernen',
 	recurrence_requires_due: 'Zuerst ein Fälligkeitsdatum setzen',
 	recurrence_every: 'Alle',
 	recurrence_unit_daily: 'Tag(e)',
@@ -338,6 +337,7 @@ const todos: TodoRecords = {
 	recurrence_unit_fallback: 'Wiederholung(en)',
 	link: 'Link',
 	no_link: 'Kein Link',
+	open_link: 'Link öffnen',
 	add_link: 'Link hinzufügen'
 };
 
