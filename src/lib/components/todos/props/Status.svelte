@@ -74,7 +74,7 @@
 	{#if changeStatus}
 		<button
 			type="button"
-			class="flex cursor-pointer items-center gap-1.5 text-sm transition-all hover:opacity-80"
+			class="flex cursor-pointer items-center gap-1.5 2xl:gap-2 text-sm transition-all hover:opacity-80"
 			onclick={toggleStatusMenu}
 		>
 			{@render label(todo.status)}
@@ -90,7 +90,7 @@
 					{#each statuses as status (status)}
 						<button
 							type="button"
-							class="flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-left text-sm hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
+							class="flex cursor-pointer items-center gap-1.5 2xl:gap-2 rounded-lg px-2 py-1 text-left text-sm hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
 							onclick={() => handleStatusChange(todo, status)}
 						>
 							{@render label(status)}
@@ -100,7 +100,7 @@
 			</QuickSelectOverlay>
 		{/if}
 	{:else}
-		<div class="flex items-center gap-1.5 text-sm">
+		<div class="flex items-center gap-1.5 2xl:gap-2 text-sm">
 			{@render label(todo.status)}
 		</div>
 	{/if}
