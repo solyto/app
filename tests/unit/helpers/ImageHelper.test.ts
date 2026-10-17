@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { canReduceImage, getReducedSize, shouldReduceImage } from '$lib/helpers/ImageHelper';
+import { API_FAVICON_URL } from '$lib/config/apiRoutes';
+import { canReduceImage, getReducedSize, grabFaviconFromUrl, shouldReduceImage } from '$lib/helpers/ImageHelper';
 
 const MB = 1024 * 1024;
 
@@ -48,5 +49,23 @@ describe('getReducedSize', () => {
 
 	it('never scales up', () => {
 		expect(getReducedSize(1200, 800)).toEqual({ width: 1200, height: 800 });
+	});
+});
+
+describe('grabFaviconFromUrl', () => {
+	it('points at the API favicon proxy', () => {
+		expect(grabFaviconFromUrl('https://github.com/solyto')).toBe(`${API_FAVICON_URL}/github.com.ico`);
+	});
+
+	it('strips a leading www', () => {
+		expect(grabFaviconFromUrl('https://www.example.com/feed')).toBe(`${API_FAVICON_URL}/example.com.ico`);
+	});
+
+	it('keeps www inside a hostname', () => {
+		expect(grabFaviconFromUrl('https://news.www.example.com')).toBe(`${API_FAVICON_URL}/news.www.example.com.ico`);
+	});
+
+	it('returns an empty string for invalid urls', () => {
+		expect(grabFaviconFromUrl('not a url')).toBe('');
 	});
 });

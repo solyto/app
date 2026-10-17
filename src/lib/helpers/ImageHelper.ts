@@ -1,7 +1,9 @@
+import { API_FAVICON_URL } from '$lib/config/apiRoutes';
+
 export function grabFaviconFromUrl(url: string): string {
 	try {
-		const hostname = new URL(url).hostname.replace('www.', '');
-		return `https://icons.duckduckgo.com/ip3/${hostname}.ico`;
+		const hostname = new URL(url).hostname.replace(/^www\./, '');
+		return `${API_FAVICON_URL}/${hostname}.ico`;
 	} catch {
 		return '';
 	}

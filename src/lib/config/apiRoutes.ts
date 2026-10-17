@@ -4,6 +4,7 @@ const BASE_URL = getApiUrl();
 const API_URL = `${BASE_URL}/api/v1`;
 export const API_STORAGE_URL = `${BASE_URL}/storage`;
 export const API_USER_STORAGE_URL = `${BASE_URL}/storage/user`;
+export const API_FAVICON_URL = `${BASE_URL}/favicons`;
 
 export const apiRoutes = {
 	health: API_URL + '/health',
