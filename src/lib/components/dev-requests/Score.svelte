@@ -6,7 +6,7 @@
 
 	const devRequests = getDevRequests();
 
-	let { entry } = $props<{ entry: DevRequest }>();
+	let { entry }: { entry: DevRequest } = $props();
 
 	async function handleUpvote(): Promise<void> {
 		await devRequests.vote(entry, 'up');

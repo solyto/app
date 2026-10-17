@@ -6,9 +6,9 @@
 	import { stripHtml, hasMeaningfulDescription } from '$lib/helpers/FormatHelper';
 	import SaveToLibraryButton from '$lib/components/feeds/SaveToLibraryButton.svelte';
 
-	let { item } = $props<{
+	let { item }: {
 		item: FeedItem;
-	}>();
+	} = $props();
 
 	let faviconUrl = $derived(grabFaviconFromUrl(item.link));
 	let formattedDate = $derived(formatDateTime(new Date(item.published_at)));

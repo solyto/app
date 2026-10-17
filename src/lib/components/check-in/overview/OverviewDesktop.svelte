@@ -8,10 +8,10 @@
 	import { resolve } from '$app/paths';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
-	let { dates, trackers } = $props<{
+	let { dates, trackers }: {
 		dates: Date[];
 		trackers: CheckInType[];
-	}>();
+	} = $props();
 
 	const checkInData = getCheckInData();
 	const ts = getTranslation();

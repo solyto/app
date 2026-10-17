@@ -15,7 +15,7 @@
 	const keyManager = getKeyManager();
 	const ts = getTranslation();
 
-	let { category } = $props<{ category: TodoCategory }>();
+	let { category }: { category: TodoCategory } = $props();
 
 	let editing = $state<boolean>(false);
 	let title = $state<string>('');

@@ -13,11 +13,11 @@
 	const loadingIndicator = getLoadingIndicator();
 	const keyManager = getKeyManager();
 
-	let { todo, subtasks, fullWidth = false } = $props<{
+	let { todo, subtasks, fullWidth = false }: {
 		todo: Todo;
 		subtasks: TodoSubtask[];
 		fullWidth?: boolean;
-	}>();
+	} = $props();
 
 	let addSubtaskVisible = $state<boolean>(false);
 	let subtaskInput = $state<HTMLInputElement | null>(null);

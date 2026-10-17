@@ -17,7 +17,7 @@
 	const loadingIndicator = getLoadingIndicator();
 	const drag = getCalendarDrag();
 
-	let { item, date } = $props<{ item: CalendarEvent; date: Date }>();
+	let { item, date }: { item: CalendarEvent; date: Date } = $props();
 
 	const dateSlug = $derived(formatDate(date));
 

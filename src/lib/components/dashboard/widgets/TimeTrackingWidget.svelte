@@ -11,9 +11,9 @@
 	const loadingIndicator = getLoadingIndicator();
 	const groupingService = new TimeTrackingGroupingService();
 
-	let { ts } = $props<{
+	let { ts }: {
 		ts: Translation;
-	}>();
+	} = $props();
 
 	let loaded = $state(false);
 

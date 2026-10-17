@@ -21,7 +21,7 @@
 	import Cover from '$lib/components/libraries/shared/Cover.svelte';
 
 	const loadingIndicator = getLoadingIndicator();
-	let { entry, library, children } = $props<{
+	let { entry, library, children }: {
 		entry: Book | Music | Recipe | Movie | Quote | Game | Plant;
 		library:
 			| BookLibrary
@@ -32,7 +32,7 @@
 			| PlantLibrary
 			| QuoteLibrary;
 		children: Snippet;
-	}>();
+	} = $props();
 
 	async function changeRating(rating: number): Promise<void> {
 		loadingIndicator.start();

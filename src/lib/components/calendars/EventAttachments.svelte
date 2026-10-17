@@ -24,7 +24,7 @@
 	let keyHandlers: { Escape: string | null } = { Escape: null };
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 
-	let { eventId } = $props<{ eventId: number }>();
+	let { eventId }: { eventId: number } = $props();
 
 	let menuOpen = $state(false);
 	let addingTodo = $state(false);

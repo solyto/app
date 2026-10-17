@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Plant } from '$lib/types/library_plant';
 
-	let { entry } = $props<{
+	let { entry }: {
 		entry: Plant;
-	}>();
+	} = $props();
 </script>
 
 <div class="text-left">

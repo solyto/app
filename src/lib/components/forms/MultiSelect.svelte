@@ -1,11 +1,13 @@
 <!--suppress CssUnusedSymbol -->
-<script lang="ts">
-	import MultiSelect from 'svelte-multiselect';
-
+<script lang="ts" module>
 	export interface MultiSelectEntry {
 		label: string;
 		value: string;
 	}
+</script>
+
+<script lang="ts">
+	import MultiSelect from 'svelte-multiselect';
 
 	let {
 		value = $bindable(),
@@ -13,13 +15,13 @@
 		allowUserOptions = false,
 		placeholder = '',
 		oncreate
-	} = $props<{
+	}: {
 		value: MultiSelectEntry[];
 		options: MultiSelectEntry[];
 		allowUserOptions?: boolean;
 		placeholder?: string;
 		oncreate?: (data: { option: MultiSelectEntry }) => unknown;
-	}>();
+	} = $props();
 </script>
 
 <div class="multiselect-field w-full">

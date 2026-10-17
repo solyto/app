@@ -4,7 +4,7 @@
 	import { IS_DESKTOP, IS_MOBILE, IS_WEB } from '$lib/config/platform';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
-	let { minVersion, clientVersion } = $props<{ minVersion: string | null; clientVersion: string }>();
+	let { minVersion, clientVersion }: { minVersion: string | null; clientVersion: string } = $props();
 
 	const ts = getTranslation();
 

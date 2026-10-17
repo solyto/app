@@ -7,9 +7,9 @@
 	import { scale } from 'svelte/transition';
 	import type { CreateLinkRequest } from '$lib/types/library_link';
 
-	let { item } = $props<{
+	let { item }: {
 		item: FeedItem;
-	}>();
+	} = $props();
 
 	const linkLibrary = getLinkLibrary();
 	const feeds = getFeeds();

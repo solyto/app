@@ -17,7 +17,7 @@
 		portal = false,
 		compact = false,
 		filled = false
-	} = $props<{
+	}: {
 		todo: Todo;
 		changePriority: boolean;
 		expanded: boolean;
@@ -26,7 +26,7 @@
 		portal?: boolean;
 		compact?: boolean;
 		filled?: boolean;
-	}>();
+	} = $props();
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();

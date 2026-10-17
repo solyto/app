@@ -14,7 +14,7 @@
 	const keyManager = getKeyManager();
 	const ts = getTranslation();
 
-	let { todo } = $props<{ todo: Todo }>();
+	let { todo }: { todo: Todo } = $props();
 
 	let editing = $state<boolean>(false);
 	let linkInput = $state<HTMLInputElement | null>(null);

@@ -4,10 +4,7 @@
 	import type { Library } from '$lib/types/library';
 	import type { Translation } from '$lib/state/Translation.svelte';
 
-	let { library, ts } = $props<{
-		library: Library;
-		ts: Translation }
-	>();
+	let { library, ts }: { library: Library; ts: Translation } = $props();
 </script>
 
 <IconButton type="plain" onclick={() => library.openExternalSearchModal()}>

@@ -13,7 +13,7 @@
 	const keyManager = getKeyManager();
 	const ts = getTranslation();
 
-	let { todo } = $props<{ todo: Todo }>();
+	let { todo }: { todo: Todo } = $props();
 
 	let changeTitle = $state<boolean>(false);
 	let titleInput = $state<HTMLInputElement | null>(null);

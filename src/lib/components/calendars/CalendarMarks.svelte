@@ -14,13 +14,13 @@
 		showCheckIn,
 		size = 14,
 		class: extraClass = ''
-	} = $props<{
+	}: {
 		date: Date;
 		showJournal: boolean;
 		showCheckIn: boolean;
 		size?: number;
 		class?: string;
-	}>();
+	} = $props();
 
 	const calendars = getCalendars();
 	const ts = getTranslation();

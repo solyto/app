@@ -2,7 +2,7 @@
 	import type { DevRequest } from '$lib/types/dev_request';
 	import { getDevRequests } from '$lib/state/DevRequests.svelte';
 
-	let { entry, editable = true } = $props<{ entry: DevRequest; editable?: boolean }>();
+	let { entry, editable = true }: { entry: DevRequest; editable?: boolean } = $props();
 
 	const devRequests = getDevRequests();
 

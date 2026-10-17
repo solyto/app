@@ -12,10 +12,10 @@
 	const ts = getTranslation();
 	const notifications = getUiNotifications();
 
-	let { release, library } = $props<{
+	let { release, library }: {
 		release: MusicRelease;
 		library: MusicLibrary;
-	}>();
+	} = $props();
 
 	let sneakPreview = $state<boolean>(false);
 	let adding = $state<boolean>(false);

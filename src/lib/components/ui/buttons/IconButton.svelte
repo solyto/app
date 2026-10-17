@@ -7,14 +7,14 @@
 		pulse = false,
 		class: customClass = '',
 		children
-	} = $props<{
+	}: {
 		onclick?: () => void;
 		type?: 'btn' | 'action' | 'danger' | 'success' | 'primary' | 'warning' | 'plain' | 'slight';
 		disabled?: boolean;
 		pulse?: boolean;
 		class?: string;
 		children: Snippet;
-	}>();
+	} = $props();
 </script>
 
 <button

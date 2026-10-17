@@ -11,10 +11,10 @@
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import MissingCover from '$lib/components/libraries/shared/MissingCover.svelte';
 
-	let { entry, library } = $props<{
+	let { entry, library }: {
 		entry: Book | Music | Recipe | Movie;
 		library: BookLibrary | MusicLibrary | RecipeLibrary | MovieLibrary;
-	}>();
+	} = $props();
 
 	const auth = getAuth();
 </script>

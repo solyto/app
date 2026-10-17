@@ -16,7 +16,7 @@
 		onConfirm,
 		onCancel,
 		children
-	} = $props<{
+	}: {
 		title?: string;
 		description?: string;
 		type?: 'default' | 'confirm' | 'confirm-delete' | 'info';
@@ -24,7 +24,7 @@
 		onConfirm: () => void;
 		onCancel: () => void;
 		children?: Snippet;
-	}>();
+	} = $props();
 
 	let visible = $state<boolean>(false);
 	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };

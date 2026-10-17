@@ -3,11 +3,11 @@
 	import type { ECharts } from './echarts';
 	import { onMount, onDestroy, tick } from 'svelte';
 
-	let { title, xCategories, dataPoints } = $props<{
+	let { title, xCategories, dataPoints }: {
 		title?: string;
 		xCategories: string[];
 		dataPoints: { title: string; values: number[] }[];
-	}>();
+	} = $props();
 
 	let chartContainer: HTMLDivElement | null = null;
 	let myChart: ECharts | null = null;

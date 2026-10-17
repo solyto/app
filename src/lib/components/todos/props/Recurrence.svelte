@@ -11,10 +11,10 @@
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 
-	let { todo, portal = false } = $props<{
+	let { todo, portal = false }: {
 		todo: Todo;
 		portal?: boolean;
-	}>();
+	} = $props();
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();

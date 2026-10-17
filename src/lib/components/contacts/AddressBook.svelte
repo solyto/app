@@ -10,9 +10,9 @@
 	const contacts = getContacts();
 	const loadingIndicator = getLoadingIndicator();
 
-	let { addressBook } = $props<{
+	let { addressBook }: {
 		addressBook: AddressBook;
-	}>();
+	} = $props();
 
 	let edit = $state<boolean>(false);
 	let hex = $state<string>(addressBook.color ?? 'var(--color-c-neutral-2)');

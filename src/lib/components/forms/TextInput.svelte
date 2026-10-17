@@ -10,7 +10,7 @@
 		height = null,
 		tabindex = null,
 		class: customClass = ''
-	} = $props<{
+	}: {
 		input?: HTMLInputElement | HTMLTextAreaElement | null;
 		value: string;
 		placeholder?: string;
@@ -21,7 +21,7 @@
 		height?: number | null;
 		tabindex?: number | null;
 		class?: string;
-	}>();
+	} = $props();
 </script>
 
 {#if !multiLine}

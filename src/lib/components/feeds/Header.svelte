@@ -12,9 +12,9 @@
 	const feeds = getFeeds();
 	const ts = getTranslation();
 
-	let { feed } = $props<{
+	let { feed }: {
 		feed: FeedSubscription | null;
-	}>();
+	} = $props();
 
 	async function onDelete(): Promise<void> {
 		loadingIndicator.start();

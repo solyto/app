@@ -13,7 +13,7 @@
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
 
-	let { workspace } = $props<{ workspace: TodoWorkspace }>();
+	let { workspace }: { workspace: TodoWorkspace } = $props();
 
 	let findCategoryMenuVisible = $state<boolean>(false);
 	let isHideable = $state<boolean>(workspace.is_hideable);

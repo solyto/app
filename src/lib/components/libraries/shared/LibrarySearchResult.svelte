@@ -9,13 +9,13 @@
 		disabled,
 		onSelect,
 		resultRow
-	} = $props<{
+	}: {
 		result: NormalizedSearchResult;
 		importing: boolean;
 		disabled: boolean;
 		onSelect: () => Promise<void>;
 		resultRow?: Snippet<[NormalizedSearchResult, boolean, () => Promise<void>]>;
-	}>();
+	} = $props();
 </script>
 
 {#if resultRow}

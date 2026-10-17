@@ -11,10 +11,10 @@
 		Weekday
 	} from '$lib/services/RecurrenceRuleService';
 
-	let { selection = $bindable(), startDate } = $props<{
+	let { selection = $bindable(), startDate }: {
 		selection: RecurrenceSelection;
 		startDate: Date;
-	}>();
+	} = $props();
 
 	const ts = getTranslation();
 	const recurrenceRuleService = new RecurrenceRuleService();

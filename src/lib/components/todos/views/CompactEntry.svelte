@@ -16,11 +16,11 @@
 		todo,
 		handleCheck,
 		minimal = true
-	} = $props<{
+	}: {
 		todo: Todo;
 		handleCheck: (event: Event, todo: Todo) => Promise<void>;
 		minimal?: boolean;
-	}>();
+	} = $props();
 
 	function openEdit(): void {
 		todos.openEdit(todo.id);

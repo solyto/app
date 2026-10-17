@@ -12,7 +12,7 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 
-	let { todo } = $props<{ todo: Todo }>();
+	let { todo }: { todo: Todo } = $props();
 
 	let modalOpen = $state<boolean>(false);
 

@@ -6,12 +6,12 @@
 		title = '',
 		inModal = true,
 		buttonStyle = 'default'
-	} = $props<{
+	}: {
 		onClick: () => void;
 		title?: string;
 		inModal?: boolean;
 		buttonStyle?: 'default' | 'plain' | 'minimal';
-	}>();
+	} = $props();
 </script>
 
 <button

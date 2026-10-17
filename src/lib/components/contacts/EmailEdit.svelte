@@ -6,10 +6,10 @@
 	import IconMail from '@lucide/svelte/icons/mail';
 	import IconBriefcaseBusiness from '@lucide/svelte/icons/briefcase-business';
 
-	let { value = $bindable(), type = $bindable() } = $props<{
+	let { value = $bindable(), type = $bindable() }: {
 		value: string;
 		type: string;
-	}>();
+	} = $props();
 
 	const ts = getTranslation();
 

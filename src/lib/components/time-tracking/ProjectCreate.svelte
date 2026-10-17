@@ -11,10 +11,10 @@
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 
-	let { onClose, projectId = null } = $props<{
+	let { onClose, projectId = null }: {
 		onClose: () => void;
 		projectId?: string | null;
-	}>();
+	} = $props();
 
 	const existingProject = projectId ? tt.projects.find((p) => p.id === projectId) : null;
 

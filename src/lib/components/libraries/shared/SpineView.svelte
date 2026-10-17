@@ -19,7 +19,7 @@
 	}
 
 	const auth = getAuth();
-	let { library } = $props<{ library: Library }>();
+	let { library }: { library: Library } = $props();
 
 	let entries = $derived(library.filteredEntries as SpineEntry[]);
 	const isSquare = $derived(library.config.type === 'music');

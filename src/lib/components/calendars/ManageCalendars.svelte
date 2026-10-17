@@ -11,7 +11,7 @@
 	import IconGripVertical from '@lucide/svelte/icons/grip-vertical';
 	import type { Calendar } from '$lib/types/calendar';
 
-	let { onClose } = $props<{ onClose: () => void }>();
+	let { onClose }: { onClose: () => void } = $props();
 
 	const calendars = getCalendars();
 	const ts = getTranslation();

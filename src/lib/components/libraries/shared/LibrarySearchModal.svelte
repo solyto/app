@@ -1,15 +1,5 @@
-<script lang="ts">
-	import { slide } from 'svelte/transition';
-	import ContentModal from '$lib/components/ui/ContentModal.svelte';
-	import TextInput from '$lib/components/forms/TextInput.svelte';
-	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
-	import LibrarySearchResult from '$lib/components/libraries/shared/LibrarySearchResult.svelte';
-	import IconSearch from '@lucide/svelte/icons/search';
-	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
-	import { getKeyManager } from '$lib/state/KeyManager.svelte';
-	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { onDestroy, onMount, tick } from 'svelte';
-	import type { Component, Snippet } from 'svelte';
+<script lang="ts" module>
+	import type { Component } from 'svelte';
 
 	export interface NormalizedSearchResult {
 		id: string | number;
@@ -25,6 +15,20 @@
 		search: (query: string) => Promise<NormalizedSearchResult[] | null>;
 		onSelect: (result: NormalizedSearchResult) => Promise<void>;
 	}
+</script>
+
+<script lang="ts">
+	import { slide } from 'svelte/transition';
+	import ContentModal from '$lib/components/ui/ContentModal.svelte';
+	import TextInput from '$lib/components/forms/TextInput.svelte';
+	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
+	import LibrarySearchResult from '$lib/components/libraries/shared/LibrarySearchResult.svelte';
+	import IconSearch from '@lucide/svelte/icons/search';
+	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import { getKeyManager } from '$lib/state/KeyManager.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
+	import type { Snippet } from 'svelte';
 
 	const ts = getTranslation();
 	const keyManager = getKeyManager();
@@ -34,12 +38,12 @@
 		onClose,
 		placeholder,
 		resultRow
-	} = $props<{
+	}: {
 		sources: SearchSource[];
 		onClose: () => void;
 		placeholder: string;
 		resultRow?: Snippet<[NormalizedSearchResult, boolean, () => Promise<void>]>;
-	}>();
+	} = $props();
 
 	let query = $state('');
 	let queryInput = $state<HTMLInputElement | null>(null);

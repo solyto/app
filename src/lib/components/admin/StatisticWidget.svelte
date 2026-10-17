@@ -9,13 +9,13 @@
 		loadDelay,
 		icon: Icon,
 		color = 'teal'
-	} = $props<{
+	}: {
 		label: string;
 		number: number;
 		loadDelay?: number;
 		icon?: Component<{ class?: string }>;
 		color?: 'teal' | 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'yellow';
-	}>();
+	} = $props();
 
 	const colorClasses: Record<string, { bg: string; text: string; border: string }> = {
 		teal: { bg: 'bg-c-primary/10 dark:bg-c-primary/20', text: 'text-c-primary', border: 'border-c-primary/40' },

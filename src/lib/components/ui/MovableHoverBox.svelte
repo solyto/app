@@ -9,7 +9,7 @@
 		align = 'left',
 		large = false,
 		class: customClass = ''
-	} = $props<{
+	}: {
 		content: string;
 		show: boolean;
 		x: number;
@@ -17,7 +17,7 @@
 		align?: 'left' | 'right';
 		large?: boolean;
 		class?: string;
-	}>();
+	} = $props();
 
 	function horizontalPosition(): string {
 		return align === 'right' ? `right: ${window.innerWidth - x + 5}px;` : `left: ${x + 5}px;`;

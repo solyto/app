@@ -18,11 +18,11 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 
-	let { todo, readonly = false, hoverReveal = false } = $props<{
+	let { todo, readonly = false, hoverReveal = false }: {
 		todo: Todo;
 		readonly?: boolean;
 		hoverReveal?: boolean;
-	}>();
+	} = $props();
 
 	let addTagVisible = $state<boolean>(false);
 	let addTagInput = $state<HTMLInputElement | null>(null);

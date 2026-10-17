@@ -11,13 +11,13 @@
 		onDelete,
 		children,
 		title = null
-	} = $props<{
+	}: {
 		onClose?: () => void | Promise<void>;
 		onEdit?: () => void | Promise<void>;
 		onDelete?: () => void | Promise<void>;
 		children?: Snippet;
 		title?: string | null;
-	}>();
+	} = $props();
 </script>
 
 <div

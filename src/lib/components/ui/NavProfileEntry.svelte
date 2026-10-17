@@ -12,11 +12,11 @@
 		active = false,
 		mobile = false,
 		onSelect = () => {}
-	} = $props<{
+	}: {
 		active?: boolean;
 		mobile?: boolean;
 		onSelect?: () => void;
-	}>();
+	} = $props();
 
 	// The profile image is fetched cross-origin from the API's storage; a
 	// transient failure (e.g. cold browser session) breaks the <img> with no

@@ -12,7 +12,7 @@
 		filled = false,
 		color = '#61d96a',
 		class: extraClass = 'h-96'
-	} = $props<{
+	}: {
 		title?: string;
 		categories?: string[];
 		values?: number[];
@@ -21,7 +21,7 @@
 		filled?: boolean;
 		color?: string;
 		class?: string;
-	}>();
+	} = $props();
 
 	let chartContainer = $state<HTMLDivElement | null>(null);
 	let myChart: ECharts | null = null;

@@ -10,7 +10,7 @@
 	const tags = getTags();
 	const loadingIndicator = getLoadingIndicator();
 
-	let { tag } = $props<{ tag: Tag }>();
+	let { tag }: { tag: Tag } = $props();
 
 	let hex = $state<string>(tag.color !== null ? tag.color : 'var(--color-c-neutral-2)');
 	let pickerOpen = $state<boolean>(false);

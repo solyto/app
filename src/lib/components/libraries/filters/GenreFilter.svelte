@@ -4,10 +4,10 @@
 	import type { MusicGenre } from '$lib/types/library_music';
 	import type { BookGenre } from '$lib/types/library_book';
 
-	let { library, toggleMenu } = $props<{
+	let { library, toggleMenu }: {
 		library: Library;
 		toggleMenu: () => void;
-	}>();
+	} = $props();
 
 	const ts = getTranslation();
 

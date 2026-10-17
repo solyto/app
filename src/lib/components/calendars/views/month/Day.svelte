@@ -12,7 +12,7 @@
 	const calendars = getCalendars();
 	const drag = getCalendarDrag();
 
-	let { day } = $props<{ day: CalendarDay }>();
+	let { day }: { day: CalendarDay } = $props();
 
 	const dateSlug = $derived(formatDate(day.date));
 	const isDropTargetCell = $derived(

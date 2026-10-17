@@ -11,10 +11,10 @@
 
 	const weather = getWeather();
 
-	let { ts, auth } = $props<{
+	let { ts, auth }: {
 		ts: Translation;
 		auth: Auth;
-	}>();
+	} = $props();
 
 	let date = new Date();
 	let time = new SvelteDate();

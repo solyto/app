@@ -6,12 +6,12 @@
 		value = $bindable(''),
 		input = $bindable<HTMLInputElement | null>(null),
 		filename = $bindable('')
-	} = $props<{
+	}: {
 		label?: string;
 		value?: string;
 		input?: HTMLInputElement | null;
 		filename?: string;
-	}>();
+	} = $props();
 
 	const ts = getTranslation();
 

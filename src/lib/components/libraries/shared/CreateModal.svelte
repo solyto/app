@@ -20,7 +20,7 @@
 		onCoverRemove,
 		selectedRating = $bindable(),
 		isWishlist = $bindable()
-	} = $props<{
+	}: {
 		title: string;
 		library: Library;
 		children: Snippet;
@@ -30,7 +30,7 @@
 		onCoverRemove?: () => void;
 		selectedRating?: number | null;
 		isWishlist?: boolean;
-	}>();
+	} = $props();
 </script>
 
 <ContentModal rounded="2xl" p="8" onClose={() => library.closeCreateModal()} {title} forcePopup={true}>

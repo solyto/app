@@ -12,7 +12,7 @@
 		selectedLanguage = $bindable(),
 		selectedDateFormat = $bindable(),
 		selectedTimeFormat = $bindable()
-	} = $props<{ selectedLanguage: string; selectedDateFormat: string; selectedTimeFormat: string }>();
+	}: { selectedLanguage: string; selectedDateFormat: string; selectedTimeFormat: string } = $props();
 
 	const languages = [
 		{ value: 'en', label: ts.get.settings.english },

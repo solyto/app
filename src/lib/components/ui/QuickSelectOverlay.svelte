@@ -11,14 +11,14 @@
 		p = null,
 		portal = false,
 		target = null
-	} = $props<{
+	}: {
 		onClose: () => void;
 		children?: Snippet;
 		class?: string;
 		p?: number;
 		portal?: boolean;
 		target?: HTMLElement | null;
-	}>();
+	} = $props();
 </script>
 
 {#if portal}

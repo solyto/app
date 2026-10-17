@@ -9,13 +9,13 @@
 		labelSize = 'xs',
 		align = 'left',
 		muted = false
-	} = $props<{
+	}: {
 		label?: string | null;
 		description: string;
 		labelSize?: string;
 		align?: 'left' | 'right';
 		muted?: boolean;
-	}>();
+	} = $props();
 
 	let trigger = $state<HTMLButtonElement | null>(null);
 	let hovered = $state<boolean>(false);

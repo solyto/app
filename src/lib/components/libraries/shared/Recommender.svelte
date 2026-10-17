@@ -18,7 +18,7 @@
 	const ts = getTranslation();
 	const auth = getAuth();
 
-	let { library } = $props<{ library: Library }>();
+	let { library }: { library: Library } = $props();
 
 	let modalVisible = $state<boolean>(false);
 	let selection = $state<LibraryRecommendationType | null>(null);

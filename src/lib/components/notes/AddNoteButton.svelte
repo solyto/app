@@ -1,9 +1,9 @@
 <script lang="ts">
 	import IconFilePlus from '@lucide/svelte/icons/file-plus';
 
-	let { onClick } = $props<{
+	let { onClick }: {
 		onClick: () => void;
-	}>();
+	} = $props();
 </script>
 
 <button

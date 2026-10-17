@@ -7,11 +7,11 @@
 	import DiscogsIcon from '$lib/assets/services/discogs_icon.png';
 	import SpotifyIcon from '$lib/assets/services/spotify_icon.svg';
 
-	let { library, ts, onSelect } = $props<{
+	let { library, ts, onSelect }: {
 		library: MusicLibrary;
 		ts: Translation;
 		onSelect: (entry: MusicRelease) => void;
-	}>();
+	} = $props();
 
 	const sourceDefs: Record<string, Omit<SearchSource, 'label' | 'icon'>> = {
 		deezer: {

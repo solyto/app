@@ -25,7 +25,7 @@
 	const hours = getHoursOfDay();
 	const desktopRows = '10% repeat(24, calc(100% / 27))';
 
-	let { date, isMobile = false } = $props<{ date: Date; isMobile?: boolean }>();
+	let { date, isMobile = false }: { date: Date; isMobile?: boolean } = $props();
 
 	let entries = $derived(calendars.getEventsForDate(date));
 	let entriesByHour = $derived(

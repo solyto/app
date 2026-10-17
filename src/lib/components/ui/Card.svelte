@@ -9,7 +9,7 @@
 		hover = true,
 		noShadowOnMobile = false,
 		children
-	} = $props<{
+	}: {
 		label?: string;
 		fixedWidth?: boolean;
 		fullWidth?: boolean;
@@ -18,7 +18,7 @@
 		hover?: boolean;
 		noShadowOnMobile?: boolean;
 		children?: Snippet;
-	}>();
+	} = $props();
 </script>
 
 {#snippet cardBody()}

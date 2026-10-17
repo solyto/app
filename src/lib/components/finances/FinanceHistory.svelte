@@ -35,7 +35,7 @@
 		onUpdate,
 		onDelete,
 		onDeleteItem
-	} = $props<{
+	}: {
 		values: FinanceValue[];
 		itemTitle: string;
 		dateFormat: string | null;
@@ -44,7 +44,7 @@
 		onUpdate: (value: FinanceValue, request: UpdateFinanceValueRequest) => Promise<boolean>;
 		onDelete: (value: FinanceValue) => Promise<boolean>;
 		onDeleteItem: () => Promise<void>;
-	}>();
+	} = $props();
 
 	let today = getUrlFormat(new Date());
 	let addOpen = $state<boolean>(false);

@@ -8,7 +8,7 @@
 
 	const keyManager = getKeyManager();
 
-	let { library } = $props<{ library: Library }>();
+	let { library }: { library: Library } = $props();
 
 	let inputExpanded = $state<boolean>(false);
 	let searchInput = $state<HTMLInputElement | null>(null);

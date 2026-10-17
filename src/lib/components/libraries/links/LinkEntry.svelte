@@ -8,10 +8,10 @@
 	import StarButton from '$lib/components/ui/buttons/StarButton.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 
-	let { entry, library } = $props<{
+	let { entry, library }: {
 		entry: Link;
 		library: LinkLibrary;
-	}>();
+	} = $props();
 
 	const loadingIndicator = getLoadingIndicator();
 

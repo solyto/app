@@ -11,7 +11,7 @@
 	import type { Library } from '$lib/types/library';
 	import Releases from '$lib/components/libraries/shared/Releases.svelte';
 
-	let { library } = $props<{ library: Library }>();
+	let { library }: { library: Library } = $props();
 
 	const ts = getTranslation();
 </script>

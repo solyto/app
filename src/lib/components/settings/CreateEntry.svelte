@@ -14,12 +14,12 @@
 		create,
 		buttonType = 'plain',
 		useAddButton = false
-	} = $props<{
+	}: {
 		label: string;
 		create: (title: string) => unknown;
 		buttonType?: 'plain' | 'slight' | 'btn';
 		useAddButton?: boolean;
-	}>();
+	} = $props();
 
 	let formOpen = $state<boolean>(false);
 	let title = $state<string>('');

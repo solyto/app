@@ -5,13 +5,13 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';
 
-	let { todo, changeEffort = true, left = false, portal = false, compact = false } = $props<{
+	let { todo, changeEffort = true, left = false, portal = false, compact = false }: {
 		todo: Todo;
 		changeEffort: boolean;
 		left?: boolean;
 		portal?: boolean;
 		compact?: boolean;
-	}>();
+	} = $props();
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();

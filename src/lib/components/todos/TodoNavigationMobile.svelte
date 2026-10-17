@@ -13,10 +13,10 @@
 	const todos = getTodos();
 	const tags = getTags();
 
-	let { sections, ts } = $props<{
+	let { sections, ts }: {
 		sections: TodoNavigationSection[];
 		ts: Translation;
-	}>();
+	} = $props();
 
 	type SectionKey = 'workspaces' | 'categories' | 'priority' | 'status' | 'effort' | 'due' | 'tags';
 

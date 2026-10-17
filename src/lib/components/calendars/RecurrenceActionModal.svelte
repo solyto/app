@@ -8,12 +8,12 @@
 	const ts = getTranslation(),
 		keyManager = getKeyManager();
 
-	let { action, onThisOccurrence, onAllOccurrences, onCancel } = $props<{
+	let { action, onThisOccurrence, onAllOccurrences, onCancel }: {
 		action: 'edit' | 'delete' | 'move';
 		onThisOccurrence: () => void;
 		onAllOccurrences: () => void;
 		onCancel: () => void;
-	}>();
+	} = $props();
 
 	let visible = $state<boolean>(false);
 	let keyHandlers: { [key: string]: string | null } = { Escape: null };

@@ -3,7 +3,7 @@
 	import { slide } from 'svelte/transition';
 	import { getTodos } from '$lib/state/Todos.svelte';
 
-	let { todo } = $props<{ todo: Todo }>();
+	let { todo }: { todo: Todo } = $props();
 
 	const todos = getTodos();
 

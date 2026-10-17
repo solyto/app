@@ -6,7 +6,7 @@
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 
-	let { day } = $props<{ day: Date }>();
+	let { day }: { day: Date } = $props();
 
 	const calendars = getCalendars();
 

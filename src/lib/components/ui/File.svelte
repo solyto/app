@@ -5,12 +5,12 @@
 		hover = true,
 		noShadowOnMobile = false,
 		children
-	} = $props<{
+	}: {
 		title?: string;
 		hover?: boolean;
 		noShadowOnMobile?: boolean;
 		children?: Snippet;
-	}>();
+	} = $props();
 </script>
 
 <div

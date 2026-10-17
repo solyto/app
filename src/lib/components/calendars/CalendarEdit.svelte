@@ -18,7 +18,7 @@
 	const ts = getTranslation();
 	const notifications = getUiNotifications();
 
-	let { calendar } = $props<{ calendar: Calendar }>();
+	let { calendar }: { calendar: Calendar } = $props();
 
 	let hex = $state<string>(calendar.color !== null ? calendar.color : 'var(--color-c-neutral-2)');
 

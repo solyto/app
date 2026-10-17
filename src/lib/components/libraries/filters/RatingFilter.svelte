@@ -3,10 +3,10 @@
 	import type { Library } from '$lib/types/library.js';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
-	let { library, toggleMenu } = $props<{
+	let { library, toggleMenu }: {
 		library: Library;
 		toggleMenu: () => void;
-	}>();
+	} = $props();
 
 	const ts = getTranslation();
 

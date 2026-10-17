@@ -3,11 +3,11 @@
 		isChecked = $bindable(false),
 		onchange,
 		class: customClass = ''
-	} = $props<{
+	}: {
 		isChecked: boolean;
 		onchange?: (event: Event) => void;
 		class?: string;
-	}>();
+	} = $props();
 </script>
 
 <div class="inline-flex items-center {customClass}">

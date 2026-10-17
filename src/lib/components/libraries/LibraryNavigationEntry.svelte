@@ -5,14 +5,14 @@
 	import { resolve } from '$app/paths';
 	import type { LibraryType } from '$lib/types/library.js';
 
-	let { type, title, url, icon: Icon, isActive, setActive } = $props<{
+	let { type, title, url, icon: Icon, isActive, setActive }: {
 		type: LibraryType;
 		title: string;
 		url: string;
 		icon: Component;
 		isActive: boolean;
 		setActive: (type: LibraryType) => void;
-	}>();
+	} = $props();
 </script>
 
 <button

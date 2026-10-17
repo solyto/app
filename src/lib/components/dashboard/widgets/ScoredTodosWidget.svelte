@@ -5,12 +5,12 @@
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 	import IconTrendingUp from '@lucide/svelte/icons/trending-up';
 
-	let { scoredTodos, handleCheck, ts, mt = false } = $props<{
+	let { scoredTodos, handleCheck, ts, mt = false }: {
 		scoredTodos: Todo[];
 		handleCheck: (event: Event, todo: Todo) => Promise<void>;
 		ts: Translation;
 		mt: boolean
-	}>();
+	} = $props();
 </script>
 
 

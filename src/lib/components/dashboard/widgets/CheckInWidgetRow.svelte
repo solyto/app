@@ -6,11 +6,11 @@
 		label,
 		value,
 		icon: Icon
-	} = $props<{
+	}: {
 		label: string;
 		value: number;
 		icon: Component<{ class?: string }> | null;
-	}>();
+	} = $props();
 </script>
 
 <div class="flex items-center gap-2.5">

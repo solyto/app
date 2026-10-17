@@ -13,10 +13,10 @@
 	const notes = getNotes();
 	const ts = getTranslation();
 
-	let { entries, title } = $props<{
+	let { entries, title }: {
 		entries: Note[];
 		title: string;
-	}>();
+	} = $props();
 
 	const ACCENT_COLORS = [
 		'#1dbda5', '#4e1f90', '#14a5cd', '#fc9427', '#ec3a41', '#61d96a', '#992f8c', '#1c68c3'

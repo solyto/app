@@ -11,7 +11,7 @@
 
 	const ts = getTranslation();
 
-	let { library } = $props<{ library: Library }>();
+	let { library }: { library: Library } = $props();
 
 	let visibility = $state<{
 		menu: boolean;

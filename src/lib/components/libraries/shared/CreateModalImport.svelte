@@ -6,7 +6,7 @@
 	import { Translation } from '$lib/state/Translation.svelte';
 	import type { Component } from 'svelte';
 
-	let { options, ts, loading, open = $bindable() } = $props<{
+	let { options, ts, loading, open = $bindable() }: {
 		options: {
 			label: string;
 			icon: string | Component;
@@ -15,7 +15,7 @@
 		ts: Translation;
 		loading: boolean;
 		open: boolean;
-	}>();
+	} = $props();
 </script>
 
 <div class="relative">

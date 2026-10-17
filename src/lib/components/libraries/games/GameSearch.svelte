@@ -6,12 +6,12 @@
 	import SteamIcon from '$lib/assets/services/steam_icon.svg';
 	import Dices from '@lucide/svelte/icons/dices';
 
-	let { library, ts, showBgg, onSelect } = $props<{
+	let { library, ts, showBgg, onSelect }: {
 		library: GameLibrary;
 		ts: Translation;
 		showBgg: boolean;
 		onSelect: (entry: GameRelease) => void;
-	}>();
+	} = $props();
 
 	const steamSource: SearchSource = {
 		label: 'Steam',

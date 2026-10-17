@@ -1,11 +1,11 @@
 <script lang="ts">
 	import IconPlus from '@lucide/svelte/icons/plus';
 
-	let { onClick, colorOnHover = false, hoverColor = 'btn' } = $props<{
+	let { onClick, colorOnHover = false, hoverColor = 'btn' }: {
 		onClick: () => void;
 		colorOnHover?: boolean;
 		hoverColor?: 'btn' | 'success' | 'danger';
-	}>();
+	} = $props();
 </script>
 
 {#if colorOnHover}

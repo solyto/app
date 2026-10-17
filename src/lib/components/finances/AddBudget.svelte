@@ -17,7 +17,7 @@
 	const finances = getFinances();
 	const viewPoint = getViewPoint();
 
-	let { type } = $props<{ type: BudgetType }>();
+	let { type }: { type: BudgetType } = $props();
 
 	let formOpen = $state<boolean>(false);
 	let titleInput = $state<HTMLInputElement | null>(null);

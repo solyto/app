@@ -11,7 +11,7 @@
 		children,
 		mobile = false,
 		dataTour = undefined
-	} = $props<{
+	}: {
 		slug: string;
 		title: string;
 		href: string;
@@ -20,7 +20,7 @@
 		children?: Snippet;
 		mobile?: boolean;
 		dataTour?: string;
-	}>();
+	} = $props();
 </script>
 
 <a

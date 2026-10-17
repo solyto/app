@@ -5,11 +5,11 @@
 		label,
 		icon: Icon,
 		onClick
-	} = $props<{
+	}: {
 		label: string;
 		icon: Component<{ class?: string }>;
 		onClick: () => void;
-	}>();
+	} = $props();
 </script>
 
 <button

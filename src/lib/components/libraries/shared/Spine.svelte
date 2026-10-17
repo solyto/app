@@ -13,7 +13,7 @@
 		onHover,
 		onCoverLoad,
 		onClick
-	} = $props<{
+	}: {
 		title: string;
 		coverUrl: string | null;
 		xOffset: number;
@@ -27,7 +27,7 @@
 		onHover: (hovered: boolean) => void;
 		onCoverLoad: (e: Event) => void;
 		onClick: () => void;
-	}>();
+	} = $props();
 
 	function titleHash(): number {
 		let hash = 0;

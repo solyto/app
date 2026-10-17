@@ -7,7 +7,7 @@
 
 	let tiles = $state<number[]>([]);
 
-	let { path = null } = $props<{ path?: string | null }>();
+	let { path = null }: { path?: string | null } = $props();
 
 	onMount(() => {
 		for (let i = 0; i < x * y; i++) {

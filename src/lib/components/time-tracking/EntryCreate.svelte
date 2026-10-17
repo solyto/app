@@ -24,11 +24,11 @@
 		onClose,
 		projectId: initialProjectId = null,
 		entry = null
-	} = $props<{
+	}: {
 		onClose: () => void;
 		projectId?: string | null;
 		entry?: TimeTrackingEntry | null;
-	}>();
+	} = $props();
 
 	type DurationUnit = 'minutes' | 'hours';
 

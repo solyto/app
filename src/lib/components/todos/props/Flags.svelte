@@ -5,9 +5,9 @@
 	import IconLink from '@lucide/svelte/icons/link';
 	import IconRepeat from '@lucide/svelte/icons/repeat';
 
-	let { todo } = $props<{
+	let { todo }: {
 		todo: Todo;
-	}>();
+	} = $props();
 </script>
 
 {#if todo.description !== null || todo.subtasks.length > 0 || todo.link !== null || todo.recurrence_frequency !== null}

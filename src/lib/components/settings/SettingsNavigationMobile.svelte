@@ -7,11 +7,11 @@
 		sections,
 		active,
 		onselect
-	} = $props<{
+	}: {
 		sections: { id: number; title: string }[];
 		active: number;
 		onselect: (id: number) => void;
-	}>();
+	} = $props();
 
 	let open = $state(false);
 

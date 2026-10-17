@@ -7,7 +7,7 @@
 		oninput,
 		id,
 		max
-	} = $props<{
+	}: {
 		input?: HTMLInputElement | null;
 		value: string;
 		placeholder?: string;
@@ -15,7 +15,7 @@
 		oninput?: () => void;
 		id?: string;
 		max?: string;
-	}>();
+	} = $props();
 </script>
 
 <input

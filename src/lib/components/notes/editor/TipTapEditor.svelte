@@ -21,7 +21,7 @@
 	const notes = getNotes();
 	const viewPoint = getViewPoint();
 
-	let { autofocus = false } = $props<{ autofocus?: boolean }>();
+	let { autofocus = false }: { autofocus?: boolean } = $props();
 
 	let editorDiv = $state<HTMLDivElement | null>(null);
 	let tableBubbleRoot = $state<HTMLDivElement | null>(null);

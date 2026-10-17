@@ -8,12 +8,12 @@
 	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 
-	let { title, type, onStart, onFinish } = $props<{
+	let { title, type, onStart, onFinish }: {
 		title: string;
 		type: 'tag' | 'category';
 		onStart: () => void;
 		onFinish: () => void;
-	}>();
+	} = $props();
 
 	const keyManager = getKeyManager();
 	const loadingIndicator = getLoadingIndicator();

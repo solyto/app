@@ -12,13 +12,13 @@
 		showPriority = true,
 		px = true,
 		wrap = false
-	} = $props<{
+	}: {
 		todo: Todo;
 		checkboxRight?: boolean;
 		showPriority?: boolean;
 		px?: boolean;
 		wrap?: boolean;
-	}>();
+	} = $props();
 
 	async function check(): Promise<void> {
 		await calendars.changeTodoCompleted(todo, !todo.is_completed);

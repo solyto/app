@@ -8,7 +8,7 @@
 	const calendars = getCalendars();
 	const ts = getTranslation();
 
-	let { calendar } = $props<{ calendar: Calendar }>();
+	let { calendar }: { calendar: Calendar } = $props();
 	let hidden = $derived(calendars.isCalendarHidden(calendar.id));
 
 	function getBorderColor(): string {

@@ -17,14 +17,14 @@
 		onRename,
 		children,
 		title = null
-	} = $props<{
+	}: {
 		onClose?: () => void | Promise<void>;
 		onDelete?: () => void | Promise<void>;
 		onComplete?: (event?: MouseEvent) => void | Promise<void>;
 		onRename?: (title: string) => Promise<boolean>;
 		children?: Snippet;
 		title?: string | null;
-	}>();
+	} = $props();
 
 	let sheet = $state<HTMLDivElement | null>(null);
 	let dragOffset = $state(0);

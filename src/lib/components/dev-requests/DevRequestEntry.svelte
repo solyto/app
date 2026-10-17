@@ -30,10 +30,10 @@
 
 	const isAdmin = auth.isAdmin();
 
-	let { entry, active = false } = $props<{
+	let { entry, active = false }: {
 		entry: DevRequest;
 		active?: boolean;
-	}>();
+	} = $props();
 
 	let open = $state<boolean>(active);
 	let titleInput = $state<HTMLInputElement | null>(null);

@@ -16,7 +16,7 @@
 	const keyManager = getKeyManager();
 	const ts = getTranslation();
 
-	let { todo } = $props<{ todo: Todo }>();
+	let { todo }: { todo: Todo } = $props();
 
 	let changeDescription = $state<boolean>(false);
 	let descriptionInput = $state<HTMLTextAreaElement | null>(null);

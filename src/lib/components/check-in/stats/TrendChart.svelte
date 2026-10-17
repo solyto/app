@@ -8,12 +8,12 @@
 		categories,
 		values,
 		icon: Icon
-	} = $props<{
+	}: {
 		label: string;
 		categories: string[];
 		values: number[];
 		icon: Component<{ class?: string }> | null;
-	}>();
+	} = $props();
 </script>
 
 {#if categories.length >= 2}

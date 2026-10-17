@@ -13,9 +13,9 @@
 	import { grabFaviconFromUrl } from '$lib/helpers/ImageHelper';
 	import ExternalSearchLink from '$lib/components/libraries/shared/ExternalSearchLink.svelte';
 
-	let { entry } = $props<{
+	let { entry }: {
 		entry: Book | Music | Recipe | Movie;
-	}>();
+	} = $props();
 
 	const ts = getTranslation();
 </script>

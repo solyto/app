@@ -38,11 +38,11 @@
 		onCreateProject,
 		onEditProject,
 		activeProjectId = null
-	} = $props<{
+	}: {
 		onCreateProject: () => void;
 		onEditProject: (id: string) => void;
 		activeProjectId?: string | null;
-	}>();
+	} = $props();
 
 	let open = $state<boolean>(false);
 	let confirmDeleteProjectId = $state<string | null>(null);

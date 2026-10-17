@@ -12,7 +12,7 @@
 	const calendarSharing = getCalendarSharing();
 	const notifications = getUiNotifications();
 
-	let { calendar } = $props<{ calendar: Calendar }>();
+	let { calendar }: { calendar: Calendar } = $props();
 
 	let processing = $state<boolean>(false);
 

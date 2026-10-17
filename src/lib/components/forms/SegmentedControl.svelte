@@ -3,11 +3,11 @@
 		value = $bindable(),
 		options,
 		onchange
-	} = $props<{
+	}: {
 		value: string | null;
 		options: { label: string; value: string }[];
 		onchange?: (value: string) => void;
-	}>();
+	} = $props();
 
 	function select(optionValue: string): void {
 		value = optionValue;

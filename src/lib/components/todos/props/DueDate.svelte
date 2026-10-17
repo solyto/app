@@ -10,11 +10,11 @@
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { portalToBody } from '$lib/helpers/PortalHelper';
 
-	let { todo, portal = false, withIcon = false } = $props<{
+	let { todo, portal = false, withIcon = false }: {
 		todo: Todo;
 		portal?: boolean;
 		withIcon?: boolean;
-	}>();
+	} = $props();
 
 	const todos = getTodos();
 	const ts = getTranslation();

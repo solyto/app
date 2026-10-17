@@ -2,11 +2,11 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { AddressBook } from '$lib/types/contact';
 
-	let { addressBook = $bindable(), availableAddressBooks } = $props<{
+	let { addressBook = $bindable(), availableAddressBooks }: {
 		addressBook: number;
 		availableAddressBooks: AddressBook[];
 		preSelect?: AddressBook;
-	}>();
+	} = $props();
 
 	const ts = getTranslation();
 

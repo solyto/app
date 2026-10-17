@@ -16,11 +16,11 @@
 	const todos = getTodos();
 	const ts = getTranslation();
 
-	let { todo, subtask, handleCheckboxClick } = $props<{
+	let { todo, subtask, handleCheckboxClick }: {
 		todo: Todo;
 		subtask: TodoSubtask;
 		handleCheckboxClick: (subtask: TodoSubtask) => void;
-	}>();
+	} = $props();
 
 	let changeTitle = $state<boolean>(false);
 	let titleInput = $state<HTMLInputElement | null>(null);

@@ -8,7 +8,7 @@
 		min,
 		max,
 		step
-	} = $props<{
+	}: {
 		input?: HTMLInputElement | HTMLTextAreaElement | null;
 		value: number | null;
 		placeholder?: string;
@@ -17,7 +17,7 @@
 		min?: number;
 		max?: number;
 		step?: number | 'any';
-	}>();
+	} = $props();
 </script>
 
 <input

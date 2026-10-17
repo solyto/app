@@ -6,11 +6,11 @@
 		label,
 		children,
 		headerAction = null
-	} = $props<{
+	}: {
 		label: string;
 		children?: Snippet;
 		headerAction?: Snippet;
-	}>();
+	} = $props();
 </script>
 
 <div class="w-full">

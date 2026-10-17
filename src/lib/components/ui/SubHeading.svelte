@@ -5,7 +5,7 @@
 		mt = 0,
 		mb = 0,
 		bold = false
-	} = $props<{ title: string; my: number; mt?: number; mb?: number; bold?: boolean }>();
+	}: { title: string; my: number; mt?: number; mb?: number; bold?: boolean } = $props();
 </script>
 
 <div class="text-base font-semibold my-{my} mt-{mt} mb-{mb}" class:font-bold={bold}>

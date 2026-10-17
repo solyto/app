@@ -5,11 +5,11 @@
 		label,
 		icon: Icon,
 		confidencePercent
-	} = $props<{
+	}: {
 		label: string;
 		icon: Component<{ class?: string }>;
 		confidencePercent: number;
-	}>();
+	} = $props();
 </script>
 
 <div class="flex w-full items-center gap-4 rounded-xl border-1 border-c-neutral-2 p-4 dark:border-s-dark-3">

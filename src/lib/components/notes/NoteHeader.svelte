@@ -20,9 +20,9 @@
 	const notifications = getUiNotifications();
 	const keyManager = getKeyManager();
 
-	let { isJournal = false } = $props<{
+	let { isJournal = false }: {
 		isJournal?: boolean;
-	}>();
+	} = $props();
 
 	let changeTitle = $state<boolean>(false);
 	let titleInput = $state<HTMLInputElement | null>(null);

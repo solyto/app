@@ -6,10 +6,10 @@
 	import { nl2br } from '$lib/helpers/FormatHelper.js';
 	import DOMPurify from 'dompurify';
 
-	let { entry, library } = $props<{
+	let { entry, library }: {
 		entry: Quote;
 		library: QuoteLibrary;
-	}>();
+	} = $props();
 
 	const loadingIndicator = getLoadingIndicator();
 

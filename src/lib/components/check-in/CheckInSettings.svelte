@@ -19,7 +19,7 @@
 	import SelectedSportButton from '$lib/components/check-in/SelectedSportButton.svelte';
 	import ReplacementSportButton from '$lib/components/check-in/ReplacementSportButton.svelte';
 
-	let { onClose } = $props<{ onClose: () => void }>();
+	let { onClose }: { onClose: () => void } = $props();
 
 	const ts = getTranslation();
 	const checkInData = getCheckInData();

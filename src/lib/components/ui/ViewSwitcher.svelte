@@ -14,7 +14,7 @@
 		currentlySelected,
 		onChange,
 		class: className = ''
-	} = $props<{
+	}: {
 		views: Array<{
 			type: 'compact' | 'comfortable' | 'card' | 'list' | 'kanban' | 'overview' | 'grouped' | 'shelf' | 'cards' | 'spine';
 			title: string;
@@ -22,7 +22,7 @@
 		currentlySelected: string;
 		onChange: (type: string) => void;
 		class?: string;
-	}>();
+	} = $props();
 </script>
 
 <div class="flex items-center gap-1 {className}">

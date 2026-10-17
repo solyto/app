@@ -7,10 +7,10 @@
 	import type { Note } from '$lib/types/note';
 	import type { Translation } from '$lib/state/Translation.svelte';
 
-	let { newestNotes, ts } = $props<{
+	let { newestNotes, ts }: {
 		newestNotes: Note[];
 		ts: Translation;
-	}>();
+	} = $props();
 </script>
 
 <div in:blur>

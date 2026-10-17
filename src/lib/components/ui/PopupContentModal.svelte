@@ -22,7 +22,7 @@
 		transparent = false,
 		higherZIndex = false,
 		showTitleOnMobile = false
-	} = $props<{
+	}: {
 		onClose?: () => void | Promise<void>;
 		onEdit?: () => void | Promise<void>;
 		onDelete?: () => void | Promise<void>;
@@ -37,7 +37,7 @@
 		transparent?: boolean;
 		higherZIndex?: boolean;
 		showTitleOnMobile?: boolean;
-	}>();
+	} = $props();
 </script>
 
 <div

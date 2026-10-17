@@ -9,12 +9,12 @@
 		values,
 		centerFormatter = europeanFormat,
 		valueFormatter = europeanFormat
-	} = $props<{
+	}: {
 		title?: string;
 		values?: { value: number; name: string; color?: string | null }[];
 		centerFormatter?: (total: number) => string;
 		valueFormatter?: (value: number) => string;
-	}>();
+	} = $props();
 
 	let chartContainer: HTMLDivElement | null = null;
 	let myChart: ECharts | null = null;

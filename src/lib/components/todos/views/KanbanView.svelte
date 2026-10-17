@@ -13,7 +13,7 @@
 	const loadingIndicator = getLoadingIndicator();
 	const flipDurationMs = 200;
 
-	let { handleCheck } = $props<{ handleCheck: (event: Event, todo: Todo) => Promise<void> }>();
+	let { handleCheck }: { handleCheck: (event: Event, todo: Todo) => Promise<void> } = $props();
 	let groups = $derived<GroupedTodos[]>(todos.groupedTodos);
 	let firstTick = $state<boolean>(true);
 

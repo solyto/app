@@ -3,11 +3,11 @@
 		checked = $bindable(),
 		label = null,
 		onchange
-	} = $props<{
+	}: {
 		checked: boolean;
 		label?: string;
 		onchange: (value: boolean) => void;
-	}>();
+	} = $props();
 </script>
 
 <label

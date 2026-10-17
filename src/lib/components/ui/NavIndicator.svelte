@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { active } = $props<{ active: boolean }>();
+	let { active }: { active: boolean } = $props();
 </script>
 
 <span

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import IconTrash from '@lucide/svelte/icons/trash-2';
 
-	let { onClick, label = null } = $props<{
+	let { onClick, label = null }: {
 		onClick: (e: MouseEvent) => void | Promise<void>;
 		label?: string | null;
-	}>();
+	} = $props();
 </script>
 
 <div

@@ -7,11 +7,11 @@
 		notification,
 		onClose = () => {},
 		variant = 'row'
-	} = $props<{
+	}: {
 		notification: UserNotification;
 		onClose?: () => void;
 		variant?: 'row' | 'card';
-	}>();
+	} = $props();
 
 	function goTo(): void {
 		onClose();

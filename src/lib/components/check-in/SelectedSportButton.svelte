@@ -7,13 +7,13 @@
 		replacing,
 		icon: Icon,
 		onClick
-	} = $props<{
+	}: {
 		title: string;
 		position: number;
 		replacing: boolean;
 		icon: Component<{ class?: string }>;
 		onClick: () => void;
-	}>();
+	} = $props();
 </script>
 
 <button

@@ -10,11 +10,11 @@
 	const loadingIndicator = getLoadingIndicator();
 	const finances = getFinances();
 
-	let { wealth, sectionTotal, onOpenHistory } = $props<{
+	let { wealth, sectionTotal, onOpenHistory }: {
 		wealth: WealthField;
 		sectionTotal: number;
 		onOpenHistory: (wealth: WealthField) => void;
-	}>();
+	} = $props();
 
 	async function onDelete(wealth: WealthField): Promise<void> {
 		loadingIndicator.start();

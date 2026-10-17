@@ -20,7 +20,7 @@
 	const shortcuts = getShortcuts();
 	const keyManager = getKeyManager();
 
-	let { onClose } = $props<{ onClose: () => void }>();
+	let { onClose }: { onClose: () => void } = $props();
 
 	const flipDurationMs = 200;
 	let items = $derived<Shortcut[]>(shortcuts.shortcuts);

@@ -5,11 +5,11 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';
 
-	let { todo, changeStatus, portal = false } = $props<{
+	let { todo, changeStatus, portal = false }: {
 		todo: Todo;
 		changeStatus: boolean;
 		portal?: boolean;
-	}>();
+	} = $props();
 
 	const todos = getTodos();
 	const ts = getTranslation();

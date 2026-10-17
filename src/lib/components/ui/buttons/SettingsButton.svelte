@@ -5,11 +5,11 @@
 		onclick,
 		title,
 		class: customClass = ''
-	} = $props<{
+	}: {
 		onclick: () => void;
 		title: string;
 		class?: string;
-	}>();
+	} = $props();
 </script>
 
 <button

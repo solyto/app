@@ -6,12 +6,12 @@
 		inModal = true,
 		buttonStyle = 'default',
 		iconClass = 'size-5'
-	} = $props<{
+	}: {
 		onClick: () => void | Promise<void>;
 		inModal?: boolean;
 		buttonStyle?: 'default' | 'plain' | 'minimal';
 		iconClass?: string;
-	}>();
+	} = $props();
 </script>
 
 <button

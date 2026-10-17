@@ -10,14 +10,14 @@
 		colors,
 		opacity = 1,
 		valueFormatter = (v: number) => String(v)
-	} = $props<{
+	}: {
 		title?: string;
 		categories?: string[];
 		values?: number[];
 		colors?: string[];
 		opacity?: number;
 		valueFormatter?: (value: number) => string;
-	}>();
+	} = $props();
 
 	let chartContainer: HTMLDivElement | null = null;
 	let myChart: ECharts | null = null;

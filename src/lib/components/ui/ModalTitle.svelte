@@ -13,11 +13,11 @@
 		title,
 		onRename,
 		class: titleClass = ''
-	} = $props<{
+	}: {
 		title: string;
 		onRename?: (title: string) => Promise<boolean>;
 		class?: string;
-	}>();
+	} = $props();
 
 	let renaming = $state<boolean>(false);
 	let renameTitle = $state<string>('');

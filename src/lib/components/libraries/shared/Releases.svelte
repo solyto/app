@@ -16,7 +16,7 @@
 	import { page } from '$app/state';
 	import type { MovieLibrary } from '$lib/state/MovieLibrary.svelte';
 
-	let { library } = $props<{ library: MusicLibrary | BookLibrary | MovieLibrary }>();
+	let { library }: { library: MusicLibrary | BookLibrary | MovieLibrary } = $props();
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();

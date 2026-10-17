@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { scale, blur } from 'svelte/transition';
 
-	let { src, previewSrc = '', alt = '', class: customClass = '' } = $props<{
+	let { src, previewSrc = '', alt = '', class: customClass = '' }: {
 		src: string;
 		previewSrc?: string;
 		alt?: string;
 		class?: string;
-	}>();
+	} = $props();
 
 	let previewLoaded = $state(false);
 	let fullLoaded = $state(false);

@@ -20,7 +20,7 @@
 
 	const auth = getAuth();
 
-	let { library } = $props<{ library: Library }>();
+	let { library }: { library: Library } = $props();
 
 	let view = $derived(library.view);
 

@@ -18,7 +18,7 @@
 	const auth = getAuth();
 	const notifications = getUiNotifications();
 
-	let { calendar, onClose } = $props<{ calendar: Calendar; onClose: () => void }>();
+	let { calendar, onClose }: { calendar: Calendar; onClose: () => void } = $props();
 
 	let friends = $state<Friend[]>([]);
 	let sharees = $state<CalendarSharee[]>([]);

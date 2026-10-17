@@ -2,10 +2,10 @@
 	import type { Tag } from '$lib/types/tag';
 	import IconX from '@lucide/svelte/icons/x';
 
-	let { tags, onRemove } = $props<{
+	let { tags, onRemove }: {
 		tags: Tag[];
 		onRemove?: (tag: Tag) => void | Promise<void>;
-	}>();
+	} = $props();
 </script>
 
 <div class="flex flex-row gap-1">

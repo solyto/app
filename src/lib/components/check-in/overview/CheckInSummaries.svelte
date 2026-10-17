@@ -6,10 +6,10 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 
-	let { dates, trackers } = $props<{
+	let { dates, trackers }: {
 		dates: Date[];
 		trackers: CheckInType[];
-	}>();
+	} = $props();
 
 	interface SummaryRow {
 		key: string;

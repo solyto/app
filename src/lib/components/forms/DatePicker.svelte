@@ -6,11 +6,11 @@
 		isOpen = $bindable(),
 		startDate = $bindable(),
 		onChange
-	} = $props<{
+	}: {
 		isOpen: boolean;
 		startDate: Date | null;
 		onChange: () => void | Promise<void>;
-	}>();
+	} = $props();
 </script>
 
 <DatePicker

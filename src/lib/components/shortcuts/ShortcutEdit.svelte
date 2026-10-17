@@ -15,7 +15,7 @@
 	const shortcuts = getShortcuts();
 	const keyManager = getKeyManager();
 
-	let { shortcut } = $props<{ shortcut: Shortcut }>();
+	let { shortcut }: { shortcut: Shortcut } = $props();
 
 	let edit = $state<boolean>(false);
 	let titleValue = $state<string>(shortcut.title);

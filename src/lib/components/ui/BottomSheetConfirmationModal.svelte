@@ -16,14 +16,14 @@
 		children,
 		onConfirm,
 		onCancel
-	} = $props<{
+	}: {
 		title?: string;
 		description?: string;
 		type?: 'default' | 'confirm' | 'confirm-delete' | 'info';
 		children?: Snippet;
 		onConfirm: () => void;
 		onCancel: () => void;
-	}>();
+	} = $props();
 </script>
 
 <div

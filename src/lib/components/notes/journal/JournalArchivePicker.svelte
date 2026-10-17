@@ -6,11 +6,11 @@
 
 	const ts = getTranslation();
 
-	let { selectedDate, markedDates, onSelect } = $props<{
+	let { selectedDate, markedDates, onSelect }: {
 		selectedDate: Date;
 		markedDates: string[];
 		onSelect: (date: Date) => void;
-	}>();
+	} = $props();
 
 	const today = new Date();
 	const todayKey = getUrlFormat(today);

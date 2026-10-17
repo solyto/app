@@ -20,10 +20,10 @@
 	import Recurrence from '$lib/components/todos/props/Recurrence.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 
-	let { todo, handleCheck } = $props<{
+	let { todo, handleCheck }: {
 		todo: Todo;
 		handleCheck: (event: Event, todo: Todo) => Promise<void>;
-	}>();
+	} = $props();
 
 	const todos = getTodos();
 

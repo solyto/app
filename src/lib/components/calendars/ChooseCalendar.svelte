@@ -2,11 +2,11 @@
 	import type { Calendar } from '$lib/types/calendar';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
-	let { calendar = $bindable(), availableCalendars } = $props<{
+	let { calendar = $bindable(), availableCalendars }: {
 		calendar: number;
 		availableCalendars: Calendar[];
 		preSelect?: Calendar;
-	}>();
+	} = $props();
 
 	const ts = getTranslation();
 

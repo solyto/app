@@ -22,9 +22,9 @@
 	const notifications = getUiNotifications();
 	const auth = getAuth();
 
-	let { onClose } = $props<{
+	let { onClose }: {
 		onClose: () => void;
-	}>();
+	} = $props();
 
 	const emptyForm: DevRequestForm = {
 		title: '',

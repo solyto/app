@@ -3,13 +3,13 @@
 	import { DEFAULT_SPORTS, SPORT_ID, SPORT_BY_ID } from '$lib/types/check_in';
 	import DailyCheckInIcon from './DailyCheckInIcon.svelte';
 
-	let { type, label, currentValue, onChange, selectedSports = DEFAULT_SPORTS } = $props<{
+	let { type, label, currentValue, onChange, selectedSports = DEFAULT_SPORTS }: {
 		type: CheckInType;
 		label: string;
 		currentValue?: number | null;
 		onChange: (type: CheckInType, value: number) => Promise<void>;
 		selectedSports?: SportId[];
-	}>();
+	} = $props();
 
 	let selected = $derived<number | null>(currentValue ?? null);
 

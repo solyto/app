@@ -16,7 +16,7 @@
 	import AverageRow from '$lib/components/check-in/stats/AverageRow.svelte';
 	const ts = getTranslation();
 
-	let { data, activeTrackers, scoredTrackers } = $props<{ data: CheckIn[]; activeTrackers: CheckInType[]; scoredTrackers: CheckInType[] }>();
+	let { data, activeTrackers, scoredTrackers }: { data: CheckIn[]; activeTrackers: CheckInType[]; scoredTrackers: CheckInType[] } = $props();
 
 	const entries = $derived(activeTrackers.filter((t: CheckInType) => t !== 'sports' && scoredTrackers.includes(t)));
 	const totalMean = $derived(getTotalMeanValue(data, entries));

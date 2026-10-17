@@ -6,9 +6,9 @@
 	import type { Recipe } from '$lib/types/library_recipe';
 	import type { Movie } from '$lib/types/library_movie';
 
-	let { entry } = $props<{
+	let { entry }: {
 		entry: Book | Music | Recipe | Movie;
-	}>();
+	} = $props();
 </script>
 
 {#if (!entry.link || !entry.link.includes('deezer')) && 'artist' in entry}

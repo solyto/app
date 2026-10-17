@@ -24,7 +24,7 @@
 
 	const auth = getAuth();
 	const keyManager = getKeyManager();
-	let { library } = $props<{ library: MusicLibrary | BookLibrary }>();
+	let { library }: { library: MusicLibrary | BookLibrary } = $props();
 
 	let entries = $derived(library.filteredEntries as ShelfEntry[]);
 	let activeEntry = $derived(entries[library.shelfIndex] ?? null);

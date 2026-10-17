@@ -1,11 +1,11 @@
 <script lang="ts">
 	import IconCheck from '@lucide/svelte/icons/check';
 
-	let { onClick, colorOnHover = false, inModal = false } = $props<{
+	let { onClick, colorOnHover = false, inModal = false }: {
 		onClick: () => void;
 		colorOnHover?: boolean;
 		inModal?: boolean;
-	}>();
+	} = $props();
 </script>
 
 <button

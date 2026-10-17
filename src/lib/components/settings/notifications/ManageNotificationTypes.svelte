@@ -12,7 +12,7 @@
 	} from '$lib/types/notification_settings';
 	import type { Connection } from '$lib/types/telegram_bot_connection';
 
-	let { showTelegram } = $props<{ showTelegram: boolean }>();
+	let { showTelegram }: { showTelegram: boolean } = $props();
 
 	const auth = getAuth();
 	const apiService = auth.apiService;

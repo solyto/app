@@ -4,12 +4,12 @@
 		label = null,
 		icon: Icon = null,
 		children
-	} = $props<{
+	}: {
 		label?: string;
 		icon?: Component<{ class?: string }>;
 		hover?: boolean;
 		children?: Snippet;
-	}>();
+	} = $props();
 </script>
 
 <div

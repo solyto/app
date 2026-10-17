@@ -11,7 +11,7 @@
 	const ts = getTranslation();
 	const grouping = new TodoGroupingService();
 
-	let { handleCheck } = $props<{ handleCheck: (event: Event, todo: Todo) => Promise<void> }>();
+	let { handleCheck }: { handleCheck: (event: Event, todo: Todo) => Promise<void> } = $props();
 
 	let groups = $derived(grouping.groupByCategory(todos.filteredTodos));
 </script>

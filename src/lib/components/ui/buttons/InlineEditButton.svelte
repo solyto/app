@@ -1,10 +1,10 @@
 <script lang="ts">
 	import IconPen from '@lucide/svelte/icons/pen';
 
-	let { onClick, label = null } = $props<{
+	let { onClick, label = null }: {
 		onClick: (e: MouseEvent) => void | Promise<void>;
 		label?: string | null;
-	}>();
+	} = $props();
 </script>
 
 <div

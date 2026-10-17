@@ -6,10 +6,10 @@
 	import type { Translation } from '$lib/state/Translation.svelte';
 	import { formatDate } from '$lib/helpers/DateHelper';
 
-	let { musicReleases, ts } = $props<{
+	let { musicReleases, ts }: {
 		musicReleases: MusicRelease[];
 		ts: Translation;
-	}>();
+	} = $props();
 </script>
 
 <div in:blur>
