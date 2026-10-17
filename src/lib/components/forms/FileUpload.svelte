@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
+	/* eslint-disable no-useless-assignment -- the $bindable fallbacks are read by the parent through bind: */
 	let {
 		label,
 		value = $bindable(''),
@@ -12,6 +13,7 @@
 		input?: HTMLInputElement | null;
 		filename?: string;
 	} = $props();
+	/* eslint-enable no-useless-assignment */
 
 	const ts = getTranslation();
 

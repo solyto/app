@@ -41,7 +41,7 @@
 
 	async function onSave(): Promise<void> {
 		loadingIndicator.start();
-		let res = null;
+		let res: boolean;
 
 		const keywordsString = keywordsValue.map((k) => k.value).join(',');
 		const blacklistString = blacklistValue.map((k) => k.value).join(',');
