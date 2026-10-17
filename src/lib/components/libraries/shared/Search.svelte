@@ -12,7 +12,6 @@
 
 	let inputExpanded = $state<boolean>(false);
 	let searchInput = $state<HTMLInputElement | null>(null);
-	let searchTerm = $state<string>('');
 	let keyHandlers: { [key: string]: string | null } = { f: null, Escape: null };
 
 	onMount(
@@ -43,14 +42,13 @@
 		inputExpanded = false;
 		setTimeout(() => {
 			library.searchVisible = false;
-			searchTerm = '';
-			library.search('');
+			library.search();
 		}, 200);
 
 		keyManager.unregisterKeyDown(keyHandlers.Escape);
 	}
 
-	const oninput = () => library.search(searchTerm);
+	const oninput = () => library.search();
 </script>
 
 <button class="cursor-pointer" onclick={openSearch}>

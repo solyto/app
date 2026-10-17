@@ -5,9 +5,8 @@
 		icon: Icon = null,
 		children
 	}: {
-		label?: string;
-		icon?: Component<{ class?: string }>;
-		hover?: boolean;
+		label?: string | null;
+		icon?: Component<{ class?: string }> | null;
 		children?: Snippet;
 	} = $props();
 </script>

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import IconStar from '@lucide/svelte/icons/star';
-	import type { Library } from '$lib/types/library.js';
+	import type { RatingLibrary } from '$lib/types/library';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	let { library, toggleMenu }: {
-		library: Library;
+		library: RatingLibrary;
 		toggleMenu: () => void;
 	} = $props();
 
@@ -12,7 +12,7 @@
 
 	function filterByRating(rating: number | null) {
 		toggleMenu();
-		library.wishlistFilter = false;
+		if ('wishlistFilter' in library) library.wishlistFilter = false;
 		library.addRatingFilter(rating);
 	}
 </script>

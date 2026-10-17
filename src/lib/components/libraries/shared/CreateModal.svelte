@@ -125,7 +125,7 @@
 				{/if}
 				{#if library.config.hasRatings}
 					<Rating
-						startRating={selectedRating}
+						startRating={selectedRating ?? 0}
 						onchange={(rating: number) => {
 							selectedRating = rating;
 						}}

@@ -57,7 +57,7 @@
 	}
 </script>
 
-{#if !calendars.isCalendarHidden(parseInt(item.calendar_id))}
+{#if !calendars.isCalendarHidden(item.calendar_id)}
 	<button
 		class="flex w-full cursor-pointer items-start justify-start border-l-4 px-2 py-1 pl-2 text-sm transition-all select-none hover:bg-c-neutral max-md:text-xs dark:hover:bg-s-dark-3"
 		style="

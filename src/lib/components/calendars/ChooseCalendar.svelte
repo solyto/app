@@ -5,7 +5,6 @@
 	let { calendar = $bindable(), availableCalendars }: {
 		calendar: number;
 		availableCalendars: Calendar[];
-		preSelect?: Calendar;
 	} = $props();
 
 	const ts = getTranslation();

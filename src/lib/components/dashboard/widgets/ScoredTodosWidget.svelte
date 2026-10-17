@@ -39,7 +39,7 @@
 					{todo.title}
 				</span>
 				<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">
-					{withDecimals(todo.relevance, 2)}
+					{withDecimals(todo.relevance ?? 0, 2)}
 				</span>
 				<Checkbox
 					isChecked={todo.is_completed}

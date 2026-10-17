@@ -35,7 +35,7 @@
 	function buildDaySummaryRows(): SummaryRow[] {
 		const p = ts.get.checkInSummary;
 		return dates
-			.map((date: Date) => {
+			.map((date: Date): SummaryRow | null => {
 				const key = getUrlFormat(new Date(date));
 				const checkIn = checkInData.getDayData(key);
 				if (!checkIn) return null;

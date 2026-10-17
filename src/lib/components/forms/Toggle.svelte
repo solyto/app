@@ -5,7 +5,7 @@
 		onchange
 	}: {
 		checked: boolean;
-		label?: string;
+		label?: string | null;
 		onchange: (value: boolean) => void;
 	} = $props();
 </script>

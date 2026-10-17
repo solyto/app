@@ -75,7 +75,7 @@
 
 	const searchSources: SearchSource[] = $derived(
 		library.integrations
-			.map((provider: string) => {
+			.map((provider: string): SearchSource | null => {
 				const def = sourceDefs[provider];
 				if (!def) return null;
 				return {

@@ -10,11 +10,11 @@
 		noShadowOnMobile = false,
 		children
 	}: {
-		label?: string;
+		label?: string | null;
 		fixedWidth?: boolean;
 		fullWidth?: boolean;
 		href?: string | null;
-		icon?: Component<{ class?: string }>;
+		icon?: Component<{ class?: string }> | null;
 		hover?: boolean;
 		noShadowOnMobile?: boolean;
 		children?: Snippet;

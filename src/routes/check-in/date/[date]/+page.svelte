@@ -30,7 +30,7 @@
 		save = null;
 	});
 
-	async function onChange(type: CheckInType, value: number): Promise<void> {
+	async function onChange(type: CheckInType, value: number | null): Promise<void> {
 		if (save === null) {
 			save = { date: checkInData.selectedDate!, [type]: value };
 		} else {

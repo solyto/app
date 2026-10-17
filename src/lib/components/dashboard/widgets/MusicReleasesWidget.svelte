@@ -43,7 +43,7 @@
 						{release.title}
 					</span>
 					<span class="truncate text-xs text-c-neutral-5 dark:text-c-neutral-4">
-						{release.artist} &middot; {formatDate(release.release_date)}
+						{release.artist} &middot; {release.release_date ? formatDate(release.release_date) : '—'}
 					</span>
 				</div>
 				<IconExternalLink

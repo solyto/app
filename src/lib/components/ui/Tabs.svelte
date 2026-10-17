@@ -8,7 +8,6 @@
 
 	let { tabs }: {
 		tabs: Tab[];
-		defaultTab?: string;
 	} = $props();
 
 	let selected = $state<number>(tabs[0].id);

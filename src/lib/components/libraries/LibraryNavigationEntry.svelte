@@ -8,7 +8,7 @@
 	let { type, title, url, icon: Icon, isActive, setActive }: {
 		type: LibraryType;
 		title: string;
-		url: string;
+		url: `/libraries/${LibraryType}`;
 		icon: Component;
 		isActive: boolean;
 		setActive: (type: LibraryType) => void;

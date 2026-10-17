@@ -1,13 +1,11 @@
 <script lang="ts">
 	import DeezerButton from '$lib/components/ui/buttons/DeezerButton.svelte';
 	import HardcoverButton from '$lib/components/ui/buttons/HardcoverButton.svelte';
-	import type { Book } from '$lib/types/library_book';
-	import type { Music } from '$lib/types/library_music';
-	import type { Recipe } from '$lib/types/library_recipe';
-	import type { Movie } from '$lib/types/library_movie';
+	import type { LibraryEntry } from '$lib/types/library';
+	import type { Quote } from '$lib/types/library_quote';
 
 	let { entry }: {
-		entry: Book | Music | Recipe | Movie;
+		entry: Exclude<LibraryEntry, Quote>;
 	} = $props();
 </script>
 

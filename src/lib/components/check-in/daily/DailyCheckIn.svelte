@@ -7,7 +7,7 @@
 		type: CheckInType;
 		label: string;
 		currentValue?: number | null;
-		onChange: (type: CheckInType, value: number) => Promise<void>;
+		onChange: (type: CheckInType, value: number | null) => Promise<void>;
 		selectedSports?: SportId[];
 	} = $props();
 

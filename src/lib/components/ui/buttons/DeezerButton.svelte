@@ -3,7 +3,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	let { link, artist, title }: {
-		link?: string;
+		link?: string | null;
 		artist?: string;
 		title?: string;
 	} = $props();

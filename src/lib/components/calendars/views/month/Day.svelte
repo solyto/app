@@ -4,7 +4,7 @@
 	import Entry from '$lib/components/calendars/views/month/Entry.svelte';
 	import { formatDate, isDateToday } from '$lib/helpers/DateHelper';
 	import { getCalendarEventKey } from '$lib/helpers/CalendarEventHelper';
-	import type { CalendarDay } from '$lib/types/calendar';
+	import type { CalendarDay, OutOfScopeCalendarDay } from '$lib/types/calendar';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import { getCalendarDrag } from '$lib/state/CalendarDrag.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
@@ -12,7 +12,7 @@
 	const calendars = getCalendars();
 	const drag = getCalendarDrag();
 
-	let { day }: { day: CalendarDay } = $props();
+	let { day }: { day: CalendarDay | OutOfScopeCalendarDay } = $props();
 
 	const dateSlug = $derived(formatDate(day.date));
 	const isDropTargetCell = $derived(

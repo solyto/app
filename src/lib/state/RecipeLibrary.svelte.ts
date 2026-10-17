@@ -96,6 +96,12 @@ export class RecipeLibrary {
 		this.filter();
 	}
 
+	clearFilters(): void {
+		this.ratingFilter = null;
+		this.typeFilter = null;
+		this.filteredEntries = this.entries;
+	}
+
 	openCreateModal(entry?: Recipe): void {
 		if (entry) this.activeEntry = entry;
 

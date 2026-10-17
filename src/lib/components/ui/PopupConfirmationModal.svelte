@@ -17,8 +17,8 @@
 		onCancel,
 		children
 	}: {
-		title?: string;
-		description?: string;
+		title?: string | null;
+		description?: string | null;
 		type?: 'default' | 'confirm' | 'confirm-delete' | 'info';
 		width?: string;
 		onConfirm: () => void;

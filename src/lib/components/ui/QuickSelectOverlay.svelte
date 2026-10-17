@@ -15,7 +15,7 @@
 		onClose: () => void;
 		children?: Snippet;
 		class?: string;
-		p?: number;
+		p?: number | null;
 		portal?: boolean;
 		target?: HTMLElement | null;
 	} = $props();

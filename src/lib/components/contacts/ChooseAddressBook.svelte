@@ -5,7 +5,6 @@
 	let { addressBook = $bindable(), availableAddressBooks }: {
 		addressBook: number;
 		availableAddressBooks: AddressBook[];
-		preSelect?: AddressBook;
 	} = $props();
 
 	const ts = getTranslation();

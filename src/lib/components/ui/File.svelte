@@ -6,7 +6,7 @@
 		noShadowOnMobile = false,
 		children
 	}: {
-		title?: string;
+		title?: string | null;
 		hover?: boolean;
 		noShadowOnMobile?: boolean;
 		children?: Snippet;

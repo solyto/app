@@ -19,7 +19,7 @@
 	></div>
 	<div
 		class="absolute top-0 right-[4px] z-20 h-[2px] rounded-full bg-white"
-		style="width: calc({(1 - todo.relevance) * 100}% - 6px);"
+		style="width: calc({(1 - (todo.relevance ?? 0)) * 100}% - 6px);"
 	></div>
 {/if}
 

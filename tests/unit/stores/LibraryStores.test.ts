@@ -537,6 +537,11 @@ describe('RecipeLibrary', () => {
 
 		s.addTypeFilter('dinner' as RecipeType);
 		expect(s.filteredEntries.map((r) => r.id)).toEqual(['1']);
+
+		s.clearFilters();
+		expect(s.filteredEntries).toHaveLength(3);
+		expect(s.ratingFilter).toBeNull();
+		expect(s.typeFilter).toBeNull();
 	});
 
 	it('toggles between list and cards view', () => {

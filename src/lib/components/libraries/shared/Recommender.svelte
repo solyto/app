@@ -8,7 +8,8 @@
 	import LoadingLogo from '$lib/components/ui/LoadingLogo.svelte';
 	import type { LibraryRecommendation, LibraryRecommendationType } from '$lib/types/library';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import type { Library } from '$lib/types/library';
+	import type { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
+	import type { BookLibrary } from '$lib/state/BookLibrary.svelte';
 	import Recommendation from '$lib/components/libraries/shared/Recommendation.svelte';
 	import { apiRoutes } from '$lib/config/apiRoutes';
 	import { urls } from '$lib/config/urls';
@@ -18,7 +19,7 @@
 	const ts = getTranslation();
 	const auth = getAuth();
 
-	let { library }: { library: Library } = $props();
+	let { library }: { library: MusicLibrary | BookLibrary } = $props();
 
 	let modalVisible = $state<boolean>(false);
 	let selection = $state<LibraryRecommendationType | null>(null);
@@ -54,7 +55,7 @@
 
 	async function loadRecommendation(): Promise<void> {
 		recommendationLoaded = false;
-		recommendation = await library.recommend(selection);
+		recommendation = await library.recommend(selection!);
 		setTimeout(() => {
 			recommendationLoaded = true;
 		}, 500);

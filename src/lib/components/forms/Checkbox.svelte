@@ -4,7 +4,7 @@
 		onchange,
 		class: customClass = ''
 	}: {
-		isChecked: boolean;
+		isChecked?: boolean;
 		onchange?: (event: Event) => void;
 		class?: string;
 	} = $props();

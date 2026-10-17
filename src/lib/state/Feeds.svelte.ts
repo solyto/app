@@ -122,7 +122,7 @@ export class Feeds {
 		return this.feedCounts[feed.feed_id] ?? 0;
 	}
 
-	saveToLibrary(feed: FeedSubscription): void {
+	saveToLibrary(feed: FeedItem): void {
 		if (this.inLibrary.includes(feed.id)) {
 			this.inLibrary = this.inLibrary.filter((id) => id !== feed.id);
 		} else {
@@ -132,7 +132,7 @@ export class Feeds {
 		this.storeInLibrary();
 	}
 
-	unsaveToLibrary(feed: FeedSubscription): void {
+	unsaveToLibrary(feed: FeedItem): void {
 		this.inLibrary = this.inLibrary.filter((id) => id !== feed.id);
 		this.storeInLibrary();
 	}

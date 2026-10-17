@@ -39,7 +39,7 @@
 >
 	{addressBook.name}
 	<Badge
-		i={contacts.getAddressBookCount(addressBook.name)}
+		i={contacts.getAddressBookCount(addressBook.id)}
 		color={addressBook.color ?? 'var(--color-c-primary)'}
 		light={addressBook.color === 'var(--color-c-neutral-2)'}
 	/>

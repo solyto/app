@@ -1,9 +1,9 @@
 <!--suppress CssUnusedSymbol -->
 <script lang="ts" module>
-	export interface MultiSelectEntry {
+	export type MultiSelectEntry = {
 		label: string;
 		value: string;
-	}
+	};
 </script>
 
 <script lang="ts">

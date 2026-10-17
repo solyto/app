@@ -91,7 +91,7 @@
 			class:dark:shadow-s-dark-shadow={!transparent}
 			in:scale|global={{ start: 0.75 }}
 		>
-			{#if showTitleOnMobile}
+			{#if showTitleOnMobile && title}
 				<div class="text-2xl font-bold tracking-wide text-c-heading dark:text-c-primary md:hidden mb-6">
 					<ModalTitle {title} {onRename} />
 				</div>

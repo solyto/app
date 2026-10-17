@@ -3,7 +3,7 @@
 	import IconHardcover from '$lib/components/ui/icons/IconHardcover.svelte';
 
 	let { link, author, title }: {
-		link?: string;
+		link?: string | null;
 		author?: string;
 		title?: string;
 	} = $props();

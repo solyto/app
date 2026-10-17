@@ -9,7 +9,7 @@
 	}: {
 		label: string;
 		children?: Snippet;
-		headerAction?: Snippet;
+		headerAction?: Snippet | null;
 	} = $props();
 </script>
 
