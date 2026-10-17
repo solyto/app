@@ -36,11 +36,11 @@
 		switch (effort) {
 			case 'medium':
 			default:
-				return 'text-orange-300';
+				return 'text-c-btn';
 			case 'high':
-				return 'text-red-500';
+				return 'text-c-danger';
 			case 'low':
-				return 'text-green-500';
+				return 'text-c-success';
 		}
 	}
 </script>
