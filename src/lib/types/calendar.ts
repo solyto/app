@@ -125,6 +125,7 @@ export interface UpdateEventRequest {
 	is_recurring: boolean;
 	recurrence_rule: string | null;
 	recurrence_end: string | null;
+	occurrence_start_date?: string;
 	etag: string;
 }
 

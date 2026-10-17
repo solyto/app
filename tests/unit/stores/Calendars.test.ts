@@ -4,7 +4,7 @@ import { api, storage, resetStoreMocks } from '../setup/storeMocks';
 import { todo } from '../helpers/factories';
 import { SvelteDate } from 'svelte/reactivity';
 import { getWeekNumber } from '$lib/helpers/DateHelper';
-import type { Calendar, CalendarEvent } from '$lib/types/calendar';
+import type { Calendar, CalendarEvent, UpdateEventRequest } from '$lib/types/calendar';
 import { apiRoutes } from '$lib/config/apiRoutes';
 
 function event(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
@@ -594,6 +594,105 @@ describe('Calendars store', () => {
 			await c.loadCalendars();
 			expect(c.calendars).toHaveLength(1);
 			expect(c.loaded).toBe(true);
+		});
+	});
+
+	describe('updateEvent', () => {
+		// Third occurrence (Oct 16) of a daily series at 9:00 that started Oct 14
+		function occurrence(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
+			return event({
+				start_date: new SvelteDate(2030, 9, 16, 9, 0),
+				end_date: new SvelteDate(2030, 9, 16, 10, 0),
+				is_recurring: true,
+				recurrence_rule: 'FREQ=DAILY',
+				original_start_date: new SvelteDate(2030, 9, 16, 9, 0),
+				...overrides
+			});
+		}
+
+		function formRequest(entry: CalendarEvent, start_date: string): UpdateEventRequest {
+			return {
+				calendar_id: entry.calendar_id,
+				title: 'Renamed',
+				description: entry.description,
+				location: entry.location,
+				start_date,
+				end_date: start_date,
+				is_all_day: entry.is_all_day,
+				is_recurring: entry.is_recurring,
+				recurrence_rule: entry.recurrence_rule,
+				recurrence_end: null,
+				etag: entry.etag
+			};
+		}
+
+		function sentBody(): UpdateEventRequest {
+			return api.update.mock.calls[0][2];
+		}
+
+		beforeEach(() => {
+			api.update.mockResolvedValue(true);
+			api.put.mockResolvedValue(true);
+			api.list.mockResolvedValue({ data: [] });
+		});
+
+		it('sends the listed occurrence start unchanged when only the title of the series changes', async () => {
+			const entry = occurrence();
+
+			await new Calendars().updateEvent(entry, formRequest(entry, '2030-10-16T09:00:00'));
+
+			expect(sentBody().start_date).toBe('2030-10-16T09:00:00');
+			expect(sentBody().occurrence_start_date).toBe('2030-10-16T09:00:00');
+		});
+
+		it('sends the start from before the drag when the series is dragged by an hour', async () => {
+			const c = new Calendars();
+
+			await c.moveEvent(occurrence(), { date: new SvelteDate(2030, 9, 16), hour: 10, minute: 0 });
+			await c.resolvePendingMove(false);
+
+			expect(sentBody().start_date).toBe('2030-10-16T10:00:00');
+			expect(sentBody().occurrence_start_date).toBe('2030-10-16T09:00:00');
+		});
+
+		it('sends the start from before the drag when the series is dragged to the next day', async () => {
+			const c = new Calendars();
+
+			await c.moveEvent(occurrence(), { date: new SvelteDate(2030, 9, 17), hour: 9, minute: 0 });
+			await c.resolvePendingMove(false);
+
+			expect(sentBody().start_date).toBe('2030-10-17T09:00:00');
+			expect(sentBody().occurrence_start_date).toBe('2030-10-16T09:00:00');
+		});
+
+		it('sends the listed start of a moved occurrence, not its original slot', async () => {
+			const entry = occurrence({
+				start_date: new SvelteDate(2030, 9, 16, 8, 0),
+				end_date: new SvelteDate(2030, 9, 16, 9, 0)
+			});
+
+			await new Calendars().updateEvent(entry, formRequest(entry, '2030-10-16T08:00:00'));
+
+			expect(sentBody().start_date).toBe('2030-10-16T08:00:00');
+			expect(sentBody().occurrence_start_date).toBe('2030-10-16T08:00:00');
+		});
+
+		it('sends no occurrence start for a single event', async () => {
+			const entry = event();
+
+			await new Calendars().updateEvent(entry, formRequest(entry, '2026-08-10T10:00:00'));
+
+			expect(sentBody()).not.toHaveProperty('occurrence_start_date');
+		});
+
+		it('sends no occurrence start when only this occurrence is changed', async () => {
+			const c = new Calendars();
+
+			await c.moveEvent(occurrence(), { date: new SvelteDate(2030, 9, 16), hour: 10, minute: 0 });
+			await c.resolvePendingMove(true);
+
+			expect(api.update).not.toHaveBeenCalled();
+			expect(api.put.mock.calls[0][1]).not.toHaveProperty('occurrence_start_date');
 		});
 	});
 

@@ -16,6 +16,7 @@ import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import {
 	formatDate,
+	formatFloatingDate,
 	getCalendarMonth,
 	getCalendarWeek,
 	getISODateInfo,
@@ -366,7 +367,9 @@ export class Calendars {
 		const res = await this.apiService.update(
 			apiRoutes.calendars.updateEvent.replace('%d', entry.calendar_id.toString()),
 			entry.uri,
-			request
+			entry.is_recurring && entry.original_start_date !== null
+				? { ...request, occurrence_start_date: formatFloatingDate(entry.start_date) }
+				: request
 		);
 		if (res) await this.loadEvents();
 		return res;
