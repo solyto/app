@@ -89,7 +89,7 @@
 		</div>
 	{:else if step === 1}
 		<div
-			class="flex w-full flex-col gap-4 rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm"
+			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm md:min-w-80"
 			in:blur
 		>
 			<label class="label">
