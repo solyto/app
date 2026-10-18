@@ -56,12 +56,12 @@
 
 {#if step === 1}
 	<button
-		class="fixed top-10 right-4 flex h-6 cursor-pointer items-center gap-1 text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
+		class="fixed top-10 right-4 flex h-6 cursor-pointer items-center gap-1 font-medium text-c-neutral-7 transition-colors hover:text-c-btn dark:text-c-neutral-2 dark:hover:text-c-btn"
 		onclick={backToChoice}
 		disabled={checking}
 	>
-		<IconChevronLeft size={16} />
-		<span class="text-xs leading-none">{ts.get.setup.back}</span>
+		<IconChevronLeft size={24} />
+		<span class="leading-none">{ts.get.setup.back}</span>
 	</button>
 {/if}
 
@@ -89,7 +89,7 @@
 		</div>
 	{:else if step === 1}
 		<div
-			class="mb-4 flex flex-col gap-4 rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm md:min-w-80"
+			class="flex flex-col gap-4 self-stretch rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm max-md:mx-4"
 			in:blur
 		>
 			<label class="label">
