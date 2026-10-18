@@ -56,11 +56,11 @@
 
 {#if step === 1}
 	<button
-		class="fixed top-10 right-4 flex h-6 cursor-pointer items-center gap-1 font-medium text-c-neutral-7 transition-colors hover:text-c-btn dark:text-c-neutral-2 dark:hover:text-c-btn"
+		class="fixed top-5 right-5 flex cursor-pointer items-center gap-1 rounded-full border-2 border-white/5 bg-c-bg-surface py-1.5 pr-4 pl-3 text-sm font-medium text-c-neutral-7 shadow-sm transition-colors hover:bg-c-neutral-1 dark:text-c-neutral-2 dark:hover:bg-s-dark"
 		onclick={backToChoice}
 		disabled={checking}
 	>
-		<IconChevronLeft size={24} />
+		<IconChevronLeft size={16} />
 		<span class="leading-none">{ts.get.setup.back}</span>
 	</button>
 {/if}
