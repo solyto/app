@@ -7,6 +7,7 @@
 	import { setCustomApiUrl, dropCustomApiUrl } from '$lib/config/platform';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { urls } from '$lib/config/urls';
+	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
 
 	const ts = getTranslation();
 
@@ -22,6 +23,11 @@
 
 	function chooseSelfhosted(): void {
 		step = 1;
+	}
+
+	function backToChoice(): void {
+		urlError = false;
+		step = 0;
 	}
 
 	async function saveSelfhosted(): Promise<void> {
@@ -47,6 +53,17 @@
 		}
 	}
 </script>
+
+{#if step === 1}
+	<button
+		class="fixed top-10 right-4 flex h-6 cursor-pointer items-center gap-1 text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
+		onclick={backToChoice}
+		disabled={checking}
+	>
+		<IconChevronLeft size={16} />
+		<span class="text-xs leading-none">{ts.get.setup.back}</span>
+	</button>
+{/if}
 
 <div class="flex w-full max-w-md flex-col items-center gap-12">
 	<div style="width: 56px; height: 71px;">

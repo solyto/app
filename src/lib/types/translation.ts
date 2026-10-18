@@ -1176,6 +1176,7 @@ export interface SetupRecords {
 	done: string;
 	checking: string;
 	url_error: string;
+	back: string;
 }
 
 export interface UpdateRequiredRecords {

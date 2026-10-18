@@ -1290,7 +1290,8 @@ const setup: SetupRecords = {
 	continue: 'Continuer',
 	done: 'Tout est prêt !',
 	checking: 'Vérification de la connexion…',
-	url_error: 'Impossible de se connecter. Vérifiez l\'URL et réessayez.'
+	url_error: 'Impossible de se connecter. Vérifiez l\'URL et réessayez.',
+	back: 'Retour'
 };
 
 const update_required: UpdateRequiredRecords = {

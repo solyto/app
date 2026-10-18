@@ -1292,7 +1292,8 @@ const setup: SetupRecords = {
 	continue: 'Weiter',
 	done: 'Alles erledigt!',
 	checking: 'Verbindung wird geprüft…',
-	url_error: 'Verbindung fehlgeschlagen. URL prüfen und erneut versuchen.'
+	url_error: 'Verbindung fehlgeschlagen. URL prüfen und erneut versuchen.',
+	back: 'Zurück'
 };
 
 const update_required: UpdateRequiredRecords = {

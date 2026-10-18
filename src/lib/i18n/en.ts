@@ -1289,7 +1289,8 @@ const setup: SetupRecords = {
 	continue: 'Continue',
 	done: 'All done!',
 	checking: 'Checking connection…',
-	url_error: 'Could not connect. Check the URL and try again.'
+	url_error: 'Could not connect. Check the URL and try again.',
+	back: 'Back'
 };
 
 const update_required: UpdateRequiredRecords = {
