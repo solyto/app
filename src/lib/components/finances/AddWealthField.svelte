@@ -7,7 +7,8 @@
 	import type { CreateWealthFieldRequest } from '$lib/types/finance';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
-	import BottomSheetConfirmationModal from '../ui/BottomSheetConfirmationModal.svelte';
+	import BottomSheetModal from '$lib/components/ui/BottomSheetModal.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const loadingIndicator = getLoadingIndicator();
@@ -71,13 +72,10 @@
 		{#if viewPoint.isDesktop}
 			<TextInput placeholder="Title" bind:input={titleInput} bind:value={titleValue} />
 		{:else}
-			<BottomSheetConfirmationModal
-				title={ts.get.finances.add_entry}
-				onConfirm={onSubmit}
-				onCancel={onblur}
-			>
+			<BottomSheetModal title={ts.get.finances.add_entry} onClose={onblur}>
 				<TextInput placeholder="Title" bind:input={titleInput} bind:value={titleValue} />
-			</BottomSheetConfirmationModal>
+				<TextButton title={ts.get.layout.modal_confirm} type="action" onclick={onSubmit} class="mt-8 w-full" />
+			</BottomSheetModal>
 		{/if}
 	{/if}
 	{#if viewPoint.isMobile || !formOpen}

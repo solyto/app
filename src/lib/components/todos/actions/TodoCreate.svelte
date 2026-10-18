@@ -12,7 +12,7 @@
 	import SettingsButton from '$lib/components/ui/buttons/SettingsButton.svelte';
 	import InlineAutocomplete from '$lib/components/forms/InlineAutocomplete.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
-	import BottomSheetConfirmationModal from '$lib/components/ui/BottomSheetConfirmationModal.svelte';
+	import BottomSheetModal from '$lib/components/ui/BottomSheetModal.svelte';
 
 	const keyManager = getKeyManager();
 	const todos = getTodos();
@@ -149,11 +149,7 @@
 				</div>
 			</div>
 		{:else}
-			<BottomSheetConfirmationModal
-				title={ts.get.todos.new_todo}
-				onConfirm={onSubmit}
-				onCancel={onblur}
-			>
+			<BottomSheetModal title={ts.get.todos.new_todo} onClose={onblur}>
 				<InlineAutocomplete
 					bind:input
 					bind:value={userInput}
@@ -161,7 +157,8 @@
 					triggers={autocompleteTriggers}
 					bind:open={autocompleteOpen}
 				/>
-			</BottomSheetConfirmationModal>
+				<TextButton title={ts.get.layout.modal_confirm} type="action" onclick={onSubmit} class="mt-8 w-full" />
+			</BottomSheetModal>
 		{/if}
 	{:else}
 		<div class="flex items-center gap-2">

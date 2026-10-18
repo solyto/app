@@ -8,7 +8,8 @@
 	import type { BudgetType, CreateBudgetRequest } from '$lib/types/finance';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
-	import BottomSheetConfirmationModal from '../ui/BottomSheetConfirmationModal.svelte';
+	import BottomSheetModal from '$lib/components/ui/BottomSheetModal.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const ts = getTranslation();
@@ -82,16 +83,13 @@
 				<NumberInput placeholder="Value" bind:input={valueInput} bind:value={valueValue} />
 			</div>
 		{:else}
-			<BottomSheetConfirmationModal
-				title={ts.get.finances.add_entry}
-				onConfirm={onSubmit}
-				onCancel={onblur}
-			>
+			<BottomSheetModal title={ts.get.finances.add_entry} onClose={onblur}>
 				<div class="flex flex-row gap-2">
 					<TextInput placeholder="Title" bind:input={titleInput} bind:value={titleValue} />
 					<NumberInput placeholder="Value" bind:input={valueInput} bind:value={valueValue} />
 				</div>
-			</BottomSheetConfirmationModal>
+				<TextButton title={ts.get.layout.modal_confirm} type="action" onclick={onSubmit} class="mt-8 w-full" />
+			</BottomSheetModal>
 		{/if}
 	{/if}
 	{#if viewPoint.isMobile || !formOpen}
