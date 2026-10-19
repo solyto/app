@@ -73,6 +73,17 @@ export interface VerifyActionResponse {
 	errors?: string[];
 }
 
+export interface AccountDeletionRequestResponse {
+	success: boolean;
+	errors?: Record<string, string[]>;
+	data?: { status: 'email_sent' | 'deleted' };
+}
+
+export interface AccountDeletionConfirmResponse {
+	success: boolean;
+	errors?: string[];
+}
+
 export interface PasskeyActionResponse {
 	success: boolean;
 	message?: string;

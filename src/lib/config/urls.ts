@@ -25,6 +25,7 @@ export const urls = {
 	register: '/auth/register',
 	forgotPassword: '/auth/forgot-password',
 	resetPassword: '/auth/reset-password',
+	confirmAccountDeletion: '/auth/confirm-account-deletion',
 	profile: '/profile',
 	checkIn: '/check-in',
 	checkInHistory: '/check-in/history',

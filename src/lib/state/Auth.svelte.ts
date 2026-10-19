@@ -8,6 +8,8 @@ import type {
 	VerifyRequest,
 	AuthActionResponse,
 	VerifyActionResponse,
+	AccountDeletionRequestResponse,
+	AccountDeletionConfirmResponse,
 	PasskeyActionResponse,
 	PasskeyAuthenticationOptions,
 	PasskeyRegistrationOptions,
@@ -37,6 +39,7 @@ export class Auth {
 	loggedIn = $state<boolean>(false);
 	authToken = $state<AuthToken | null>(null);
 	user = $state<User | null>(null);
+	accountDeletionRequiresEmail = $state<boolean>(false);
 	apiService: ApiService;
 	localStorage = new LocalStorageService();
 	profileCache = new SvelteMap<string, User>();
@@ -84,7 +87,10 @@ export class Auth {
 	public async loadAdditionalData(): Promise<void> {
 		if (!this.user) return;
 		const res = await this.apiService.get(apiRoutes.users.get, null);
-		if (res) this.user = res.data as User;
+		if (res) {
+			this.user = res.data as User;
+			this.accountDeletionRequiresEmail = res.meta?.account_deletion_requires_email === true;
+		}
 		this.save();
 	}
 
@@ -280,6 +286,22 @@ export class Auth {
 			new_password_confirmation: newPasswordConfirmation
 		});
 		// The API revokes every token on success, including the one that made this request.
+		if (res.success) this.logout();
+		return res;
+	}
+
+	async requestAccountDeletion(password: string, confirmation: string): Promise<AccountDeletionRequestResponse> {
+		const res = await this.apiService.postRaw<AccountDeletionRequestResponse>(apiRoutes.users.deletionRequest, {
+			password,
+			confirmation,
+			platform: PLATFORM
+		});
+		if (res.data?.status === 'deleted') this.logout();
+		return res;
+	}
+
+	async confirmAccountDeletion(token: string, email: string): Promise<AccountDeletionConfirmResponse> {
+		const res = await this.apiService.postRaw<AccountDeletionConfirmResponse>(apiRoutes.auth.confirmAccountDeletion, { token, email });
 		if (res.success) this.logout();
 		return res;
 	}

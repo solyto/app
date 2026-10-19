@@ -128,7 +128,13 @@ const auth: AuthRecords = {
 	register_link: 'Crear cuenta',
 	have_account: '¿Ya tienes una cuenta?',
 	open_in_app: 'Abrir en la app',
-	session_expired: 'Tu sesión ha caducado. Vuelve a iniciar sesión.'
+	session_expired: 'Tu sesión ha caducado. Vuelve a iniciar sesión.',
+	confirm_deletion_title: 'Eliminar tu cuenta',
+	confirm_deletion_warning: 'Esto elimina de forma permanente la cuenta %s y todos sus datos. Esta acción no se puede deshacer.',
+	confirm_deletion_submit: 'Eliminar mi cuenta definitivamente',
+	confirm_deletion_success: 'Tu cuenta y todos sus datos han sido eliminados. ¡Adiós!',
+	confirm_deletion_invalid: 'Este enlace no es válido o ha caducado. Solicita uno nuevo en los ajustes de tu cuenta.',
+	confirm_deletion_error: 'No se pudo eliminar tu cuenta. Inténtalo de nuevo.'
 };
 
 const home: HomeRecords = {
@@ -229,6 +235,16 @@ const settings: SettingsRecords = {
 	new_password_same_as_current: 'La nueva contraseña debe ser distinta de tu contraseña actual.',
 	password_changed: 'Contraseña cambiada. Vuelve a iniciar sesión con tu nueva contraseña.',
 	password_change_error: 'No se pudo cambiar la contraseña.',
+	delete_account: 'Eliminar cuenta',
+	delete_account_description: 'Elimina de forma permanente tu cuenta y todos tus datos: tareas, notas, calendarios, contactos, bibliotecas, finanzas, archivos y todo lo demás. Esta acción no se puede deshacer.',
+	delete_account_start: 'Eliminar mi cuenta',
+	delete_account_warning: 'Todos tus datos se eliminarán de forma permanente y no se podrán recuperar. Si quieres conservar algo, exporta tus datos primero. ¿Quieres continuar?',
+	delete_account_type_label: 'Escribe DELETE para confirmar',
+	delete_account_type_error: 'Escribe exactamente DELETE.',
+	delete_account_submit: 'Enviar correo de confirmación',
+	delete_account_email_sent: 'Hemos enviado un enlace de confirmación a %s. Tu cuenta solo se eliminará cuando abras el enlace y confirmes. El enlace caduca en 60 minutos.',
+	delete_account_request_error: 'No se pudo solicitar la eliminación de la cuenta. Inténtalo de nuevo más tarde.',
+	delete_account_super_admin: 'Los superadministradores no pueden eliminar su propia cuenta.',
 	no_tags: 'Aún no tienes etiquetas.',
 	theme: 'Tema',
 	animations: 'Animaciones',

@@ -128,7 +128,13 @@ const auth: AuthRecords = {
 	register_link: 'Créer un compte',
 	have_account: 'Déjà un compte ?',
 	open_in_app: "Ouvrir dans l'application",
-	session_expired: 'Votre session a expiré. Veuillez vous reconnecter.'
+	session_expired: 'Votre session a expiré. Veuillez vous reconnecter.',
+	confirm_deletion_title: 'Supprimer ton compte',
+	confirm_deletion_warning: 'Cette action supprime définitivement le compte %s et toutes ses données. Elle est irréversible.',
+	confirm_deletion_submit: 'Supprimer mon compte définitivement',
+	confirm_deletion_success: 'Ton compte et toutes ses données ont été supprimés. Au revoir !',
+	confirm_deletion_invalid: 'Ce lien est invalide ou a expiré. Demandes-en un nouveau dans les paramètres de ton compte.',
+	confirm_deletion_error: 'Ton compte n\'a pas pu être supprimé. Réessaie.'
 };
 
 const home: HomeRecords = {
@@ -228,6 +234,16 @@ const settings: SettingsRecords = {
 	new_password_same_as_current: 'Le nouveau mot de passe doit être différent de votre mot de passe actuel.',
 	password_changed: 'Mot de passe modifié. Veuillez vous reconnecter avec votre nouveau mot de passe.',
 	password_change_error: 'Impossible de changer le mot de passe.',
+	delete_account: 'Supprimer le compte',
+	delete_account_description: 'Supprime définitivement ton compte et toutes tes données : tâches, notes, calendriers, contacts, bibliothèques, finances, fichiers et tout le reste. Cette action est irréversible.',
+	delete_account_start: 'Supprimer mon compte',
+	delete_account_warning: 'Toutes tes données seront définitivement supprimées et ne pourront pas être restaurées. Si tu veux conserver quelque chose, exporte d\'abord tes données. Veux-tu continuer ?',
+	delete_account_type_label: 'Saisis DELETE pour confirmer',
+	delete_account_type_error: 'Saisis exactement DELETE.',
+	delete_account_submit: 'Envoyer l\'e-mail de confirmation',
+	delete_account_email_sent: 'Nous avons envoyé un lien de confirmation à %s. Ton compte ne sera supprimé qu\'après avoir ouvert le lien et confirmé. Le lien expire dans 60 minutes.',
+	delete_account_request_error: 'La suppression du compte n\'a pas pu être demandée. Réessaie plus tard.',
+	delete_account_super_admin: 'Les super-administrateurs ne peuvent pas supprimer leur propre compte.',
 	no_tags: 'Vous n\'avez pas encore de tags.',
 	theme: 'Thème',
 	animations: 'Animations',

@@ -15,6 +15,7 @@ export const apiRoutes = {
 		verify: API_URL + '/auth/verify',
 		forgotPassword: API_URL + '/auth/forgot-password',
 		resetPassword: API_URL + '/auth/reset-password',
+		confirmAccountDeletion: API_URL + '/auth/confirm-account-deletion',
 		passkeys: {
 			registerOptions: API_URL + '/auth/passkeys/register-options',
 			register: API_URL + '/auth/passkeys/register',
@@ -30,6 +31,7 @@ export const apiRoutes = {
 		updateProfileImage: API_URL + '/users/me/profile-image',
 		getPublicProfile: API_URL + '/users/%s/public-profile',
 		changePassword: API_URL + '/users/change-password',
+		deletionRequest: API_URL + '/users/me/deletion-request',
 		settings: {
 			updateNavigationSettings: API_URL + '/users/me/settings/navigation',
 			updateTimezone: API_URL + '/users/me/settings/timezone',

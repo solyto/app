@@ -128,7 +128,13 @@ const auth: AuthRecords = {
 	register_link: 'Create account',
 	have_account: 'Already have an account?',
 	open_in_app: 'Open in App',
-	session_expired: 'Your session expired. Please sign in again.'
+	session_expired: 'Your session expired. Please sign in again.',
+	confirm_deletion_title: 'Delete your account',
+	confirm_deletion_warning: 'This permanently deletes the account %s and all of its data. This cannot be undone.',
+	confirm_deletion_submit: 'Delete my account permanently',
+	confirm_deletion_success: 'Your account and all of its data have been deleted. Goodbye!',
+	confirm_deletion_invalid: 'This link is invalid or has expired. Request a new one in your account settings.',
+	confirm_deletion_error: 'Your account could not be deleted. Please try again.'
 };
 
 const home: HomeRecords = {
@@ -229,6 +235,16 @@ const settings: SettingsRecords = {
 	new_password_same_as_current: 'The new password must be different from your current password.',
 	password_changed: 'Password changed. Please sign in again with your new password.',
 	password_change_error: 'Failed to change password.',
+	delete_account: 'Delete account',
+	delete_account_description: 'Permanently delete your account and all of your data: todos, notes, calendars, contacts, libraries, finances, files and everything else. This cannot be undone.',
+	delete_account_start: 'Delete my account',
+	delete_account_warning: 'All of your data will be permanently deleted and cannot be restored. If you want to keep anything, export your data first. Do you want to continue?',
+	delete_account_type_label: 'Type DELETE to confirm',
+	delete_account_type_error: 'Please type DELETE exactly.',
+	delete_account_submit: 'Send confirmation email',
+	delete_account_email_sent: 'We sent a confirmation link to %s. Your account will only be deleted after you open the link and confirm. The link expires in 60 minutes.',
+	delete_account_request_error: 'Account deletion could not be requested. Please try again later.',
+	delete_account_super_admin: 'Super administrators cannot delete their own account.',
 	no_tags: 'You have no tags yet.',
 	theme: 'Theme',
 	animations: 'Animations',

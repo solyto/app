@@ -129,7 +129,13 @@ const auth: AuthRecords = {
 	register_link: 'Konto erstellen',
 	have_account: 'Bereits ein Konto?',
 	open_in_app: 'In App öffnen',
-	session_expired: 'Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.'
+	session_expired: 'Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.',
+	confirm_deletion_title: 'Konto löschen',
+	confirm_deletion_warning: 'Damit werden das Konto %s und alle zugehörigen Daten endgültig gelöscht. Das kann nicht rückgängig gemacht werden.',
+	confirm_deletion_submit: 'Mein Konto endgültig löschen',
+	confirm_deletion_success: 'Dein Konto und alle zugehörigen Daten wurden gelöscht. Auf Wiedersehen!',
+	confirm_deletion_invalid: 'Dieser Link ist ungültig oder abgelaufen. Fordere in deinen Kontoeinstellungen einen neuen an.',
+	confirm_deletion_error: 'Dein Konto konnte nicht gelöscht werden. Bitte versuche es erneut.'
 };
 
 const home: HomeRecords = {
@@ -230,6 +236,16 @@ const settings: SettingsRecords = {
 	new_password_same_as_current: 'Das neue Passwort muss sich von deinem aktuellen Passwort unterscheiden.',
 	password_changed: 'Passwort geändert. Bitte melde dich mit deinem neuen Passwort erneut an.',
 	password_change_error: 'Passwort konnte nicht geändert werden.',
+	delete_account: 'Konto löschen',
+	delete_account_description: 'Lösche dein Konto und alle deine Daten endgültig: Todos, Notizen, Kalender, Kontakte, Bibliotheken, Finanzen, Dateien und alles andere. Das kann nicht rückgängig gemacht werden.',
+	delete_account_start: 'Mein Konto löschen',
+	delete_account_warning: 'Alle deine Daten werden endgültig gelöscht und können nicht wiederhergestellt werden. Wenn du etwas behalten möchtest, exportiere deine Daten vorher. Möchtest du fortfahren?',
+	delete_account_type_label: 'Gib DELETE ein, um zu bestätigen',
+	delete_account_type_error: 'Bitte gib genau DELETE ein.',
+	delete_account_submit: 'Bestätigungs-E-Mail senden',
+	delete_account_email_sent: 'Wir haben einen Bestätigungslink an %s gesendet. Dein Konto wird erst gelöscht, wenn du den Link öffnest und bestätigst. Der Link ist 60 Minuten gültig.',
+	delete_account_request_error: 'Die Kontolöschung konnte nicht angefordert werden. Bitte versuche es später erneut.',
+	delete_account_super_admin: 'Super-Administratoren können ihr eigenes Konto nicht löschen.',
 	no_tags: 'Du hast noch keine Tags.',
 	theme: 'Design',
 	animations: 'Animationen',
