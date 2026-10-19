@@ -95,7 +95,7 @@
 {#if PLATFORM !== 'web'}
 	<a
 		href={resolve(urls.setup)}
-		class="fixed top-10 right-4 flex items-center gap-2 text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
+		class="fixed top-5 right-5 flex items-center gap-2 text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
 	>
 		<span class="text-xs">{getApiLabel()}</span>
 		<IconSettings size={24} />

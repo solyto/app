@@ -7,6 +7,7 @@
 	import { setCustomApiUrl, dropCustomApiUrl } from '$lib/config/platform';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { urls } from '$lib/config/urls';
+	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
 
 	const ts = getTranslation();
 
@@ -22,6 +23,11 @@
 
 	function chooseSelfhosted(): void {
 		step = 1;
+	}
+
+	function backToChoice(): void {
+		urlError = false;
+		step = 0;
 	}
 
 	async function saveSelfhosted(): Promise<void> {
@@ -48,6 +54,17 @@
 	}
 </script>
 
+{#if step === 1}
+	<button
+		class="fixed top-5 right-5 flex cursor-pointer items-center gap-1 rounded-full border-2 border-white/5 bg-c-bg-surface py-1.5 pr-4 pl-3 text-sm font-medium text-c-neutral-7 shadow-sm transition-colors hover:bg-c-neutral-1 dark:text-c-neutral-2 dark:hover:bg-s-dark"
+		onclick={backToChoice}
+		disabled={checking}
+	>
+		<IconChevronLeft size={16} />
+		<span class="leading-none">{ts.get.setup.back}</span>
+	</button>
+{/if}
+
 <div class="flex w-full max-w-md flex-col items-center gap-12">
 	<div style="width: 56px; height: 71px;">
 		<StaggeredLogo path="../" />
@@ -72,7 +89,7 @@
 		</div>
 	{:else if step === 1}
 		<div
-			class="flex w-full flex-col gap-4 rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm"
+			class="flex flex-col gap-4 self-stretch rounded-lg border-2 border-white/5 bg-c-bg-surface px-8 pt-6 pb-8 shadow-sm max-md:mx-4"
 			in:blur
 		>
 			<label class="label">

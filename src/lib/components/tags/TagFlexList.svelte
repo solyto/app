@@ -8,7 +8,7 @@
 	} = $props();
 </script>
 
-<div class="flex flex-row gap-1">
+<div class="flex flex-row flex-wrap gap-1">
 	{#each tags as tag (tag.id)}
 		<div
 			class="flex items-center gap-1 rounded-full px-2 py-1 text-xs text-c-neutral-7"

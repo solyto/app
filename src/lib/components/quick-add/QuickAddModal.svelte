@@ -165,7 +165,12 @@
 			</div>
 		</div>
 	{:else}
-		<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="flex items-center gap-3">
+		<form
+			onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}
+			class="flex gap-3"
+			class:flex-col={isMobile}
+			class:items-center={!isMobile}
+		>
 			<div class="flex-1">
 				<TextInput
 					bind:input={contentInput}
@@ -177,6 +182,7 @@
 				title={quickAdd.loading ? ts.get.quick_add.adding : ts.get.quick_add.add}
 				disabled={quickAdd.loading || !quickAdd.content.trim()}
 				onclick={handleSubmit}
+				class={isMobile ? 'mt-5 w-full' : ''}
 			/>
 		</form>
 		{#if quickAdd.error}
