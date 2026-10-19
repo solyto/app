@@ -1,5 +1,5 @@
 # Report: Smart Score (todo relevance)
-read: false
+read: true
 
 Date: 2026-10-17
 Job: `flash_smart-score`
