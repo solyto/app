@@ -29,6 +29,9 @@
 
 	/* Semantic color tokens */
 	--color-c-primary: #a09880;
+	--color-c-primary-text: #0e0e12;
+	--color-c-primary-text-hover: #0e0e12;
+	--color-c-flag-text: #0e0e12;
 	--color-c-heading: #d4cdb8;
 	--color-c-heading-base: #e8e4dc;
 	--color-c-btn: #2a2830;
@@ -69,6 +72,7 @@
 	--color-c-neutral-7: #b8b0c0;
 	--color-c-neutral-8: #ccc4d0;
 	--color-c-neutral-9: #e0d8e8;
+	--color-c-avatar-text: #e0d8e8;
 
 	/* Override light-blue utility colors used for borders and subtle backgrounds */
 	--color-d-lightblue: transparent;

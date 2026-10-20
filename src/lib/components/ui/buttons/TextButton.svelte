@@ -41,9 +41,11 @@
 		class:dark:hover:bg-s-dark-2={type === 'slight' && !disabled}
 		class:dark:text-white={type === 'slight'}
 		class:text-c-neutral-7={type === 'slight'}
-		class:text-c-heading={type === 'warning' || type === 'action'}
-		class:text-c-btn-text={type !== 'plain' && type !== 'slight' && type !== 'warning' && type !== 'action'}
-		class:hover:text-white={type !== 'plain' && type !== 'slight' && type !== 'warning' && type !== 'action' && !disabled}
+		class:text-c-action-text={type === 'warning' || type === 'action'}
+		class:text-c-btn-text={type !== 'plain' && type !== 'slight' && type !== 'warning' && type !== 'action' && type !== 'primary'}
+		class:text-c-primary-text={type === 'primary'}
+		class:hover:text-white={type !== 'plain' && type !== 'slight' && type !== 'warning' && type !== 'action' && type !== 'primary' && !disabled}
+		class:hover:text-c-primary-text-hover={type === 'primary' && !disabled}
 		class:text-left={align === 'left'}
 		class:text-right={align === 'right'}
 		class:px-4={type !== 'plain'}
@@ -73,9 +75,11 @@
 		class:dark:hover:bg-s-dark-2={type === 'slight'}
 		class:dark:text-white={type === 'slight'}
 		class:text-c-neutral-7={type === 'slight'}
-		class:text-c-heading={type === 'warning'}
-		class:text-c-btn-text={type !== 'plain' && type !== 'slight' && type !== 'warning'}
-		class:hover:text-white={type !== 'plain' && type !== 'slight' && type !== 'warning'}
+		class:text-c-action-text={type === 'warning'}
+		class:text-c-btn-text={type !== 'plain' && type !== 'slight' && type !== 'warning' && type !== 'primary'}
+		class:text-c-primary-text={type === 'primary'}
+		class:hover:text-white={type !== 'plain' && type !== 'slight' && type !== 'warning' && type !== 'primary'}
+		class:hover:text-c-primary-text-hover={type === 'primary'}
 		class:text-left={align === 'left'}
 		class:text-right={align === 'right'}
 		class:px-4={type !== 'plain'}

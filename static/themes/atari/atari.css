@@ -27,12 +27,18 @@
 
 	/* Semantic color tokens */
 	--color-c-primary: #ff6600;
+	--color-c-primary-text: #000000;
+	--color-c-primary-text-hover: #000000;
+	--color-c-flag-text: #000000;
 	--color-c-heading: #ffcc00;
 	--color-c-heading-base: #ffffff;
 	--color-c-btn: #0055cc;
 	--color-c-btn-hover: #0077ff;
 	--color-c-action: #ff6600;
 	--color-c-action-hover: #ffcc00;
+	--color-c-action-text: #000000;
+	--color-c-action-icon: #000000;
+	--color-c-action-icon-hover: #000000;
 	--color-c-danger: #ff0033;
 	--color-c-danger-hover: #cc0022;
 	--color-c-success: #00ff66;

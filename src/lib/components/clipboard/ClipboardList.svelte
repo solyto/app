@@ -74,7 +74,7 @@
 {#snippet actionButtons(entry: ClipboardEntry)}
 	<div class="flex gap-2">
 		<button
-			class="flex size-8 cursor-pointer items-center justify-center rounded-full bg-c-action text-white drop-shadow-md transition-all hover:drop-shadow-xl"
+			class="flex size-8 cursor-pointer items-center justify-center rounded-full bg-c-action text-c-action-icon drop-shadow-md transition-all hover:drop-shadow-xl"
 			onclick={() =>
 				entry.type === 'image' ? onCopyImage(entry) : onCopyText(entry.content)}
 		>

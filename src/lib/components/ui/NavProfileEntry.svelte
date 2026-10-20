@@ -49,7 +49,7 @@
 	{mobile}
 	{onSelect}
 >
-	<div class="flex size-10 items-center justify-center rounded-full bg-c-neutral-2 text-black">
+	<div class="flex size-10 items-center justify-center rounded-full bg-c-neutral-2 text-c-avatar-text">
 		{#if imageSrc && failedPath !== imagePath}
 			<img
 				src={imageSrc}

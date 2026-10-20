@@ -102,7 +102,7 @@
 					<Recommendation {library} item={recommendation} />
 					<div class="mt-3 flex w-full justify-end gap-2 md:mt-8">
 						<button
-							class="flex cursor-pointer items-center justify-center gap-3 rounded-lg bg-c-action px-4 py-2 text-white drop-shadow-md transition-all hover:bg-c-warning hover:text-c-heading hover:shadow-xs hover:drop-shadow-xl"
+							class="flex cursor-pointer items-center justify-center gap-3 rounded-lg bg-c-action px-4 py-2 text-c-action-icon drop-shadow-md transition-all hover:bg-c-warning hover:text-c-action-icon-hover hover:shadow-xs hover:drop-shadow-xl"
 							in:fade
 							onclick={async () => loadRecommendation()}
 						>
