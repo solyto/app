@@ -79,7 +79,7 @@
 					<IconEllipsisVertical />
 					{#if activeOverflowItem}
 						<div
-							class="absolute right-[-22px] top-[-20px] [&>svg]:size-5 rounded-full p-1 bg-c-nav-active shadow-xl shadow-c-neutral-5 border-c-neutral text-c-neutral"
+							class="nav-overflow-active absolute right-[-22px] top-[-20px] [&>svg]:size-5 rounded-full p-1 bg-c-nav-active shadow-xl shadow-c-neutral-5 border-c-neutral text-c-neutral"
 							transition:scale
 						>
 							<NavEntryIcon type={activeOverflowItem.iconType} />

@@ -95,6 +95,10 @@ html.dark {
 body {
 	background-image: url('./wallpaper.jpg');
 	background-size: cover;
+	/* The page can end a fraction of a pixel above the viewport bottom; don't let the */
+	/* wallpaper's light top edge repeat into that strip. #10100c is its bottom edge.  */
+	background-repeat: no-repeat;
+	background-color: #10100c;
 }
 
 .page-container {
@@ -123,6 +127,15 @@ body {
 
 .nav-mobile {
 	background: none !important;
+}
+
+/* Icon of the current page shown on the mobile overflow button: solid and outlined */
+/* like the other nav surfaces, without the default light glow.                     */
+.nav-overflow-active {
+	--tw-shadow: 0 0 #0000;
+	border: 1px solid var(--color-c-border);
+	background-color: #0e0e12;
+	color: var(--color-c-nav-active-text);
 }
 
 /* Secondary navigation overlays (mobile hamburger/funnel menus) — opaque so   */
