@@ -12,7 +12,6 @@
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 
-	const CONFIRMATION_WORD = 'DELETE';
 	const LABEL = 'label-text mb-2 text-sm font-bold dark:text-white';
 
 	const auth = getAuth();
@@ -32,7 +31,7 @@
 
 		loadingIndicator.start();
 		try {
-			const result = await auth.requestAccountDeletion(password, CONFIRMATION_WORD);
+			const result = await auth.requestAccountDeletion(password);
 			if (result.data?.status === 'deleted') {
 				notifications.success(ts.get.auth.confirm_deletion_success);
 				await goto(resolve(urls.login));

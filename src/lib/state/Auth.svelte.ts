@@ -290,10 +290,9 @@ export class Auth {
 		return res;
 	}
 
-	async requestAccountDeletion(password: string, confirmation: string): Promise<AccountDeletionRequestResponse> {
+	async requestAccountDeletion(password: string): Promise<AccountDeletionRequestResponse> {
 		const res = await this.apiService.postRaw<AccountDeletionRequestResponse>(apiRoutes.users.deletionRequest, {
 			password,
-			confirmation,
 			platform: PLATFORM
 		});
 		if (res.data?.status === 'deleted') this.logout();
