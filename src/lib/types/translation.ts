@@ -144,11 +144,8 @@ export interface SettingsRecords {
 	password_changed: string;
 	password_change_error: string;
 	delete_account: string;
-	delete_account_description: string;
 	delete_account_start: string;
 	delete_account_warning: string;
-	delete_account_type_label: string;
-	delete_account_type_error: string;
 	delete_account_submit: string;
 	delete_account_email_sent: string;
 	delete_account_request_error: string;
