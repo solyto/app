@@ -47,7 +47,7 @@
 	onkeydown={(e) => e.key === 'Enter' && openEdit()}
 	in:fade
 >
-	<div class="absolute top-0 left-0 h-full w-1 rounded-l-md {getPriorityColorClass(todo.priority)}"></div>
+	<div class="todo-priority-bar absolute top-0 left-0 h-full w-1 rounded-l-md {getPriorityColorClass(todo.priority)}"></div>
 	<ScoreBar {todo} />
 	<div class="flex items-center gap-3">
 		<span

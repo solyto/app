@@ -113,6 +113,21 @@ body {
 	}
 }
 
+/* Pull the todo view switcher closer to the hamburger button (only shown below lg) */
+@media (width < 64rem) {
+	.todo-view-switcher {
+		left: 4.5rem;
+	}
+}
+
+/* The wide system font doesn't fit the todo header toggles on narrow screens; shrink their labels */
+@media (width < 64rem) {
+	.todo-header-actions label {
+		font-size: var(--text-xs);
+		line-height: var(--text-xs--line-height);
+	}
+}
+
 /* Nav text sits on the blue taskbar gradient; popovers inside the nav keep their own colours */
 .nav-desktop-container,
 .nav-mobile-container {

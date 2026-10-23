@@ -30,7 +30,7 @@
 </script>
 
 <div
-	class="absolute top-7 left-20 2xl:top-10 2xl:left-8 z-30 2xl:block"
+	class="todo-view-switcher absolute top-7 left-20 2xl:top-10 2xl:left-8 z-30 2xl:block"
 >
 	{#if !quickCreateOpen}
 		<div class="transition-opacity duration-150 ease-in-out">

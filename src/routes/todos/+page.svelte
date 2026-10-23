@@ -66,7 +66,7 @@
 		<ViewSwitcher />
 		<TodoCreate />
 		<div class="relative w-full px-1 pb-2">
-			<div class="mb-4 flex w-full items-center gap-4">
+			<div class="todo-header-actions mb-4 flex w-full items-center gap-4">
 				<SortByScore />
 				<HideIt />
 				<Counter todos={todos.filteredTodos} />

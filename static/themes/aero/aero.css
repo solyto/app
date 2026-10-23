@@ -129,6 +129,31 @@ body {
 	background: rgba(25, 60, 110, 0.9);
 }
 
+/* The wide system font doesn't fit the todo header toggles on narrow screens; shrink their labels */
+@media (width < 64rem) {
+	.todo-header-actions label {
+		font-size: var(--text-xs);
+		line-height: var(--text-xs--line-height);
+	}
+}
+
+/* The light card border shows through the glass; let the todo card's side bars cover it */
+.todo-priority-bar,
+.todo-progress-bar {
+	top: -1px;
+	height: calc(100% + 2px);
+}
+
+.todo-priority-bar {
+	left: -1px;
+	border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+
+.todo-progress-bar {
+	right: -1px;
+	border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
 /* Glossy highlight on coloured buttons */
 .bg-c-btn,
 .bg-c-action,

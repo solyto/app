@@ -70,7 +70,7 @@
 </script>
 
 {#if mobile}
-	<div class="absolute top-0 right-0 flex h-full w-1 flex-col justify-end overflow-hidden rounded-r-md">
+	<div class="todo-progress-bar absolute top-0 right-0 flex h-full w-1 flex-col justify-end overflow-hidden rounded-r-md">
 		<div class="w-full bg-c-primary" style="height: {todo.progress ?? 0}%"></div>
 	</div>
 {:else}

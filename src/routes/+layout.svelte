@@ -158,7 +158,7 @@
 	<LoadingIndicator />
 	<Notifications />
 	{#if updateRequired.required}
-		<div class="min-h-0 w-full grow overflow-auto content-container">
+		<div class="relative min-h-0 w-full grow overflow-auto content-container">
 			<UpdateRequiredScreen minVersion={updateRequired.minVersion} clientVersion={CLIENT_VERSION} />
 		</div>
 	{:else}
@@ -167,7 +167,7 @@
 				<DesktopNavbar />
 			</div>
 		{/if}
-		<div class="min-h-0 w-full grow overflow-auto content-container">
+		<div class="relative min-h-0 w-full grow overflow-auto content-container">
 			{#if !browser || canAccessRoute}
 				{@render children?.()}
 			{:else}
