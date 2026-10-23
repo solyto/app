@@ -129,11 +129,10 @@ body {
 	background: none !important;
 }
 
-/* Icon of the current page shown on the mobile overflow button: solid and outlined */
-/* like the other nav surfaces, without the default light glow.                     */
+/* Icon of the current page shown on the mobile overflow button: solid, without */
+/* a border and without the default light glow.                                 */
 .nav-overflow-active {
 	--tw-shadow: 0 0 #0000;
-	border: 1px solid var(--color-c-border);
 	background-color: #0e0e12;
 	color: var(--color-c-nav-active-text);
 }
