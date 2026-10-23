@@ -123,23 +123,25 @@
 			<Priority {entry} editable={isAdmin} />
 			<Type {entry} />
 			<Status {entry} editable={isAdmin} />
+		</div>
+		<div class="mt-1 flex flex-row items-start gap-2 md:mt-0 md:ml-3 md:w-3/6">
+			<div class="min-w-0 flex-1">
+				{#if isAdmin}
+					{#if changeTitle}
+						<TextInput bind:input={titleInput} bind:value={titleValue} {onblur} />
+					{:else}
+						<button type="button" ondblclick={() => toggleChange('title')} class="cursor-pointer text-left text-lg font-bold md:text-base">
+							{entry.title}
+						</button>
+					{/if}
+				{:else}
+					<span class="text-lg font-bold md:text-base">{entry.title}</span>
+				{/if}
+			</div>
 			<IconChevronsUpDown
-				class="ml-auto cursor-pointer text-c-btn md:hidden"
+				class="mt-0.5 shrink-0 cursor-pointer text-c-btn md:hidden"
 				onclick={() => (open = !open)}
 			/>
-		</div>
-		<div class="mt-1 md:mt-0 md:ml-3 md:w-3/6">
-			{#if isAdmin}
-				{#if changeTitle}
-					<TextInput bind:input={titleInput} bind:value={titleValue} {onblur} />
-				{:else}
-					<button type="button" ondblclick={() => toggleChange('title')} class="cursor-pointer text-lg font-bold md:text-base">
-						{entry.title}
-					</button>
-				{/if}
-			{:else}
-				<span class="text-lg font-bold md:text-base">{entry.title}</span>
-			{/if}
 		</div>
 		<div class="flex flex-row items-center gap-4 md:ml-auto">
 			<Author {entry} />
