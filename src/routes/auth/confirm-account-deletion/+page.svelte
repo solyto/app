@@ -39,7 +39,7 @@
 			const result = await auth.confirmAccountDeletion(token, email);
 			if (result.success) {
 				done = true;
-			} else if (result.errors?.includes('invalid_token')) {
+			} else if (Array.isArray(result.errors) ? result.errors.includes('invalid_token') : result.errors != null) {
 				invalidLink = true;
 			} else {
 				failed = true;

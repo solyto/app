@@ -16,7 +16,7 @@
 	in:blur={{ duration: 200 }}
 >
 	<div 
-		class="tracking-wide text-c-heading dark:text-c-primarytext-left"
+		class="tracking-wide text-c-heading dark:text-c-primary"
 		class:text-xl={!smallerTitle}
 		class:text-lg={smallerTitle}
 		class:text-center={!leftAlign}

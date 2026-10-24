@@ -81,7 +81,7 @@ export interface AccountDeletionRequestResponse {
 
 export interface AccountDeletionConfirmResponse {
 	success: boolean;
-	errors?: string[];
+	errors?: string[] | Record<string, string[]>;
 }
 
 export interface PasskeyActionResponse {
