@@ -7,7 +7,6 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { fade } from 'svelte/transition';
-	import SettingsSection from '$lib/components/settings/SettingsSection.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
 	import PasswordStrengthIndicator from '$lib/components/forms/PasswordStrengthIndicator.svelte';
@@ -62,7 +61,7 @@
 	<p class="mt-2 pl-2 text-xs text-red-500" in:fade>{message}</p>
 {/snippet}
 
-<SettingsSection label={ts.get.settings.change_password}>
+<div class="w-full">
 	<form class="flex max-w-sm flex-col gap-4" {onsubmit}>
 		<label class="label">
 			<div class={LABEL}>{ts.get.settings.current_password}</div>
@@ -91,4 +90,4 @@
 			<TextButton title={ts.get.settings.change_password_submit} />
 		</div>
 	</form>
-</SettingsSection>
+</div>

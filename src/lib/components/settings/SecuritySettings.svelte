@@ -136,14 +136,9 @@
 </script>
 
 <div class="flex flex-col gap-8">
+<div class="flex gap-8 max-lg:flex-col">
 <PasswordSettings />
 <SettingsSection label={ts.get.settings.passkeys}>
-	{#snippet headerAction()}
-		{#if !showNameInput}
-			<TextButton title={ts.get.settings.passkey_add} onclick={startAddPasskey} disabled={addingPasskey} />
-		{/if}
-	{/snippet}
-
 	{#if loading}
 		<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">Loading...</p>
 	{:else if passkeys.length === 0 && !showNameInput}
@@ -204,8 +199,13 @@
 				<IconX size={14} />
 			</IconButton>
 		</div>
+	{:else}
+		<div class="mt-6">
+			<TextButton title={ts.get.settings.passkey_add} onclick={startAddPasskey} disabled={addingPasskey} />
+		</div>
 	{/if}
 </SettingsSection>
+</div>
 <AccountDeletionSettings />
 </div>
 
