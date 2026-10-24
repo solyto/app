@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
@@ -86,8 +86,8 @@
 <div
 	class="fixed top-0 left-0 z-40 flex h-dvh w-screen items-end bg-transparent backdrop-blur-xs modal-blur pb-16 2xl:pb-0"
 	style:padding-bottom={viewPoint.keyboardHeight ? `${viewPoint.keyboardHeight}px` : ''}
-	in:fly|global={{ y: 400, duration: 350 }}
-	out:fly|global={{ y: 400, duration: 250 }}
+	in:fade|global={{ duration: 350 }}
+	out:fade|global={{ duration: 250 }}
 >
 	{#if onClose}
 		<div class="absolute inset-0 touch-none" role="presentation" onclick={onBackdropClick} {...dragHandlers}></div>
@@ -98,6 +98,8 @@
 		class:duration-200={!dragging}
 		style:transform={dragOffset ? `translateY(${dragOffset}px)` : ''}
 		bind:this={sheet}
+		in:fly|global={{ y: 400, duration: 350 }}
+		out:fly|global={{ y: 400, duration: 250 }}
 	>
 		{#if onClose}
 			<CloseButton onClick={onClose} />

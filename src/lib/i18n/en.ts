@@ -151,7 +151,8 @@ const home: HomeRecords = {
 	new_books: 'New Books',
 	recent_notes: 'Recent Notes',
 	newest_links: 'Newest Links',
-	inspiration_empty_hint: 'Add notes, music, books, or links to see them here.'
+	more_to_come: 'More to come.',
+	more_to_come_desc: 'The more you use the different features, the more shows up here.'
 };
 
 const settings: SettingsRecords = {
@@ -281,7 +282,9 @@ const todos: TodoRecords = {
 	title: 'Title',
 	enter_todo: 'Enter Todo',
 	no_todos: 'No Todos found.',
-	no_todos_desc: 'Press Enter to add one.',
+	no_todos_desc: 'Try another filter or workspace.',
+	no_todos_yet: 'No todos yet.',
+	no_todos_yet_desc: 'Add your first one with the New Todo button.',
 	tags: 'Tags',
 	tag: 'Tag',
 	tag_error: 'Tag does not exist',
@@ -426,6 +429,7 @@ const widgets: WidgetRecords = {
 	random_quote: 'Random Quote',
 	shortcuts: 'Shortcuts',
 	manage_shortcuts: 'Manage Shortcuts',
+	no_shortcuts_hint: 'Shortcuts are quick links to your favorite websites. Use the pen to add your first one.',
 	shortcut_title: 'Title',
 	shortcut_url: 'URL',
 	clock: 'Clock',
@@ -440,10 +444,12 @@ const widgets: WidgetRecords = {
 
 const notes: NoteRecords = {
 	notebook: 'Notebook',
-	welcome: 'Welcome to your notebook.',
-	instruction: 'Start by creating a new note or selecting one.',
+	no_notes: 'No notes yet.',
+	no_notes_desc: 'Add your first one with the New Note button.',
 	new_note: 'New Note',
 	new_folder: 'New Folder',
+	no_folders: 'No folders yet.',
+	no_folders_desc: 'Create one with the folder button.',
 	delete_note: 'Delete Note',
 	delete_folder: 'Delete Folder',
 	edit_folder: 'Change Folder Name',
@@ -728,7 +734,10 @@ const libraries: LibraryRecords = {
 	show_on: 'Show on %s',
 	search: 'Search',
 	import: 'Import',
-	no_results: 'No results found.'
+	no_results: 'No results found.',
+	no_results_desc: 'Try a different search or clear the filters.',
+	no_entries: 'Nothing here yet.',
+	no_entries_desc: 'Add your first entry with the plus button.'
 };
 
 const dev: DevRecords = {
@@ -820,7 +829,11 @@ const feeds: FeedRecords = {
 	browse_feeds_empty: 'No feeds found.',
 	browse_feeds_friends: 'Subscribed to by your friends',
 	browse_feeds_friends_empty: 'Your friends have not subscribed to any feeds yet.',
-	browse_feeds_subscribers: 'subscribers'
+	browse_feeds_subscribers: 'subscribers',
+	no_feeds: 'No feeds yet.',
+	no_feeds_desc: 'Add a feed or browse what others are reading.',
+	no_items: 'Nothing here yet.',
+	no_items_desc: 'New entries show up as soon as this feed publishes them.'
 };
 
 const calendar: CalendarRecords = {
@@ -942,6 +955,10 @@ const calendar: CalendarRecords = {
 
 const contacts: ContactRecords = {
 	add_contact: 'Add Contact',
+	no_contacts: 'No contacts yet.',
+	no_contacts_desc: 'Add a contact or import an address book.',
+	no_visible_contacts: 'No contacts to show.',
+	no_visible_contacts_desc: 'Pick another address book or show the hidden ones.',
 	address_books: 'Address Books',
 	import_success: 'Address Books were successfully imported.',
 	import_error: 'There was an error when importing Address Books.',
@@ -1202,6 +1219,7 @@ const timeTracking: TimeTrackingRecords = {
 	stop_timer: 'Stop Timer',
 	timer_running: 'Timer Running',
 	no_projects: 'No projects yet.',
+	no_projects_desc: 'Create a project to start tracking time.',
 	no_entries: 'No entries yet.',
 	no_description: 'No description',
 	manual_entry: 'Manual Entry',

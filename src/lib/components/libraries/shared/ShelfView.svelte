@@ -195,8 +195,4 @@
 			</button>
 		{/key}
 	{/if}
-
-	{#if entries.length === 0}
-		<p class="text-c-neutral-5 dark:text-c-neutral-4" in:fade>Nothing here yet.</p>
-	{/if}
 </div>

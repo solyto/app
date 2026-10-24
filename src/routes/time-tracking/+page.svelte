@@ -27,7 +27,9 @@
 	{:else}
 		<div>
 			<div class="mb-4 flex flex-row items-center justify-between">
-				<Heading title={ts.get.timeTracking.entries} my={0} />
+				<div class="max-lg:ml-14">
+					<Heading title={ts.get.timeTracking.entries} my={0} />
+				</div>
 				<TextButton
 					title={ts.get.timeTracking.add_entry}
 					onclick={() => (showEntryCreate = true)}

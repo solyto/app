@@ -38,7 +38,7 @@
 	});
 </script>
 
-{#if loaded}
+{#if loaded && weekBreakdown.length > 0}
 	<div in:blur>
 		<div class="mb-3 flex items-center gap-2">
 			<IconTimer size={15} class="text-c-heading dark:text-c-primary" />

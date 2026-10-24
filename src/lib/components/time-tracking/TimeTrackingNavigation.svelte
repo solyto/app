@@ -323,7 +323,7 @@
 
 {#if open}
 	<div
-		class="secondary-nav-mobile-container fixed inset-0 z-50 flex h-full max-h-screen w-full flex-col gap-4 overflow-y-auto bg-c-bg lg:hidden dark:bg-s-dark-1"
+		class="secondary-nav-mobile-container fixed inset-0 z-50 flex h-full max-h-screen w-full flex-col overflow-y-auto bg-c-bg lg:hidden dark:bg-s-dark-1"
 		transition:fly={{ x: -400, duration: 200 }}
 	>
 		{@render sidebar()}

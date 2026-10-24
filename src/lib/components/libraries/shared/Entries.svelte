@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
+	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 	import ShelfView from '$lib/components/libraries/shared/ShelfView.svelte';
 	import SpineView from '$lib/components/libraries/shared/SpineView.svelte';
 	import BookEntry from '$lib/components/libraries/books/BookEntry.svelte';
@@ -30,8 +31,10 @@
 	import type { GameLibrary } from '$lib/state/GameLibrary.svelte';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { getAuth } from '$lib/state/Auth.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const auth = getAuth();
+	const ts = getTranslation();
 
 	let { library }: { library: Library } = $props();
 
@@ -43,7 +46,11 @@
 	}
 </script>
 
-{#if view === 'shelf'}
+{#if library.loaded && library.entries.length === 0}
+	<EmptyState title={ts.get.libraries.no_entries} description={ts.get.libraries.no_entries_desc} />
+{:else if library.loaded && library.filteredEntries.length === 0}
+	<EmptyState title={ts.get.libraries.no_results} description={ts.get.libraries.no_results_desc} />
+{:else if view === 'shelf'}
 	<ShelfView library={library as MusicLibrary | BookLibrary} />
 {:else if view === 'spine'}
 	<SpineView {library} />
@@ -51,7 +58,7 @@
 
 <div
 	class="flex w-full flex-wrap"
-	class:hidden={view === 'shelf' || view === 'spine'}
+	class:hidden={view === 'shelf' || view === 'spine' || library.filteredEntries.length === 0}
 	class:md:p-2={view === 'list'}
 	class:flex-col={view === 'list'}
 	class:gap-2={view === 'list'}

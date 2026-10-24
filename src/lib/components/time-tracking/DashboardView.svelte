@@ -6,6 +6,7 @@
 	import TimerWidget from '$lib/components/time-tracking/TimerWidget.svelte';
 	import TimeBreakdownWidget from '$lib/components/time-tracking/TimeBreakdownWidget.svelte';
 	import Heading from '$lib/components/ui/Heading.svelte';
+	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 	import TimeTrackingGroupingService from '$lib/services/TimeTrackingGroupingService';
 	import type { TimeTrackingEntry } from '$lib/types/time_tracking';
 
@@ -43,23 +44,27 @@
 </script>
 
 <div class="flex flex-col gap-8">
-	<Heading title={ts.get.timeTracking.dashboard} my={0} />
-
-	<div class="grid grid-cols-1 items-start gap-4 md:grid-cols-2 lg:grid-cols-4">
-		<div class="lg:col-span-1">
-			<TimerWidget />
-		</div>
-		<TimeBreakdownWidget
-			title={ts.get.timeTracking.today}
-			breakdown={todayBreakdown}
-			total={todayBreakdown.reduce((s, c) => s + c.minutes, 0)}
-		/>
-		<TimeBreakdownWidget
-			title={ts.get.timeTracking.this_week}
-			breakdown={weekBreakdown}
-			total={weekBreakdown.reduce((s, c) => s + c.minutes, 0)}
-		/>
+	<div class="max-lg:ml-14">
+		<Heading title={ts.get.timeTracking.dashboard} my={0} />
 	</div>
+
+	{#if tt.projects.length === 0}
+		<EmptyState title={ts.get.timeTracking.no_projects} description={ts.get.timeTracking.no_projects_desc} />
+	{:else}
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+			<TimerWidget />
+			<TimeBreakdownWidget
+				title={ts.get.timeTracking.today}
+				breakdown={todayBreakdown}
+				total={todayBreakdown.reduce((s, c) => s + c.minutes, 0)}
+			/>
+			<TimeBreakdownWidget
+				title={ts.get.timeTracking.this_week}
+				breakdown={weekBreakdown}
+				total={weekBreakdown.reduce((s, c) => s + c.minutes, 0)}
+			/>
+		</div>
+	{/if}
 
 	{#if recentEntries.length > 0}
 		<div class="flex flex-col gap-2">

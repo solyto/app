@@ -72,7 +72,6 @@
 		"svelte-dnd-action": "0.9.80",
 		"svelte-gestures": "5.2.2",
 		"svelte-multiselect": "11.6.4",
-		"svelte-typewriter": "3.2.3",
 		"uuid": "14.0.3"
 	}
 }

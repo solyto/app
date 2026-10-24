@@ -11,7 +11,7 @@
 	const ts = getTranslation();
 </script>
 
-<div class="flex flex-col gap-3 rounded-lg bg-c-bg-surface p-4 shadow-sm lg:col-span-1">
+<div class="flex flex-col gap-3 rounded-lg bg-c-bg-surface p-4 shadow-sm">
 	<Heading {title} my={0} />
 	<div class="flex flex-col gap-2.5">
 		<div class="flex flex-row items-center justify-between">

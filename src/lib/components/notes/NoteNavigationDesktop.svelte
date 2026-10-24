@@ -15,6 +15,7 @@
 	import { getDateMinusDays, getUrlFormat } from '$lib/helpers/DateHelper';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import NavHeading from '$lib/components/ui/NavHeading.svelte';
+	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 
 	const ts = getTranslation();
 	const notes = getNotes();
@@ -120,6 +121,6 @@
 		</div>
 	{/if}
 	{#if notes.categories.length === 0 && notes.getVisibleNotes().length === 0}
-		<span class="text-md font-bold">{ts.get.notes.no_entries}</span>
+		<EmptyState title={ts.get.notes.no_folders} description={ts.get.notes.no_folders_desc} py={2} />
 	{/if}
 </div>

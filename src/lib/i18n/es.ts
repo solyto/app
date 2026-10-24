@@ -151,7 +151,8 @@ const home: HomeRecords = {
 	new_books: 'Nuevos libros',
 	recent_notes: 'Notas recientes',
 	newest_links: 'Enlaces recientes',
-	inspiration_empty_hint: 'Añade notas, música, libros o enlaces para verlos aquí.'
+	more_to_come: 'Habrá más por aquí.',
+	more_to_come_desc: 'Cuanto más uses las distintas funciones, más aparecerá aquí.'
 };
 
 const settings: SettingsRecords = {
@@ -281,7 +282,9 @@ const todos: TodoRecords = {
 	title: 'Título',
 	enter_todo: 'Ingrese una tarea',
 	no_todos: 'No se encontraron tareas.',
-	no_todos_desc: 'Presione Enter para agregar una.',
+	no_todos_desc: 'Prueba otro filtro o espacio de trabajo.',
+	no_todos_yet: 'Aún no hay tareas.',
+	no_todos_yet_desc: 'Añade la primera con el botón «Nueva tarea».',
 	tags: 'Etiquetas',
 	tag: 'Etiqueta',
 	tag_error: 'La etiqueta no existe',
@@ -426,6 +429,7 @@ const widgets: WidgetRecords = {
 	random_quote: 'Cita aleatoria',
 	shortcuts: 'Accesos directos',
 	manage_shortcuts: 'Administrar accesos directos',
+	no_shortcuts_hint: 'Los accesos directos son enlaces rápidos a tus sitios web favoritos. Usa el lápiz para añadir el primero.',
 	shortcut_title: 'Título',
 	shortcut_url: 'URL',
 	clock: 'Reloj',
@@ -440,10 +444,12 @@ const widgets: WidgetRecords = {
 
 const notes: NoteRecords = {
 	notebook: 'Bloc de notas',
-	welcome: 'Bienvenido a su bloc de notas.',
-	instruction: 'Comience creando una nueva nota o seleccionando una existente.',
+	no_notes: 'Aún no hay notas.',
+	no_notes_desc: 'Añade la primera con el botón «Nueva nota».',
 	new_note: 'Nueva nota',
 	new_folder: 'Nueva carpeta',
+	no_folders: 'Aún no hay carpetas.',
+	no_folders_desc: 'Crea una con el botón de carpeta.',
 	delete_note: 'Eliminar nota',
 	delete_folder: 'Eliminar carpeta',
 	edit_folder: 'Cambiar nombre de carpeta',
@@ -728,7 +734,10 @@ const libraries: LibraryRecords = {
 	show_on: 'Ver en %s',
 	search: 'Buscar',
 	import: 'Importar',
-	no_results: 'No se encontraron resultados.'
+	no_results: 'No se encontraron resultados.',
+	no_results_desc: 'Prueba otra búsqueda o quita los filtros.',
+	no_entries: 'Aún no hay nada aquí.',
+	no_entries_desc: 'Añade tu primera entrada con el botón más.'
 };
 
 const dev: DevRecords = {
@@ -820,7 +829,11 @@ const feeds: FeedRecords = {
 	browse_feeds_empty: 'No se encontraron feeds.',
 	browse_feeds_friends: 'Suscritos por tus amigos',
 	browse_feeds_friends_empty: 'Tus amigos aún no se han suscrito a ningún feed.',
-	browse_feeds_subscribers: 'suscriptores'
+	browse_feeds_subscribers: 'suscriptores',
+	no_feeds: 'Aún no hay feeds.',
+	no_feeds_desc: 'Añade un feed o explora lo que leen los demás.',
+	no_items: 'Aún no hay nada aquí.',
+	no_items_desc: 'Las nuevas entradas aparecerán en cuanto este feed las publique.'
 };
 
 const calendar: CalendarRecords = {
@@ -942,6 +955,10 @@ const calendar: CalendarRecords = {
 
 const contacts: ContactRecords = {
 	add_contact: 'Agregar contacto',
+	no_contacts: 'Aún no hay contactos.',
+	no_contacts_desc: 'Añade un contacto o importa una libreta de direcciones.',
+	no_visible_contacts: 'No hay contactos que mostrar.',
+	no_visible_contacts_desc: 'Elige otra libreta de direcciones o muestra las ocultas.',
 	address_books: 'Libretas de direcciones',
 	import_success: 'Las libretas de direcciones se importaron correctamente.',
 	import_error: 'Hubo un error al importar las libretas de direcciones.',
@@ -1202,6 +1219,7 @@ const timeTracking: TimeTrackingRecords = {
 	stop_timer: 'Detener temporizador',
 	timer_running: 'Temporizador en marcha',
 	no_projects: 'Aún no hay proyectos.',
+	no_projects_desc: 'Crea un proyecto para empezar a registrar tiempo.',
 	no_entries: 'Aún no hay entradas.',
 	no_description: 'Sin descripción',
 	manual_entry: 'Entrada manual',

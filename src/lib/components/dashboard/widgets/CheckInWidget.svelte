@@ -61,7 +61,7 @@
 	}
 </script>
 
-{#if loaded}
+{#if loaded && checkInData.data.length > 0}
 	<div>
 		<div class="mb-3 flex items-center gap-2">
 			<IconActivity size={15} class="text-c-heading dark:text-c-primary" />
