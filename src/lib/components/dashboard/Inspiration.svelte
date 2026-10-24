@@ -25,7 +25,6 @@
 	let newestNotes = $state<Note[]>([]);
 	let newestLinks = $state<Link[]>([]);
 	let notesLoaded = $state<boolean>(false);
-	let showEmptState = $state<boolean>(false);
 
 	onMount(() => {
 		apiService.get(apiRoutes.libraries.quotes.getRandom, null).then((res) => {
@@ -66,8 +65,6 @@
 
 	{#if newestNotes.length > 0}
 		<NewestNotesWidget {newestNotes} {ts} />
-	{:else if notesLoaded}
-		<EmptyState title={ts.get.home.more_to_come} description={ts.get.home.more_to_come_desc} smallerTitle={true} />
 	{/if}
 
 	{#if newestLinks.length > 0}
@@ -76,5 +73,9 @@
 
 	{#if quote}
 		<QuoteWidget {quote} />
+	{/if}
+
+	{#if notesLoaded && musicReleases.length === 0 && bookReleases.length === 0 && newestNotes.length === 0 && newestLinks.length === 0 && !quote}
+		<EmptyState title={ts.get.home.more_to_come} description={ts.get.home.more_to_come_desc} smallerTitle={true} />
 	{/if}
 </div>
