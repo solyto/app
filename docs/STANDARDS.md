@@ -713,6 +713,14 @@ Good:
 Check: look for bare words between tags or in `placeholder=`/`title=`
 attributes that are not a `{…}` expression.
 
+### 8.2 Translations follow `docs/I18N.md`
+
+New strings are written in `en` and translated by the `translator` agent
+following `docs/I18N.md` (voice, placeholders, glossary), not improvised per
+change. Translating on the fly is how `fr.ts` and `es.ts` ended up mixing
+formal and informal address
+(`docs/backlog/i18n-consistent-voice-and-terms.md`).
+
 ---
 
 ## 9. Keyboard handling goes through `KeyManager`
