@@ -501,7 +501,7 @@ const libraries: LibraryRecords = {
 		format: 'Formato',
 		condition: 'Condizione',
 		acquired_where: 'Acquistato presso',
-		acquired_at: 'Acquistato il',
+		acquired_at: 'Acquistato presso',
 		additional_info: 'Informazioni aggiuntive',
 		cover: 'URL della copertina',
 		link: 'Link',
@@ -751,7 +751,7 @@ const dev: DevRecords = {
 		status_pending: 'In attesa',
 		status_in_progress: 'In corso',
 		status_completed: 'Completata',
-		status_cancelled: 'Annullata',
+		status_cancelled: 'Rifiutata',
 		validation_error: 'Aggiungi un titolo e una descrizione',
 		priority_1: 'Priorità bassa',
 		priority_2: 'Priorità media',
@@ -917,7 +917,7 @@ const calendar: CalendarRecords = {
 	import_create_calendar: 'Creazione del calendario %s..',
 	import_calendars: 'Importa calendari',
 	import_calendars_running: 'Importazione dei calendari..',
-	import_events: 'Importazione di %d eventi per il calendario %s..',
+	import_events: 'Importazione di %deventi per il calendario %s..',
 	recurring_event: 'Evento ricorrente',
 	recurring_edit_question: 'Vuoi modificare solo questa occorrenza o tutte le occorrenze?',
 	recurring_delete_question: 'Vuoi eliminare solo questa occorrenza o tutte le occorrenze?',
@@ -966,7 +966,7 @@ const contacts: ContactRecords = {
 	import_create_address_book: 'Creazione della rubrica %s..',
 	import_address_books: 'Importazione delle rubriche..',
 	import_contacts: 'Importa contatti',
-	import_contacts_running: 'Importazione di %d contatti per la rubrica %s..',
+	import_contacts_running: 'Importazione di %dcontatti per la rubrica %s..',
 	save_error: 'Impossibile salvare il contatto.',
 	name_required: 'Nome e cognome sono obbligatori.',
 	email_placeholder: 'Email',
@@ -1058,7 +1058,7 @@ const welcome_tour: WelcomeTourRecords = {
 	feature_calendar: 'Calendario',
 	feature_calendar_desc: 'Pianifica eventi, sincronizza con CalDAV',
 	feature_todos: 'Attività',
-	feature_todos_desc: 'Compiti, progetti e scadenze',
+	feature_todos_desc: 'Attività, progetti e scadenze',
 	feature_notes: 'Note',
 	feature_notes_desc: 'Note in Markdown, organizzate in cartelle',
 	feature_libraries: 'Librerie',
@@ -1111,11 +1111,11 @@ const welcome_tour: WelcomeTourRecords = {
 		},
 		todos: {
 			title: 'Attività',
-			description: 'Gestisci i tuoi compiti con priorità, scadenze, categorie e spazi di lavoro. Resta organizzato e non perdere mai una scadenza.',
+			description: 'Gestisci le tue attività con priorità, scadenze, categorie e spazi di lavoro. Resta organizzato e non perdere mai una scadenza.',
 			create_tip: 'Premi Invio dopo aver scritto per creare subito una nuova attività.',
 			priority_tip: 'Imposta le priorità (alta, media, bassa) per concentrarti su ciò che conta di più.',
 			workspace_tip: 'Usa gli spazi di lavoro per separare le attività personali da quelle di lavoro, oppure per organizzarle per progetto.',
-			subtask_tip: 'Suddividi i compiti complessi in sottoattività per seguire i progressi passo dopo passo.',
+			subtask_tip: 'Suddividi le attività complesse in sottoattività per seguire i progressi passo dopo passo.',
 			recurring_tip: 'Imposta una ricorrenza su qualsiasi attività per farla ricreare automaticamente secondo una pianificazione.'
 		},
 		calendar: {
@@ -1277,7 +1277,7 @@ const quick_add: QuickAddRecords = {
 	back: 'Indietro',
 	url_label: 'URL',
 	detected_label: 'Rilevato',
-	commit_success: 'Aggiunto a %s.',
+	commit_success: 'Aggiunto %s.',
 	commit_error: 'Impossibile aggiungerlo. Riprova.',
 	url_required: 'Questo tipo richiede un URL valido.',
 	content_types: {
@@ -1295,18 +1295,18 @@ const quick_add: QuickAddRecords = {
 		clipboard: 'Appunti'
 	},
 	destinations: {
-		music: 'la tua libreria musicale',
-		books: 'la tua libreria di libri',
-		movies: 'la tua libreria di film',
-		games: 'la tua libreria di giochi',
-		links: 'i tuoi link',
-		recipes: 'la tua libreria di ricette',
-		plants: 'la tua libreria di piante',
-		quotes: 'la tua libreria di citazioni',
-		todo: 'le tue attività',
-		note: 'le tue note',
-		feed: 'i tuoi feed',
-		clipboard: 'i tuoi appunti'
+		music: 'alla tua libreria musicale',
+		books: 'alla tua libreria di libri',
+		movies: 'alla tua libreria di film',
+		games: 'alla tua libreria di giochi',
+		links: 'ai tuoi link',
+		recipes: 'alla tua libreria di ricette',
+		plants: 'alla tua libreria di piante',
+		quotes: 'alla tua libreria di citazioni',
+		todo: 'alle tue attività',
+		note: 'alle tue note',
+		feed: 'ai tuoi feed',
+		clipboard: 'agli appunti'
 	}
 };
 
