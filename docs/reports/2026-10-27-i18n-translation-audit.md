@@ -199,5 +199,6 @@ Not changed: English (owner decision), and the ellipsis style ("…" vs "..").
 `alcohol`/`smoking` value as bad (`INVERTED_TRACKERS`), but the phrases treat
 5 as "no alcohol" / "didn't smoke". So the summary pairs them the wrong way
 round, e.g. "Smoked heavily, but no alcohol" with smoking counted as the good
-part. One of the two sides is inverted. Which one depends on what the check-in
-form stores. This needs a developer.
+part. **Fixed:** the check-in form (red at 1, green at 5) and the score
+(`CheckInHelper.getMeanValue`) both treat 5 as the good end, so the helper's
+inversion was wrong. It was removed, and a unit test covers the case.
