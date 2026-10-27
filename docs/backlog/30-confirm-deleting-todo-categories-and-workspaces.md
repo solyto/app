@@ -18,4 +18,4 @@ Undo.
 
 ## Notes
 
-All new strings (title, description) in all four i18n files. Check how other features word their delete confirmations (`timeTracking.category_deletion_*`) and follow that. Safety: `check`, plus a manual run on mobile and desktop: delete a category and a workspace, cancel both, and confirm both.
+All new strings (title, description) in every i18n file. Check how other features word their delete confirmations (`timeTracking.category_deletion_*`) and follow that. Safety: `check`, plus a manual run on mobile and desktop: delete a category and a workspace, cancel both, and confirm both.

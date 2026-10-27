@@ -683,8 +683,8 @@ Check: `grep -rl '<input' src --include='*.svelte' | grep -v /forms/` lists
 
 Not a single user-facing word is written as a literal in a component: not a
 button label, not a placeholder, not a unit, not a fallback like
-`'occurrence(s)'`. If the key does not exist, add it to all four locale
-files (`en`, `de`, `es`, `fr`); `npm run check` enforces that the four files
+`'occurrence(s)'`. If the key does not exist, add it to every locale
+file (`en`, `de`, `es`, `fr`, `it`); `npm run check` enforces that the files
 match each other.
 
 What the tooling does **not** catch: a hardcoded string in a component.

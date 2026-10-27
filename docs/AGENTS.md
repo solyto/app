@@ -43,7 +43,7 @@ The client for [solyto.app](https://solyto.app): a free, private, all-in-one per
 - `src/lib/config/` — `apiRoutes.ts` (all endpoints, composed from `getApiUrl()` + `/api/v1`), `platform.ts` (web vs. desktop vs. mobile via `PUBLIC_DESKTOP`/`PUBLIC_MOBILE`, API URL resolution), `themes.ts`, `navigation.ts`, `urls.ts`, `features.ts`.
 - `src/lib/components/` — feature components plus shared `ui/` (buttons, modals, navbar), `forms/` (inputs, pickers, toggles), and `charts/` (echarts wrappers). Several features keep separate desktop/mobile view variants (e.g. `calendars/views/{day,week,month,list}`, `todos/views/`).
 - `src/lib/types/` — TypeScript interfaces mirroring the API data model, one file per domain (`todo.ts`, `note.ts`, `library_*.ts`, `calendar.ts`, ...).
-- `src/lib/i18n/` — translation tables `en.ts`, `de.ts`, `es.ts`, `fr.ts`, typed via `types/translation.ts`; every UI string must exist in all four.
+- `src/lib/i18n/` — translation tables `en.ts`, `de.ts`, `es.ts`, `fr.ts`, `it.ts`, typed via `types/translation.ts`; every UI string must exist in all of them.
 - `src/lib/helpers/` — pure utilities (DateHelper, NumberHelper, FormatHelper, ColorHelper, MusicTheory, ...).
 - `src/service-worker.ts` — PWA service worker (app-shell precache, stale-while-revalidate, push notifications); `static/site.webmanifest` is the PWA manifest, `static/themes/*` are runtime-loaded theme CSS.
 - `tests/` — Vitest unit tests for pure helpers/services only (no component or integration tests); run in node env with `TZ=UTC` and `$lib` aliased to `src/lib`.
