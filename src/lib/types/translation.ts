@@ -1,4 +1,4 @@
-export type Language = 'en' | 'de' | 'fr' | 'es';
+export type Language = 'en' | 'de' | 'fr' | 'es' | 'it';
 
 export interface LayoutRecords {
 	modal_explanation: string;
@@ -69,6 +69,7 @@ export interface SettingsRecords {
 	german: string;
 	french: string;
 	spanish: string;
+	italian: string;
 	tags: string;
 	new_tag: string;
 	localization: string;

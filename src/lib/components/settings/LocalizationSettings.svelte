@@ -13,7 +13,8 @@
 		{ value: 'en', label: ts.get.settings.english },
 		{ value: 'de', label: ts.get.settings.german },
 		{ value: 'fr', label: ts.get.settings.french },
-		{ value: 'es', label: ts.get.settings.spanish }
+		{ value: 'es', label: ts.get.settings.spanish },
+		{ value: 'it', label: ts.get.settings.italian }
 	];
 
 	const timezoneOptions = getTimeZones()
