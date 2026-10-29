@@ -105,6 +105,7 @@
 		}
 
 		window.addEventListener('unhandledrejection', handleUnhandledRejection);
+		auth.loaded.finally(() => auth.widgetBridge.start());
 
 		const updateHeight = () => { innerHeight = window.innerHeight; };
 		updateHeight();

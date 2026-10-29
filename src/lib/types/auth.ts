@@ -52,6 +52,12 @@ export interface LoginResponse {
 	user: User;
 }
 
+export interface WidgetTokenResponse {
+	token: string;
+	token_type: string;
+	token_expires_at: string;
+}
+
 export interface RegisterRequest {
 	name: string;
 	email: string;

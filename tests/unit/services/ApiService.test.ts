@@ -152,6 +152,15 @@ describe('postWithStatus', () => {
 		// Refresh is an auth endpoint, so recovery must not run for it.
 		expect(fetchMock).toHaveBeenCalledTimes(1);
 	});
+
+	it('forwards the abort signal to fetch', async () => {
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse({}));
+		vi.stubGlobal('fetch', fetchMock);
+		const signal = new AbortController().signal;
+		await new ApiService('tok').postWithStatus('/logout', {}, signal);
+		expect(fetchMock.mock.calls[0][1].signal).toBe(signal);
+	});
+
 	it('sends FormData as it is, without a JSON content type', async () => {
 		const fetchMock = vi.fn().mockResolvedValue(jsonResponse({}, false, 413));
 		vi.stubGlobal('fetch', fetchMock);
@@ -351,6 +360,19 @@ describe('401 recovery', () => {
 		vi.stubGlobal('fetch', fetchMock);
 
 		await service.post(apiRoutes.auth.login, {});
+		expect(handler).not.toHaveBeenCalled();
+		expect(fetchMock).toHaveBeenCalledTimes(1);
+	});
+
+	it('never runs recovery for a 401 from logout', async () => {
+		const service = new ApiService('revoked');
+		const handler = vi.fn(async () => true);
+		service.setUnauthorizedHandler(handler);
+
+		const fetchMock = vi.fn().mockResolvedValue(jsonResponse(null, false, 401));
+		vi.stubGlobal('fetch', fetchMock);
+
+		await expect(service.postWithStatus(apiRoutes.auth.logout, {})).resolves.toEqual({ ok: false, status: 401, data: null });
 		expect(handler).not.toHaveBeenCalled();
 		expect(fetchMock).toHaveBeenCalledTimes(1);
 	});

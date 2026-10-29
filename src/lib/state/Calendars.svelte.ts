@@ -349,6 +349,7 @@ export class Calendars {
 			request
 		);
 		if (res) await this.loadEvents();
+		if (res) this.auth.widgetBridge.notifyChanged();
 		return res !== null;
 	}
 
@@ -361,6 +362,7 @@ export class Calendars {
 				: request
 		);
 		if (res) await this.loadEvents();
+		if (res) this.auth.widgetBridge.notifyChanged();
 		return res;
 	}
 
@@ -370,6 +372,7 @@ export class Calendars {
 			entry.uri
 		);
 		if (res) await this.loadEvents();
+		if (res) this.auth.widgetBridge.notifyChanged();
 		return res;
 	}
 
@@ -478,6 +481,7 @@ export class Calendars {
 			.replace('%s', encodeURIComponent(occDateStr));
 		const res = await this.apiService.put(url, request);
 		if (res) await this.loadEvents();
+		if (res) this.auth.widgetBridge.notifyChanged();
 		return res;
 	}
 
@@ -489,6 +493,7 @@ export class Calendars {
 			encodeURIComponent(occurrenceDate.toISOString())
 		);
 		if (res) await this.loadEvents();
+		if (res) this.auth.widgetBridge.notifyChanged();
 		return res;
 	}
 
@@ -523,6 +528,7 @@ export class Calendars {
 		if (res) {
 			await this.loadCalendars();
 			await this.loadEvents();
+			this.auth.widgetBridge.notifyChanged();
 		}
 		this.selectedCalendar = null;
 		this.deletionModal = false;
@@ -533,6 +539,7 @@ export class Calendars {
 		const request: UpdateTodoRequest = { is_completed: checked };
 		const res = await this.apiService.update(apiRoutes.todos.update, todo.id, request);
 		if (res) await this.loadTodos();
+		if (res) this.auth.widgetBridge.notifyChanged();
 		return res;
 	}
 }

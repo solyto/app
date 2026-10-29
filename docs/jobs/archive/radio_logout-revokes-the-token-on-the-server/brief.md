@@ -1,6 +1,10 @@
-# Backlog: logout revokes the token on the server
+# Brief: logout revokes the token on the server
 
-created: 2026-10-29
+type: feature
+id: radio
+branch: feature/radio_logout-revokes-the-token-on-the-server
+date: 2026-10-29
+author: Leander Muskalla
 
 ## What
 

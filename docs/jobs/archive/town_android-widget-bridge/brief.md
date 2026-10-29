@@ -1,6 +1,10 @@
-# Backlog: Android widget bridge
+# Brief: Android widget bridge
 
-created: 2026-10-29
+type: feature
+id: town
+branch: feature/town_android-widget-bridge
+date: 2026-10-29
+author: Leander Muskalla
 
 ## What
 
@@ -92,3 +96,31 @@ Native → app:
 - Native never sends the widget token back to JS; the app never stores it.
 - The message types and route keys above are the cross-repo contract. Changing
   them needs the mobile job and the API format (`route.key`) changed too.
+
+### `POST /auth/widget-token` response (confirmed, implemented in solyto/api)
+
+Request: `POST {apiUrl}/auth/widget-token` with the normal Bearer token, empty body.
+
+Success: **201**, standard `ApiResponse` envelope, same shape as login/refresh:
+
+    {
+      "success": true,
+      "message": "…",
+      "data": {
+        "token": "<plain text token>",
+        "token_type": "Bearer",
+        "token_expires_at": "<ISO 8601>"
+      },
+      "timestamp": "…"
+    }
+
+Use `data.token` and `data.token_expires_at`, and send
+`setToken { token, expiresAt: token_expires_at, apiUrl: getApiUrl() }`.
+
+Other responses:
+- **404**: the server has no widgets (old self-hosted server). Remember it per
+  API URL and server version, and don't retry (step 3).
+- **429**: throttled. Try again on the next trigger.
+- Any other non-2xx: transient. Try again on the next trigger.
+
+Tests mock this response; no running API is needed.

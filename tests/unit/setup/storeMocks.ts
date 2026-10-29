@@ -36,7 +36,8 @@ export const auth = {
 	getPublicProfile: vi.fn(),
 	updateNavigation: vi.fn(),
 	loadAdditionalData: vi.fn(),
-	getWeekStart: vi.fn(() => 'monday')
+	getWeekStart: vi.fn(() => 'monday'),
+	widgetBridge: { notifyChanged: vi.fn() }
 };
 
 export const pageState = {
@@ -106,6 +107,7 @@ export function resetStoreMocks() {
 	auth.updateNavigation.mockReset();
 	auth.loadAdditionalData.mockReset();
 	auth.getWeekStart.mockReset();
+	auth.widgetBridge.notifyChanged.mockReset();
 
 	auth.getToken.mockReturnValue('test-token');
 	auth.getWeekStart.mockReturnValue('monday');
