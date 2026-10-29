@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Auth } from '$lib/state/Auth.svelte';
+import { apiRoutes } from '$lib/config/apiRoutes';
 import type { User, AuthToken, LoginResponse } from '$lib/types/auth';
 
 // The Auth module itself must NOT be mocked — only its service dependencies.
@@ -448,6 +449,72 @@ describe('Auth store', () => {
 			expect(auth.user).toBeNull();
 			expect(auth.getToken()).toBeNull();
 			expect(storage.destroy).toHaveBeenCalledWith('auth');
+		});
+	});
+
+	describe('signOut', () => {
+		async function signedInAuth(): Promise<Auth> {
+			api.postRaw.mockResolvedValue({ data: loginResponse() });
+			const auth = new Auth();
+			await auth.login('a@b.c', 'p');
+			api.postWithStatus.mockClear();
+			return auth;
+		}
+
+		function expectSignedOut(auth: Auth): void {
+			expect(auth.loggedIn).toBe(false);
+			expect(auth.user).toBeNull();
+			expect(auth.getToken()).toBeNull();
+			expect(storage.destroy).toHaveBeenCalledWith('auth');
+		}
+
+		it('revokes the token on the server, then clears the session', async () => {
+			const auth = await signedInAuth();
+			api.postWithStatus.mockResolvedValue({ ok: true, status: 200, data: {} });
+
+			await auth.signOut();
+
+			expect(api.postWithStatus).toHaveBeenCalledWith(apiRoutes.auth.logout, {}, expect.any(AbortSignal));
+			expectSignedOut(auth);
+		});
+
+		it.each([401, 500])('still clears the session when the server answers %d', async (status) => {
+			const auth = await signedInAuth();
+			api.postWithStatus.mockResolvedValue({ ok: false, status, data: null });
+
+			await expect(auth.signOut()).resolves.toBeUndefined();
+
+			expectSignedOut(auth);
+		});
+
+		it('still clears the session when the request fails or times out', async () => {
+			const auth = await signedInAuth();
+			api.postWithStatus.mockRejectedValue(new Error('offline'));
+
+			await expect(auth.signOut()).resolves.toBeUndefined();
+
+			expectSignedOut(auth);
+		});
+
+		it('does not report an expired session', async () => {
+			const auth = await signedInAuth();
+			const handler = vi.fn();
+			auth.setSessionExpiredHandler(handler);
+			api.postWithStatus.mockResolvedValue({ ok: false, status: 401, data: null });
+
+			await auth.signOut();
+
+			expect(handler).not.toHaveBeenCalled();
+		});
+
+		it('skips the server call without a token', async () => {
+			const auth = new Auth();
+			await flushAsync();
+
+			await auth.signOut();
+
+			expect(api.postWithStatus).not.toHaveBeenCalled();
+			expect(auth.loggedIn).toBe(false);
 		});
 	});
 

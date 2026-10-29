@@ -183,6 +183,20 @@ export class Auth {
 		this.clear();
 	}
 
+	// Revokes the token on the server, then clears local state whatever the
+	// outcome: being offline or a failing server must never keep the user logged in.
+	async signOut(): Promise<void> {
+		try {
+			if (this.getToken()) {
+				await this.apiService.postWithStatus(apiRoutes.auth.logout, {}, AbortSignal.timeout(3000));
+			}
+		} catch {
+			// The token expires on its own; local logout must not depend on the server.
+		} finally {
+			this.logout();
+		}
+	}
+
 	setSessionExpiredHandler(handler: () => void): void {
 		this.sessionExpiredHandler = handler;
 	}

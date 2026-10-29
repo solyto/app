@@ -11,6 +11,7 @@ import LocalStorageService from '$lib/services/LocalStorageService';
 const AUTH_ENDPOINTS: string[] = [
 	apiRoutes.auth.login,
 	apiRoutes.auth.refresh,
+	apiRoutes.auth.logout,
 	apiRoutes.auth.register,
 	apiRoutes.auth.verify,
 	apiRoutes.auth.forgotPassword,
@@ -271,14 +272,15 @@ export default class ApiService {
 
 	async postWithStatus(
 		endpoint: string,
-		body: FormData | object
+		body: FormData | object,
+		signal?: AbortSignal
 	): Promise<
 		{ ok: true; status: number; data: PostResponse } | { ok: false; status: number; data: null }
 	> {
 		const isFormData = body instanceof FormData;
 		const res = await this.fetchWithRecovery(
 			endpoint,
-			{ method: 'POST', body: isFormData ? body : JSON.stringify(body) },
+			{ method: 'POST', body: isFormData ? body : JSON.stringify(body), signal },
 			() => (isFormData ? this.getApiHeader() : this.getApiHeaderWithBody())
 		);
 
