@@ -28,7 +28,9 @@
 		{ value: 'YYYY/mm/dd', label: 'YYYY/mm/dd (2025/12/31)' },
 		{ value: 'YY/mm/dd', label: 'YY/mm/dd (25/12/31)' },
 		{ value: 'YYYY-mm-dd', label: 'YYYY-mm-dd (2025-12-31)' },
-		{ value: 'YY-mm-dd', label: 'YY-mm-dd (25-12-31)' }
+		{ value: 'YY-mm-dd', label: 'YY-mm-dd (25-12-31)' },
+		{ value: 'mm/dd/YYYY', label: 'mm/dd/YYYY (12/31/2025)' },
+		{ value: 'mm/dd/YY', label: 'mm/dd/YY (12/31/25)' }
 	];
 
 	const timeFormats = [

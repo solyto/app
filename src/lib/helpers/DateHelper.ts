@@ -81,7 +81,7 @@ export function formatDateWithoutYear(
 }
 
 export function formatMonth(input: string | Date, dateFormat: string | null = null): string {
-	const monthFormat = (dateFormat ?? 'dd.mm.YYYY').replace(/^dd[^a-zA-Z]|[^a-zA-Z]dd$/, '');
+	const monthFormat = (dateFormat ?? 'dd.mm.YYYY').replace(/^dd[^a-zA-Z]|[^a-zA-Z]dd$|(?<=[^a-zA-Z])dd[^a-zA-Z]/, '');
 	return formatDate(input, monthFormat);
 }
 

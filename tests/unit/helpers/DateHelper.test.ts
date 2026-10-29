@@ -40,6 +40,8 @@ describe('formatDate', () => {
 		expect(formatDate(AUG_15, 'dd/mm/YYYY')).toBe('15/08/2025');
 		expect(formatDate(AUG_15, 'YYYY-mm-dd')).toBe('2025-08-15');
 		expect(formatDate(AUG_15, 'dd.mm.YY')).toBe('15.08.25');
+		expect(formatDate(AUG_15, 'mm/dd/YYYY')).toBe('08/15/2025');
+		expect(formatDate(AUG_15, 'mm/dd/YY')).toBe('08/15/25');
 	});
 
 	it('accepts an ISO date string', () => {
@@ -54,6 +56,8 @@ describe('formatDateWithoutYear', () => {
 
 	it('strips year and cleans trailing separator', () => {
 		expect(formatDateWithoutYear(AUG_15, 'dd/mm/YYYY')).toBe('15/08');
+		expect(formatDateWithoutYear(AUG_15, 'mm/dd/YYYY')).toBe('08/15');
+		expect(formatDateWithoutYear(AUG_15, 'mm/dd/YY')).toBe('08/15');
 	});
 });
 
@@ -69,6 +73,11 @@ describe('formatMonth', () => {
 	it('drops a trailing day', () => {
 		expect(formatMonth(AUG_15, 'YYYY/mm/dd')).toBe('2025/08');
 		expect(formatMonth(AUG_15, 'YYYY-mm-dd')).toBe('2025-08');
+	});
+
+	it('drops a day between month and year', () => {
+		expect(formatMonth(AUG_15, 'mm/dd/YYYY')).toBe('08/2025');
+		expect(formatMonth(AUG_15, 'mm/dd/YY')).toBe('08/25');
 	});
 });
 

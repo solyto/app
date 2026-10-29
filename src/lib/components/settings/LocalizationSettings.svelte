@@ -30,7 +30,9 @@
 		{ value: 'YYYY/mm/dd', label: '2025/10/01' },
 		{ value: 'YY/mm/dd', label: '25/10/01' },
 		{ value: 'YYYY-mm-dd', label: '2025-10-01' },
-		{ value: 'YY-mm-dd', label: '25-10-01' }
+		{ value: 'YY-mm-dd', label: '25-10-01' },
+		{ value: 'mm/dd/YYYY', label: '10/01/2025' },
+		{ value: 'mm/dd/YY', label: '10/01/25' }
 	];
 
 	const timeFormatOptions = [
