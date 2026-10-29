@@ -51,6 +51,7 @@ export class MusicLibrary {
 	genreFilter = $state<MusicGenre | null>(null);
 	wishlistFilter = $state<boolean>(false);
 	searchTerm = $state<string>('');
+	activeFilter: 'none' | 'search' | 'genreAndRating' | 'wishlist' = 'none';
 	releases = $state<MusicRelease[]>([]);
 	releasesLoaded = $state<boolean>(false);
 	integrations = $state<string[]>(['deezer', 'discogs']);
@@ -78,7 +79,7 @@ export class MusicLibrary {
 		const res = await this.apiService.list(apiRoutes.libraries.music.list);
 		if (res) {
 			this.entries = res.data as Music[];
-			this.setFilteredEntries(this.entries);
+			this.reapplyFilter();
 			await this.loadGenres();
 			this.loaded = true;
 		}
@@ -112,27 +113,45 @@ export class MusicLibrary {
 	search(): void {
 		this.genreFilter = null;
 		this.ratingFilter = null;
-		this.setFilteredEntries(
-			this.filterService.search(this.entries, this.searchTerm, ['title', 'artist'])
-		);
+		this.activeFilter = 'search';
+		this.setFilteredEntries(this.filterEntries());
 	}
 
 	filterByGenreAndRating(): void {
-		this.setFilteredEntries(
-			this.filterService.byGenreAndRating(this.entries, this.genreFilter, this.ratingFilter)
-		);
+		this.activeFilter = 'genreAndRating';
+		this.setFilteredEntries(this.filterEntries());
 	}
 
 	filterByWishlist(): void {
 		this.wishlistFilter = true;
-		this.setFilteredEntries(this.filterService.byWishlist(this.entries));
+		this.activeFilter = 'wishlist';
+		this.setFilteredEntries(this.filterEntries());
 	}
 
 	clearFilters(): void {
 		this.genreFilter = null;
 		this.ratingFilter = null;
 		this.wishlistFilter = false;
+		this.activeFilter = 'none';
 		this.setFilteredEntries(this.entries);
+	}
+
+	private filterEntries(): Music[] {
+		switch (this.activeFilter) {
+			case 'search':
+				return this.filterService.search(this.entries, this.searchTerm, ['title', 'artist']);
+			case 'genreAndRating':
+				return this.filterService.byGenreAndRating(this.entries, this.genreFilter, this.ratingFilter);
+			case 'wishlist':
+				return this.filterService.byWishlist(this.entries);
+			default:
+				return this.entries;
+		}
+	}
+
+	private reapplyFilter(): void {
+		this.filteredEntries = this.filterEntries();
+		this.shelfIndex = Math.max(0, Math.min(this.shelfIndex, this.filteredEntries.length - 1));
 	}
 
 	private setFilteredEntries(entries: Music[]): void {

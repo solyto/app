@@ -52,6 +52,7 @@ export class BookLibrary {
 	wishlistFilter = $state<boolean>(false);
 	lentFilter = $state<boolean>(false);
 	searchTerm = $state<string>('');
+	activeFilter: 'none' | 'search' | 'genreAndRating' | 'wishlist' | 'lent' = 'none';
 	releases = $state<BookRelease[]>([]);
 	releasesLoaded = $state<boolean>(false);
 	view = $state<'list' | 'cards' | 'shelf' | 'spine'>('cards');
@@ -76,7 +77,7 @@ export class BookLibrary {
 		const res = await this.apiService.list(apiRoutes.libraries.books.list);
 		if (res) {
 			this.entries = res.data as Book[];
-			this.setFilteredEntries(this.entries);
+			this.reapplyFilter();
 			await this.loadGenres();
 			this.loaded = true;
 		}
@@ -99,27 +100,27 @@ export class BookLibrary {
 	search(): void {
 		this.genreFilter = null;
 		this.ratingFilter = null;
-		this.setFilteredEntries(
-			this.filterService.search(this.entries, this.searchTerm, ['title', 'author', 'series'])
-		);
+		this.activeFilter = 'search';
+		this.setFilteredEntries(this.filterEntries());
 	}
 
 	filterByGenreAndRating(): void {
-		this.setFilteredEntries(
-			this.filterService.byGenreAndRating(this.entries, this.genreFilter, this.ratingFilter)
-		);
+		this.activeFilter = 'genreAndRating';
+		this.setFilteredEntries(this.filterEntries());
 	}
 
 	filterByWishlist(): void {
 		this.lentFilter = false;
 		this.wishlistFilter = true;
-		this.setFilteredEntries(this.filterService.byWishlist(this.entries));
+		this.activeFilter = 'wishlist';
+		this.setFilteredEntries(this.filterEntries());
 	}
 
 	filterByLent(): void {
 		this.wishlistFilter = false;
 		this.lentFilter = true;
-		this.setFilteredEntries(this.filterService.byLent(this.entries));
+		this.activeFilter = 'lent';
+		this.setFilteredEntries(this.filterEntries());
 	}
 
 	clearFilters(): void {
@@ -127,7 +128,28 @@ export class BookLibrary {
 		this.ratingFilter = null;
 		this.wishlistFilter = false;
 		this.lentFilter = false;
+		this.activeFilter = 'none';
 		this.setFilteredEntries(this.entries);
+	}
+
+	private filterEntries(): Book[] {
+		switch (this.activeFilter) {
+			case 'search':
+				return this.filterService.search(this.entries, this.searchTerm, ['title', 'author', 'series']);
+			case 'genreAndRating':
+				return this.filterService.byGenreAndRating(this.entries, this.genreFilter, this.ratingFilter);
+			case 'wishlist':
+				return this.filterService.byWishlist(this.entries);
+			case 'lent':
+				return this.filterService.byLent(this.entries);
+			default:
+				return this.entries;
+		}
+	}
+
+	private reapplyFilter(): void {
+		this.filteredEntries = this.filterEntries();
+		this.shelfIndex = Math.max(0, Math.min(this.shelfIndex, this.filteredEntries.length - 1));
 	}
 
 	private setFilteredEntries(entries: Book[]): void {
