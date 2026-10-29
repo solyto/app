@@ -748,6 +748,12 @@ export interface DevRecords {
 		comments_submit: string;
 		current_requests: string;
 		resolved_requests: string;
+		edit: string;
+		fixed_in_version: string;
+		fixed_in: string;
+		fixed_in_included: string;
+		fixed_in_pending: string;
+		fixed_in_current_version: string;
 	};
 }
 

@@ -767,7 +767,13 @@ const dev: DevRecords = {
 		comments_placeholder: 'Añadir un comentario...',
 		comments_submit: 'Enviar',
 		current_requests: 'Solicitudes actuales',
-		resolved_requests: 'Solicitudes resueltas'
+		resolved_requests: 'Solicitudes resueltas',
+		edit: 'Editar solicitud',
+		fixed_in_version: 'Corregido en la versión',
+		fixed_in: 'Corregido en %s',
+		fixed_in_included: 'Corregido en %s ✓',
+		fixed_in_pending: 'Corregido en %s · actualización pendiente',
+		fixed_in_current_version: 'Tu versión: %s'
 	}
 };
 

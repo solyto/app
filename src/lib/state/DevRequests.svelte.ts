@@ -89,6 +89,7 @@ export class DevRequests {
 			apiRoutes.dev.requests.createComment.replace('%d', entry.id.toString()),
 			{ content }
 		);
+		if (res) await this.load();
 		return Promise.resolve(res !== null);
 	}
 }

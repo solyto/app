@@ -752,7 +752,7 @@ const dev: DevRecords = {
 		status_pending: 'Pending',
 		status_in_progress: 'In Progress',
 		status_completed: 'Completed',
-		status_cancelled: 'Cancelled',
+		status_cancelled: 'Rejected',
 		validation_error: 'Please add a title and a description',
 		priority_1: 'Low Priority',
 		priority_2: 'Medium Priority',
@@ -767,7 +767,13 @@ const dev: DevRecords = {
 		comments_placeholder: 'Add a comment...',
 		comments_submit: 'Submit',
 		current_requests: 'Current Requests',
-		resolved_requests: 'Resolved Requests'
+		resolved_requests: 'Resolved Requests',
+		edit: 'Edit Request',
+		fixed_in_version: 'Fixed in version',
+		fixed_in: 'Fixed in %s',
+		fixed_in_included: 'Fixed in %s ✓',
+		fixed_in_pending: 'Fixed in %s · update pending',
+		fixed_in_current_version: "You're on %s"
 	}
 };
 

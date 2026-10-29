@@ -15,6 +15,14 @@ voice and the glossary. Known cases:
 - `es.ts` uses both "tag(s)" and "etiqueta(s)"; use "etiqueta(s)".
 - `de.ts` uses both "Account" and "Konto"; use "Konto". `workspace_hide_it`
   reads "Versteck Das".
+- Edit titles: `en.ts` uses both "Update …" (`edit_album`, `edit_book`,
+  `edit_movie`, `edit_game`, `edit_quote`, `edit_recipe`, `edit_plant`,
+  `calendar.edit_entry`) and "Edit …" (`timeTracking.edit_entry`, the new
+  `dev.requests.edit`), so `it.ts` mixes "Aggiorna" and "Modifica" too.
+  `notes.edit_folder` is "Change Folder Name" in `en`/`es`/`fr`/`it` but
+  "Ordner bearbeiten" in `de`. Needs the owner to pick the English wording
+  first (outside this entry's scope), then align every locale and add an
+  "Edit" row to the glossary.
 
 Hand the work to the `translator` agent, one locale per commit.
 

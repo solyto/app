@@ -766,7 +766,13 @@ const dev: DevRecords = {
 		comments_placeholder: 'Ajouter un commentaire...',
 		comments_submit: 'Envoyer',
 		current_requests: 'Demandes en cours',
-		resolved_requests: 'Demandes résolues'
+		resolved_requests: 'Demandes résolues',
+		edit: 'Modifier la demande',
+		fixed_in_version: 'Corrigé dans la version',
+		fixed_in: 'Corrigé dans %s',
+		fixed_in_included: 'Corrigé dans %s ✓',
+		fixed_in_pending: 'Corrigé dans %s · mise à jour en attente',
+		fixed_in_current_version: 'Ta version : %s'
 	}
 };
 

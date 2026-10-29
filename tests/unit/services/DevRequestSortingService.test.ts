@@ -19,6 +19,7 @@ function request(overrides: Partial<DevRequest> = {}): DevRequest {
 		score: 0,
 		user_vote: 'up',
 		comment_count: 0,
+		fixed_in_version: null,
 		created_by_user_id: null,
 		created_by_user: { id: '', name: '' },
 		...overrides

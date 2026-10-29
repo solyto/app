@@ -767,7 +767,13 @@ const dev: DevRecords = {
 		comments_placeholder: 'Aggiungi un commento...',
 		comments_submit: 'Invia',
 		current_requests: 'Richieste attuali',
-		resolved_requests: 'Richieste risolte'
+		resolved_requests: 'Richieste risolte',
+		edit: 'Modifica richiesta',
+		fixed_in_version: 'Risolto nella versione',
+		fixed_in: 'Risolto in %s',
+		fixed_in_included: 'Risolto in %s ✓',
+		fixed_in_pending: 'Risolto in %s · aggiornamento in sospeso',
+		fixed_in_current_version: 'La tua versione: %s'
 	}
 };
 
