@@ -21,6 +21,9 @@ export interface LayoutRecords {
 	remove: string;
 	rename: string;
 	network_error: string;
+	rate_limited: string;
+	rate_limited_minutes_singular: string;
+	rate_limited_minutes_plural: string;
 }
 
 export interface NavigationRecords {
@@ -118,6 +121,8 @@ export interface SettingsRecords {
 	export_status_failed: string;
 	export_download: string;
 	export_rate_limited: string;
+	export_rate_limited_hours_singular: string;
+	export_rate_limited_hours_plural: string;
 	export_next_available: string;
 	export_expired: string;
 	export_download_failed: string;

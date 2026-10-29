@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import ApiService, { NetworkError } from '$lib/services/ApiService';
+import ApiService, { NetworkError, RateLimitedError } from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 
 function jsonResponse(data: unknown, ok = true, status = 200) {
@@ -547,5 +547,67 @@ describe('426 upgrade required', () => {
 
 		await expect(new ApiService('tok').list('/todos')).resolves.toBeNull();
 		expect(response.clone).not.toHaveBeenCalled();
+	});
+});
+
+describe('429 rate limited', () => {
+	function rateLimitedResponse(body: unknown) {
+		const json = typeof body === 'string'
+			? vi.fn().mockRejectedValue(new SyntaxError('not json'))
+			: vi.fn().mockResolvedValue(body);
+		const response = { ok: false, status: 429, json };
+		return { ...response, clone: vi.fn(() => ({ ...response })) };
+	}
+
+	it('throws a RateLimitedError with the wait time and code from the envelope', async () => {
+		const body = { message: 'Too many requests.', errors: ['too_many_requests'], meta: { retry_after: 120 } };
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(rateLimitedResponse(body)));
+
+		const error = await new ApiService().post(apiRoutes.auth.login, {}).catch((e) => e);
+
+		expect(error).toBeInstanceOf(RateLimitedError);
+		expect(error.retryAfter).toBe(120);
+		expect(error.code).toBe('too_many_requests');
+	});
+
+	it('reads a top-level retry_after', async () => {
+		const body = { errors: ['export_rate_limited'], retry_after: 3600 };
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(rateLimitedResponse(body)));
+
+		const error = await new ApiService('tok').postRaw('/export', {}).catch((e) => e);
+
+		expect(error.retryAfter).toBe(3600);
+		expect(error.code).toBe('export_rate_limited');
+	});
+
+	it('falls back to null without wait time and code', async () => {
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(rateLimitedResponse({ message: 'x' })));
+
+		const error = await new ApiService().list('/todos').catch((e) => e);
+
+		expect(error).toBeInstanceOf(RateLimitedError);
+		expect(error.retryAfter).toBeNull();
+		expect(error.code).toBeNull();
+	});
+
+	it('falls back to null when the body is not JSON', async () => {
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(rateLimitedResponse('<html>')));
+
+		const error = await new ApiService().list('/todos').catch((e) => e);
+
+		expect(error).toBeInstanceOf(RateLimitedError);
+		expect(error.retryAfter).toBeNull();
+	});
+
+	it('never runs 401 recovery and never retries', async () => {
+		const service = new ApiService('tok');
+		const handler = vi.fn(async () => true);
+		service.setUnauthorizedHandler(handler);
+		const fetchMock = vi.fn().mockResolvedValue(rateLimitedResponse({}));
+		vi.stubGlobal('fetch', fetchMock);
+
+		await expect(service.list('/todos')).rejects.toBeInstanceOf(RateLimitedError);
+		expect(handler).not.toHaveBeenCalled();
+		expect(fetchMock).toHaveBeenCalledTimes(1);
 	});
 });

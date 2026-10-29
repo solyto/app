@@ -49,7 +49,10 @@ const layout: LayoutRecords = {
 	reload: 'Recharger',
 	remove: 'Retirer',
 	rename: 'Renommer',
-	network_error: 'Problème de connexion. Vérifie ta connexion et réessaie.'
+	network_error: 'Problème de connexion. Vérifie ta connexion et réessaie.',
+	rate_limited: 'Trop de tentatives. Réessaie dans un instant.',
+	rate_limited_minutes_singular: 'Trop de tentatives. Réessaie dans 1 minute.',
+	rate_limited_minutes_plural: 'Trop de tentatives. Réessaie dans {n} minutes.'
 };
 
 const nav: NavigationRecords = {
@@ -209,6 +212,8 @@ const settings: SettingsRecords = {
 	export_status_failed: 'L\'export a échoué.',
 	export_download: 'Télécharger',
 	export_rate_limited: 'Tu ne peux exporter qu\'une fois toutes les 24 heures.',
+	export_rate_limited_hours_singular: 'Tu ne peux exporter qu\'une fois toutes les 24 heures. Réessaie dans 1 heure.',
+	export_rate_limited_hours_plural: 'Tu ne peux exporter qu\'une fois toutes les 24 heures. Réessaie dans {n} heures.',
 	export_next_available: 'Prochain export disponible dans',
 	export_expired: 'L\'export a expiré.',
 	export_download_failed: 'Le téléchargement a échoué.',

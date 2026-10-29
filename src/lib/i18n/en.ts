@@ -49,7 +49,10 @@ const layout: LayoutRecords = {
 	reload: 'Reload',
 	remove: 'Remove',
 	rename: 'Rename',
-	network_error: 'Connection problem. Please check your connection and try again.'
+	network_error: 'Connection problem. Please check your connection and try again.',
+	rate_limited: 'Too many attempts. Please try again in a moment.',
+	rate_limited_minutes_singular: 'Too many attempts. Please try again in 1 minute.',
+	rate_limited_minutes_plural: 'Too many attempts. Please try again in {n} minutes.'
 };
 
 const nav: NavigationRecords = {
@@ -210,6 +213,8 @@ const settings: SettingsRecords = {
 	export_status_failed: 'Export failed.',
 	export_download: 'Download',
 	export_rate_limited: 'You can only export once every 24 hours.',
+	export_rate_limited_hours_singular: 'You can only export once every 24 hours. Try again in 1 hour.',
+	export_rate_limited_hours_plural: 'You can only export once every 24 hours. Try again in {n} hours.',
 	export_next_available: 'Next export available in',
 	export_expired: 'Export has expired.',
 	export_download_failed: 'Download failed.',

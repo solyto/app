@@ -9,6 +9,8 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { scale } from 'svelte/transition';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import { RateLimitedError } from '$lib/services/ApiService';
+	import { rateLimitedMessage } from '$lib/helpers/NetworkErrorHelper';
 
 	const auth = getAuth();
 	const ts = getTranslation();
@@ -18,6 +20,7 @@
 	let loaded = $state<boolean>(false);
 	let status = $state<boolean>(false);
 	let errors = $state<string[]>([]);
+	let rateLimit = $state<RateLimitedError | null>(null);
 
 	onMount(async () => {
 		if (!userId || !token) {
@@ -25,12 +28,17 @@
 			return;
 		}
 
-		const verification = await auth.verify({
-			user_id: userId,
-			token: token
-		});
-		status = verification.success;
-		errors = verification.errors ?? [];
+		try {
+			const verification = await auth.verify({
+				user_id: userId,
+				token: token
+			});
+			status = verification.success;
+			errors = verification.errors ?? [];
+		} catch (e) {
+			if (!(e instanceof RateLimitedError)) throw e;
+			rateLimit = e;
+		}
 		loaded = true;
 	});
 </script>
@@ -44,7 +52,9 @@
 			class="mb-4 space-y-4 rounded bg-c-bg-surface px-8 pt-6 pb-8 shadow-md"
 			in:scale
 		>
-			{#if status || errors.includes('already_verified')}
+			{#if rateLimit}
+				<span>{rateLimitedMessage(rateLimit.retryAfter, ts.get.layout)}</span>
+			{:else if status || errors.includes('already_verified')}
 				<span>{ts.get.auth.verify_success}</span>
 				{#if deepLinkUrl}
 					<div class="mt-4 flex items-center justify-end">

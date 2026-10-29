@@ -30,6 +30,20 @@ export class NetworkError extends Error {
 	}
 }
 
+// A 429 from the API. Thrown instead of returning the response so no caller can
+// mistake it for a failed login or an invalid link; the root layout reports it.
+export class RateLimitedError extends Error {
+	readonly retryAfter: number | null;
+	readonly code: string | null;
+
+	constructor(retryAfter: number | null, code: string | null) {
+		super('Too many requests');
+		this.name = 'RateLimitedError';
+		this.retryAfter = retryAfter;
+		this.code = code;
+	}
+}
+
 interface StoredServerVersion {
 	apiUrl: string;
 	version: string;
@@ -127,6 +141,10 @@ export default class ApiService {
 			return res;
 		}
 
+		if (res.status === 429) {
+			throw await this.readRateLimitedError(res);
+		}
+
 		if (res.status !== 401 || !this.unauthorizedHandler || this.isAuthEndpoint(endpoint)) {
 			return res;
 		}
@@ -163,6 +181,20 @@ export default class ApiService {
 			return typeof minVersion === 'string' ? minVersion : null;
 		} catch {
 			return null;
+		}
+	}
+
+	private async readRateLimitedError(res: Response): Promise<RateLimitedError> {
+		try {
+			const body = await res.clone().json();
+			const retryAfter = body?.meta?.retry_after ?? body?.retry_after;
+			const code = body?.errors?.[0];
+			return new RateLimitedError(
+				typeof retryAfter === 'number' ? retryAfter : null,
+				typeof code === 'string' ? code : null
+			);
+		} catch {
+			return new RateLimitedError(null, null);
 		}
 	}
 

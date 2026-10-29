@@ -49,7 +49,10 @@ const layout: LayoutRecords = {
 	reload: 'Recargar',
 	remove: 'Eliminar',
 	rename: 'Renombrar',
-	network_error: 'Problema de conexión. Comprueba tu conexión e inténtalo de nuevo.'
+	network_error: 'Problema de conexión. Comprueba tu conexión e inténtalo de nuevo.',
+	rate_limited: 'Demasiados intentos. Inténtalo de nuevo en un momento.',
+	rate_limited_minutes_singular: 'Demasiados intentos. Inténtalo de nuevo en 1 minuto.',
+	rate_limited_minutes_plural: 'Demasiados intentos. Inténtalo de nuevo en {n} minutos.'
 };
 
 const nav: NavigationRecords = {
@@ -210,6 +213,8 @@ const settings: SettingsRecords = {
 	export_status_failed: 'Exportación fallida.',
 	export_download: 'Descargar',
 	export_rate_limited: 'Solo puedes exportar una vez cada 24 horas.',
+	export_rate_limited_hours_singular: 'Solo puedes exportar una vez cada 24 horas. Inténtalo de nuevo en 1 hora.',
+	export_rate_limited_hours_plural: 'Solo puedes exportar una vez cada 24 horas. Inténtalo de nuevo en {n} horas.',
 	export_next_available: 'Próxima exportación disponible en',
 	export_expired: 'La exportación ha expirado.',
 	export_download_failed: 'La descarga ha fallado.',

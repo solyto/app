@@ -17,6 +17,7 @@
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
 	import { PLATFORM, getApiUrl, getPwaApiUrl } from '$lib/config/platform';
+	import { RateLimitedError } from '$lib/services/ApiService';
 
 	function getApiLabel(): string {
 		const url = getApiUrl();
@@ -74,7 +75,8 @@
 			ts.loadLanguage();
 			notifications.success(ts.get.auth.login_success);
 			await goto(resolve(urls.home));
-		} catch {
+		} catch (e) {
+			if (e instanceof RateLimitedError) throw e;
 			notifications.error(ts.get.auth.passkey_error);
 		} finally {
 			loadingIndicator.stop();
