@@ -36,6 +36,17 @@ export function parseDateSlug(slug: string): Date | null {
 	return new Date(year, month - 1, day);
 }
 
+/** Parses a "YYYY-mm-dd" value (see getUrlFormat) into a local date. `new Date()` would read it as UTC midnight. */
+export function parseUrlFormat(value: string): Date | null {
+	const parts = value.split('-');
+	if (parts.length !== 3) return null;
+	const year = parseInt(parts[0], 10);
+	const month = parseInt(parts[1], 10);
+	const day = parseInt(parts[2], 10);
+	if (!day || !month || !year) return null;
+	return new Date(year, month - 1, day);
+}
+
 export function formatFloatingDate(date: Date) {
 	const pad = (n: number) => String(n).padStart(2, '0');
 
