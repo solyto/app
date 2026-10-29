@@ -21,6 +21,7 @@ import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class MusicLibrary {
 	static readonly LS_VIEW_KEY: string = 'music_view';
+	static readonly VIEWS = ['list', 'cards', 'shelf', 'spine'] as const;
 
 	config: LibraryConfig = {
 		type: 'music',
@@ -56,7 +57,7 @@ export class MusicLibrary {
 	releasesLoaded = $state<boolean>(false);
 	integrations = $state<string[]>(['deezer', 'discogs']);
 	integrationsLoaded = $state<boolean>(false);
-	view = $state<'list' | 'cards' | 'shelf' | 'spine'>('cards');
+	view = $state<(typeof MusicLibrary.VIEWS)[number]>('cards');
 	auth: Auth;
 	apiService: ApiService;
 	localStorage: LocalStorageService;
@@ -72,7 +73,7 @@ export class MusicLibrary {
 		this.localStorage = localStorage;
 
 		const saved = this.localStorage.get(MusicLibrary.LS_VIEW_KEY);
-		this.view = (saved as 'list' | 'cards' | 'shelf' | 'spine' | null) ?? 'cards';
+		this.view = MusicLibrary.VIEWS.find((view) => view === saved) ?? 'cards';
 	}
 
 	async load(): Promise<void> {

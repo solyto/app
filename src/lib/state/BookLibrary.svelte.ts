@@ -21,6 +21,7 @@ import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class BookLibrary {
 	static readonly LS_VIEW_KEY: string = 'books_view';
+	static readonly VIEWS = ['list', 'cards', 'shelf', 'spine'] as const;
 
 	config: LibraryConfig = {
 		type: 'books',
@@ -55,7 +56,7 @@ export class BookLibrary {
 	activeFilter: 'none' | 'search' | 'genreAndRating' | 'wishlist' | 'lent' = 'none';
 	releases = $state<BookRelease[]>([]);
 	releasesLoaded = $state<boolean>(false);
-	view = $state<'list' | 'cards' | 'shelf' | 'spine'>('cards');
+	view = $state<(typeof BookLibrary.VIEWS)[number]>('cards');
 	auth: Auth;
 	filterService = new LibraryFilterService();
 	apiService: ApiService;
@@ -70,7 +71,7 @@ export class BookLibrary {
 		this.apiService = apiService;
 		this.localStorage = localStorage;
 		const saved = this.localStorage.get(BookLibrary.LS_VIEW_KEY);
-		this.view = (saved as 'list' | 'cards' | 'shelf' | 'spine' | null) ?? 'cards';
+		this.view = BookLibrary.VIEWS.find((view) => view === saved) ?? 'cards';
 	}
 
 	async load(): Promise<void> {

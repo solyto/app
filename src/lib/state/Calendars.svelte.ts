@@ -32,6 +32,7 @@ import type { CalendarDropTarget } from '$lib/services/CalendarDragService';
 
 export class Calendars {
 	static readonly LS_VIEW_KEY: string = 'calendars_view';
+	static readonly VIEWS = ['month', 'week', 'day', 'list'] as const;
 
 	calendars = $state<Calendar[]>([]);
 	events = $state<CalendarEvent[]>([]);
@@ -49,7 +50,7 @@ export class Calendars {
 	newEventPreset = $state<NewEventPreset>({});
 	isSyncing = $state<boolean>(false);
 	lastSync = $state<number | null>(null);
-	view = $state<'month' | 'week' | 'day' | 'list'>('month');
+	view = $state<(typeof Calendars.VIEWS)[number]>('month');
 	activeEvent = $state<CalendarEvent | null>(null);
 	activeEventTodos = $state<Todo[]>([]);
 	activeEventNotes = $state<Note[]>([]);
@@ -175,14 +176,14 @@ export class Calendars {
 		this.checkInMarks = (checkInRes?.data as string[]) ?? [];
 	}
 
-	changeView(view: 'month' | 'week' | 'day' | 'list'): void {
+	changeView(view: (typeof Calendars.VIEWS)[number]): void {
 		this.view = view;
 		this.saveView();
 	}
 
 	loadView(): void {
 		const stored = this.localStorage.get(Calendars.LS_VIEW_KEY);
-		this.view = (stored as 'month' | 'week' | 'day' | 'list' | null) ?? 'month';
+		this.view = Calendars.VIEWS.find((view) => view === stored) ?? 'month';
 	}
 
 	saveView(): void {

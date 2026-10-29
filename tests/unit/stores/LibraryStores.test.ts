@@ -333,6 +333,14 @@ describe('BookLibrary', () => {
 		s.switchView();
 		expect(s.view).toBe('list');
 	});
+
+	it('falls back to cards for an invalid persisted view', () => {
+		storage.get.mockReturnValue('grid');
+		expect(new BookLibrary().view).toBe('cards');
+
+		storage.get.mockReturnValue('');
+		expect(new BookLibrary().view).toBe('cards');
+	});
 });
 
 describe('MusicLibrary', () => {
@@ -413,6 +421,14 @@ describe('MusicLibrary', () => {
 		storage.get.mockReturnValue('spine');
 		const s = new MusicLibrary();
 		expect(s.view).toBe('spine');
+	});
+
+	it('falls back to cards for an invalid persisted view', () => {
+		storage.get.mockReturnValue('grid');
+		expect(new MusicLibrary().view).toBe('cards');
+
+		storage.get.mockReturnValue('');
+		expect(new MusicLibrary().view).toBe('cards');
 	});
 });
 

@@ -650,6 +650,18 @@ describe('Calendars store', () => {
 			c.loadView();
 			expect(c.view).toBe('month');
 		});
+
+		it('loadView falls back to month for an invalid stored view', () => {
+			const c = new Calendars();
+			storage.get.mockReturnValue('grid');
+			c.loadView();
+			expect(c.view).toBe('month');
+
+			// the JSON format written before 7afd9d43
+			storage.get.mockReturnValue('"week"');
+			c.loadView();
+			expect(c.view).toBe('month');
+		});
 	});
 
 	describe('derived calendar groupings', () => {
