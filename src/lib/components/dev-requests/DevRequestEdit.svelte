@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import type {
@@ -12,6 +11,7 @@
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getDevRequests } from '$lib/state/DevRequests.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import FileUpload from '$lib/components/forms/FileUpload.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
@@ -82,11 +82,8 @@
 	}
 </script>
 
-<div
-	class="mx-auto flex w-120 max-w-screen flex-col gap-4 rounded-b-lg bg-c-bg-modal p-4 drop-shadow-lg"
-	transition:slide
->
-	<div class="flex w-full flex-col gap-2">
+<ContentModal title={ts.get.dev.requests.new} rounded="2xl" p="8" {onClose}>
+	<div class="flex flex-col gap-3">
 		<TextInput placeholder={ts.get.dev.requests.title} bind:value={form.title} />
 		<TextInput
 			placeholder={ts.get.dev.requests.description}
@@ -102,6 +99,8 @@
 			bind:filename={form.screenshot_name}
 		/>
 		<TextInput placeholder="URL" bind:value={form.url} />
-		<TextButton title={ts.get.layout.save} type="btn" onclick={onSave} class="mt-6" />
+		<div class="mt-4 flex w-full justify-end">
+			<TextButton title={ts.get.layout.save} type="btn" onclick={onSave} />
+		</div>
 	</div>
-</div>
+</ContentModal>
