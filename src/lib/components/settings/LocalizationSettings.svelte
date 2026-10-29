@@ -5,6 +5,7 @@
 	import Select from '$lib/components/forms/Select.svelte';
 	import { getTimeZones } from '@vvo/tzdb';
 	import { getAuth } from '$lib/state/Auth.svelte';
+	import type { WeekStart } from '$lib/types/auth';
 
 	const ts = getTranslation();
 	const auth = getAuth();
@@ -41,6 +42,11 @@
 		{ value: 'g:i a', label: '1.37 pm' }
 	];
 
+	const weekStartOptions = [
+		{ value: 'monday', label: ts.get.calendar.weekdays[1] },
+		{ value: 'sunday', label: ts.get.calendar.weekdays[7] }
+	];
+
 	let languageInput = $state<HTMLSelectElement | null>(null);
 	let languageValues = $state<string>(auth?.user?.settings?.language ?? 'en');
 	let timezoneInput = $state<HTMLSelectElement | null>(null);
@@ -49,6 +55,7 @@
 	let dateFormatValues = $state<string>(auth?.user?.settings?.date_format ?? '');
 	let timeFormatInput = $state<HTMLSelectElement | null>(null);
 	let timeFormatValues = $state<string>(auth?.user?.settings?.time_format ?? '');
+	let weekStartValues = $state<string>(auth.getWeekStart());
 
 	const handleLanguageChange = async (value: string) => {
 		ts.changeLanguage(value as Language);
@@ -57,6 +64,7 @@
 	const handleTimezoneChange = async (value: string) => await auth.updateTimezone(value);
 	const handleDateFormatChange = async (value: string) => await auth.updateDateFormat(value);
 	const handleTimeFormatChange = async (value: string) => await auth.updateTimeFormat(value);
+	const handleWeekStartChange = async (value: string) => await auth.updateWeekStart(value as WeekStart);
 </script>
 
 <div class="flex gap-8 max-lg:flex-col">
@@ -90,6 +98,13 @@
 			bind:value={timeFormatValues}
 			onchange={(value) => handleTimeFormatChange(value)}
 			options={timeFormatOptions}
+		/>
+	</SettingsSection>
+	<SettingsSection label={ts.get.settings.week_start}>
+		<Select
+			bind:value={weekStartValues}
+			onchange={handleWeekStartChange}
+			options={weekStartOptions}
 		/>
 	</SettingsSection>
 </div>

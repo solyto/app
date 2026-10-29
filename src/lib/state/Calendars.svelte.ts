@@ -18,11 +18,10 @@ import {
 	formatDate,
 	formatFloatingDate,
 	getCalendarMonth,
-	getCalendarWeek,
-	getISODateInfo,
-	getISOWeeksInYear,
+	getDatePlusDays,
+	getStartOfWeek,
 	getUrlFormat,
-	getWeekNumber
+	getWeekNumberOfWeek
 } from '$lib/helpers/DateHelper';
 import type { Todo, UpdateTodoRequest } from '$lib/types/todo';
 import type { Note } from '$lib/types/note';
@@ -39,8 +38,7 @@ export class Calendars {
 	sortedEvents = $state<Record<string, CalendarEvent[]>>({});
 	todos = $state<Todo[]>([]);
 	month = $state<CalendarMonth>({ weeks: [] });
-	currentWeek = $state<number>(0);
-	currentWeekYear = $state<number>(0);
+	currentWeekStart = $state<Date>(new Date());
 	currentMonth = $state<number>(0);
 	currentYear = $state<number>(0);
 	currentDate = $state<Date>(new Date());
@@ -90,9 +88,7 @@ export class Calendars {
 		this.localStorage = localStorage;
 
 		const today = new Date();
-		const iso = getISODateInfo(today);
-		this.currentWeek = iso.week;
-		this.currentWeekYear = iso.year;
+		this.currentWeekStart = getStartOfWeek(today, auth.getWeekStart());
 		this.currentMonth = today.getMonth() + 1;
 		this.currentYear = today.getFullYear();
 
@@ -107,14 +103,18 @@ export class Calendars {
 		this.loaded = true;
 	}
 
+	get currentWeekNumber(): number {
+		return getWeekNumberOfWeek(this.currentWeekStart);
+	}
+
 	loadMonth(): void {
-		const calendarDays = getCalendarMonth(this.currentYear, this.currentMonth - 1);
+		const calendarDays = getCalendarMonth(this.currentYear, this.currentMonth - 1, this.auth.getWeekStart());
 
 		const weeks: CalendarWeek[] = [];
 		for (let i = 0; i < calendarDays.length; i += 7) {
 			const firstDayOfWeek = calendarDays[i];
 			weeks.push({
-				number: firstDayOfWeek.date ? getWeekNumber(firstDayOfWeek.date) : 0,
+				number: firstDayOfWeek.date ? getWeekNumberOfWeek(firstDayOfWeek.date) : 0,
 				days: calendarDays.slice(i, i + 7)
 			});
 		}
@@ -214,27 +214,17 @@ export class Calendars {
 	}
 
 	nextWeek(): void {
-		if (this.currentWeek === getISOWeeksInYear(this.currentWeekYear)) {
-			this.currentWeek = 1;
-			this.currentWeekYear++;
-		} else {
-			this.currentWeek++;
-		}
-
-		const weekDays = getCalendarWeek(this.currentWeekYear, this.currentWeek);
-		this.mobileWeekStart = new Date(weekDays[0].date);
+		this.currentWeekStart = getDatePlusDays(this.currentWeekStart, 7);
+		this.mobileWeekStart = new Date(this.currentWeekStart);
 	}
 
 	lastWeek(): void {
-		if (this.currentWeek === 1) {
-			this.currentWeekYear--;
-			this.currentWeek = getISOWeeksInYear(this.currentWeekYear);
-		} else {
-			this.currentWeek--;
-		}
+		this.currentWeekStart = getDatePlusDays(this.currentWeekStart, -7);
+		this.mobileWeekStart = new Date(this.currentWeekStart);
+	}
 
-		const weekDays = getCalendarWeek(this.currentWeekYear, this.currentWeek);
-		this.mobileWeekStart = new Date(weekDays[0].date);
+	goToCurrentWeek(): void {
+		this.currentWeekStart = getStartOfWeek(new Date(), this.auth.getWeekStart());
 	}
 
 	nextDay(): void {
@@ -251,15 +241,13 @@ export class Calendars {
 
 	setMobileWeekStart(date: Date): void {
 		this.mobileWeekStart = new Date(date);
-		this.currentWeek = getWeekNumber(date);
+		this.currentWeekStart = getStartOfWeek(date, this.auth.getWeekStart());
 	}
 
 	async goToToday(): Promise<void> {
 		const today = new Date();
-		const iso = getISODateInfo(today);
 		this.currentDate = today;
-		this.currentWeek = iso.week;
-		this.currentWeekYear = iso.year;
+		this.currentWeekStart = getStartOfWeek(today, this.auth.getWeekStart());
 		this.currentMonth = today.getMonth() + 1;
 		this.currentYear = today.getFullYear();
 		this.mobileSelectedDate = new Date(today);

@@ -2,6 +2,7 @@ import type {
 	AuthToken,
 	User,
 	UserSettings,
+	WeekStart,
 	LoginRequest,
 	LoginResponse,
 	RegisterRequest,
@@ -385,6 +386,17 @@ export class Auth {
 		return Promise.resolve(res);
 	}
 
+	async updateWeekStart(weekStart: WeekStart): Promise<boolean> {
+		const res = await this.apiService.put(apiRoutes.users.settings.updateWeekStart, {
+			week_start: weekStart
+		});
+		if (res && this.user?.settings) {
+			this.user.settings.week_start = weekStart;
+			this.save();
+		}
+		return Promise.resolve(res);
+	}
+
 	private async updateBooleanSetting(
 		endpoint: string,
 		enabled: boolean,
@@ -489,6 +501,10 @@ export class Auth {
 
 	getTimeWithSecondsInUserPreferredFormat(input: string | Date): string {
 		return formatTimeWithSeconds(input, this?.user?.settings?.time_format ?? null);
+	}
+
+	getWeekStart(): WeekStart {
+		return this.user?.settings?.week_start ?? 'monday';
 	}
 
 	getTemperatureInUserPreferredFormat(temperature: number): number {

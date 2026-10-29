@@ -189,6 +189,7 @@ const settings: SettingsRecords = {
 	timezone: 'Zona horaria',
 	date_format: 'Formato de fecha',
 	time_format: 'Formato de hora',
+	week_start: 'Primer día de la semana',
 	nextcloud_token: 'Token registrado',
 	nextcloud_no_token: 'No hay token registrado.',
 	telegram_bot_integration_success:

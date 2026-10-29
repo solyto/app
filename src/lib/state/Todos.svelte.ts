@@ -211,7 +211,7 @@ export class Todos {
 		}
 
 		for (const filter of filters) {
-			this.filteredTodos = this.filterService.filter(filter, this.filteredTodos);
+			this.filteredTodos = this.filterService.filter(filter, this.filteredTodos, this.auth.getWeekStart());
 		}
 
 		this.filteredTodos = this.sortingService.sort(this.filteredTodos);

@@ -98,6 +98,7 @@ export interface SettingsRecords {
 	timezone: string;
 	date_format: string;
 	time_format: string;
+	week_start: string;
 	nextcloud_no_token: string;
 	nextcloud_token: string;
 	telegram_bot_integration_success: string;

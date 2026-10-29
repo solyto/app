@@ -10,11 +10,14 @@ export interface UserProfile {
 	profile_image_path: string | null;
 }
 
+export type WeekStart = 'monday' | 'sunday';
+
 export interface UserSettings {
 	language: string;
 	timezone: string;
 	date_format: string;
 	time_format: string;
+	week_start: WeekStart;
 	widgets: string;
 	navigation: string;
 	first_visit: boolean;

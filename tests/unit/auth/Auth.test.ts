@@ -76,6 +76,7 @@ function user(overrides: Partial<User> = {}): User {
 			timezone: 'UTC',
 			date_format: 'dd.mm.YYYY',
 			time_format: 'H:i',
+			week_start: 'monday',
 			widgets: '',
 			navigation: '',
 			first_visit: true,
@@ -647,6 +648,57 @@ describe('Auth store', () => {
 
 			expect(result).toBe(false);
 			expect(auth.user?.settings?.journal_enabled).toBe(false);
+		});
+	});
+
+	describe('week start setting', () => {
+		async function loggedInUser(): Promise<Auth> {
+			const expiresAt = new Date(Date.now() + 6 * 24 * 3600 * 1000).toISOString();
+			storage.getJson.mockReturnValue({ user: user(), authToken: authToken(expiresAt) });
+			const auth = new Auth();
+			await flushAsync();
+			return auth;
+		}
+
+		it('falls back to Monday without a user or a stored setting', () => {
+			const auth = new Auth();
+			expect(auth.getWeekStart()).toBe('monday');
+
+			const { week_start: _, ...settings } = user().settings;
+			auth.user = user({ settings: settings as User['settings'] });
+			expect(auth.getWeekStart()).toBe('monday');
+		});
+
+		it('returns the stored week start', () => {
+			const auth = new Auth();
+			auth.user = user({ settings: { ...user().settings, week_start: 'sunday' } });
+			expect(auth.getWeekStart()).toBe('sunday');
+		});
+
+		it('keeps an updated week start in the user settings and persists it', async () => {
+			api.put.mockResolvedValue(true);
+			const auth = await loggedInUser();
+			storage.setJson.mockClear();
+
+			const result = await auth.updateWeekStart('sunday');
+
+			expect(result).toBe(true);
+			expect(api.put).toHaveBeenCalledWith(
+				expect.stringContaining('/settings/week-start'),
+				{ week_start: 'sunday' }
+			);
+			expect(auth.getWeekStart()).toBe('sunday');
+			expect(storage.setJson).toHaveBeenCalled();
+		});
+
+		it('keeps the old week start when the API rejects the update', async () => {
+			api.put.mockResolvedValue(false);
+			const auth = await loggedInUser();
+
+			const result = await auth.updateWeekStart('sunday');
+
+			expect(result).toBe(false);
+			expect(auth.getWeekStart()).toBe('monday');
 		});
 	});
 
