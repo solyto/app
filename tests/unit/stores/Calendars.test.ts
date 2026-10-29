@@ -58,6 +58,20 @@ describe('Calendars store', () => {
 		});
 	});
 
+	describe('widget refresh', () => {
+		it('notifies the widgets after a successful event change only', async () => {
+			const c = new Calendars();
+
+			api.delete.mockResolvedValueOnce(false);
+			await c.deleteEvent(event());
+			expect(auth.widgetBridge.notifyChanged).not.toHaveBeenCalled();
+
+			api.delete.mockResolvedValueOnce(true);
+			await c.deleteEvent(event());
+			expect(auth.widgetBridge.notifyChanged).toHaveBeenCalledTimes(1);
+		});
+	});
+
 	describe('loadMonth', () => {
 		it('builds a 42-day Monday-first grid for the current month', () => {
 			const c = new Calendars();

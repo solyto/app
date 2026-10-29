@@ -118,7 +118,7 @@ export default class ApiService {
 		}
 	}
 
-	private storedServerVersion(): string | null {
+	storedServerVersion(): string | null {
 		const stored = this.localStorage.getJson(ApiService.LS_SERVER_VERSION_KEY) as Partial<StoredServerVersion> | null;
 		if (!stored || stored.apiUrl !== getApiUrl() || typeof stored.version !== 'string') return null;
 

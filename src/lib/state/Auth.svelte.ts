@@ -23,6 +23,7 @@ import { apiRoutes } from '$lib/config/apiRoutes';
 import ApiService from '$lib/services/ApiService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { SessionMonitor } from '$lib/state/SessionMonitor';
+import { WidgetBridge } from '$lib/state/WidgetBridge';
 import { SvelteMap } from 'svelte/reactivity';
 import {
 	formatDate,
@@ -45,6 +46,8 @@ export class Auth {
 	apiService: ApiService;
 	localStorage = new LocalStorageService();
 	profileCache = new SvelteMap<string, User>();
+	widgetBridge: WidgetBridge;
+	readonly loaded: Promise<void>;
 	private refreshInFlight: Promise<RefreshOutcome> | null = null;
 	private recoveryInFlight: Promise<boolean> | null = null;
 	private sessionMonitor: SessionMonitor;
@@ -53,7 +56,8 @@ export class Auth {
 	constructor() {
 		this.apiService = new ApiService(null);
 		this.apiService.setUnauthorizedHandler(() => this.recoverFromUnauthorized());
-		this.load().then();
+		this.widgetBridge = new WidgetBridge(this.apiService, () => this.loggedIn);
+		this.loaded = this.load();
 		this.sessionMonitor = new SessionMonitor(() => this.validateSession());
 	}
 
@@ -135,6 +139,7 @@ export class Auth {
 		this.apiService.updateAuthToken(this.getToken()!);
 
 		this.save();
+		void this.widgetBridge.issueToken();
 		await this.loadAdditionalData();
 
 		return { success: true };
@@ -175,11 +180,13 @@ export class Auth {
 		this.apiService.updateAuthToken(this.getToken());
 
 		this.save();
+		void this.widgetBridge.issueToken();
 
 		return 'refreshed';
 	}
 
 	logout(): void {
+		this.widgetBridge.clear();
 		this.clear();
 	}
 
@@ -208,6 +215,7 @@ export class Auth {
 
 	destroy(): void {
 		this.sessionMonitor.destroy();
+		this.widgetBridge.destroy();
 	}
 
 	async recoverFromUnauthorized(): Promise<boolean> {
@@ -352,6 +360,7 @@ export class Auth {
 		this.loggedIn = true;
 		this.apiService.updateAuthToken(this.getToken()!);
 		this.save();
+		void this.widgetBridge.issueToken();
 		await this.loadAdditionalData();
 	}
 

@@ -5,7 +5,7 @@ import type { User, AuthToken, LoginResponse } from '$lib/types/auth';
 
 // The Auth module itself must NOT be mocked — only its service dependencies.
 
-const { api, storage, monitor } = vi.hoisted(() => {
+const { api, storage, monitor, bridge } = vi.hoisted(() => {
 	const api = {
 		post: vi.fn(),
 		postWithStatus: vi.fn(),
@@ -28,8 +28,21 @@ const { api, storage, monitor } = vi.hoisted(() => {
 		check: null as (() => void) | null,
 		destroy: vi.fn()
 	};
-	return { api, storage, monitor };
+	const bridge = {
+		issueToken: vi.fn(),
+		clear: vi.fn(),
+		destroy: vi.fn()
+	};
+	return { api, storage, monitor, bridge };
 });
+
+vi.mock('$lib/state/WidgetBridge', () => ({
+	WidgetBridge: class FakeWidgetBridge {
+		issueToken = bridge.issueToken;
+		clear = bridge.clear;
+		destroy = bridge.destroy;
+	}
+}));
 
 vi.mock('$lib/state/SessionMonitor', () => ({
 	SessionMonitor: class FakeSessionMonitor {
@@ -449,6 +462,63 @@ describe('Auth store', () => {
 			expect(auth.user).toBeNull();
 			expect(auth.getToken()).toBeNull();
 			expect(storage.destroy).toHaveBeenCalledWith('auth');
+		});
+	});
+
+	describe('widget bridge', () => {
+		it('issues a widget token after a password login', async () => {
+			api.postRaw.mockResolvedValue({ data: loginResponse() });
+
+			const auth = new Auth();
+			await auth.login('a@b.c', 'p');
+
+			expect(bridge.issueToken).toHaveBeenCalledTimes(1);
+		});
+
+		it('does not issue a widget token after a failed login', async () => {
+			api.postRaw.mockResolvedValue({ success: false });
+
+			const auth = new Auth();
+			await auth.login('a@b.c', 'wrong');
+
+			expect(bridge.issueToken).not.toHaveBeenCalled();
+		});
+
+		it('issues a widget token after a passkey login', async () => {
+			api.postRaw.mockResolvedValue({ success: true, data: loginResponse() });
+
+			const auth = new Auth();
+			await auth.passkeyAuthenticate({ id: 'cred' });
+
+			expect(bridge.issueToken).toHaveBeenCalledTimes(1);
+		});
+
+		it('issues a widget token after a successful refresh only', async () => {
+			const auth = new Auth();
+			await auth.refresh();
+			expect(bridge.issueToken).not.toHaveBeenCalled();
+
+			api.postWithStatus.mockResolvedValue({ ok: true, status: 200, data: { data: loginResponse() } });
+			await auth.refresh();
+
+			expect(bridge.issueToken).toHaveBeenCalledTimes(1);
+		});
+
+		it('clears the widgets before the local session is cleared', () => {
+			const auth = new Auth();
+
+			auth.logout();
+
+			expect(bridge.clear).toHaveBeenCalledTimes(1);
+			expect(bridge.clear.mock.invocationCallOrder[0]).toBeLessThan(storage.destroy.mock.invocationCallOrder[0]);
+		});
+
+		it('destroy() tears the bridge down', () => {
+			const auth = new Auth();
+
+			auth.destroy();
+
+			expect(bridge.destroy).toHaveBeenCalledTimes(1);
 		});
 	});
 
