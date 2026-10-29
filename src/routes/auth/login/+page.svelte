@@ -137,6 +137,14 @@
 		<div class="mt-4 flex items-center justify-end">
 			<TextButton title={ts.get.auth.sign_in} class="w-full" />
 		</div>
+		<div class="flex justify-center">
+			<a
+				href={resolve(urls.resendVerification)}
+				class="text-xs text-c-neutral-5 transition-colors hover:text-c-btn dark:text-c-neutral-4 dark:hover:text-c-btn"
+			>
+				{ts.get.auth.resend_verification_link}
+			</a>
+		</div>
 	</form>
 	{#if passkeySupported}
 		<div class="mt-3 flex justify-center">

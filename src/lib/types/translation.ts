@@ -228,6 +228,11 @@ export interface AuthRecords {
 	forgot_password_sent_title: string;
 	forgot_password_sent_desc: string;
 	forgot_password_resend: string;
+	resend_verification_link: string;
+	resend_verification_title: string;
+	resend_verification_hint: string;
+	resend_verification_send: string;
+	resend_verification_sent_desc: string;
 	reset_password_title: string;
 	reset_password_new: string;
 	reset_password_confirm: string;

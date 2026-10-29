@@ -271,6 +271,10 @@ export class Auth {
 		await this.apiService.post(apiRoutes.auth.forgotPassword, { email, platform });
 	}
 
+	async resendVerification(email: string, platform: string): Promise<void> {
+		await this.apiService.post(apiRoutes.auth.resendVerification, { email, platform });
+	}
+
 	async resetPassword(token: string, email: string, password: string, passwordConfirmation: string): Promise<AuthActionResponse> {
 		return this.apiService.postRaw<AuthActionResponse>(apiRoutes.auth.resetPassword, {
 			token,

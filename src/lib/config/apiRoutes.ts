@@ -14,6 +14,7 @@ export const apiRoutes = {
 		register: API_URL + '/auth/register',
 		verify: API_URL + '/auth/verify',
 		forgotPassword: API_URL + '/auth/forgot-password',
+		resendVerification: API_URL + '/auth/resend-verification',
 		resetPassword: API_URL + '/auth/reset-password',
 		confirmAccountDeletion: API_URL + '/auth/confirm-account-deletion',
 		passkeys: {

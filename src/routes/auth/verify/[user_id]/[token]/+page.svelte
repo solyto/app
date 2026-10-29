@@ -9,6 +9,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { scale } from 'svelte/transition';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import ResendVerificationForm from '$lib/components/auth/ResendVerificationForm.svelte';
 	import { RateLimitedError } from '$lib/services/ApiService';
 	import { rateLimitedMessage } from '$lib/helpers/NetworkErrorHelper';
 
@@ -86,9 +87,9 @@
 			{:else if errors.length === 0}
 				<span>{ts.get.auth.verify_general_error}</span>
 			{:else if errors.includes('token_mismatch')}
-				<span>{ts.get.auth.verify_token_mismatch}</span>
+				<ResendVerificationForm hint={ts.get.auth.verify_token_mismatch} />
 			{:else if errors.includes('token_expired')}
-				<span>{ts.get.auth.verify_token_expired}</span>
+				<ResendVerificationForm hint={ts.get.auth.verify_token_expired} />
 			{/if}
 		</div>
 	{/if}

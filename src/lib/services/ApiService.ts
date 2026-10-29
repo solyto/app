@@ -14,6 +14,7 @@ const AUTH_ENDPOINTS: string[] = [
 	apiRoutes.auth.register,
 	apiRoutes.auth.verify,
 	apiRoutes.auth.forgotPassword,
+	apiRoutes.auth.resendVerification,
 	apiRoutes.auth.resetPassword,
 	apiRoutes.auth.confirmAccountDeletion,
 	apiRoutes.auth.passkeys.authenticateOptions,
