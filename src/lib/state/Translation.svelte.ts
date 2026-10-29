@@ -56,6 +56,7 @@ export class Translation {
 				this.get = it;
 				break;
 		}
+		if (browser) document.documentElement.lang = this.locale;
 	}
 }
 
