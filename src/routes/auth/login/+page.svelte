@@ -39,6 +39,7 @@
 	let password = $state<string>('');
 	let passwordError = $state<boolean>(false);
 	let error = $state<boolean>(false);
+	let emailUnverified = $state<boolean>(false);
 	let passkeySupported = $state(false);
 
 	onMount(() => {
@@ -49,20 +50,35 @@
 	async function onsubmit(e: SubmitEvent): Promise<void> {
 		e.preventDefault();
 
+		emailUnverified = false;
 		if (!validateInput()) return;
 
 		loadingIndicator.start();
-		let success = await auth.login(email, password);
-		loadingIndicator.stop();
-
-		if (success) {
-			ts.loadLanguage();
-			notifications.success(ts.get.auth.login_success);
-			await goto(resolve(urls.home));
-		} else {
-			notifications.error(ts.get.auth.login_error);
-			error = true;
+		try {
+			const res = await auth.login(email, password);
+			if (res.success) {
+				ts.loadLanguage();
+				notifications.success(ts.get.auth.login_success);
+				await goto(resolve(urls.home));
+			} else if (res.errors?.includes('email_unverified')) {
+				emailUnverified = true;
+			} else {
+				notifications.error(ts.get.auth.login_error);
+				error = true;
+			}
+		} finally {
+			loadingIndicator.stop();
 		}
+	}
+
+	async function resendVerification(): Promise<void> {
+		loadingIndicator.start();
+		try {
+			await auth.resendVerification(email, PLATFORM);
+		} finally {
+			loadingIndicator.stop();
+		}
+		notifications.success(ts.get.auth.resend_verification_sent_desc);
 	}
 
 	async function signInWithPasskey(): Promise<void> {
@@ -134,6 +150,18 @@
 				<p class="mt-2 pl-2 text-xs text-red-500" in:fade>{ts.get.auth.password_error}</p>
 			{/if}
 		</label>
+		{#if emailUnverified}
+			<div class="flex flex-col items-center gap-2" in:fade>
+				<p class="text-center text-sm text-red-500">{ts.get.auth.login_email_unverified}</p>
+				<button
+					type="button"
+					onclick={resendVerification}
+					class="cursor-pointer text-xs font-medium text-c-btn transition-colors hover:underline"
+				>
+					{ts.get.auth.resend_verification_send}
+				</button>
+			</div>
+		{/if}
 		<div class="mt-4 flex items-center justify-end">
 			<TextButton title={ts.get.auth.sign_in} class="w-full" />
 		</div>

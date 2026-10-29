@@ -9,6 +9,7 @@ import type {
 	VerifyRequest,
 	AuthActionResponse,
 	VerifyActionResponse,
+	LoginActionResponse,
 	AccountDeletionRequestResponse,
 	AccountDeletionConfirmResponse,
 	PasskeyActionResponse,
@@ -110,12 +111,19 @@ export class Auth {
 		this.apiService.updateAuthToken(null);
 	}
 
-	async login(email: string, password: string): Promise<boolean> {
+	async login(email: string, password: string): Promise<LoginActionResponse> {
 		const request: LoginRequest = { email, password, platform: PLATFORM };
-		const res = await this.apiService.post(apiRoutes.auth.login, request);
+		let res: LoginActionResponse;
+		try {
+			res = await this.apiService.postRaw<LoginActionResponse>(apiRoutes.auth.login, request);
+		} catch (error) {
+			// A non-JSON error body (e.g. a proxy's HTML 502) is a plain failed login.
+			if (error instanceof SyntaxError) return { success: false };
+			throw error;
+		}
 
-		if (!res) return Promise.resolve(false);
-		const login = res.data as LoginResponse;
+		if (!res?.data) return { success: false, errors: res?.errors };
+		const login = res.data;
 
 		this.user = login.user;
 		this.authToken = {
@@ -129,7 +137,7 @@ export class Auth {
 		this.save();
 		await this.loadAdditionalData();
 
-		return Promise.resolve(true);
+		return { success: true };
 	}
 
 	private shouldRefresh(expiresAt: number): boolean {

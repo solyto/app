@@ -106,6 +106,7 @@ const auth: AuthRecords = {
 	register_error: 'Ocurrió un error durante el registro.',
 	login_success: 'Inicio de sesión exitoso.',
 	login_error: 'Autenticación fallida.',
+	login_email_unverified: 'Primero confirma tu dirección de correo electrónico.',
 	verify_success: 'Tu cuenta se ha confirmado. ¡Ya puedes iniciar sesión!',
 	verify_general_error: 'Hubo un error al confirmar tu cuenta.',
 	already_verified: 'Tu cuenta ya está confirmada. ¡Puedes iniciar sesión!',

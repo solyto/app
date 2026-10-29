@@ -218,6 +218,7 @@ export interface AuthRecords {
 	register_error: string;
 	login_success: string;
 	login_error: string;
+	login_email_unverified: string;
 	verify_success: string;
 	already_verified: string;
 	verify_general_error: string;

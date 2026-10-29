@@ -76,6 +76,12 @@ export interface VerifyActionResponse {
 	errors?: string[];
 }
 
+export interface LoginActionResponse {
+	success: boolean;
+	data?: LoginResponse;
+	errors?: string[];
+}
+
 export interface AccountDeletionRequestResponse {
 	success: boolean;
 	errors?: Record<string, string[]>;
