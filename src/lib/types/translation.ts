@@ -304,6 +304,10 @@ export interface TodoRecords {
 	uncategorized: string;
 	delete_confirm_label: string;
 	delete_confirm_message: string;
+	category_deletion_title: string;
+	category_deletion_description: string;
+	workspace_deletion_title: string;
+	workspace_deletion_description: string;
 	add_subtask: string;
 	sort_by_score: string;
 	no_description: string;
