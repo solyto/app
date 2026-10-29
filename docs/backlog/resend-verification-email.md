@@ -37,7 +37,10 @@ log in and has no way to get a new link. The verify page currently ends at
    share a component with the new page).
 4. Strings in all five locales (`src/lib/i18n/{de,en,es,fr,it}.ts`) and
    `src/lib/types/translation.ts`, following `docs/I18N.md`.
-5. A 429 shows the existing "too many requests" handling. Don't treat it as success.
+5. A 429 is handled app-wide by `show-rate-limit-message.md`, which has to be
+   done first: `ApiService` throws `RateLimitedError` and the layout shows the
+   message. The form only has to make sure it doesn't show its success
+   message or stay stuck in a submitting state.
 
 ## Out of scope
 
