@@ -90,7 +90,10 @@
 				<button
 					type="button"
 					class="z-40 flex size-[24px] cursor-pointer items-center justify-center rounded-full bg-c-danger text-white drop-shadow-md transition-all hover:text-c-heading hover:drop-shadow-xl"
-					onclick={() => library.deleteCategory(category)}
+					onclick={(e) => {
+						e.stopPropagation();
+						library.deleteCategory(category);
+					}}
 				>
 					<IconTrash class="size-4" />
 				</button>
