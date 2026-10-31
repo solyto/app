@@ -439,6 +439,7 @@ export interface WidgetRecords {
 
 export interface NoteRecords {
 	notebook: string;
+	dashboard: string;
 	no_notes: string;
 	no_notes_desc: string;
 	new_note: string;
@@ -460,7 +461,6 @@ export interface NoteRecords {
 	export: string;
 	created_days_ago: string;
 	updated_days_ago: string;
-	new_notes: string;
 	last_updated: string;
 	enter_note_title: string;
 	enter_folder_title: string;

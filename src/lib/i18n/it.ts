@@ -460,6 +460,7 @@ const widgets: WidgetRecords = {
 
 const notes: NoteRecords = {
 	notebook: 'Quaderno',
+	dashboard: 'Dashboard',
 	no_notes: 'Ancora nessuna nota.',
 	no_notes_desc: 'Aggiungi la prima con il pulsante Nuova nota.',
 	new_note: 'Nuova nota',
@@ -481,7 +482,6 @@ const notes: NoteRecords = {
 	export: 'Esporta',
 	created_days_ago: 'Creata %d giorni fa',
 	updated_days_ago: 'Aggiornata %d giorni fa',
-	new_notes: 'Nuove note',
 	last_updated: 'Ultimo aggiornamento',
 	enter_note_title: 'Inserisci il titolo della nota',
 	enter_folder_title: 'Inserisci il nome della cartella',
