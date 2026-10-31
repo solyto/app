@@ -646,7 +646,7 @@ const dev: DevRecords = {
 		bug: 'Ошибка', feature: 'Предложение', status_backlog: 'Запланировано',
 		status_pending: 'Ожидает рассмотрения', status_in_progress: 'В работе',
 		status_completed: 'Завершено', status_cancelled: 'Отклонено',
-		validation_error: 'Укажите название и описание', priority_1: 'Низкий приоритет',
+		validation_error: 'Укажите название и описание', save_error: 'Не удалось сохранить обращение', priority_1: 'Низкий приоритет',
 		priority_2: 'Средний приоритет', priority_3: 'Высокий приоритет',
 		priority_4: 'Очень высокий приоритет', priority_5: 'Критический приоритет',
 		title: 'Название', description: 'Описание', url: 'URL',

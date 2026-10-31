@@ -794,6 +794,7 @@ const dev: DevRecords = {
 		status_completed: 'Completed',
 		status_cancelled: 'Rejected',
 		validation_error: 'Please add a title and a description',
+		save_error: 'Request could not be saved',
 		priority_1: 'Low Priority',
 		priority_2: 'Medium Priority',
 		priority_3: 'High Priority',

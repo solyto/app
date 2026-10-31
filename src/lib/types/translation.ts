@@ -774,6 +774,7 @@ export interface DevRecords {
 		status_completed: string;
 		status_cancelled: string;
 		validation_error: string;
+		save_error: string;
 		priority_1: string;
 		priority_2: string;
 		priority_3: string;

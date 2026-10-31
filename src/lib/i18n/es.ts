@@ -794,6 +794,7 @@ const dev: DevRecords = {
 		status_completed: 'Completado',
 		status_cancelled: 'Rechazado',
 		validation_error: 'Añade un título y una descripción',
+		save_error: 'No se pudo guardar la solicitud',
 		priority_1: 'Prioridad baja',
 		priority_2: 'Prioridad media',
 		priority_3: 'Prioridad alta',
