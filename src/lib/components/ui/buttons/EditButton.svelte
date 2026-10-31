@@ -5,12 +5,14 @@
 		onClick,
 		title = '',
 		inModal = true,
-		buttonStyle = 'default'
+		buttonStyle = 'default',
+		iconClass = 'size-5'
 	}: {
-		onClick: () => void;
+		onClick: (e: MouseEvent) => void;
 		title?: string;
 		inModal?: boolean;
 		buttonStyle?: 'default' | 'plain' | 'minimal' | 'fill-on-hover';
+		iconClass?: string;
 	} = $props();
 </script>
 
@@ -23,7 +25,7 @@
 		aria-label={title || undefined}
 	>
 		<span class="absolute h-0 w-0 rounded-full bg-c-btn transition-all group-hover:h-full group-hover:w-full group-focus-visible:h-full group-focus-visible:w-full"></span>
-		<IconPen class="relative size-5 transition-colors group-hover:text-white group-focus-visible:text-white" />
+		<IconPen class="relative {iconClass} transition-colors group-hover:text-white group-focus-visible:text-white" />
 	</button>
 {:else}
 	<button
@@ -41,7 +43,8 @@
 		class:right-4={inModal}
 		onclick={onClick}
 		{title}
+		aria-label={title || undefined}
 	>
-		<IconPen class="size-5" />
+		<IconPen class={iconClass} />
 	</button>
 {/if}
