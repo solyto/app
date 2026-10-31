@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
+	import { portalToBody } from '$lib/helpers/PortalHelper';
 	import { onMount } from 'svelte';
 	import type { TodoCategory } from '$lib/types/todo';
 
-	let { x, y, categories, onclick, close }: {
-		x: number;
-		y: number;
+	let { target, categories, onclick, close }: {
+		target: HTMLElement;
 		categories: TodoCategory[];
 		onclick: (id: number) => void;
 		close: () => void;
@@ -23,9 +23,9 @@
 
 {#if visible}
 	<div
-		class="absolute z-50 flex flex-col justify-start rounded-lg border-1 border-c-neutral-2 bg-c-bg-modal shadow-md dark:border-s-dark"
-		style="top: {y}px; left: {x}px;"
+		class="flex flex-col justify-start rounded-lg border-1 border-c-neutral-2 bg-c-bg-modal shadow-md dark:border-s-dark"
 		transition:fade
+		use:portalToBody={{ target, closeOnScroll: true, onClose: close }}
 		use:clickOutside={() => {
 			close();
 		}}
