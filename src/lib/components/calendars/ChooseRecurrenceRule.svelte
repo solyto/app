@@ -31,26 +31,18 @@
 	}
 
 	function ordinalOptions(): { label: string; value: string }[] {
-		return ORDINALS.map((ordinal) => {
-			// Russian ordinals agree with the selected weekday.
-			const weekday = weekdayNumber(selection.monthlyWeekday);
-			const ending = weekday === 7 ? 'е' : [3, 5, 6].includes(weekday) ? 'ю' : 'й';
-			return {
-				label: ts.locale === 'ru' ? `${ordinal}-${ending}` : ts.get.calendar.recurrence_ordinals[ordinal],
-				value: String(ordinal)
-			};
-		});
+		const byWeekday = ts.get.calendar.recurrence_ordinals_by_weekday?.[weekdayNumber(selection.monthlyWeekday)];
+		return ORDINALS.map((ordinal) => ({
+			label: byWeekday?.[ordinal] ?? ts.get.calendar.recurrence_ordinals[ordinal],
+			value: String(ordinal)
+		}));
 	}
 
 	function weekdayOptions(): { label: string; value: Weekday }[] {
-		const russianWeekdays = [
-			'понедельник', 'вторник', 'среду', 'четверг',
-			'пятницу', 'субботу', 'воскресенье'
-		];
 		return WEEKDAYS.map((day) => ({
-			label: ts.locale === 'ru'
-				? russianWeekdays[weekdayNumber(day) - 1]
-				: ts.get.calendar.weekdays[weekdayNumber(day)],
+			label:
+				ts.get.calendar.recurrence_weekdays?.[weekdayNumber(day)] ??
+				ts.get.calendar.weekdays[weekdayNumber(day)],
 			value: day
 		}));
 	}

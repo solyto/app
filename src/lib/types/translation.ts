@@ -930,6 +930,15 @@ export interface CalendarRecords {
 		3: string;
 		4: string;
 	};
+	// Optional grammatical variants for "on the <ordinal> <weekday>", for languages
+	// where the weekday is inflected there or the ordinal agrees with it (ru).
+	// Falls back to `weekdays` / `recurrence_ordinals` when not set.
+	recurrence_weekdays?: {
+		[key: number]: string;
+	};
+	recurrence_ordinals_by_weekday?: {
+		[weekday: number]: { [ordinal: number]: string };
+	};
 	choose_calendar: string;
 	request_sync: string;
 	sync_success: string;

@@ -460,6 +460,32 @@ const widgets: WidgetRecords = {
 
 const notes: NoteRecords = {
 	notebook: 'Блокнот',
+	dashboard: 'Сводка',
+	table_add_row_above: 'Вставить строку выше',
+	table_add_row_below: 'Вставить строку ниже',
+	table_delete_row: 'Удалить строку',
+	table_add_column_left: 'Вставить столбец слева',
+	table_add_column_right: 'Вставить столбец справа',
+	table_delete_column: 'Удалить столбец',
+	table_delete: 'Удалить таблицу',
+	editor_undo: 'Отменить',
+	editor_redo: 'Повторить',
+	editor_heading_1: 'Заголовок 1',
+	editor_heading_2: 'Заголовок 2',
+	editor_heading_3: 'Заголовок 3',
+	editor_bold: 'Полужирный',
+	editor_italic: 'Курсив',
+	editor_strikethrough: 'Зачёркнутый',
+	editor_inline_code: 'Код в строке',
+	editor_bullet_list: 'Маркированный список',
+	editor_ordered_list: 'Нумерованный список',
+	editor_blockquote: 'Цитата',
+	editor_code_block: 'Блок кода',
+	editor_horizontal_rule: 'Горизонтальная линия',
+	editor_insert_link: 'Вставить ссылку',
+	editor_insert_table: 'Вставить таблицу',
+	editor_insert_image: 'Вставить изображение',
+	editor_formatting: 'Форматирование',
 	no_notes: 'Заметок пока нет.',
 	no_notes_desc: 'Создайте первую заметку кнопкой «Новая заметка».',
 	new_note: 'Новая заметка',
@@ -470,7 +496,6 @@ const notes: NoteRecords = {
 	delete_folder: 'Удалить папку',
 	edit_folder: 'Переименовать папку',
 	editor: 'Редактор',
-	output: 'Предпросмотр',
 	create_note_success: 'Заметка создана.',
 	create_folder_success: 'Папка создана.',
 	create_error: 'Не удалось создать заметку.',
@@ -481,7 +506,6 @@ const notes: NoteRecords = {
 	export: 'Экспорт',
 	created_days_ago: 'Создано %d дн. назад',
 	updated_days_ago: 'Изменено %d дн. назад',
-	new_notes: 'Новые заметки',
 	last_updated: 'Последнее изменение',
 	enter_note_title: 'Название заметки',
 	enter_folder_title: 'Название папки',
@@ -652,7 +676,8 @@ const finances: FinanceRecords = {
 
 const feeds: FeedRecords = {
 	feeds: 'Ленты', all_feeds: 'Все ленты', add_feed: 'Добавить ленту',
-	edit_feed: 'Изменить ленту', delete_feed: 'Удалить ленту', title: 'Название',
+	edit_feed: 'Изменить ленту', delete_feed: 'Удалить ленту',
+	delete_feed_description: 'Удалить эту ленту?', title: 'Название',
 	url: 'URL', keywords: 'Разрешённые слова',
 	keywords_description: 'Показывать только статьи, содержащие хотя бы одно из этих слов.',
 	keywords_placeholder: 'Введите ключевые слова', blacklist: 'Исключаемые слова',
@@ -695,6 +720,19 @@ const calendar: CalendarRecords = {
 	recurrence_yearly: 'Каждый год', recurrence_on_the: 'в',
 	recurrence_not_editable: 'Это правило повторения нельзя изменить здесь. Оно останется прежним.',
 	recurrence_ordinals: { 1: '1-й', 2: '2-й', 3: '3-й', 4: '4-й' },
+	recurrence_weekdays: {
+		1: 'понедельник', 2: 'вторник', 3: 'среду', 4: 'четверг',
+		5: 'пятницу', 6: 'субботу', 7: 'воскресенье'
+	},
+	recurrence_ordinals_by_weekday: {
+		1: { 1: '1-й', 2: '2-й', 3: '3-й', 4: '4-й' },
+		2: { 1: '1-й', 2: '2-й', 3: '3-й', 4: '4-й' },
+		3: { 1: '1-ю', 2: '2-ю', 3: '3-ю', 4: '4-ю' },
+		4: { 1: '1-й', 2: '2-й', 3: '3-й', 4: '4-й' },
+		5: { 1: '1-ю', 2: '2-ю', 3: '3-ю', 4: '4-ю' },
+		6: { 1: '1-ю', 2: '2-ю', 3: '3-ю', 4: '4-ю' },
+		7: { 1: '1-е', 2: '2-е', 3: '3-е', 4: '4-е' }
+	},
 	choose_calendar: 'Выбрать календарь', request_sync: 'Синхронизировать',
 	sync_success: 'Синхронизация завершена.', sync_error: 'Ошибка синхронизации.',
 	sync_still_running: 'Синхронизация ещё выполняется. Попробуйте через минуту.',
@@ -728,6 +766,7 @@ const calendar: CalendarRecords = {
 };
 
 const contacts: ContactRecords = {
+	all: 'Все',
 	add_contact: 'Добавить контакт', no_contacts: 'Контактов пока нет.',
 	no_contacts_desc: 'Добавьте контакт или импортируйте адресную книгу.',
 	no_visible_contacts: 'Нет контактов для отображения.',
