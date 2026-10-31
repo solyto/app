@@ -24,7 +24,8 @@ export class LinkLibrary {
 		hasExternalLinks: false,
 		hasReleases: false,
 		hasShelf: false,
-		entriesAreLinks: true
+		entriesAreLinks: true,
+		hasSmallForm: true
 	};
 	loaded = $state<boolean>(false);
 	entries = $state<Link[]>([]);
