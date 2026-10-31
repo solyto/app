@@ -212,6 +212,7 @@
 								e.preventDefault();
 								e.stopPropagation();
 								onEditProject(project.id);
+								handleNavigation();
 							}}
 							inModal={false}
 							buttonStyle="minimal"
