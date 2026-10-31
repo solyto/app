@@ -496,7 +496,6 @@ const notes: NoteRecords = {
 	delete_folder: 'Delete Folder',
 	edit_folder: 'Change Folder Name',
 	editor: 'Editor',
-	output: 'Output',
 	create_note_success: 'Note was successfully created.',
 	create_folder_success: 'Folder was successfully created.',
 	create_error: 'Failed to create note.',
@@ -1002,6 +1001,7 @@ const calendar: CalendarRecords = {
 };
 
 const contacts: ContactRecords = {
+	all: 'All',
 	add_contact: 'Add Contact',
 	no_contacts: 'No contacts yet.',
 	no_contacts_desc: 'Add a contact or import an address book.',

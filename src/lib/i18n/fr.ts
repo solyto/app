@@ -495,7 +495,6 @@ const notes: NoteRecords = {
 	delete_folder: 'Supprimer le dossier',
 	edit_folder: 'Renommer le dossier',
 	editor: 'Éditeur',
-	output: 'Sortie',
 	create_note_success: 'La note a été créée avec succès.',
 	create_folder_success: 'Le dossier a été créé avec succès.',
 	create_error: 'Échec de la création de la note.',
@@ -1003,6 +1002,7 @@ const calendar: CalendarRecords = {
 };
 
 const contacts: ContactRecords = {
+	all: 'Tous',
 	add_contact: 'Ajouter un contact',
 	no_contacts: 'Pas encore de contacts.',
 	no_contacts_desc: 'Ajoute un contact ou importe un carnet d\'adresses.',

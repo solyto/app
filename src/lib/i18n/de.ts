@@ -495,9 +495,8 @@ const notes: NoteRecords = {
 	no_folders_desc: 'Lege einen über den Ordner-Button an.',
 	delete_note: 'Notiz löschen',
 	delete_folder: 'Ordner löschen',
-	edit_folder: 'Ordner bearbeiten',
+	edit_folder: 'Ordner umbenennen',
 	editor: 'Editor',
-	output: 'Output',
 	create_note_success: 'Die Notiz wurde erfolgreich erstellt.',
 	create_folder_success: 'Der Ordner wurde erfolgreich erstellt.',
 	create_error: 'Notiz konnte nicht erstellt werden.',
@@ -1004,6 +1003,7 @@ const calendar: CalendarRecords = {
 };
 
 const contacts: ContactRecords = {
+	all: 'Alle',
 	add_contact: 'Kontakt hinzufügen',
 	no_contacts: 'Noch keine Kontakte.',
 	no_contacts_desc: 'Füge einen Kontakt hinzu oder importiere ein Adressbuch.',

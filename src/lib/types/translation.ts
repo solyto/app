@@ -475,7 +475,6 @@ export interface NoteRecords {
 	delete_note: string;
 	delete_folder: string;
 	editor: string;
-	output: string;
 	create_note_success: string;
 	create_folder_success: string;
 	create_error: string;
@@ -985,6 +984,7 @@ export interface CalendarRecords {
 }
 
 export interface ContactRecords {
+	all: string;
 	add_contact: string;
 	no_contacts: string;
 	no_contacts_desc: string;

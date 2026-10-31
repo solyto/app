@@ -58,7 +58,7 @@
 						handleNavigation();
 					}}
 				>
-					All
+					{ts.get.contacts.all}
 					<Badge
 						i={contacts.contactTotal}
 						color="var(--color-c-btn-hover)"
