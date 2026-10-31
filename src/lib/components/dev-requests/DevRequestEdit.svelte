@@ -76,7 +76,7 @@
 			return;
 		}
 
-		const res = await devRequests.create({
+		await devRequests.create({
 			title: form.title,
 			description: form.description,
 			screenshot: form.screenshot != '' ? form.screenshot : null,
@@ -87,7 +87,6 @@
 			created_by_user_id: auth.user?.id ?? null
 		});
 		form = formService.empty();
-		if (res) await devRequests.load();
 		loadingIndicator.stop();
 		onClose();
 	}
