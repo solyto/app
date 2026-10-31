@@ -7,7 +7,7 @@
 	import { grabFaviconFromUrl } from '$lib/helpers/ImageHelper';
 	import TagFlexList from '$lib/components/tags/TagFlexList.svelte';
 	import StarButton from '$lib/components/ui/buttons/StarButton.svelte';
-	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
+	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 
 	let { entry, library, showCategory }: {
 		entry: Link;
@@ -64,12 +64,12 @@
 			{/if}
 		</span>
 	{/if}
-	<div class="flex shrink-0 gap-1">
+	<div class="flex shrink-0 items-center gap-1">
 		<div class={ON_ROW_HOVER} class:md:opacity-0={!entry.is_favorite}>
 			<StarButton onClick={(e: MouseEvent) => onStar(e)} selected={entry.is_favorite} />
 		</div>
 		<div class="md:opacity-0 {ON_ROW_HOVER}">
-			<InlineDeleteButton onClick={(e: MouseEvent) => onDelete(e)} />
+			<DeleteButton onClick={(e: MouseEvent) => onDelete(e)} inModal={false} buttonStyle="fill-on-hover" />
 		</div>
 	</div>
 	<span class="shrink-0 text-sm text-c-neutral-5 tabular-nums max-md:hidden dark:text-c-neutral-4">{formatDate(entry.created_at)}</span>

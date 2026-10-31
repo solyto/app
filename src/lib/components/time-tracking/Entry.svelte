@@ -2,8 +2,8 @@
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import InlineEditButton from '$lib/components/ui/buttons/InlineEditButton.svelte';
-	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
+	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
+	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import type { TimeTrackingEntry } from '$lib/types/time_tracking';
 
@@ -57,20 +57,24 @@
 			</span>
 		{/if}
 	</div>
-	<div class="flex flex-row items-center gap-0 self-center">
-		<span class="mr-4 text-base tabular-nums text-c-primary">
+	<div class="flex flex-row items-center gap-1 self-center">
+		<span class="mr-3 text-base tabular-nums text-c-primary">
 			{tt.formatDuration(entry.duration_minutes)}
 		</span>
 		{#if showEdit}
-			<InlineEditButton
-				label={ts.get.timeTracking.edit_entry}
+			<EditButton
+				title={ts.get.timeTracking.edit_entry}
 				onClick={() => onEdit?.(entry)}
+				inModal={false}
+				buttonStyle="fill-on-hover"
 			/>
 		{/if}
 		{#if showDelete}
-			<InlineDeleteButton
-				label={ts.get.timeTracking.entry_deletion_title}
+			<DeleteButton
+				title={ts.get.timeTracking.entry_deletion_title}
 				onClick={() => { confirmingDelete = true; }}
+				inModal={false}
+				buttonStyle="fill-on-hover"
 			/>
 		{/if}
 	</div>
