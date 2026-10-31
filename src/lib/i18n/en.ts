@@ -852,6 +852,7 @@ const feeds: FeedRecords = {
 	add_feed: 'Add Feed',
 	edit_feed: 'Edit Feed',
 	delete_feed: 'Delete Feed',
+	delete_feed_description: 'Are you sure you want to delete this feed?',
 	title: 'Title',
 	url: 'URL',
 	keywords: 'Whitelist',

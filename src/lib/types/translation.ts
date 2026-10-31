@@ -832,6 +832,7 @@ export interface FeedRecords {
 	add_feed: string;
 	edit_feed: string;
 	delete_feed: string;
+	delete_feed_description: string;
 	title: string;
 	url: string;
 	keywords: string;

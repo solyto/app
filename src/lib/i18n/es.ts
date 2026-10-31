@@ -852,6 +852,7 @@ const feeds: FeedRecords = {
 	add_feed: 'Añadir feed',
 	edit_feed: 'Editar feed',
 	delete_feed: 'Eliminar feed',
+	delete_feed_description: '¿Seguro que quieres eliminar este feed?',
 	title: 'Título',
 	url: 'URL',
 	keywords: 'Lista blanca',
