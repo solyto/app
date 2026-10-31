@@ -73,8 +73,6 @@
 	async function handleStatusChange(todoId: string, status: TodoStatus): Promise<void> {
 		loadingIndicator.start();
 		await todos.changeStatus(todoId, status);
-		await todos.load();
-
 		loadingIndicator.stop();
 	}
 </script>
