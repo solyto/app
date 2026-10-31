@@ -170,6 +170,7 @@ const settings: SettingsRecords = {
 	french: 'Français',
 	spanish: 'Espagnol',
 	italian: 'Italien',
+	russian: 'Russe',
 	tags: 'Tags',
 	new_tag: 'Nouveau tag',
 	localization: 'Localisation',
