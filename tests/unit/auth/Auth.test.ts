@@ -264,6 +264,16 @@ describe('Auth store', () => {
 			expect(result).toEqual({ success: false, errors: ['email_unverified'] });
 			expect(auth.loggedIn).toBe(false);
 		});
+
+		it('drops validation errors that are not error codes', async () => {
+			api.postRaw.mockResolvedValue({ success: false, errors: { email: ['The email field must be a valid email address.'] } });
+
+			const auth = new Auth();
+			const result = await auth.login('not-an-email', 'secret');
+
+			expect(result).toEqual({ success: false, errors: undefined });
+			expect(auth.loggedIn).toBe(false);
+		});
 	});
 
 	describe('refresh', () => {
