@@ -88,8 +88,8 @@ Things to handle (this is where the actual work is):
    split locale chunks are still available offline. No change is needed there.
    For installed PWAs the total bytes downloaded stay the same. The win is the
    first visit (before the SW is installed) and parse/memory on every start.
-4. **Tests.** `tests/components/helpers/context.ts` seeds a `Translation`. Check
-   whether it calls `changeLanguage` and make it await if so. A small store test
+4. **Tests.** No existing test calls `changeLanguage` or `new Translation`
+   (checked with grep), so nothing breaks. A small store test
    (`tests/unit/stores/`) can cover "unknown locale falls back to `en`" and "the
    locale is set after the load resolves".
 5. **Type parity.** `npm run check` checks that every locale matches
