@@ -60,7 +60,7 @@
 	bind:this={trigger}
 	class="
 		relative flex items-center rounded-l-md transition-all duration-300
-		max-2xl:rounded-full {filled ? getPriorityColorClass(todo.priority) : ''}
+		max-2xl:rounded-full {filled ? `todo-priority-filled ${getPriorityColorClass(todo.priority)}` : ''}
 	"
 	class:justify-center={!left}
 	class:justify-start={left}
