@@ -5,7 +5,7 @@
 	import MultiSelect, { type MultiSelectEntry } from '$lib/components/forms/MultiSelect.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import DeezerIcon from '$lib/assets/services/deezer_icon.svg';
-	import DiscogsIcon from '$lib/assets/services/discogs_icon.png';
+	import DiscogsIcon from '$lib/assets/services/discogs_icon.svg';
 	import SpotifyIcon from '$lib/assets/services/spotify_icon.svg';
 	import type {
 		CreateMusicRequest,
