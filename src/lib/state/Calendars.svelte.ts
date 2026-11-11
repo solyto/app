@@ -124,14 +124,16 @@ export class Calendars {
 	}
 
 	async loadEvents(): Promise<void> {
+		const year = this.currentYear;
+		const month = this.currentMonth;
 		const res = await this.apiService.list(
 			apiRoutes.calendars.listEvents.replace(
 				'%s',
-				this.currentYear.toString() + '-' + this.currentMonth.toString().padStart(2, '0')
+				year.toString() + '-' + month.toString().padStart(2, '0')
 			)
 		);
 
-		if (!res) return;
+		if (!res || !this.isCurrentMonth(year, month)) return;
 
 		const events = (res.data as CalendarEventResponse[]).map((item) =>
 			this.eventService.fromApi(item)
@@ -164,6 +166,8 @@ export class Calendars {
 		const days = this.month.weeks.flatMap((week) => week.days.map((day) => day.date));
 		if (days.length === 0) return;
 
+		const year = this.currentYear;
+		const month = this.currentMonth;
 		const from = getUrlFormat(days[0]);
 		const to = getUrlFormat(days[days.length - 1]);
 
@@ -171,6 +175,8 @@ export class Calendars {
 			this.journalMarksEnabled ? this.apiService.list(`${apiRoutes.notes.journalMarks}?from=${from}&to=${to}`) : Promise.resolve(null),
 			this.checkInMarksEnabled ? this.apiService.list(`${apiRoutes.checkIn.marks}?from=${from}&to=${to}`) : Promise.resolve(null)
 		]);
+
+		if (!this.isCurrentMonth(year, month)) return;
 
 		this.journalMarks = (journalRes?.data as string[]) ?? [];
 		this.checkInMarks = (checkInRes?.data as string[]) ?? [];
@@ -540,6 +546,10 @@ export class Calendars {
 	private async reloadMonth(): Promise<void> {
 		this.loadMonth();
 		await Promise.all([this.loadEvents(), this.loadMarks()]);
+	}
+
+	private isCurrentMonth(year: number, month: number): boolean {
+		return year === this.currentYear && month === this.currentMonth;
 	}
 }
 

@@ -412,6 +412,47 @@ describe('Calendars store', () => {
 			expect(c.journalMarks).toEqual(['2026-09-01']);
 		});
 
+		it('ignores an events response for a month the user has already left', async () => {
+			const pending: Record<string, (value: { data: unknown[] }) => void> = {};
+			api.list.mockImplementation(
+				(endpoint: string) => new Promise((resolve) => (pending[endpoint.slice(-7)] = resolve))
+			);
+			const c = new Calendars();
+			c.currentYear = 2026;
+			c.currentMonth = 8;
+
+			const toSeptember = c.nextMonth();
+			const toOctober = c.nextMonth();
+			pending['2026-10']({ data: [] });
+			await toOctober;
+			pending['2026-09']({ data: [{ id: 1 }] });
+			await toSeptember;
+
+			expect(c.events).toEqual([]);
+		});
+
+		it('ignores a marks response for a month the user has already left', async () => {
+			const pending: ((value: { data: string[] }) => void)[] = [];
+			api.list.mockImplementation((endpoint: string) =>
+				endpoint.includes('/calendars/events/')
+					? Promise.resolve({ data: [] })
+					: new Promise((resolve) => pending.push(resolve))
+			);
+			const c = new Calendars();
+			c.journalMarksEnabled = true;
+			c.currentYear = 2026;
+			c.currentMonth = 8;
+
+			const toSeptember = c.nextMonth();
+			const toOctober = c.nextMonth();
+			pending[1]({ data: ['2026-10-01'] });
+			await toOctober;
+			pending[0]({ data: ['2026-09-01'] });
+			await toSeptember;
+
+			expect(c.journalMarks).toEqual(['2026-10-01']);
+		});
+
 		it('lastMonth wraps January to December of the previous year', async () => {
 			const c = new Calendars();
 			c.currentYear = 2026;
