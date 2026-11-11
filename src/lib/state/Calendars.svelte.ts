@@ -197,9 +197,7 @@ export class Calendars {
 		} else {
 			this.currentMonth++;
 		}
-		this.loadMonth();
-		await this.loadEvents();
-		await this.loadMarks();
+		await this.reloadMonth();
 	}
 
 	async lastMonth(): Promise<void> {
@@ -209,9 +207,7 @@ export class Calendars {
 		} else {
 			this.currentMonth--;
 		}
-		this.loadMonth();
-		await this.loadEvents();
-		await this.loadMarks();
+		await this.reloadMonth();
 	}
 
 	nextWeek(): void {
@@ -253,9 +249,7 @@ export class Calendars {
 		this.currentYear = today.getFullYear();
 		this.mobileSelectedDate = new Date(today);
 		this.mobileWeekStart = new Date(today);
-		this.loadMonth();
-		await this.loadEvents();
-		await this.loadMarks();
+		await this.reloadMonth();
 	}
 
 	getEventsForDate(date: Date): CalendarEvent[] {
@@ -541,6 +535,11 @@ export class Calendars {
 		if (res) await this.loadTodos();
 		if (res) this.auth.widgetBridge.notifyChanged();
 		return res;
+	}
+
+	private async reloadMonth(): Promise<void> {
+		this.loadMonth();
+		await Promise.all([this.loadEvents(), this.loadMarks()]);
 	}
 }
 
