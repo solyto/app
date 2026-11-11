@@ -1,8 +1,13 @@
-# Report: `marked` ships to 12 routes that never render markdown
+# Brief: `marked` ships to 12 routes that never render markdown
 
-Date: 2026-11-09
-Scope: what `src/lib/helpers/FormatHelper.ts` pulls into the route bundles.
-Method: ran `npm run build` at `76def9d` and followed the static imports of every
+type: feature
+id: classic
+branch: feature/classic_marked-ships-to-12-routes-that-never-render-markdown
+date: 2026-11-10
+author: Leander Muskalla
+
+Source report: `docs/reports/2026-11-09-marked-via-formathelper.md`
+
 route node through `.svelte-kit/output/client/.vite/manifest.json`. Sizes are the
 `.br` files the build writes. Then I tried the fix below in a throwaway build to
 check that it works, and reverted it. No code was changed.
