@@ -4,6 +4,7 @@
 	import { formatDateTime } from '$lib/helpers/DateHelper';
 	import { grabFaviconFromUrl } from '$lib/helpers/ImageHelper';
 	import SaveToLibraryButton from '$lib/components/feeds/SaveToLibraryButton.svelte';
+	import { safeHref } from '$lib/helpers/UrlHelper';
 
 	let { item, source }: {
 		item: FeedItem;
@@ -14,7 +15,7 @@
 </script>
 
 <a
-	href={item.link}
+	href={safeHref(item.link)}
 	class="flex w-full gap-x-3 gap-y-1 rounded-sm border-c-neutral-1 px-2 py-2.5 transition-colors hover:bg-c-neutral max-md:flex-col md:items-center dark:border-s-dark dark:hover:bg-s-dark-3"
 	target="_blank"
 	rel="external"

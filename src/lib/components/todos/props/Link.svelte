@@ -10,6 +10,7 @@
 	import { goto } from '$app/navigation';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import IconExternalLink from '@lucide/svelte/icons/external-link';
+	import { safeHref } from '$lib/helpers/UrlHelper';
 
 	const todos = getTodos();
 	const loadingIndicator = getLoadingIndicator();
@@ -65,12 +66,13 @@
 	}
 
 	function openLink(): void {
-		if (!todo.link) return;
-		if (todo.link.startsWith('/')) {
+		const link = safeHref(todo.link);
+		if (!link) return;
+		if (link.startsWith('/')) {
 			// eslint-disable-next-line svelte/no-navigation-without-resolve -- user-entered path, not a known route
-			goto(todo.link);
+			goto(link);
 		} else {
-			window.open(todo.link, '_blank', 'noopener,noreferrer');
+			window.open(link, '_blank', 'noopener,noreferrer');
 		}
 	}
 

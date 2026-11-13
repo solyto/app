@@ -5,6 +5,7 @@
 	import type { BookRelease } from '$lib/types/library_book';
 	import type { Translation } from '$lib/state/Translation.svelte';
 	import { formatDate } from '$lib/helpers/DateHelper';
+	import { safeHref } from '$lib/helpers/UrlHelper';
 
 	let { bookReleases, ts }: {
 		bookReleases: BookRelease[];
@@ -22,7 +23,7 @@
 	<div class="flex flex-col gap-2.5">
 		{#each bookReleases as release (release.id)}
 			<a
-				href={release.url}
+				href={safeHref(release.url)}
 				target="_blank"
 				rel="noopener noreferrer"
 				class="group flex items-center gap-3 transition-colors"

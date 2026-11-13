@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconHardcover from '$lib/components/ui/icons/IconHardcover.svelte';
+	import { safeHref } from '$lib/helpers/UrlHelper';
 
 	let { link, author, title }: {
 		link?: string | null;
@@ -15,7 +16,7 @@
 </script>
 
 <a
-	href={link ? link : getHardcoverUrl()}
+	href={link ? safeHref(link) : getHardcoverUrl()}
 	target="_blank"
 	rel="external"
 	class="group mt-2 mb-1 flex cursor-pointer items-center gap-3 rounded-lg border-1 border-c-neutral p-2 text-sm font-bold shadow-sm transition-all hover:text-c-btn dark:border-s-dark-3"

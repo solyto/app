@@ -5,6 +5,7 @@
 	import type { MusicRelease } from '$lib/types/library_music';
 	import type { Translation } from '$lib/state/Translation.svelte';
 	import { formatDate } from '$lib/helpers/DateHelper';
+	import { safeHref } from '$lib/helpers/UrlHelper';
 
 	let { musicReleases, ts }: {
 		musicReleases: MusicRelease[];
@@ -22,7 +23,7 @@
 	<div class="flex flex-col gap-2.5">
 		{#each musicReleases as release (release.id)}
 			<a
-				href={release.url}
+				href={safeHref(release.url)}
 				target="_blank"
 				rel="noopener noreferrer"
 				class="group flex items-center gap-3 transition-colors"

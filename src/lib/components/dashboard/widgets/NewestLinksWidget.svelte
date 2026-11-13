@@ -4,6 +4,7 @@
 	import IconLink from '@lucide/svelte/icons/link';
 	import IconExternalLink from '@lucide/svelte/icons/external-link';
 	import type { Translation } from '$lib/state/Translation.svelte';
+	import { safeHref } from '$lib/helpers/UrlHelper';
 
 	let { newestLinks, ts }: {
 		newestLinks: Link[];
@@ -21,7 +22,7 @@
 	<div class="flex flex-col gap-1">
 		{#each newestLinks as link (link.id)}
 			<a
-				href={link.url}
+				href={safeHref(link.url)}
 				target="_blank"
 				rel="noopener noreferrer"
 				class="group flex items-center gap-2 py-0.5 transition-colors"

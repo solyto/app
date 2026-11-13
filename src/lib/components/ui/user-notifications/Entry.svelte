@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { UserNotification } from '$lib/types/user_notification';
 	import { formatDate } from '$lib/helpers/DateHelper';
+	import { safeHref } from '$lib/helpers/UrlHelper';
 
 
 	let {
@@ -44,7 +45,7 @@
 		class:dark:shadow-s-dark-shadow={variant === 'card'}
 		class:dark:bg-s-dark-2={variant === 'card'}
 		class:dark:hover:bg-s-dark-3={variant === 'card'}
-		href={notification.link}
+		href={safeHref(notification.link)}
 		onclick={goTo}
 	>
 		{@render rowContent()}
