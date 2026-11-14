@@ -1028,7 +1028,7 @@ const calendar: CalendarRecords = {
 	search_note: 'Rechercher une note',
 	life_journal: 'Journal',
 	life_check_in: 'Check-in',
-	entry_delete_error: 'Impossible de supprimer l\'entrée. Réessaie.',
+	entry_delete_error: 'Impossible de supprimer l\'événement. Réessaie.',
 	event_changed_on_server: 'Cet événement a été modifié entre-temps sur son serveur. La dernière version est maintenant affichée.',
 	event_unreadable: 'Impossible de lire cet événement sur son serveur, il ne peut donc pas être modifié ici.',
 	event_server_unavailable: 'Le serveur du calendrier est injoignable pour le moment. Réessaie plus tard.',
