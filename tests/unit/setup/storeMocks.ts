@@ -67,23 +67,29 @@ vi.mock('$lib/state/Auth.svelte', () => ({
 	setAuth: () => auth
 }));
 
-vi.mock('$lib/services/ApiService', () => ({
-	default: class FakeApi {
-		list = api.list;
-		get = api.get;
-		create = api.create;
-		createWithStatus = api.createWithStatus;
-		update = api.update;
-		delete = api.delete;
-		post = api.post;
-		postWithStatus = api.postWithStatus;
-		postRaw = api.postRaw;
-		put = api.put;
-		postFormData = api.postFormData;
-		uploadFile = api.uploadFile;
-		image = api.image;
-	}
-}));
+vi.mock('$lib/services/ApiService', async (importOriginal) => {
+	const actual = await importOriginal<typeof import('$lib/services/ApiService')>();
+
+	return {
+		NetworkError: actual.NetworkError,
+		RateLimitedError: actual.RateLimitedError,
+		default: class FakeApi {
+			list = api.list;
+			get = api.get;
+			create = api.create;
+			createWithStatus = api.createWithStatus;
+			update = api.update;
+			delete = api.delete;
+			post = api.post;
+			postWithStatus = api.postWithStatus;
+			postRaw = api.postRaw;
+			put = api.put;
+			postFormData = api.postFormData;
+			uploadFile = api.uploadFile;
+			image = api.image;
+		}
+	};
+});
 
 vi.mock('$lib/services/LocalStorageService', () => ({
 	default: class FakeStorage {

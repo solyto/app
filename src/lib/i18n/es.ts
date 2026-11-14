@@ -883,7 +883,27 @@ const feeds: FeedRecords = {
 	no_feeds: 'Aún no hay feeds.',
 	no_feeds_desc: 'Añade un feed o explora lo que leen los demás.',
 	no_items: 'Aún no hay nada aquí.',
-	no_items_desc: 'Las nuevas entradas aparecerán en cuanto este feed las publique.'
+	no_items_desc: 'Las nuevas entradas aparecerán en cuanto este feed las publique.',
+	import_opml: 'Importar OPML',
+	import_hint: 'Elige el archivo OPML que exportaste desde tu otro lector de feeds.',
+	import_select_all: 'Seleccionar todo',
+	import_select_none: 'Deseleccionar todo',
+	import_selected_singular: '1 seleccionado',
+	import_selected_plural: '{n} seleccionados',
+	import_already_subscribed: 'Ya suscrito',
+	import_button: 'Importar',
+	import_progress: 'Importando feeds... {n} de {total}',
+	import_result_added: 'Añadidos ({n})',
+	import_result_already_subscribed: 'Ya suscrito ({n})',
+	import_result_failed: 'No funcionaron ({n})',
+	import_reason_unreachable: 'No respondió',
+	import_reason_not_a_feed: 'No es un feed',
+	import_another: 'Importar otro archivo',
+	import_close: 'Cerrar',
+	import_error_generic: 'Algo salió mal con la importación. Inténtalo de nuevo.',
+	import_error_unreadable: 'No se pudo leer este archivo. Tiene que ser un archivo OPML con al menos 1 y como máximo 500 feeds.',
+	import_error_running: 'Ya hay una importación en curso.',
+	import_error_rate_limited: 'Demasiadas importaciones. Inténtalo de nuevo más tarde.'
 };
 
 const calendar: CalendarRecords = {

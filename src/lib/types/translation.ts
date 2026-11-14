@@ -864,6 +864,26 @@ export interface FeedRecords {
 	no_feeds_desc: string;
 	no_items: string;
 	no_items_desc: string;
+	import_opml: string;
+	import_hint: string;
+	import_select_all: string;
+	import_select_none: string;
+	import_selected_singular: string;
+	import_selected_plural: string;
+	import_already_subscribed: string;
+	import_button: string;
+	import_progress: string;
+	import_result_added: string;
+	import_result_already_subscribed: string;
+	import_result_failed: string;
+	import_reason_unreachable: string;
+	import_reason_not_a_feed: string;
+	import_another: string;
+	import_close: string;
+	import_error_generic: string;
+	import_error_unreadable: string;
+	import_error_running: string;
+	import_error_rate_limited: string;
 }
 
 export interface CalendarRecords {

@@ -3,10 +3,12 @@
 	import { onMount } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getLinkLibrary, setLinkLibrary } from '$lib/state/LinkLibrary.svelte';
+	import { setFeedImport } from '$lib/state/FeedImport.svelte';
 
 	let { children } = $props();
 
 	setFeeds();
+	setFeedImport();
 	setLinkLibrary();
 
 	const loadingIndicator = getLoadingIndicator();
