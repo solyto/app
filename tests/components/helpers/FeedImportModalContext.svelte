@@ -11,4 +11,6 @@
 	onDestroy(() => feedImport.destroy());
 </script>
 
-<FeedImportModal />
+{#if feedImport.modalOpen}
+	<FeedImportModal />
+{/if}

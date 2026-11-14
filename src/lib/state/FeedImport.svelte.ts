@@ -117,18 +117,17 @@ export class FeedImport {
 			this.failedPolls = 0;
 			this.pollError = null;
 		} catch (error) {
+			if (!(error instanceof NetworkError) && !(error instanceof RateLimitedError)) {
+				this.stall();
+				return;
+			}
 			delay = this.backOff(error);
 		}
 
 		this.continuePolling(delay);
 	}
 
-	private backOff(error: unknown): number {
-		if (!(error instanceof NetworkError) && !(error instanceof RateLimitedError)) {
-			this.stopPolling();
-			throw error;
-		}
-
+	private backOff(error: NetworkError | RateLimitedError): number {
 		this.failedPolls++;
 		this.pollError = error instanceof RateLimitedError ? 'rate_limited' : 'network';
 
@@ -152,13 +151,20 @@ export class FeedImport {
 		}
 
 		if (Date.now() - this.lastProgressAt >= FeedImport.POLL_TIMEOUT_MS) {
-			this.stopPolling();
-			this.stalled = true;
-			if (!this.modalOpen) this.notifications.error(this.ts.get.feeds.import_error_generic);
+			this.stall();
 			return;
 		}
 
 		this.pollTimer = setTimeout(() => this.poll(), delay);
+	}
+
+	private stall(): void {
+		if (!this.polling) return;
+
+		this.stopPolling();
+		this.pollError = null;
+		this.stalled = true;
+		if (!this.modalOpen) this.notifications.error(this.ts.get.feeds.import_error_generic);
 	}
 
 	private announceFinished(state: FeedImportState): void {

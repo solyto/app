@@ -210,10 +210,17 @@
 	<h3 class="text-sm font-semibold text-c-heading dark:text-c-primary">{text}</h3>
 {/snippet}
 
+{#snippet leaveActions()}
+	<div class="flex justify-end gap-2">
+		<TextButton title={ts.get.feeds.import_another} onclick={importAnother} />
+		<TextButton type="primary" title={ts.get.feeds.import_close} onclick={close} />
+	</div>
+{/snippet}
+
 <ContentModal title={ts.get.feeds.import_opml} onClose={close} rounded="2xl" p="8" width="2xl">
 	<div class="flex flex-col gap-4">
 		{#if message()}
-			<p class="text-sm text-c-danger">{message()}</p>
+			<p class="text-sm text-c-danger" role="alert">{message()}</p>
 		{/if}
 
 		{#if shown === null}
@@ -258,7 +265,11 @@
 					</div>
 				{/each}
 			</div>
-			<TextButton type="primary" title={ts.get.feeds.import_button} disabled={busy || selected.length === 0} onclick={startImport} />
+			{#if service.initialSelection(importState).length === 0}
+				{@render leaveActions()}
+			{:else}
+				<TextButton type="primary" title={ts.get.feeds.import_button} disabled={busy || selected.length === 0} onclick={startImport} />
+			{/if}
 		{:else if shown === 'progress' && feedImport.state}
 			<p class="text-sm">{progressLabel(feedImport.state)}</p>
 			<ProgressBar value={service.progress(feedImport.state)} label={progressLabel(feedImport.state)} />
@@ -279,14 +290,9 @@
 					{/each}
 				</div>
 			{/if}
-			<div class="flex justify-end gap-2">
-				<TextButton title={ts.get.feeds.import_another} onclick={importAnother} />
-				<TextButton type="primary" title={ts.get.feeds.import_close} onclick={close} />
-			</div>
+			{@render leaveActions()}
 		{:else if shown === 'failed'}
-			<div class="flex justify-end">
-				<TextButton type="primary" title={ts.get.feeds.import_close} onclick={close} />
-			</div>
+			{@render leaveActions()}
 		{:else if shown === 'unavailable'}
 			<div class="flex justify-end gap-2">
 				<TextButton title={ts.get.feeds.import_close} onclick={close} />

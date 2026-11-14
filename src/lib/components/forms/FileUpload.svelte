@@ -23,6 +23,7 @@
 
 	let selectedFile = $state<File | null>(null);
 	let isUploading = $state(false);
+	let isHandingOver = $state(false);
 	let uploadProgress = $state(0);
 	let uploadError = $state<string | null>(null);
 	let uploadSuccess = $state(false);
@@ -58,13 +59,17 @@
 	}
 
 	async function handOver(inputElement: HTMLInputElement, file: File, deliver: (file: File) => Promise<boolean>): Promise<void> {
-		const accepted = await deliver(file);
-		if (accepted) {
-			uploadSuccess = true;
-			return;
+		isHandingOver = true;
+		try {
+			if (await deliver(file)) {
+				uploadSuccess = true;
+				return;
+			}
+			selectedFile = null;
+			inputElement.value = '';
+		} finally {
+			isHandingOver = false;
 		}
-		selectedFile = null;
-		inputElement.value = '';
 	}
 
 	async function fileToBase64(file: File): Promise<string> {
@@ -110,6 +115,7 @@
 			id="file-upload"
 			type="file"
 			{accept}
+			disabled={isHandingOver}
 			bind:this={input}
 			onchange={handleFileChange}
 			class="block w-full text-sm text-c-neutral-5

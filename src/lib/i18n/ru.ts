@@ -716,7 +716,7 @@ const feeds: FeedRecords = {
 	import_close: 'Закрыть',
 	import_retry: 'Повторить',
 	import_error_generic: 'Что-то пошло не так при импорте. Попробуйте ещё раз.',
-	import_error_unreadable: 'Не удалось прочитать файл. Это должен быть файл OPML, содержащий от 1 до 500 лент.',
+	import_error_unreadable: 'Не удалось прочитать файл. Это должен быть файл OPML размером не более 1 МБ, содержащий от 1 до 500 лент.',
 	import_error_running: 'Импорт уже выполняется.',
 	import_error_rate_limited: 'Слишком много импортов. Попробуйте позже.'
 };

@@ -42,7 +42,8 @@
 		</div>
 		<div class="flex flex-col gap-1">
 			{#each shortcuts.shortcuts as shortcut (shortcut.id)}
-				<a
+				<svelte:element
+					this={safeHref(shortcut.url) ? 'a' : 'div'}
 					href={safeHref(shortcut.url)}
 					target="_blank"
 					rel="external"
@@ -60,7 +61,7 @@
 						size={12}
 						class="ml-auto shrink-0 text-c-neutral-4 opacity-0 transition-opacity group-hover:opacity-100"
 					/>
-				</a>
+				</svelte:element>
 			{:else}
 				<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">
 					{ts.get.widgets.no_shortcuts_hint}

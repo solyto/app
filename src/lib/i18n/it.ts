@@ -907,7 +907,7 @@ const feeds: FeedRecords = {
 	import_close: 'Chiudi',
 	import_retry: 'Riprova',
 	import_error_generic: "Qualcosa è andato storto con l'importazione. Riprova.",
-	import_error_unreadable: 'Impossibile leggere questo file. Deve essere un file OPML con almeno 1 e al massimo 500 feed.',
+	import_error_unreadable: 'Impossibile leggere questo file. Deve essere un file OPML di massimo 1 MB con almeno 1 e al massimo 500 feed.',
 	import_error_running: "È già in corso un'importazione.",
 	import_error_rate_limited: 'Troppe importazioni. Riprova più tardi.'
 };

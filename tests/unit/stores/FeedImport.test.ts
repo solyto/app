@@ -292,6 +292,36 @@ describe('FeedImport store', () => {
 			expect(notifications.error).toHaveBeenCalledWith('generic error');
 		});
 
+		it('treats an unexpected poll error as a stall instead of rethrowing it', async () => {
+			const s = await startedStore();
+			api.get.mockRejectedValueOnce(new SyntaxError('Unexpected token <'));
+
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(1000);
+			await vi.advanceTimersByTimeAsync(10000);
+
+			expect(api.get).toHaveBeenCalledTimes(1);
+			expect(s.stalled).toBe(true);
+			expect(s.polling).toBe(false);
+			expect(s.pollError).toBeNull();
+			expect(notifications.error).toHaveBeenCalledWith('generic error');
+		});
+
+		it('does not report a stall for an error that arrives after it was destroyed', async () => {
+			const s = await startedStore();
+			let reject: (error: Error) => void = () => {};
+			api.get.mockImplementationOnce(() => new Promise((_, r) => (reject = r)));
+
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(1000);
+			s.destroy();
+			reject(new SyntaxError('Unexpected token <'));
+			await vi.advanceTimersByTimeAsync(1000);
+
+			expect(s.stalled).toBe(false);
+			expect(notifications.error).not.toHaveBeenCalled();
+		});
+
 		it('resumes polling on load only when an import is running', async () => {
 			const idle = store();
 			api.get.mockResolvedValueOnce({ data: importState({ stage: 'finished' }) });

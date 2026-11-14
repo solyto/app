@@ -47,7 +47,7 @@ afterEach(() => {
 });
 
 describe('FeedImportModal', () => {
-	it('stops polling the import state once it is unmounted mid-import', async () => {
+	it('stops polling once the feed import store is destroyed mid-import', async () => {
 		vi.useFakeTimers();
 		const refresh = vi.spyOn(FeedImport.prototype, 'refresh').mockImplementation(async function (this: FeedImport) {
 			this.state = { stage: 'running', total: 2, processed: 1, feeds: [] };
@@ -67,7 +67,7 @@ describe('FeedImportModal', () => {
 		expect(refresh).toHaveBeenCalledTimes(2);
 	});
 
-	it('does not start polling when it is unmounted before the first refresh resolves', async () => {
+	it('does not start polling when the feed import store is destroyed before the first refresh resolves', async () => {
 		vi.useFakeTimers();
 		let resolveFirst: (found: boolean) => void = () => {};
 		const refresh = vi.spyOn(FeedImport.prototype, 'refresh').mockImplementation(function (this: FeedImport) {
@@ -86,6 +86,22 @@ describe('FeedImportModal', () => {
 		await vi.advanceTimersByTimeAsync(10000);
 
 		expect(refresh).toHaveBeenCalledTimes(1);
+	});
+
+	it('keeps polling in the background after the modal is closed mid-import', async () => {
+		vi.useFakeTimers();
+		const refresh = mockRunningImport((call) => call);
+
+		renderWithContext(FeedImportModalContext);
+		await vi.advanceTimersByTimeAsync(1000);
+		screen.getByRole('button').click();
+		await vi.advanceTimersByTimeAsync(0);
+		expect(screen.queryByRole('progressbar')).toBeNull();
+
+		const calls = refresh.mock.calls.length;
+		await vi.advanceTimersByTimeAsync(3000);
+
+		expect(refresh.mock.calls.length).toBeGreaterThan(calls);
 	});
 
 	it('keeps polling past the stall timeout while the import makes progress', async () => {
@@ -111,11 +127,42 @@ describe('FeedImportModal', () => {
 		expect(screen.queryByText(GENERIC_ERROR)).toBeNull();
 
 		await vi.advanceTimersByTimeAsync(101000);
-		expect(screen.getByText(GENERIC_ERROR)).toBeInTheDocument();
+		expect(screen.getByRole('alert')).toHaveTextContent(GENERIC_ERROR);
 
 		const calls = refresh.mock.calls.length;
 		await vi.advanceTimersByTimeAsync(10000);
 		expect(refresh).toHaveBeenCalledTimes(calls);
+	});
+
+	it('offers to import another file once the import has stalled', async () => {
+		const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+		vi.useFakeTimers();
+		mockRunningImport(() => 10);
+
+		renderWithContext(FeedImportModalContext);
+		await vi.advanceTimersByTimeAsync(301000);
+		await user.click(screen.getByRole('button', { name: 'Import another file' }));
+
+		expect(screen.getByText(/Choose the OPML file/)).toBeInTheDocument();
+		expect(screen.queryByText(GENERIC_ERROR)).toBeNull();
+	});
+
+	it('shows the failed view when polling gets an unreadable response', async () => {
+		vi.useFakeTimers();
+		let call = 0;
+		const refresh = vi.spyOn(FeedImport.prototype, 'refresh').mockImplementation(async function (this: FeedImport) {
+			if (call++ === 1) throw new SyntaxError('Unexpected token <');
+			this.state = { stage: 'running', total: 4, processed: 1, feeds: [] };
+			return true;
+		});
+
+		renderWithContext(FeedImportModalContext);
+		await vi.advanceTimersByTimeAsync(1000);
+		await vi.advanceTimersByTimeAsync(10000);
+
+		expect(screen.getByRole('alert')).toHaveTextContent(GENERIC_ERROR);
+		expect(screen.getByRole('button', { name: 'Import another file' })).toBeInTheDocument();
+		expect(refresh).toHaveBeenCalledTimes(2);
 	});
 
 	it('shows the result when a long import finishes', async () => {
@@ -260,6 +307,22 @@ describe('FeedImportModal', () => {
 		expect(screen.queryByText('feeds.opml')).toBeNull();
 	});
 
+	it('disables the file input while the upload is in flight', async () => {
+		const user = userEvent.setup();
+		vi.spyOn(FeedImport.prototype, 'refresh').mockResolvedValue(false);
+		let resolveUpload: (res: { ok: boolean; status: number }) => void = () => {};
+		vi.spyOn(FeedImport.prototype, 'upload').mockImplementation(() => new Promise((resolve) => (resolveUpload = resolve)));
+
+		renderWithContext(FeedImportModalContext);
+		const input = await screen.findByLabelText<HTMLInputElement>('Select File');
+		await user.upload(input, new File(['<opml/>'], 'feeds.opml'));
+		expect(input).toBeDisabled();
+
+		resolveUpload({ ok: false, status: 422 });
+
+		await vi.waitFor(() => expect(input).toBeEnabled());
+	});
+
 	it('does not show the file as selected when the server rejects it', async () => {
 		const user = userEvent.setup();
 		vi.spyOn(FeedImport.prototype, 'refresh').mockResolvedValue(false);
@@ -269,7 +332,7 @@ describe('FeedImportModal', () => {
 		const input = await screen.findByLabelText<HTMLInputElement>('Select File');
 		await user.upload(input, new File(['<opml/>'], 'feeds.opml'));
 
-		expect(await screen.findByText(/This file couldn't be read/)).toBeInTheDocument();
+		expect(await screen.findByRole('alert')).toHaveTextContent(/This file couldn't be read/);
 		expect(screen.queryByText('feeds.opml')).toBeNull();
 		expect(screen.queryByText(/Processing/)).toBeNull();
 		expect(input.value).toBe('');
@@ -320,7 +383,11 @@ describe('FeedImportModal', () => {
 
 		expect(await screen.findByText(/already subscribed to every feed/)).toBeInTheDocument();
 		expect(screen.queryByRole('button', { name: /Select (all|none)/ })).toBeNull();
-		expect(screen.getByRole('button', { name: 'Import' })).toBeDisabled();
+		expect(screen.queryByRole('button', { name: 'Import' })).toBeNull();
+
+		await user.click(screen.getByRole('button', { name: 'Import another file' }));
+
+		expect(screen.getByText(/Choose the OPML file/)).toBeInTheDocument();
 	});
 
 	it('lists feeds over the subscription limit as failed with their reason', async () => {

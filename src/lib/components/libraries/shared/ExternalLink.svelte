@@ -17,12 +17,14 @@
 	} = $props();
 
 	const ts = getTranslation();
+
+	let href = $derived(safeHref(entry.link));
 </script>
 
 <div class="mt-2 flex flex-col">
-	{#if entry.link}
+	{#if entry.link && href}
 		<a
-			href={safeHref(entry.link)}
+			{href}
 			target="_blank"
 			rel="external"
 			class="group mt-2 mb-1 flex cursor-pointer items-center gap-3 rounded-lg border-1 border-c-neutral p-2 text-sm font-bold shadow-sm transition-all hover:text-c-btn dark:border-s-dark-3"

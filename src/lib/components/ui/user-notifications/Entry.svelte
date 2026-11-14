@@ -14,6 +14,8 @@
 		variant?: 'row' | 'card';
 	} = $props();
 
+	let href = $derived(safeHref(notification.link));
+
 	function goTo(): void {
 		onClose();
 	}
@@ -32,7 +34,7 @@
 	</p>
 {/snippet}
 
-{#if notification.link}
+{#if href}
 	<a
 		class="relative flex w-full cursor-pointer flex-col gap-1 hover:bg-c-neutral"
 		class:px-4={variant === 'row'}
@@ -45,7 +47,7 @@
 		class:dark:shadow-s-dark-shadow={variant === 'card'}
 		class:dark:bg-s-dark-2={variant === 'card'}
 		class:dark:hover:bg-s-dark-3={variant === 'card'}
-		href={safeHref(notification.link)}
+		{href}
 		onclick={goTo}
 	>
 		{@render rowContent()}
