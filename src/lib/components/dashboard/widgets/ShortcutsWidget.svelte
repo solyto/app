@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 	import { getShortcuts } from '$lib/state/Shortcuts.svelte';
 	import type { Translation } from '$lib/state/Translation.svelte';
+	import { safeHref } from '$lib/helpers/UrlHelper';
 
 	const shortcuts = getShortcuts();
 
@@ -42,7 +43,7 @@
 		<div class="flex flex-col gap-1">
 			{#each shortcuts.shortcuts as shortcut (shortcut.id)}
 				<a
-					href={shortcut.url}
+					href={safeHref(shortcut.url)}
 					target="_blank"
 					rel="external"
 					class="group flex items-center gap-2.5 py-0.5 transition-colors"

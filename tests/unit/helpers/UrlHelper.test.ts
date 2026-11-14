@@ -26,14 +26,49 @@ describe('safeHref', () => {
 		expect(safeHref('/\\example.com')).toBeUndefined();
 	});
 
+	it('rejects protocol-relative URLs hidden by tabs and newlines', () => {
+		expect(safeHref('/\t/evil.com')).toBeUndefined();
+		expect(safeHref('/\n\\evil.com')).toBeUndefined();
+		expect(safeHref('/\r/evil.com')).toBeUndefined();
+		expect(safeHref('\t//evil.com')).toBeUndefined();
+	});
+
+	it('rejects script schemes hidden by tabs, newlines and control characters', () => {
+		expect(safeHref('java\tscript:alert(1)')).toBeUndefined();
+		expect(safeHref('java\nscript:alert(1)')).toBeUndefined();
+		expect(safeHref('\u0000javascript:alert(1)')).toBeUndefined();
+		expect(safeHref('\u001fjavascript:alert(1)')).toBeUndefined();
+	});
+
+	it('strips tabs, newlines and surrounding whitespace the browser would ignore', () => {
+		expect(safeHref('  https://example.com  ')).toBe('https://example.com');
+		expect(safeHref('/to\tdos')).toBe('/todos');
+	});
+
+	it('treats a host without a scheme as https', () => {
+		expect(safeHref('example.com')).toBe('https://example.com');
+		expect(safeHref('www.example.com/a?b=c#d')).toBe('https://www.example.com/a?b=c#d');
+		expect(safeHref('example.com:8080/x')).toBe('https://example.com:8080/x');
+		expect(safeHref(' example.com ')).toBe('https://example.com');
+		expect(safeHref('münchen.de')).toBe('https://münchen.de');
+	});
+
 	it('rejects input that is not a URL', () => {
-		expect(safeHref('example.com')).toBeUndefined();
 		expect(safeHref('todos/1')).toBeUndefined();
+		expect(safeHref('localhost')).toBeUndefined();
+		expect(safeHref('not a url')).toBeUndefined();
+		expect(safeHref('example .com')).toBeUndefined();
+		expect(safeHref('example.com/a b')).toBeUndefined();
+		expect(safeHref('someone@example.com')).toBeUndefined();
+		expect(safeHref('example.com:javascript')).toBeUndefined();
+		expect(safeHref('.example.com')).toBeUndefined();
 	});
 
 	it('rejects empty input', () => {
 		expect(safeHref(null)).toBeUndefined();
 		expect(safeHref(undefined)).toBeUndefined();
 		expect(safeHref('')).toBeUndefined();
+		expect(safeHref('   ')).toBeUndefined();
+		expect(safeHref('\t\n')).toBeUndefined();
 	});
 });
