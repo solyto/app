@@ -11,10 +11,10 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import type { FeedImportStage, FeedImportState } from '$lib/types/feed';
 
-	type View = 'picker' | 'preview' | 'progress' | 'result' | 'failed';
+	type View = 'picker' | 'preview' | 'progress' | 'result' | 'failed' | 'unavailable';
 
 	const POLL_INTERVAL_MS = 1000;
-	const POLL_TIMEOUT_MS = 120000;
+	const POLL_TIMEOUT_MS = 300000;
 	const MUTED = 'text-xs text-c-neutral-5 dark:text-c-neutral-4';
 
 	const ts = getTranslation();
@@ -26,9 +26,11 @@
 	let selected = $state<string[]>([]);
 	let result = $state<FeedImportResult | null>(null);
 	let error = $state<string | null>(null);
+	let fileInput = $state<HTMLInputElement | null>(null);
 	let polling = false;
 	let destroyed = false;
-	let pollStartedAt = 0;
+	let lastProgressAt = 0;
+	let lastProcessed: number | null = null;
 	let pollTimer: ReturnType<typeof setTimeout> | null = null;
 
 	onMount(open);
@@ -40,9 +42,17 @@
 		try {
 			const found = await feedImport.refresh();
 			showStage(found ? feedImport.state?.stage : undefined);
+		} catch {
+			error = ts.get.feeds.import_error_generic;
+			view = 'unavailable';
 		} finally {
 			loadingIndicator.stop();
 		}
+	}
+
+	function retry(): void {
+		error = null;
+		open();
 	}
 
 	function showStage(stage: FeedImportStage | undefined): void {
@@ -62,6 +72,7 @@
 	function showResult(): void {
 		if (!feedImport.state) return;
 		result = service.group(feedImport.state);
+		error = null;
 		view = 'result';
 	}
 
@@ -70,6 +81,12 @@
 		loadingIndicator.start();
 		try {
 			const res = await feedImport.upload(file);
+			if (res.status === 409) {
+				error = uploadErrorMessage(res.status);
+				const found = await feedImport.refresh();
+				showStage(found ? feedImport.state?.stage : undefined);
+				return;
+			}
 			if (!res.ok || !feedImport.state) {
 				error = uploadErrorMessage(res.status);
 				return;
@@ -77,6 +94,7 @@
 			selected = service.initialSelection(feedImport.state);
 			view = 'preview';
 		} finally {
+			if (fileInput) fileInput.value = '';
 			loadingIndicator.stop();
 		}
 	}
@@ -115,7 +133,8 @@
 	function startPolling(): void {
 		if (destroyed) return;
 		polling = true;
-		pollStartedAt = Date.now();
+		lastProgressAt = Date.now();
+		lastProcessed = feedImport.state?.processed ?? null;
 		scheduleNextPoll();
 	}
 
@@ -142,7 +161,13 @@
 			return;
 		}
 
-		if (Date.now() - pollStartedAt >= POLL_TIMEOUT_MS) {
+		const processed = feedImport.state?.processed ?? null;
+		if (processed !== lastProcessed) {
+			lastProcessed = processed;
+			lastProgressAt = Date.now();
+		}
+
+		if (Date.now() - lastProgressAt >= POLL_TIMEOUT_MS) {
 			stopPolling();
 			error = ts.get.feeds.import_error_generic;
 			view = 'failed';
@@ -219,7 +244,7 @@
 
 		{#if view === 'picker'}
 			<p class="text-sm">{ts.get.feeds.import_hint}</p>
-			<FileUpload accept=".opml,.xml" onfile={upload} />
+			<FileUpload accept=".opml,.xml" bind:input={fileInput} onfile={upload} />
 		{:else if view === 'preview' && feedImport.state}
 			{@const importState = feedImport.state}
 			<div class="flex items-center justify-between gap-4">
@@ -268,6 +293,11 @@
 		{:else if view === 'failed'}
 			<div class="flex justify-end">
 				<TextButton type="primary" title={ts.get.feeds.import_close} onclick={close} />
+			</div>
+		{:else if view === 'unavailable'}
+			<div class="flex justify-end gap-2">
+				<TextButton title={ts.get.feeds.import_close} onclick={close} />
+				<TextButton type="primary" title={ts.get.feeds.import_retry} onclick={retry} />
 			</div>
 		{/if}
 	</div>

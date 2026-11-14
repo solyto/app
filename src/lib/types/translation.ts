@@ -880,6 +880,7 @@ export interface FeedRecords {
 	import_reason_not_a_feed: string;
 	import_another: string;
 	import_close: string;
+	import_retry: string;
 	import_error_generic: string;
 	import_error_unreadable: string;
 	import_error_running: string;

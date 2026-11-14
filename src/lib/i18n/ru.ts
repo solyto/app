@@ -708,6 +708,7 @@ const feeds: FeedRecords = {
 	import_result_failed: 'Не удалось ({n})', import_reason_unreachable: 'Не отвечает',
 	import_reason_not_a_feed: 'Это не лента', import_another: 'Импортировать другой файл',
 	import_close: 'Закрыть',
+	import_retry: 'Повторить',
 	import_error_generic: 'Что-то пошло не так при импорте. Попробуйте ещё раз.',
 	import_error_unreadable: 'Не удалось прочитать файл. Это должен быть файл OPML, содержащий от 1 до 500 лент.',
 	import_error_running: 'Импорт уже выполняется.',

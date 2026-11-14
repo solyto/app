@@ -900,6 +900,7 @@ const feeds: FeedRecords = {
 	import_reason_not_a_feed: 'No es un feed',
 	import_another: 'Importar otro archivo',
 	import_close: 'Cerrar',
+	import_retry: 'Reintentar',
 	import_error_generic: 'Algo salió mal con la importación. Inténtalo de nuevo.',
 	import_error_unreadable: 'No se pudo leer este archivo. Tiene que ser un archivo OPML con al menos 1 y como máximo 500 feeds.',
 	import_error_running: 'Ya hay una importación en curso.',
