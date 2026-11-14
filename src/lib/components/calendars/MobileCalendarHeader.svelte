@@ -3,7 +3,6 @@
 	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import IconChevronDown from '@lucide/svelte/icons/chevron-down';
-	import IconCloudOff from '@lucide/svelte/icons/cloud-off';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconMonth from '$lib/components/ui/icons/IconMonth.svelte';
 	import IconWeek from '$lib/components/ui/icons/IconWeek.svelte';
@@ -14,6 +13,7 @@
 	import CloudButton from '$lib/components/ui/buttons/CloudButton.svelte';
 	import BottomSheetModal from '$lib/components/ui/BottomSheetModal.svelte';
 	import ManageCalendars from '$lib/components/calendars/ManageCalendars.svelte';
+	import UnavailableCalendarsNotice from '$lib/components/calendars/UnavailableCalendarsNotice.svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getCalendarImport } from '$lib/state/CalendarImport.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -48,10 +48,6 @@
 			return formatDateWithoutYear(calendars.currentDate);
 		}
 		return formatDateWithoutYear(calendars.currentDate);
-	}
-
-	function unavailableNotice(): string {
-		return ts.get.calendar.external_unavailable_notice.replace('%s', calendars.unavailableCalendarNames().join(', '));
 	}
 
 	async function navigateBack(): Promise<void> {
@@ -163,12 +159,7 @@
 		</div>
 	{/if}
 
-	{#if calendars.unavailableCalendarNames().length > 0}
-		<p class="flex items-center justify-center gap-1 text-xs text-c-danger">
-			<IconCloudOff class="size-3.5 shrink-0" />
-			{unavailableNotice()}
-		</p>
-	{/if}
+	<UnavailableCalendarsNotice />
 
 	{#if calendars.view !== 'list'}
 		<div class="flex items-center justify-center gap-4">

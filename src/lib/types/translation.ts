@@ -1026,10 +1026,14 @@ export interface CalendarRecords {
 	external_calendar: string;
 	external_unavailable: string;
 	external_unavailable_notice: string;
+	external_credentials_rejected: string;
+	external_credentials_rejected_notice: string;
+	calendar_with_status: string;
 	disconnect_title: string;
 	disconnect_description: string;
 	connected_accounts: string;
 	no_connected_accounts: string;
+	accounts_load_error: string;
 	connect_calendar: string;
 	connect_server_url: string;
 	connect_username: string;
@@ -1050,6 +1054,7 @@ export interface CalendarRecords {
 	account_calendars_singular: string;
 	account_calendars_plural: string;
 	account_add_calendars: string;
+	account_no_calendars_hint: string;
 	account_change_password: string;
 	account_change_password_hint: string;
 	account_password_updated: string;

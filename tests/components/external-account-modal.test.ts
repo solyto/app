@@ -1,11 +1,13 @@
 import { describe, it, expect, vi } from 'vitest';
 import { screen, waitFor } from '@testing-library/svelte';
+import { flushSync } from 'svelte';
 import userEvent from '@testing-library/user-event';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { RateLimitedError } from '$lib/services/ApiService';
 import { renderWithContext } from './helpers/context';
 import ExternalAccountModalHarness from './helpers/ExternalAccountModalHarness.svelte';
-import type { ExternalCalendarAccount, ExternalCalendarCandidate } from '$lib/types/calendar';
+import type { ExternalCalendars } from '$lib/state/ExternalCalendars.svelte';
+import type { ExternalAccountDialog, ExternalCalendarAccount, ExternalCalendarCandidate } from '$lib/types/calendar';
 
 const routes = apiRoutes.calendars.externalAccounts;
 const ACCOUNT: ExternalCalendarAccount = { id: 7, server_url: 'https://cloud.example.com', username: 'alice', calendars: [] };
@@ -21,20 +23,26 @@ function refused(code: string) {
 function fakeApi(postRaw: (endpoint: string, body: object) => Promise<unknown>) {
 	return {
 		list: vi.fn(async () => ({ data: [], meta: { unavailable_calendars: [] } })),
-		listRaw: vi.fn(async () => ({ success: true, data: CANDIDATES })),
-		postRaw: vi.fn(postRaw)
+		listRaw: vi.fn(async (): Promise<unknown> => ({ success: true, data: CANDIDATES })),
+		postRaw: vi.fn(postRaw),
+		putRaw: vi.fn(async (): Promise<unknown> => ({ success: true, data: ACCOUNT }))
 	};
 }
 
-function render(api: ReturnType<typeof fakeApi>) {
-	renderWithContext(ExternalAccountModalHarness, {}, { stores: { auth: { apiService: api } } });
+function render(api: ReturnType<typeof fakeApi>, dialog?: ExternalAccountDialog): ExternalCalendars {
+	let store: ExternalCalendars | null = null;
+	renderWithContext(
+		ExternalAccountModalHarness,
+		{ dialog, onStore: (s: ExternalCalendars) => (store = s) },
+		{ stores: { auth: { apiService: api } } }
+	);
+	return store!;
 }
 
 async function fillForm(user: ReturnType<typeof userEvent.setup>): Promise<void> {
-	const [url, username] = screen.getAllByRole('textbox');
-	await user.type(url, ' https://cloud.example.com ');
-	await user.type(username, 'alice');
-	await user.type(document.querySelector('input[type="password"]')!, 'app-password');
+	await user.type(screen.getByLabelText('Server URL'), ' https://cloud.example.com ');
+	await user.type(screen.getByLabelText('Username'), 'alice');
+	await user.type(screen.getByLabelText('App password'), 'app-password');
 }
 
 function submitButton(): HTMLButtonElement {
@@ -88,6 +96,90 @@ describe('ExternalAccountModal connect flow', () => {
 		expect(submitButton()).toBeEnabled();
 	});
 
+	it('links a field error to its input and announces it', async () => {
+		const user = userEvent.setup();
+		render(fakeApi(async () => refused('external_credentials_rejected')));
+		await fillForm(user);
+
+		await user.click(submitButton());
+
+		const shown = 'The server rejected the username or app password.';
+		expect(await screen.findByRole('alert')).toHaveTextContent(shown);
+		expect(screen.getByLabelText('App password')).toHaveAccessibleDescription(shown);
+		expect(screen.getByLabelText('Server URL')).not.toHaveAttribute('aria-describedby');
+	});
+
+	it('shows a generic error when the reply is not the API envelope', async () => {
+		const user = userEvent.setup();
+		render(fakeApi(async () => ({ success: false })));
+		await fillForm(user);
+
+		await user.click(submitButton());
+
+		expect(await screen.findByRole('alert')).toHaveTextContent('Something went wrong. Please check your input and try again.');
+		expect(submitButton()).toBeEnabled();
+	});
+
+	it('submits with Enter, once', async () => {
+		const user = userEvent.setup();
+		let resolve: (value: unknown) => void = () => {};
+		const api = fakeApi(() => new Promise((r) => (resolve = r)));
+		render(api);
+		await fillForm(user);
+
+		await user.keyboard('{Enter}');
+		await user.keyboard('{Enter}');
+		resolve({ success: true, data: ACCOUNT });
+
+		await screen.findByText('Work');
+		expect(api.postRaw).toHaveBeenCalledTimes(1);
+	});
+
+	it('sets the mobile keyboard hints on the inputs', () => {
+		render(fakeApi(async () => ({ success: true, data: ACCOUNT })));
+
+		const url = screen.getByLabelText('Server URL');
+		expect(url).toHaveAttribute('inputmode', 'url');
+		expect(url).toHaveAttribute('autocapitalize', 'off');
+		expect(url).toHaveAttribute('autocorrect', 'off');
+		expect(url).toHaveAttribute('spellcheck', 'false');
+		expect(screen.getByLabelText('Username')).toHaveAttribute('autocapitalize', 'off');
+		expect(screen.getByLabelText('App password')).toHaveAttribute('autocomplete', 'new-password');
+	});
+
+	it('stays closed when the dialog is closed while the account is being checked', async () => {
+		const user = userEvent.setup();
+		let resolve: (value: unknown) => void = () => {};
+		const api = fakeApi(() => new Promise((r) => (resolve = r)));
+		const store = render(api);
+		await fillForm(user);
+		await user.click(submitButton());
+
+		flushSync(() => store.closeDialog());
+		resolve({ success: true, data: ACCOUNT });
+
+		await waitFor(() => expect(api.list).toHaveBeenCalled());
+		expect(store.dialog).toBeNull();
+		expect(api.listRaw).not.toHaveBeenCalled();
+	});
+
+	it('leaves a dialog opened in the meantime alone', async () => {
+		const user = userEvent.setup();
+		let resolve: (value: unknown) => void = () => {};
+		const api = fakeApi(() => new Promise((r) => (resolve = r)));
+		const store = render(api);
+		await fillForm(user);
+		await user.click(submitButton());
+
+		const other = { ...ACCOUNT, id: 9 };
+		flushSync(() => store.closeDialog());
+		flushSync(() => store.openDialog({ step: 'credentials', account: other }));
+		resolve({ success: true, data: ACCOUNT });
+
+		await waitFor(() => expect(api.list).toHaveBeenCalled());
+		expect(store.dialog).toEqual({ step: 'credentials', account: other });
+	});
+
 	it('shows an invalid URL under the URL field', async () => {
 		const user = userEvent.setup();
 		render(fakeApi(async () => ({ success: false, errors: { server_url: ['The server url field must be a valid URL.'] } })));
@@ -122,11 +214,41 @@ describe('ExternalAccountModal connect flow', () => {
 		expect(screen.getByRole('checkbox', { name: 'Personal' })).toBeDisabled();
 		expect(connect).toBeDisabled();
 
-		await user.click(screen.getByRole('checkbox', { name: 'Work' }));
+		await user.click(screen.getByText('Work'));
+		expect(screen.getByRole('checkbox', { name: 'Work' })).toBeChecked();
 		await user.click(connect);
 
 		await waitFor(() => expect(screen.queryByRole('button', { name: 'Connect' })).toBeNull());
 		expect(api.postRaw).toHaveBeenLastCalledWith(routes.connect.replace('%d', '7'), { urls: ['https://cloud.example.com/dav/work/'] });
 		expect(api.list).toHaveBeenCalledWith(apiRoutes.calendars.listCalendars);
+	});
+});
+
+describe('ExternalAccountModal app password flow', () => {
+	it('returns to the calendar list after a rejected app password was changed there', async () => {
+		const user = userEvent.setup();
+		const api = fakeApi(async () => ({ success: true, data: [] }));
+		api.listRaw.mockResolvedValueOnce(refused('external_credentials_rejected'));
+		render(api, { step: 'calendars', account: ACCOUNT });
+
+		await user.click(await screen.findByRole('button', { name: 'Change app password' }));
+		await user.type(screen.getByLabelText('App password'), 'new-password');
+		await user.click(screen.getByRole('button', { name: 'Save' }));
+
+		expect(await screen.findByText('Work')).toBeInTheDocument();
+		expect(api.putRaw).toHaveBeenCalledWith(routes.update.replace('%d', '7'), { username: 'alice', password: 'new-password' });
+		expect(api.listRaw).toHaveBeenCalledTimes(2);
+	});
+
+	it('closes after an app password change started from the account list', async () => {
+		const user = userEvent.setup();
+		const api = fakeApi(async () => ({ success: true, data: [] }));
+		const store = render(api, { step: 'credentials', account: ACCOUNT });
+
+		await user.type(screen.getByLabelText('App password'), 'new-password');
+		await user.click(screen.getByRole('button', { name: 'Save' }));
+
+		await waitFor(() => expect(store.dialog).toBeNull());
+		expect(api.listRaw).not.toHaveBeenCalled();
 	});
 });

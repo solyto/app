@@ -6,6 +6,7 @@
 	import IconUsers from '@lucide/svelte/icons/users';
 	import IconCloud from '@lucide/svelte/icons/cloud';
 	import IconCloudOff from '@lucide/svelte/icons/cloud-off';
+	import IconKeyRound from '@lucide/svelte/icons/key-round';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
 
 	const calendars = getCalendars();
@@ -24,12 +25,19 @@
 		return getEventBackgroundColor(calendar.color);
 	}
 
+	function withStatus(status: string): string {
+		return ts.get.calendar.calendar_with_status.replace('{status}', status).replace('{name}', calendar.name);
+	}
+
 	function getTitle(): string {
+		if (calendars.isCalendarCredentialsRejected(calendar.id)) {
+			return withStatus(ts.get.calendar.external_credentials_rejected);
+		}
 		if (calendars.isCalendarUnavailable(calendar.id)) {
-			return calendar.name + ': ' + ts.get.calendar.external_unavailable;
+			return withStatus(ts.get.calendar.external_unavailable);
 		}
 		if (calendar.is_external) {
-			return calendar.name + ': ' + ts.get.calendar.external_calendar;
+			return withStatus(ts.get.calendar.external_calendar);
 		}
 		if (calendar.is_shared && calendar.share_owner) {
 			return ts.get.calendar.shared_by.replace('%s', calendar.share_owner);
@@ -56,7 +64,9 @@
 	title={getTitle()}
 >
 	{calendar.name ? calendar.name.slice(0, 1) : ''}
-	{#if calendars.isCalendarUnavailable(calendar.id)}
+	{#if calendars.isCalendarCredentialsRejected(calendar.id)}
+		{@render badge(IconKeyRound, 'text-c-danger', ts.get.calendar.external_credentials_rejected)}
+	{:else if calendars.isCalendarUnavailable(calendar.id)}
 		{@render badge(IconCloudOff, 'text-c-danger', ts.get.calendar.external_unavailable)}
 	{:else if calendar.is_external}
 		{@render badge(IconCloud, 'text-c-neutral-4', ts.get.calendar.external_calendar)}

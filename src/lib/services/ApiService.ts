@@ -46,6 +46,10 @@ export class RateLimitedError extends Error {
 	}
 }
 
+interface RawResponse {
+	success: boolean;
+}
+
 interface StoredServerVersion {
 	apiUrl: string;
 	version: string;
@@ -205,9 +209,9 @@ export default class ApiService {
 		return res.ok ? await res.json() : null;
 	}
 
-	async listRaw<T = object>(endpoint: string): Promise<T> {
+	async listRaw<T extends RawResponse = RawResponse>(endpoint: string): Promise<T> {
 		const res = await this.fetchWithRecovery(endpoint, {}, () => this.getApiHeader());
-		return await res.json() as Promise<T>;
+		return this.readRaw<T>(res);
 	}
 
 	async get(endpoint: string, id: string | number | null): Promise<GetResponse | null> {
@@ -305,24 +309,24 @@ export default class ApiService {
 		return res.ok ? await res.json() : null;
 	}
 
-	async postRaw<T = object>(endpoint: string, body: FormData | object): Promise<T> {
+	async postRaw<T extends RawResponse = RawResponse>(endpoint: string, body: FormData | object): Promise<T> {
 		const res = await this.fetchWithRecovery(
 			endpoint,
 			{ method: 'POST', body: typeof body === 'object' ? JSON.stringify(body) : body },
 			() => (typeof body === 'object' ? this.getApiHeaderWithBody() : this.getApiHeader())
 		);
 
-		return await res.json() as Promise<T>;
+		return this.readRaw<T>(res);
 	}
 
-	async putRaw<T = object>(endpoint: string, body: object): Promise<T> {
+	async putRaw<T extends RawResponse = RawResponse>(endpoint: string, body: object): Promise<T> {
 		const res = await this.fetchWithRecovery(
 			endpoint,
 			{ method: 'PUT', body: JSON.stringify(body) },
 			() => this.getApiHeaderWithBody()
 		);
 
-		return await res.json() as Promise<T>;
+		return this.readRaw<T>(res);
 	}
 
 	async put(endpoint: string, body: FormData | object): Promise<boolean> {
@@ -376,6 +380,15 @@ export default class ApiService {
 			...this.getClientVersionHeader()
 		}));
 		return res.ok ? await res.blob() : null;
+	}
+
+	// A body that is not JSON (a proxy's HTML 502) reads as a failure without codes.
+	private async readRaw<T extends RawResponse>(res: Response): Promise<T> {
+		try {
+			return await res.json();
+		} catch {
+			return { success: false } as T;
+		}
 	}
 
 	// An error body that is not the API's envelope (a proxy's HTML page) has no codes.

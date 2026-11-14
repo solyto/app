@@ -18,6 +18,7 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 	const ts = getTranslation();
+	const uid = $props.id();
 
 	let candidates = $state<ExternalCalendarCandidate[] | null>(null);
 	let selected = $state<string[]>([]);
@@ -56,7 +57,7 @@
 	}
 
 	function changePassword(): void {
-		externalCalendars.openDialog({ step: 'credentials', account });
+		externalCalendars.openDialog({ step: 'credentials', account, returnToCalendars: true });
 	}
 
 	async function connect(): Promise<void> {
@@ -65,9 +66,11 @@
 		submitting = true;
 		error = null;
 		loadingIndicator.start();
+		const token = externalCalendars.dialogToken();
 
 		try {
 			const result = await externalCalendars.connect(account, selected);
+			if (!externalCalendars.isDialogCurrent(token)) return;
 			if (result.ok) {
 				notifications.success(ts.get.calendar.connect_success);
 				onDone();
@@ -91,14 +94,21 @@
 			{allConnected() ? ts.get.calendar.connect_all_connected : ts.get.calendar.connect_choose}
 		</p>
 		<div class="flex flex-col gap-2">
-			{#each candidates as candidate (candidate.url)}
+			{#each candidates as candidate, i (candidate.url)}
 				<div class="flex w-full items-center justify-between gap-2 border-l-4 pl-3" style="border-color: {candidate.color};">
-					<span class="min-w-0 truncate text-sm">{candidate.name}</span>
+					<label
+						for="{uid}-candidate-{i}"
+						class="min-w-0 flex-1 truncate py-2 text-sm"
+						class:cursor-pointer={!candidate.is_connected && !submitting}
+					>
+						{candidate.name}
+					</label>
 					<span class="flex shrink-0 items-center gap-2">
 						{#if candidate.is_connected}
 							<span class="text-xs text-c-neutral-4">{ts.get.calendar.connect_already_connected}</span>
 						{/if}
 						<Checkbox
+							id="{uid}-candidate-{i}"
 							isChecked={candidate.is_connected || selected.includes(candidate.url)}
 							disabled={candidate.is_connected || submitting}
 							ariaLabel={candidate.name}

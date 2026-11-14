@@ -3,6 +3,7 @@
 	import CalendarView from '$lib/components/calendars/CalendarView.svelte';
 	import CalendarNavigation from '$lib/components/calendars/CalendarNavigation.svelte';
 	import MobileCalendarHeader from '$lib/components/calendars/MobileCalendarHeader.svelte';
+	import UnavailableCalendarsNotice from '$lib/components/calendars/UnavailableCalendarsNotice.svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getCalendarSharing } from '$lib/state/CalendarSharing.svelte';
 	import DeleteModal from '$lib/components/calendars/DeleteModal.svelte';
@@ -48,6 +49,7 @@
 <div class="flex h-full w-full flex-col">
 	{#if calendars.loaded}
 		<MobileCalendarHeader />
+		<UnavailableCalendarsNotice class="bg-c-bg-surface px-3 py-1 max-lg:hidden" />
 		<div class="flex min-h-0 w-full flex-1 flex-row">
 			<CalendarNavigation />
 			<CalendarView />

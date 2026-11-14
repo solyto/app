@@ -39,6 +39,7 @@ export class Calendars {
 	calendars = $state<Calendar[]>([]);
 	events = $state<CalendarEvent[]>([]);
 	unavailableCalendarIds = $state<number[]>([]);
+	credentialsRejectedCalendarIds = $state<number[]>([]);
 	sortedEvents = $state<Record<string, CalendarEvent[]>>({});
 	todos = $state<Todo[]>([]);
 	month = $state<CalendarMonth>({ weeks: [] });
@@ -144,14 +145,23 @@ export class Calendars {
 		this.events = events;
 		this.sortedEvents = this.eventService.groupByDay(events);
 		this.unavailableCalendarIds = (res.meta?.unavailable_calendars as number[] | undefined) ?? [];
+		this.credentialsRejectedCalendarIds = (res.meta?.credentials_rejected_calendars as number[] | undefined) ?? [];
 	}
 
 	isCalendarUnavailable(id: number): boolean {
 		return this.unavailableCalendarIds.includes(Number(id));
 	}
 
-	unavailableCalendarNames(): string[] {
-		return this.calendars.filter((calendar) => this.isCalendarUnavailable(calendar.id)).map((calendar) => calendar.name);
+	isCalendarCredentialsRejected(id: number): boolean {
+		return this.credentialsRejectedCalendarIds.includes(Number(id));
+	}
+
+	unreachableCalendars(): Calendar[] {
+		return this.calendars.filter((calendar) => this.isCalendarUnavailable(calendar.id) && !this.isCalendarCredentialsRejected(calendar.id));
+	}
+
+	credentialsRejectedCalendars(): Calendar[] {
+		return this.calendars.filter((calendar) => this.isCalendarCredentialsRejected(calendar.id));
 	}
 
 	loadMarksConfig(): void {

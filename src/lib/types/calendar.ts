@@ -13,6 +13,7 @@ export interface Calendar {
 	share_token: string | null;
 	is_external: boolean;
 	is_unavailable: boolean;
+	is_credentials_rejected: boolean;
 }
 
 export interface ShareCalendarRequest {
@@ -233,6 +234,6 @@ export type ExternalAccountResult<T> = { ok: true; data: T } | { ok: false; erro
 export type ExternalAccountDialog =
 	| { step: 'connect' }
 	| { step: 'calendars'; account: ExternalCalendarAccount }
-	| { step: 'credentials'; account: ExternalCalendarAccount };
+	| { step: 'credentials'; account: ExternalCalendarAccount; returnToCalendars?: boolean };
 
 export type EventWriteResult = 'ok' | 'changed_on_server' | 'unreadable' | 'server_unavailable' | 'failed';

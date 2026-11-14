@@ -7,6 +7,7 @@ import type {
 	ExternalCalendarResponse,
 	UpdateExternalAccountRequest
 } from '$lib/types/calendar';
+import type { ListResponse } from '$lib/types/api';
 import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import { getCalendars, type Calendars } from '$lib/state/Calendars.svelte';
@@ -17,6 +18,7 @@ import { apiRoutes } from '$lib/config/apiRoutes';
 export class ExternalCalendars {
 	accounts = $state<ExternalCalendarAccount[]>([]);
 	loaded = $state<boolean>(false);
+	loadFailed = $state<boolean>(false);
 	dialog = $state<ExternalAccountDialog | null>(null);
 	removal = $state<ExternalCalendarAccount | null>(null);
 
@@ -24,6 +26,7 @@ export class ExternalCalendars {
 	apiService: ApiService;
 	calendars: Calendars;
 	service = new ExternalCalendarService();
+	private dialogGeneration = 0;
 
 	constructor(
 		auth: Auth = getAuth(),
@@ -36,7 +39,12 @@ export class ExternalCalendars {
 	}
 
 	async load(): Promise<void> {
-		const res = await this.apiService.list(apiRoutes.calendars.externalAccounts.list);
+		let res: ListResponse | null = null;
+		try {
+			res = await this.apiService.list(apiRoutes.calendars.externalAccounts.list);
+		} finally {
+			this.loadFailed = res === null;
+		}
 		if (!res) return;
 
 		this.accounts = res.data as ExternalCalendarAccount[];
@@ -89,12 +97,29 @@ export class ExternalCalendars {
 		return account.calendars.filter((linked) => this.calendars.calendars.some((calendar) => calendar.id === linked.id)).length;
 	}
 
+	async changePasswordForCalendar(calendarId: number): Promise<void> {
+		if (!this.loaded) await this.load();
+
+		const account = this.accounts.find((candidate) => candidate.calendars.some((linked) => linked.id === calendarId));
+		if (account) this.openDialog({ step: 'credentials', account });
+	}
+
 	openDialog(dialog: ExternalAccountDialog): void {
+		this.dialogGeneration++;
 		this.dialog = dialog;
 	}
 
 	closeDialog(): void {
+		this.dialogGeneration++;
 		this.dialog = null;
+	}
+
+	dialogToken(): number {
+		return this.dialogGeneration;
+	}
+
+	isDialogCurrent(token: number): boolean {
+		return token === this.dialogGeneration;
 	}
 
 	private async send<T>(request: () => Promise<ExternalCalendarResponse<T>>): Promise<ExternalAccountResult<T>> {

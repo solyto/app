@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getCalendarSharing } from '$lib/state/CalendarSharing.svelte';
+	import { getExternalCalendars } from '$lib/state/ExternalCalendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import ColorPicker from 'svelte-awesome-color-picker';
@@ -11,9 +12,11 @@
 	import IconShare2 from '@lucide/svelte/icons/share-2';
 	import IconEye from '@lucide/svelte/icons/eye';
 	import IconEyeOff from '@lucide/svelte/icons/eye-off';
+	import IconKeyRound from '@lucide/svelte/icons/key-round';
 
 	const calendars = getCalendars();
 	const calendarSharing = getCalendarSharing();
+	const externalCalendars = getExternalCalendars();
 	const loadingIndicator = getLoadingIndicator();
 	const ts = getTranslation();
 	const notifications = getUiNotifications();
@@ -53,6 +56,9 @@
 		loadingIndicator.stop();
 	}
 
+	function onChangePassword(): void {
+		externalCalendars.changePasswordForCalendar(calendar.id);
+	}
 </script>
 
 <div class="flex w-full items-center gap-4">
@@ -70,6 +76,8 @@
 		<span class="truncate text-md">{calendar.name}</span>
 		{#if calendar.is_shared && calendar.share_owner}
 			<span class="truncate text-xs text-c-neutral-4">{ts.get.calendar.shared_by.toLowerCase().replace('%s', calendar.share_owner)}</span>
+		{:else if calendars.isCalendarCredentialsRejected(calendar.id)}
+			<span class="truncate text-xs text-c-danger">{ts.get.calendar.external_credentials_rejected}</span>
 		{:else if calendars.isCalendarUnavailable(calendar.id)}
 			<span class="truncate text-xs text-c-danger">{ts.get.calendar.external_unavailable}</span>
 		{:else if calendar.is_external}
@@ -90,6 +98,16 @@
 	</div>
 	<div class="flex items-center">
 		{#if !calendar.is_shared && calendar.invite_status === null}
+			{#if calendars.isCalendarCredentialsRejected(calendar.id)}
+				<button
+					class="cursor-pointer rounded-full p-2 text-c-danger transition-colors hover:bg-c-neutral-1 hover:text-c-primary dark:hover:bg-s-dark-3"
+					onclick={onChangePassword}
+					title={ts.get.calendar.account_change_password}
+					aria-label={ts.get.calendar.account_change_password}
+				>
+					<IconKeyRound class="size-4" />
+				</button>
+			{/if}
 			{#if !calendar.is_external}
 				<button
 					class="cursor-pointer rounded-full p-2 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-primary dark:hover:bg-s-dark-3"

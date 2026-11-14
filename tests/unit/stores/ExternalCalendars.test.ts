@@ -45,6 +45,28 @@ describe('ExternalCalendars store', () => {
 		expect(s.loaded).toBe(true);
 	});
 
+	it('marks a failed load and clears the mark once a retry succeeds', async () => {
+		api.list.mockResolvedValue(null);
+		const s = store();
+
+		await s.load();
+		expect(s.loadFailed).toBe(true);
+		expect(s.loaded).toBe(false);
+
+		api.list.mockResolvedValue({ data: [account()] });
+		await s.load();
+		expect(s.loadFailed).toBe(false);
+		expect(s.loaded).toBe(true);
+	});
+
+	it('marks a load that throws as failed and lets the error through', async () => {
+		api.list.mockRejectedValue(new Error('offline'));
+		const s = store();
+
+		await expect(s.load()).rejects.toThrow('offline');
+		expect(s.loadFailed).toBe(true);
+	});
+
 	it('adds an account and reloads the list', async () => {
 		api.postRaw.mockResolvedValue({ success: true, data: account() });
 		api.list.mockResolvedValue({ data: [account()] });
@@ -79,6 +101,14 @@ describe('ExternalCalendars store', () => {
 		const result = await s.addAccount({ server_url: 'https://x.test', username: 'a', password: 'b' });
 
 		expect(result).toEqual({ ok: false, error: { field: null, reason: 'rate_limited', retryAfter: 42 } });
+	});
+
+	it('turns a reply without the API envelope into a generic error', async () => {
+		api.postRaw.mockResolvedValue({ success: false });
+
+		const result = await store().addAccount({ server_url: 'https://x.test', username: 'a', password: 'b' });
+
+		expect(result).toEqual({ ok: false, error: { field: null, reason: 'failed', retryAfter: null } });
 	});
 
 	it('lets other errors through', async () => {
@@ -140,6 +170,7 @@ describe('ExternalCalendars store', () => {
 
 		expect(api.putRaw).toHaveBeenCalledWith(routes.update.replace('%d', '7'), { username: 'alice', password: 'new' });
 		expect(result.ok).toBe(true);
+		expect(calendars.loadCalendars).toHaveBeenCalled();
 		expect(calendars.loadEvents).toHaveBeenCalled();
 	});
 
@@ -170,5 +201,37 @@ describe('ExternalCalendars store', () => {
 		});
 
 		expect(store().connectedCount(linked)).toBe(1);
+	});
+
+	it('gives every opened or closed dialog a new token', () => {
+		const s = store();
+		s.openDialog({ step: 'connect' });
+		const token = s.dialogToken();
+
+		expect(s.isDialogCurrent(token)).toBe(true);
+		s.closeDialog();
+		expect(s.isDialogCurrent(token)).toBe(false);
+		s.openDialog({ step: 'connect' });
+		expect(s.isDialogCurrent(token)).toBe(false);
+	});
+
+	it('opens the app password dialog of the account a calendar belongs to, loading the accounts first', async () => {
+		const owner = account({ id: 8, calendars: [{ id: 12, remote_url: 'b' }] });
+		api.list.mockResolvedValue({ data: [account({ calendars: [{ id: 11, remote_url: 'a' }] }), owner] });
+		const s = store();
+
+		await s.changePasswordForCalendar(12);
+
+		expect(api.list).toHaveBeenCalledWith(routes.list);
+		expect(s.dialog).toEqual({ step: 'credentials', account: owner });
+	});
+
+	it('opens no dialog for a calendar without an account', async () => {
+		api.list.mockResolvedValue({ data: [account()] });
+		const s = store();
+
+		await s.changePasswordForCalendar(12);
+
+		expect(s.dialog).toBeNull();
 	});
 });

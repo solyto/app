@@ -173,6 +173,11 @@ describe('listRaw', () => {
 		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(errorBody, false, 422)));
 		await expect(new ApiService('tok').listRaw('/x')).resolves.toEqual(errorBody);
 	});
+
+	it('reads a body that is not JSON as a failure without codes', async () => {
+		vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 504, json: vi.fn().mockRejectedValue(new SyntaxError('html')) }));
+		await expect(new ApiService('tok').listRaw('/x')).resolves.toEqual({ success: false });
+	});
 });
 
 describe('postWithStatus', () => {
@@ -291,6 +296,13 @@ describe('post / postRaw / put', () => {
 		const errorBody = { success: false, errors: { current_password: ['wrong'] } };
 		vi.stubGlobal('fetch', vi.fn().mockResolvedValue(jsonResponse(errorBody, false, 422)));
 		await expect(new ApiService('tok').putRaw('/x', {})).resolves.toEqual(errorBody);
+	});
+
+	it('postRaw and putRaw read a body that is not JSON as a failure without codes', async () => {
+		const html = () => ({ ok: false, status: 502, json: vi.fn().mockRejectedValue(new SyntaxError('html')) });
+		vi.stubGlobal('fetch', vi.fn().mockImplementation(async () => html()));
+		await expect(new ApiService('tok').postRaw('/x', {})).resolves.toEqual({ success: false });
+		await expect(new ApiService('tok').putRaw('/x', {})).resolves.toEqual({ success: false });
 	});
 
 	it('put returns the ok flag', async () => {

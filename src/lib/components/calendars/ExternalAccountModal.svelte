@@ -23,7 +23,12 @@
 
 	function passwordUpdated(): void {
 		notifications.success(ts.get.calendar.account_password_updated);
-		externalCalendars.closeDialog();
+		const dialog = externalCalendars.dialog;
+		if (dialog?.step === 'credentials' && dialog.returnToCalendars) {
+			externalCalendars.openDialog({ step: 'calendars', account: dialog.account });
+		} else {
+			externalCalendars.closeDialog();
+		}
 	}
 
 	function close(): void {

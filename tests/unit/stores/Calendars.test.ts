@@ -753,7 +753,8 @@ describe('Calendars store', () => {
 				share_owner: null,
 				share_token: null,
 				is_external: false,
-				is_unavailable: false
+				is_unavailable: false,
+				is_credentials_rejected: false
 			};
 			const c = new Calendars();
 			c.calendars = [
@@ -1075,6 +1076,7 @@ describe('Calendars store', () => {
 				share_token: null,
 				is_external: true,
 				is_unavailable: false,
+				is_credentials_rejected: false,
 				...overrides
 			};
 		}
@@ -1095,17 +1097,32 @@ describe('Calendars store', () => {
 
 			expect(c.isCalendarUnavailable(2)).toBe(true);
 			expect(c.isCalendarUnavailable(1)).toBe(false);
-			expect(c.unavailableCalendarNames()).toEqual(['Work']);
+			expect(c.unreachableCalendars().map((x) => x.name)).toEqual(['Work']);
+		});
+
+		it('tells a rejected app password apart from an unreachable server', async () => {
+			api.list.mockResolvedValue({ data: [], meta: { unavailable_calendars: [2, 3], credentials_rejected_calendars: [3] } });
+			const c = inAugust();
+			c.calendars = [calendar({ id: 1 }), calendar({ id: 2, name: 'Work' }), calendar({ id: 3, name: 'Family' })];
+
+			await c.loadEvents();
+
+			expect(c.isCalendarCredentialsRejected(3)).toBe(true);
+			expect(c.isCalendarCredentialsRejected(2)).toBe(false);
+			expect(c.unreachableCalendars().map((x) => x.name)).toEqual(['Work']);
+			expect(c.credentialsRejectedCalendars().map((x) => x.name)).toEqual(['Family']);
 		});
 
 		it('clears the unavailable calendars once the listing reports none', async () => {
 			const c = inAugust();
 			c.unavailableCalendarIds = [2];
+			c.credentialsRejectedCalendarIds = [2];
 			api.list.mockResolvedValue({ data: [], meta: { unavailable_calendars: [] } });
 
 			await c.loadEvents();
 
 			expect(c.isCalendarUnavailable(2)).toBe(false);
+			expect(c.isCalendarCredentialsRejected(2)).toBe(false);
 		});
 
 		it('ignores the unavailable calendars of a month the user has already left', async () => {
