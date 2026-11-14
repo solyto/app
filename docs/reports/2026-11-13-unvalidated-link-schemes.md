@@ -1,4 +1,5 @@
 # Report: third-party URLs go into `href` with no scheme check
+read: true
 
 Date: 2026-11-13
 Scope: every place that puts a URL from API data into `href` or `window.open`.

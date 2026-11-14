@@ -1,4 +1,5 @@
 # Report: calendar month navigation waits for two requests in a row
+read: true
 
 Date: 2026-11-11
 Scope: `nextMonth`, `lastMonth` and `goToToday` in `src/lib/state/Calendars.svelte.ts`.

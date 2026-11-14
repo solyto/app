@@ -1,4 +1,5 @@
 # Report: all six locales ship in the root-layout bundle
+read: true
 
 Date: 2026-11-08
 Scope: startup cost of `src/lib/state/Translation.svelte.ts`.

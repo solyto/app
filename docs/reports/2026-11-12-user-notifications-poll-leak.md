@@ -1,5 +1,5 @@
 # Report: the notifications poller can leak and keep fetching
-read: false
+read: true
 
 Date: 2026-11-12
 Scope: `load()` / `destroy()` in `src/lib/state/UserNotifications.svelte.ts` and its
