@@ -73,3 +73,10 @@ export interface FeedImportState {
 	processed: number;
 	feeds: FeedImportEntry[];
 }
+
+export interface FeedImportResponse {
+	ok: boolean;
+	status: number;
+}
+
+export type FeedImportPollError = 'network' | 'rate_limited';

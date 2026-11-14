@@ -8,10 +8,10 @@
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 	import FeedImportService, { type FeedImportFailureReason } from '$lib/services/FeedImportService';
 	import { NetworkError } from '$lib/services/ApiService';
-	import { getFeedImport, type FeedImportPollError } from '$lib/state/FeedImport.svelte';
+	import { getFeedImport } from '$lib/state/FeedImport.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import type { FeedImportStage, FeedImportState } from '$lib/types/feed';
+	import type { FeedImportPollError, FeedImportStage, FeedImportState } from '$lib/types/feed';
 
 	type View = 'picker' | 'preview' | 'import' | 'unavailable';
 

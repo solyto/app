@@ -1,4 +1,4 @@
-import type { FeedImportState } from '$lib/types/feed';
+import type { FeedImportState, FeedImportResponse, FeedImportPollError } from '$lib/types/feed';
 import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import { getFeeds, type Feeds } from '$lib/state/Feeds.svelte';
@@ -7,13 +7,6 @@ import { getTranslation, type Translation } from '$lib/state/Translation.svelte'
 import ApiService, { NetworkError, RateLimitedError } from '$lib/services/ApiService';
 import FeedImportService from '$lib/services/FeedImportService';
 import { apiRoutes } from '$lib/config/apiRoutes';
-
-export interface FeedImportResponse {
-	ok: boolean;
-	status: number;
-}
-
-export type FeedImportPollError = 'network' | 'rate_limited';
 
 export class FeedImport {
 	static readonly POLL_INTERVAL_MS = 1000;
