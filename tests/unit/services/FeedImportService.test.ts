@@ -84,13 +84,14 @@ describe('group', () => {
 	it('puts each status in its group and keeps the reason for failures', () => {
 		const finished = state({
 			stage: 'finished',
-			total: 4,
-			processed: 4,
+			total: 5,
+			processed: 5,
 			feeds: [
 				entry({ url: 'https://a.test/feed', title: 'A', status: 'subscribed' }),
 				entry({ url: 'https://b.test/feed', title: 'B', status: 'already_subscribed' }),
 				entry({ url: 'https://c.test/feed', title: 'C', status: 'unreachable' }),
-				entry({ url: 'https://d.test/feed', title: 'D', status: 'not_a_feed' })
+				entry({ url: 'https://d.test/feed', title: 'D', status: 'not_a_feed' }),
+				entry({ url: 'https://e.test/feed', title: 'E', status: 'limit_reached' })
 			]
 		});
 
@@ -100,7 +101,8 @@ describe('group', () => {
 		expect(result.alreadySubscribed.map((feed) => feed.url)).toEqual(['https://b.test/feed']);
 		expect(result.failed).toEqual([
 			{ url: 'https://c.test/feed', title: 'C', reason: 'unreachable' },
-			{ url: 'https://d.test/feed', title: 'D', reason: 'not_a_feed' }
+			{ url: 'https://d.test/feed', title: 'D', reason: 'not_a_feed' },
+			{ url: 'https://e.test/feed', title: 'E', reason: 'limit_reached' }
 		]);
 	});
 

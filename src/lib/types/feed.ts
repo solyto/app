@@ -58,7 +58,7 @@ export type FeedEntrySize = 'compact' | 'comfortable' | 'card';
 
 export type FeedImportStage = 'parsed' | 'running' | 'finished';
 
-export type FeedImportStatus = 'pending' | 'subscribed' | 'already_subscribed' | 'unreachable' | 'not_a_feed';
+export type FeedImportStatus = 'pending' | 'subscribed' | 'already_subscribed' | 'unreachable' | 'not_a_feed' | 'limit_reached';
 
 export interface FeedImportEntry {
 	url: string;

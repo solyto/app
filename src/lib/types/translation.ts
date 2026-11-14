@@ -878,6 +878,11 @@ export interface FeedRecords {
 	import_result_failed: string;
 	import_reason_unreachable: string;
 	import_reason_not_a_feed: string;
+	import_reason_limit_reached: string;
+	import_all_subscribed: string;
+	import_in_progress: string;
+	import_finished_singular: string;
+	import_finished_plural: string;
 	import_another: string;
 	import_close: string;
 	import_retry: string;

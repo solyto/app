@@ -1,6 +1,6 @@
 import type { FeedImportEntry, FeedImportState } from '$lib/types/feed';
 
-export type FeedImportFailureReason = 'unreachable' | 'not_a_feed';
+export type FeedImportFailureReason = 'unreachable' | 'not_a_feed' | 'limit_reached';
 
 export interface FeedImportFailure {
 	url: string;
@@ -44,6 +44,7 @@ export default class FeedImportService {
 					break;
 				case 'unreachable':
 				case 'not_a_feed':
+				case 'limit_reached':
 					result.failed.push({ url: feed.url, title: feed.title, reason: feed.status });
 					break;
 			}

@@ -1,10 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { FeedImport } from '$lib/state/FeedImport.svelte';
 import { RateLimitedError, NetworkError } from '$lib/services/ApiService';
 import type ApiService from '$lib/services/ApiService';
 import type { Auth } from '$lib/state/Auth.svelte';
 import type { Feeds } from '$lib/state/Feeds.svelte';
-import type { FeedImportState } from '$lib/types/feed';
+import type { UiNotifications } from '$lib/state/UiNotifications.svelte';
+import type { Translation } from '$lib/state/Translation.svelte';
+import type { FeedImportEntry, FeedImportState } from '$lib/types/feed';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { api, auth, resetStoreMocks } from '../setup/storeMocks';
 
@@ -19,14 +21,40 @@ function importState(overrides: Partial<FeedImportState> = {}): FeedImportState 
 }
 
 let feeds: { load: ReturnType<typeof vi.fn> };
+let notifications: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
+
+const ts = {
+	get: {
+		feeds: {
+			import_finished_singular: '1 added',
+			import_finished_plural: '{n} added',
+			import_error_generic: 'generic error'
+		}
+	}
+};
 
 function store(): FeedImport {
-	return new FeedImport(auth as unknown as Auth, api as unknown as ApiService, feeds as unknown as Feeds);
+	return new FeedImport(
+		auth as unknown as Auth,
+		api as unknown as ApiService,
+		feeds as unknown as Feeds,
+		notifications as unknown as UiNotifications,
+		ts as unknown as Translation
+	);
+}
+
+function entry(status: FeedImportEntry['status']): FeedImportEntry {
+	return { url: `https://example.com/${Math.random()}`, title: 'Example', already_subscribed: false, status };
 }
 
 beforeEach(() => {
 	resetStoreMocks();
 	feeds = { load: vi.fn().mockResolvedValue(undefined) };
+	notifications = { success: vi.fn(), error: vi.fn() };
+});
+
+afterEach(() => {
+	vi.useRealTimers();
 });
 
 describe('FeedImport store', () => {
@@ -92,6 +120,12 @@ describe('FeedImport store', () => {
 
 			expect(await store().select(['https://example.com/feed.xml'])).toEqual({ ok: false, status: 409 });
 		});
+
+		it('turns a thrown RateLimitedError into a 429', async () => {
+			api.postWithStatus.mockRejectedValue(new RateLimitedError(60, null));
+
+			expect(await store().select(['https://example.com/feed.xml'])).toEqual({ ok: false, status: 429 });
+		});
 	});
 
 	describe('refresh', () => {
@@ -127,6 +161,148 @@ describe('FeedImport store', () => {
 
 			expect(await s.refresh()).toBe(false);
 			expect(s.state?.stage).toBe('running');
+		});
+	});
+
+	describe('polling', () => {
+		function running(processed: number): { data: FeedImportState } {
+			return { data: importState({ stage: 'running', total: 10, processed }) };
+		}
+
+		async function startedStore(): Promise<FeedImport> {
+			const s = store();
+			api.get.mockResolvedValueOnce(running(0));
+			await s.refresh();
+			api.get.mockClear();
+			return s;
+		}
+
+		beforeEach(() => {
+			vi.useFakeTimers();
+		});
+
+		it('runs a single poller however often it is started', async () => {
+			const s = await startedStore();
+			api.get.mockResolvedValue(running(1));
+
+			s.startPolling();
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(1000);
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(1000);
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+			expect(s.polling).toBe(true);
+		});
+
+		it('stops once the import finishes and announces the added feeds while the modal is closed', async () => {
+			const s = await startedStore();
+			api.get.mockResolvedValueOnce(running(1));
+			api.get.mockResolvedValueOnce({
+				data: importState({ stage: 'finished', total: 3, processed: 3, feeds: [entry('subscribed'), entry('subscribed'), entry('limit_reached')] })
+			});
+
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(2000);
+			await vi.advanceTimersByTimeAsync(10000);
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+			expect(s.polling).toBe(false);
+			expect(feeds.load).toHaveBeenCalledTimes(1);
+			expect(notifications.success).toHaveBeenCalledWith('2 added');
+		});
+
+		it('does not announce the finish while the modal is open', async () => {
+			const s = await startedStore();
+			s.modalOpen = true;
+			api.get.mockResolvedValueOnce({ data: importState({ stage: 'finished' }) });
+
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(1000);
+
+			expect(s.polling).toBe(false);
+			expect(notifications.success).not.toHaveBeenCalled();
+		});
+
+		it('stops for good when destroyed, even with a request in flight', async () => {
+			const s = await startedStore();
+			let resolve: (value: { data: FeedImportState }) => void = () => {};
+			api.get.mockImplementationOnce(() => new Promise((r) => (resolve = r)));
+
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(1000);
+			s.destroy();
+			resolve(running(1));
+			await vi.advanceTimersByTimeAsync(10000);
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(10000);
+
+			expect(api.get).toHaveBeenCalledTimes(1);
+			expect(s.polling).toBe(false);
+		});
+
+		it('backs off on network errors, reports them, and clears the error once a poll succeeds', async () => {
+			const s = await startedStore();
+			api.get.mockRejectedValueOnce(new NetworkError(new TypeError('offline')));
+			api.get.mockRejectedValueOnce(new NetworkError(new TypeError('offline')));
+			api.get.mockResolvedValue(running(2));
+
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(1000);
+			expect(s.pollError).toBe('network');
+
+			await vi.advanceTimersByTimeAsync(1999);
+			expect(api.get).toHaveBeenCalledTimes(1);
+			await vi.advanceTimersByTimeAsync(1);
+			expect(api.get).toHaveBeenCalledTimes(2);
+
+			await vi.advanceTimersByTimeAsync(4000);
+			expect(api.get).toHaveBeenCalledTimes(3);
+			expect(s.pollError).toBeNull();
+			expect(s.polling).toBe(true);
+		});
+
+		it('reports a rate limit and waits at least as long as the server asks, up to the cap', async () => {
+			const s = await startedStore();
+			api.get.mockRejectedValueOnce(new RateLimitedError(3600, null));
+			api.get.mockResolvedValue(running(2));
+
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(1000);
+			expect(s.pollError).toBe('rate_limited');
+
+			await vi.advanceTimersByTimeAsync(FeedImport.MAX_POLL_INTERVAL_MS - 1);
+			expect(api.get).toHaveBeenCalledTimes(1);
+			await vi.advanceTimersByTimeAsync(1);
+			expect(api.get).toHaveBeenCalledTimes(2);
+		});
+
+		it('gives up and reports it when the import makes no progress for 5 minutes', async () => {
+			const s = await startedStore();
+			api.get.mockResolvedValue(running(0));
+
+			s.startPolling();
+			await vi.advanceTimersByTimeAsync(FeedImport.POLL_TIMEOUT_MS + 1000);
+			const calls = api.get.mock.calls.length;
+			await vi.advanceTimersByTimeAsync(10000);
+
+			expect(api.get).toHaveBeenCalledTimes(calls);
+			expect(s.stalled).toBe(true);
+			expect(s.polling).toBe(false);
+			expect(notifications.error).toHaveBeenCalledWith('generic error');
+		});
+
+		it('resumes polling on load only when an import is running', async () => {
+			const idle = store();
+			api.get.mockResolvedValueOnce({ data: importState({ stage: 'finished' }) });
+			await idle.resume();
+			expect(idle.polling).toBe(false);
+
+			const busy = store();
+			api.get.mockResolvedValueOnce(running(1));
+			await busy.resume();
+			expect(busy.polling).toBe(true);
+			busy.destroy();
 		});
 	});
 

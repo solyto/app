@@ -15,7 +15,7 @@
 		input?: HTMLInputElement | null;
 		filename?: string;
 		accept?: string;
-		onfile?: (file: File) => void;
+		onfile?: (file: File) => Promise<boolean>;
 	} = $props();
 	/* eslint-enable no-useless-assignment */
 
@@ -33,7 +33,11 @@
 			selectedFile = inputElement.files[0];
 			uploadError = null;
 			uploadSuccess = false;
-			onfile?.(selectedFile);
+
+			if (onfile) {
+				await handOver(inputElement, selectedFile, onfile);
+				return;
+			}
 
 			try {
 				isUploading = true;
@@ -51,6 +55,16 @@
 				isUploading = false;
 			}
 		}
+	}
+
+	async function handOver(inputElement: HTMLInputElement, file: File, deliver: (file: File) => Promise<boolean>): Promise<void> {
+		const accepted = await deliver(file);
+		if (accepted) {
+			uploadSuccess = true;
+			return;
+		}
+		selectedFile = null;
+		inputElement.value = '';
 	}
 
 	async function fileToBase64(file: File): Promise<string> {
