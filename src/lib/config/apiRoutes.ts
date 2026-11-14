@@ -255,7 +255,10 @@ export const apiRoutes = {
 		testFeed: API_URL + '/feeds/test',
 		available: API_URL + '/feeds/available',
 		search: API_URL + '/feeds/search',
-		friendFeeds: API_URL + '/feeds/friends'
+		friendFeeds: API_URL + '/feeds/friends',
+		importStart: API_URL + '/feeds/import',
+		importSelect: API_URL + '/feeds/import/select',
+		importState: API_URL + '/feeds/import/state'
 	},
 	shortcuts: {
 		list: API_URL + '/shortcuts',

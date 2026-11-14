@@ -55,3 +55,21 @@ export interface FriendFeed {
 }
 
 export type FeedEntrySize = 'compact' | 'comfortable' | 'card';
+
+export type FeedImportStage = 'parsed' | 'running' | 'finished';
+
+export type FeedImportStatus = 'pending' | 'subscribed' | 'already_subscribed' | 'unreachable' | 'not_a_feed';
+
+export interface FeedImportEntry {
+	url: string;
+	title: string;
+	already_subscribed: boolean;
+	status: FeedImportStatus | null;
+}
+
+export interface FeedImportState {
+	stage: FeedImportStage;
+	total: number;
+	processed: number;
+	feeds: FeedImportEntry[];
+}

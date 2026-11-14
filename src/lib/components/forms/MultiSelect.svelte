@@ -20,8 +20,24 @@
 		options: MultiSelectEntry[];
 		allowUserOptions?: boolean;
 		placeholder?: string;
-		oncreate?: (data: { option: MultiSelectEntry }) => unknown;
+		oncreate?: (label: string) => Promise<string | null>;
 	} = $props();
+
+	function optionLabel(option: MultiSelectEntry | string | number): string {
+		return typeof option === 'object' ? option.label : option.toString();
+	}
+
+	function isAwaitingValue(entry: MultiSelectEntry | string | number, label: string): boolean {
+		return typeof entry === 'object' ? entry.label === label && !entry.value : entry.toString() === label;
+	}
+
+	async function createOption(data: { option: MultiSelectEntry | string | number }): Promise<void> {
+		const label = optionLabel(data.option);
+		const created = await oncreate!(label);
+		value = created
+			? value.map((entry) => (isAwaitingValue(entry, label) ? { label, value: created } : entry))
+			: value.filter((entry) => !isAwaitingValue(entry, label));
+	}
 </script>
 
 <div class="multiselect-field w-full">
@@ -30,7 +46,7 @@
 		{options}
 		{allowUserOptions}
 		{placeholder}
-		{oncreate}
+		oncreate={oncreate ? createOption : undefined}
 		portal={{ active: true }}
 		ulOptionsStyle="z-index: 60;"
 	/>

@@ -882,7 +882,27 @@ const feeds: FeedRecords = {
 	no_feeds: 'Pas encore de flux.',
 	no_feeds_desc: 'Ajoute un flux ou découvre ce que les autres lisent.',
 	no_items: 'Rien ici pour le moment.',
-	no_items_desc: 'Les nouvelles entrées apparaîtront dès que ce flux les publiera.'
+	no_items_desc: 'Les nouvelles entrées apparaîtront dès que ce flux les publiera.',
+	import_opml: 'Importer OPML',
+	import_hint: 'Choisis le fichier OPML que tu as exporté depuis ton autre lecteur de flux.',
+	import_select_all: 'Tout sélectionner',
+	import_select_none: 'Tout désélectionner',
+	import_selected_singular: '1 sélectionné',
+	import_selected_plural: '{n} sélectionnés',
+	import_already_subscribed: 'Déjà abonné',
+	import_button: 'Importer',
+	import_progress: 'Importation des flux... {n} sur {total}',
+	import_result_added: 'Ajoutés ({n})',
+	import_result_already_subscribed: 'Déjà abonné ({n})',
+	import_result_failed: 'Ça n\'a pas marché ({n})',
+	import_reason_unreachable: 'Pas de réponse',
+	import_reason_not_a_feed: 'Pas un flux',
+	import_another: 'Importer un autre fichier',
+	import_close: 'Fermer',
+	import_error_generic: 'Quelque chose s\'est mal passé pendant l\'importation. Réessaie.',
+	import_error_unreadable: 'Impossible de lire ce fichier. Il doit s\'agir d\'un fichier OPML contenant entre 1 et 500 flux.',
+	import_error_running: 'Une importation est déjà en cours.',
+	import_error_rate_limited: 'Trop d\'importations. Réessaie plus tard.'
 };
 
 const calendar: CalendarRecords = {

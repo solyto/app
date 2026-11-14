@@ -697,7 +697,21 @@ const feeds: FeedRecords = {
 	browse_feeds_subscribers: 'подписчиков', no_feeds: 'Лент пока нет.',
 	no_feeds_desc: 'Добавьте ленту или посмотрите, что читают другие.',
 	no_items: 'Здесь пока пусто.',
-	no_items_desc: 'Новые записи появятся, когда источник их опубликует.'
+	no_items_desc: 'Новые записи появятся, когда источник их опубликует.',
+	import_opml: 'Импорт OPML',
+	import_hint: 'Выберите файл OPML, который вы экспортировали из другого приложения для чтения лент.',
+	import_select_all: 'Выбрать всё', import_select_none: 'Снять выделение',
+	import_selected_singular: 'Выбрано: 1', import_selected_plural: 'Выбрано: {n}',
+	import_already_subscribed: 'Уже подписаны', import_button: 'Импортировать',
+	import_progress: 'Импорт лент... {n} из {total}',
+	import_result_added: 'Добавлено ({n})', import_result_already_subscribed: 'Уже подписаны ({n})',
+	import_result_failed: 'Не удалось ({n})', import_reason_unreachable: 'Не отвечает',
+	import_reason_not_a_feed: 'Это не лента', import_another: 'Импортировать другой файл',
+	import_close: 'Закрыть',
+	import_error_generic: 'Что-то пошло не так при импорте. Попробуйте ещё раз.',
+	import_error_unreadable: 'Не удалось прочитать файл. Это должен быть файл OPML, содержащий от 1 до 500 лент.',
+	import_error_running: 'Импорт уже выполняется.',
+	import_error_rate_limited: 'Слишком много импортов. Попробуйте позже.'
 };
 
 const calendar: CalendarRecords = {

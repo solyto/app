@@ -6,12 +6,16 @@
 		label,
 		value = $bindable(''),
 		input = $bindable<HTMLInputElement | null>(null),
-		filename = $bindable('')
+		filename = $bindable(''),
+		accept,
+		onfile
 	}: {
 		label?: string;
 		value?: string;
 		input?: HTMLInputElement | null;
 		filename?: string;
+		accept?: string;
+		onfile?: (file: File) => void;
 	} = $props();
 	/* eslint-enable no-useless-assignment */
 
@@ -29,6 +33,7 @@
 			selectedFile = inputElement.files[0];
 			uploadError = null;
 			uploadSuccess = false;
+			onfile?.(selectedFile);
 
 			try {
 				isUploading = true;
@@ -90,6 +95,7 @@
 		<input
 			id="file-upload"
 			type="file"
+			{accept}
 			bind:this={input}
 			onchange={handleFileChange}
 			class="block w-full text-sm text-c-neutral-5
