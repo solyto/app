@@ -30,7 +30,12 @@ next to the page's own requests. Found while working through
 
 - The `LAZY` list (theme wallpapers and fonts, `.woff`). Those are cached on
   first use and dropped with the old cache. Carrying them over too would be a
-  small extension, but not part of this entry.
+  small extension, but not part of this entry. Side effect worth knowing
+  (found in the 1.1.2 review, 2026-11-14): a user of a wallpaper theme who
+  opens the PWA offline right after a deploy, before loading it online once,
+  sees the theme without its wallpaper and fonts. Cosmetic and rare, so it
+  was left here rather than fixed separately; if this entry is picked up,
+  consider carrying the `LAZY` entries over as well.
 - Files from `static/` (`files`). They have no hash in their name, so the same
   path doesn't mean the same content. They are few and small; keep
   downloading them.
