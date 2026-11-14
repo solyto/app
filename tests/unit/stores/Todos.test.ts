@@ -401,4 +401,41 @@ describe('Todos store', () => {
 			expect(t.filteredCategories.map((c) => c.id)).toEqual([]);
 		});
 	});
+
+	describe('view persistence', () => {
+		it('saves the view on change', () => {
+			const t = new Todos();
+			t.changeView('kanban');
+
+			expect(t.view).toBe('kanban');
+			expect(storage.set).toHaveBeenCalledWith(Todos.LS_VIEW_KEY, 'kanban');
+		});
+
+		it('restores a saved view allowed for the viewport', () => {
+			storage.get.mockReturnValue('grouped');
+			const t = new Todos();
+
+			t.loadView(true);
+			expect(t.view).toBe('grouped');
+
+			t.loadView(false);
+			expect(t.view).toBe('grouped');
+		});
+
+		it('falls back to the viewport default for invalid or disallowed views', () => {
+			const t = new Todos();
+
+			storage.get.mockReturnValue('kanban');
+			t.loadView(false);
+			expect(t.view).toBe('card');
+
+			storage.get.mockReturnValue('card');
+			t.loadView(true);
+			expect(t.view).toBe('list');
+
+			storage.get.mockReturnValue(null);
+			t.loadView(true);
+			expect(t.view).toBe('list');
+		});
+	});
 });

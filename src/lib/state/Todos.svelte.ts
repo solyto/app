@@ -36,6 +36,9 @@ import LocalStorageService from '$lib/services/LocalStorageService';
 
 export class Todos {
 	static readonly LS_HIDE_IT_KEY: string = 'todos_hideit';
+	static readonly LS_VIEW_KEY: string = 'todos_view';
+	static readonly VIEWS_DESKTOP: TodoView[] = ['list', 'grouped', 'kanban', 'overview'];
+	static readonly VIEWS_MOBILE: TodoView[] = ['card', 'grouped', 'overview'];
 
 	loaded = $state<boolean>(false);
 	todos = $state<Todo[]>([]);
@@ -125,6 +128,17 @@ export class Todos {
 
 	changeView(view: TodoView): void {
 		this.view = view;
+		this.saveView();
+	}
+
+	loadView(isDesktop: boolean): void {
+		const allowed = isDesktop ? Todos.VIEWS_DESKTOP : Todos.VIEWS_MOBILE;
+		const stored = this.localStorage.get(Todos.LS_VIEW_KEY);
+		this.view = allowed.find((view) => view === stored) ?? allowed[0];
+	}
+
+	saveView(): void {
+		this.localStorage.set(Todos.LS_VIEW_KEY, this.view);
 	}
 
 	openEdit(todoId: string): void {

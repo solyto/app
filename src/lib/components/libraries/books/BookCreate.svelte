@@ -23,7 +23,7 @@
 	import CreateModalImport from '$lib/components/libraries/shared/CreateModalImport.svelte';
 	import BookSearch from '$lib/components/libraries/books/BookSearch.svelte';
 	import IconHardcover from '$lib/components/ui/icons/IconHardcover.svelte';
-	import GoodreadsIcon from '$lib/assets/services/goodreads_icon.png';
+	import GoodreadsIcon from '$lib/assets/services/goodreads_icon.svg';
 	import { getIntegrations } from '$lib/state/Integrations.svelte';
 
 	const ts = getTranslation();
