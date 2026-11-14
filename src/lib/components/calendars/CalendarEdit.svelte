@@ -70,6 +70,10 @@
 		<span class="truncate text-md">{calendar.name}</span>
 		{#if calendar.is_shared && calendar.share_owner}
 			<span class="truncate text-xs text-c-neutral-4">{ts.get.calendar.shared_by.toLowerCase().replace('%s', calendar.share_owner)}</span>
+		{:else if calendars.isCalendarUnavailable(calendar.id)}
+			<span class="truncate text-xs text-c-danger">{ts.get.calendar.external_unavailable}</span>
+		{:else if calendar.is_external}
+			<span class="truncate text-xs text-c-neutral-4">{ts.get.calendar.external_calendar}</span>
 		{/if}
 	</div>
 	<div class="lg:hidden">
@@ -86,13 +90,15 @@
 	</div>
 	<div class="flex items-center">
 		{#if !calendar.is_shared && calendar.invite_status === null}
-			<button
-				class="cursor-pointer rounded-full p-2 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-primary dark:hover:bg-s-dark-3"
-				onclick={onShare}
-				title={ts.get.calendar.share_calendar}
-			>
-				<IconShare2 class="size-4" />
-			</button>
+			{#if !calendar.is_external}
+				<button
+					class="cursor-pointer rounded-full p-2 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-primary dark:hover:bg-s-dark-3"
+					onclick={onShare}
+					title={ts.get.calendar.share_calendar}
+				>
+					<IconShare2 class="size-4" />
+				</button>
+			{/if}
 			<InlineDeleteButton onClick={onDelete} />
 		{:else if calendar.is_shared}
 			<InlineDeleteButton onClick={onUnsubscribe} />

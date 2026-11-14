@@ -1,4 +1,4 @@
-import type { CreateResponse, GetResponse, ListResponse, PostResponse } from '$lib/types/api';
+import type { CreateResponse, GetResponse, ListResponse, PostResponse, StatusResponse } from '$lib/types/api';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { CLIENT_VERSION, getApiUrl } from '$lib/config/platform';
 import { acceptsClientVersionHeader, isOlderVersion } from '$lib/helpers/VersionHelper';
@@ -205,6 +205,11 @@ export default class ApiService {
 		return res.ok ? await res.json() : null;
 	}
 
+	async listRaw<T = object>(endpoint: string): Promise<T> {
+		const res = await this.fetchWithRecovery(endpoint, {}, () => this.getApiHeader());
+		return await res.json() as Promise<T>;
+	}
+
 	async get(endpoint: string, id: string | number | null): Promise<GetResponse | null> {
 		if (typeof id === 'string') {
 			endpoint = endpoint.replace('%s', id);
@@ -226,14 +231,14 @@ export default class ApiService {
 		return res.ok ? await res.json() : null;
 	}
 
-	async createWithStatus(endpoint: string, body: object): Promise<{ ok: boolean; status: number }> {
+	async createWithStatus(endpoint: string, body: object): Promise<StatusResponse> {
 		const res = await this.fetchWithRecovery(
 			endpoint,
 			{ method: 'POST', body: JSON.stringify(body) },
 			() => this.getApiHeaderWithBody()
 		);
 
-		return { ok: res.ok, status: res.status };
+		return this.withStatus(res);
 	}
 
 	async delete(endpoint: string, id: string | number): Promise<boolean> {
@@ -246,6 +251,12 @@ export default class ApiService {
 		);
 
 		return Promise.resolve(res.ok);
+	}
+
+	async deleteWithStatus(endpoint: string): Promise<StatusResponse> {
+		const res = await this.fetchWithRecovery(endpoint, { method: 'DELETE' }, () => this.getApiHeader());
+
+		return this.withStatus(res);
 	}
 
 	async update(endpoint: string, id: string | number, body: object): Promise<boolean> {
@@ -324,6 +335,16 @@ export default class ApiService {
 		return res.ok;
 	}
 
+	async putWithStatus(endpoint: string, body: object): Promise<StatusResponse> {
+		const res = await this.fetchWithRecovery(
+			endpoint,
+			{ method: 'PUT', body: JSON.stringify(body) },
+			() => this.getApiHeaderWithBody()
+		);
+
+		return this.withStatus(res);
+	}
+
 	async postFormData(endpoint: string, body: FormData): Promise<boolean> {
 		const res = await this.fetchWithRecovery(
 			endpoint,
@@ -355,6 +376,23 @@ export default class ApiService {
 			...this.getClientVersionHeader()
 		}));
 		return res.ok ? await res.blob() : null;
+	}
+
+	// An error body that is not the API's envelope (a proxy's HTML page) has no codes.
+	private async withStatus(res: Response): Promise<StatusResponse> {
+		if (res.ok) return { ok: true, status: res.status, errors: [] };
+
+		try {
+			const body = await res.json();
+			const errors: unknown = body?.errors;
+			return {
+				ok: false,
+				status: res.status,
+				errors: Array.isArray(errors) ? errors.filter((code) => typeof code === 'string') : []
+			};
+		} catch {
+			return { ok: false, status: res.status, errors: [] };
+		}
 	}
 
 	private getAuthHeaderOnly(): HeadersInit {

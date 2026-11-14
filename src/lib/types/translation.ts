@@ -1019,6 +1019,45 @@ export interface CalendarRecords {
 	search_note: string;
 	life_journal: string;
 	life_check_in: string;
+	entry_delete_error: string;
+	event_changed_on_server: string;
+	event_unreadable: string;
+	event_server_unavailable: string;
+	external_calendar: string;
+	external_unavailable: string;
+	external_unavailable_notice: string;
+	disconnect_title: string;
+	disconnect_description: string;
+	connected_accounts: string;
+	no_connected_accounts: string;
+	connect_calendar: string;
+	connect_server_url: string;
+	connect_username: string;
+	connect_password: string;
+	connect_password_hint: string;
+	connect_submit: string;
+	connect_choose: string;
+	connect_already_connected: string;
+	connect_all_connected: string;
+	connect_selected: string;
+	connect_success: string;
+	connect_error_url_not_allowed: string;
+	connect_error_url_invalid: string;
+	connect_error_server_unreachable: string;
+	connect_error_no_calendars: string;
+	connect_error_credentials_rejected: string;
+	connect_error_failed: string;
+	account_calendars_singular: string;
+	account_calendars_plural: string;
+	account_add_calendars: string;
+	account_change_password: string;
+	account_change_password_hint: string;
+	account_password_updated: string;
+	account_remove: string;
+	account_remove_title: string;
+	account_remove_description: string;
+	account_remove_success: string;
+	account_remove_error: string;
 }
 
 export interface ContactRecords {

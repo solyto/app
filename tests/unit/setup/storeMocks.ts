@@ -2,15 +2,19 @@ import { vi } from 'vitest';
 
 export const api = {
 	list: vi.fn(),
+	listRaw: vi.fn(),
 	get: vi.fn(),
 	create: vi.fn(),
 	createWithStatus: vi.fn(),
 	update: vi.fn(),
 	delete: vi.fn(),
+	deleteWithStatus: vi.fn(),
 	post: vi.fn(),
 	postWithStatus: vi.fn(),
 	postRaw: vi.fn(),
+	putRaw: vi.fn(),
 	put: vi.fn(),
+	putWithStatus: vi.fn(),
 	postFormData: vi.fn(),
 	uploadFile: vi.fn(),
 	image: vi.fn()
@@ -75,15 +79,19 @@ vi.mock('$lib/services/ApiService', async (importOriginal) => {
 		RateLimitedError: actual.RateLimitedError,
 		default: class FakeApi {
 			list = api.list;
+			listRaw = api.listRaw;
 			get = api.get;
 			create = api.create;
 			createWithStatus = api.createWithStatus;
 			update = api.update;
 			delete = api.delete;
+			deleteWithStatus = api.deleteWithStatus;
 			post = api.post;
 			postWithStatus = api.postWithStatus;
 			postRaw = api.postRaw;
+			putRaw = api.putRaw;
 			put = api.put;
+			putWithStatus = api.putWithStatus;
 			postFormData = api.postFormData;
 			uploadFile = api.uploadFile;
 			image = api.image;
