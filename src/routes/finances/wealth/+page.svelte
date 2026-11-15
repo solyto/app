@@ -154,6 +154,7 @@
 				<StackedAreaChart
 					xCategories={statisticsService.getMonthLabels(statistics, auth.user?.settings?.date_format ?? null)}
 					dataPoints={getSeriesData(statistics)}
+					valueFormatter={europeanFormat}
 				/>
 			</div>
 		{/if}
