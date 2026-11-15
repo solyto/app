@@ -798,6 +798,7 @@ const dev: DevRecords = {
 		status_cancelled: 'Abgewiesen',
 		validation_error: 'Bitte füge einen Titel und eine Beschreibung hinzu',
 		save_error: 'Anfrage konnte nicht gespeichert werden',
+		version_validation_error: 'Bitte gib die Version als X.X.X ein, z. B. 1.2.0',
 		priority_1: 'Niedrige Priorität',
 		priority_2: 'Mittlere Priorität',
 		priority_3: 'Hohe Priorität',

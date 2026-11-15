@@ -797,6 +797,7 @@ export interface DevRecords {
 		fixed_in_included: string;
 		fixed_in_pending: string;
 		fixed_in_current_version: string;
+		version_validation_error: string;
 	};
 }
 

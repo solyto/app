@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/svelte';
+import { screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import Comments from '$lib/components/dev-requests/Comments.svelte';
 import DevRequestEntry from '$lib/components/dev-requests/DevRequestEntry.svelte';
@@ -8,7 +8,6 @@ import FixedIn from '$lib/components/dev-requests/FixedIn.svelte';
 import Priority from '$lib/components/dev-requests/Priority.svelte';
 import Status from '$lib/components/dev-requests/Status.svelte';
 import Type from '$lib/components/dev-requests/Type.svelte';
-import VersionInput from '$lib/components/forms/VersionInput.svelte';
 import { renderWithContext } from './helpers/context';
 import { devRequest } from '../unit/helpers/factories';
 import type { DevRequest } from '$lib/types/dev_request';
@@ -37,15 +36,6 @@ function renderEdit(entry?: DevRequest) {
 	renderWithContext(DevRequestEdit, { entry, onClose }, { stores: { auth: { user: ADMIN }, devRequests, uiNotifications: { error } } });
 	return { devRequests, error, onClose };
 }
-
-describe('VersionInput', () => {
-	it('shows the label and one number box per version part', () => {
-		render(VersionInput, { props: { value: { major: 1, minor: 2, patch: 3 }, label: 'Fixed in version' } });
-
-		expect(screen.getByText('Fixed in version')).toBeInTheDocument();
-		expect(screen.getAllByRole('spinbutton').map((input) => (input as HTMLInputElement).value)).toEqual(['1', '2', '3']);
-	});
-});
 
 describe('display-only badges', () => {
 	it('render Priority, Status and Type without buttons', () => {
@@ -154,9 +144,9 @@ describe('DevRequestEdit, edit', () => {
 		const user = userEvent.setup();
 		renderEdit(devRequest());
 
-		expect(screen.queryAllByRole('spinbutton')).toHaveLength(0);
+		expect(screen.queryByPlaceholderText('Fixed in version')).toBeNull();
 		await user.selectOptions(screen.getByDisplayValue('Pending'), 'completed');
-		expect(screen.getAllByRole('spinbutton')).toHaveLength(3);
+		expect(screen.getByPlaceholderText('Fixed in version')).toBeInTheDocument();
 	});
 
 	it('saves only the changed fields, including the version', async () => {
@@ -168,10 +158,7 @@ describe('DevRequestEdit, edit', () => {
 		await user.clear(title);
 		await user.type(title, 'Login broken');
 		await user.selectOptions(screen.getByDisplayValue('Pending'), 'completed');
-		const [major, minor, patch] = screen.getAllByRole('spinbutton');
-		await user.type(major, '1');
-		await user.type(minor, '2');
-		await user.type(patch, '0');
+		await user.type(screen.getByPlaceholderText('Fixed in version'), '1.2.0');
 		await user.click(screen.getByRole('button', { name: 'Save' }));
 
 		await waitFor(() => expect(onClose).toHaveBeenCalled());
@@ -191,13 +178,26 @@ describe('DevRequestEdit, edit', () => {
 		expect(devRequests.update).toHaveBeenCalledWith(entry, { status: 'cancelled', fixed_in_version: null });
 	});
 
+	it('rejects a version that is not X.X.X and keeps the modal open', async () => {
+		const user = userEvent.setup();
+		const { devRequests, error, onClose } = renderEdit(devRequest());
+
+		await user.selectOptions(screen.getByDisplayValue('Pending'), 'completed');
+		await user.type(screen.getByPlaceholderText('Fixed in version'), '1.2');
+		await user.click(screen.getByRole('button', { name: 'Save' }));
+
+		expect(error).toHaveBeenCalledWith('Please enter the version as X.X.X, e.g. 1.2.0');
+		expect(devRequests.update).not.toHaveBeenCalled();
+		expect(onClose).not.toHaveBeenCalled();
+	});
+
 	it('saves the waiting-for-deployment status', async () => {
 		const user = userEvent.setup();
 		const entry = devRequest({ status: 'in-progress' });
 		const { devRequests, onClose } = renderEdit(entry);
 
 		await user.selectOptions(screen.getByDisplayValue('In Progress'), 'waiting-for-deployment');
-		expect(screen.queryAllByRole('spinbutton')).toHaveLength(0);
+		expect(screen.queryByPlaceholderText('Fixed in version')).toBeNull();
 		await user.click(screen.getByRole('button', { name: 'Save' }));
 
 		await waitFor(() => expect(onClose).toHaveBeenCalled());

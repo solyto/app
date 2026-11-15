@@ -797,6 +797,7 @@ const dev: DevRecords = {
 		status_cancelled: 'Rejected',
 		validation_error: 'Please add a title and a description',
 		save_error: 'Request could not be saved',
+		version_validation_error: 'Please enter the version as X.X.X, e.g. 1.2.0',
 		priority_1: 'Low Priority',
 		priority_2: 'Medium Priority',
 		priority_3: 'High Priority',

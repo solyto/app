@@ -14,8 +14,8 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import FileUpload from '$lib/components/forms/FileUpload.svelte';
-	import VersionInput from '$lib/components/forms/VersionInput.svelte';
 	import DevRequestFormService from '$lib/services/DevRequestFormService';
+	import { isVersion } from '$lib/helpers/VersionHelper';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 
@@ -70,6 +70,13 @@
 			return;
 		}
 
+		const version = form.fixed_in_version.trim();
+		if (form.status === 'completed' && version !== '' && !isVersion(version)) {
+			loadingIndicator.stop();
+			notifications.error(ts.get.dev.requests.version_validation_error);
+			return;
+		}
+
 		const ok = entry
 			? await devRequests.update(entry, formService.changes(entry, form))
 			: await devRequests.create({
@@ -109,7 +116,7 @@
 		{#if entry}
 			<Select bind:value={form.status} options={statusOptions} />
 			{#if form.status === 'completed'}
-				<VersionInput label={ts.get.dev.requests.fixed_in_version} bind:value={form.fixed_in_version} />
+				<TextInput placeholder={ts.get.dev.requests.fixed_in_version} bind:value={form.fixed_in_version} inputmode="decimal" />
 			{/if}
 		{:else}
 			<FileUpload
