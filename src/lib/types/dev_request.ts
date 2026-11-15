@@ -1,7 +1,7 @@
 import type { VersionParts } from '$lib/types/version';
 
 export type DevRequestType = 'feature' | 'bug';
-export type DevRequestStatus = 'backlog' | 'pending' | 'in-progress' | 'cancelled' | 'completed';
+export type DevRequestStatus = 'backlog' | 'pending' | 'in-progress' | 'waiting-for-deployment' | 'cancelled' | 'completed';
 export type DevRequestPriority = 1 | 2 | 3 | 4 | 5;
 
 export type DevRequestVote = 'up' | 'down';

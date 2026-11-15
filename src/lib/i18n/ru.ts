@@ -646,6 +646,7 @@ const dev: DevRecords = {
 		new: 'Новое обращение', status_changed: 'Статус изменён', screenshot: 'Снимок экрана',
 		bug: 'Ошибка', feature: 'Предложение', status_backlog: 'Запланировано',
 		status_pending: 'Ожидает рассмотрения', status_in_progress: 'В работе',
+		status_waiting_for_deployment: 'Ожидает развёртывания',
 		status_completed: 'Завершено', status_cancelled: 'Отклонено',
 		validation_error: 'Укажите название и описание', save_error: 'Не удалось сохранить обращение', priority_1: 'Низкий приоритет',
 		priority_2: 'Средний приоритет', priority_3: 'Высокий приоритет',

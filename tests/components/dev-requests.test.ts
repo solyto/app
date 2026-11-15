@@ -60,6 +60,11 @@ describe('display-only badges', () => {
 		expect(screen.getByRole('img', { name: 'Critical Priority' })).toBeInTheDocument();
 	});
 
+	it('shows waiting-for-deployment with its label', () => {
+		renderWithContext(Status, { entry: devRequest({ status: 'waiting-for-deployment' }) });
+		expect(screen.getByText('Waiting for Deployment')).toBeInTheDocument();
+	});
+
 	it('shows cancelled as Rejected', () => {
 		renderWithContext(Status, { entry: devRequest({ status: 'cancelled' }) });
 		expect(screen.getByText('Rejected')).toBeInTheDocument();
@@ -182,6 +187,19 @@ describe('DevRequestEdit, edit', () => {
 
 		await waitFor(() => expect(onClose).toHaveBeenCalled());
 		expect(devRequests.update).toHaveBeenCalledWith(entry, { status: 'cancelled', fixed_in_version: null });
+	});
+
+	it('saves the waiting-for-deployment status', async () => {
+		const user = userEvent.setup();
+		const entry = devRequest({ status: 'in-progress' });
+		const { devRequests, onClose } = renderEdit(entry);
+
+		await user.selectOptions(screen.getByDisplayValue('In Progress'), 'waiting-for-deployment');
+		expect(screen.queryAllByRole('spinbutton')).toHaveLength(0);
+		await user.click(screen.getByRole('button', { name: 'Save' }));
+
+		await waitFor(() => expect(onClose).toHaveBeenCalled());
+		expect(devRequests.update).toHaveBeenCalledWith(entry, { status: 'waiting-for-deployment' });
 	});
 
 	it('rejects an empty title like on create', async () => {

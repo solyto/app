@@ -791,6 +791,7 @@ const dev: DevRecords = {
 		status_backlog: 'Backlog',
 		status_pending: 'En attente',
 		status_in_progress: 'En cours',
+		status_waiting_for_deployment: 'En attente de déploiement',
 		status_completed: 'Terminé',
 		status_cancelled: 'Refusé',
 		validation_error: 'Ajoute un titre et une description',
