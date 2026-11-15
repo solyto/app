@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
+import Comments from '$lib/components/dev-requests/Comments.svelte';
 import DevRequestEntry from '$lib/components/dev-requests/DevRequestEntry.svelte';
 import DevRequestEdit from '$lib/components/dev-requests/DevRequestEdit.svelte';
 import FixedIn from '$lib/components/dev-requests/FixedIn.svelte';
@@ -11,6 +12,7 @@ import VersionInput from '$lib/components/forms/VersionInput.svelte';
 import { renderWithContext } from './helpers/context';
 import { devRequest } from '../unit/helpers/factories';
 import type { DevRequest } from '$lib/types/dev_request';
+import type { KeyManager } from '$lib/state/KeyManager.svelte';
 
 const ADMIN = { id: 'admin', name: 'Admin', role: 'admin' };
 const MEMBER = { id: 'member', name: 'Member', role: 'user' };
@@ -212,5 +214,62 @@ describe('DevRequestEdit, edit', () => {
 		expect(error).toHaveBeenCalledWith('Please add a title and a description');
 		expect(devRequests.update).not.toHaveBeenCalled();
 		expect(onClose).not.toHaveBeenCalled();
+	});
+});
+
+describe('Comments', () => {
+	function renderComments() {
+		const devRequests = { ...devRequestsStub(), createComment: vi.fn().mockResolvedValue(true) };
+		let keyManager!: KeyManager;
+		renderWithContext(
+			Comments,
+			{ entry: devRequest() },
+			{ stores: { auth: { user: MEMBER }, devRequests }, onReady: (stores) => (keyManager = stores.keyManager as KeyManager) }
+		);
+		const textarea = screen.getByPlaceholderText('Add a comment...') as HTMLTextAreaElement;
+		return { devRequests, keyManager, textarea };
+	}
+
+	// The app layout forwards window keydowns to the KeyManager; do the same here.
+	function press(keyManager: KeyManager, key: string, shift = false) {
+		if (shift) keyManager.handleKeyDown(new KeyboardEvent('keydown', { key: 'Shift' }));
+		keyManager.handleKeyDown(new KeyboardEvent('keydown', { key, shiftKey: shift }));
+		if (shift) keyManager.handleKeyUp(new KeyboardEvent('keyup', { key: 'Shift' }));
+	}
+
+	it('inserts a newline at the cursor on Shift+Enter without submitting', async () => {
+		const user = userEvent.setup();
+		const { devRequests, keyManager, textarea } = renderComments();
+
+		await user.type(textarea, 'ab');
+		textarea.setSelectionRange(1, 1);
+		press(keyManager, 'Enter', true);
+
+		await waitFor(() => expect(textarea.value).toBe('a\nb'));
+		expect(textarea.selectionStart).toBe(2);
+		expect(devRequests.createComment).not.toHaveBeenCalled();
+	});
+
+	it('submits the comment, including newlines, on Enter', async () => {
+		const user = userEvent.setup();
+		const { devRequests, keyManager, textarea } = renderComments();
+
+		await user.type(textarea, 'a');
+		press(keyManager, 'Enter', true);
+		await waitFor(() => expect(textarea.value).toBe('a\n'));
+		await user.type(textarea, 'b');
+		press(keyManager, 'Enter');
+
+		await waitFor(() => expect(devRequests.createComment).toHaveBeenCalledWith(expect.anything(), 'a\nb'));
+	});
+
+	it('leaves Shift+Enter to other handlers when the comment box is not focused', () => {
+		const { keyManager } = renderComments();
+		const other = vi.fn();
+		keyManager.registerKeyDown('Enter', other, { priority: 0 });
+
+		press(keyManager, 'Enter', true);
+
+		expect(other).toHaveBeenCalled();
 	});
 });
