@@ -34,9 +34,12 @@
 </script>
 
 <div
-	class="flex w-full flex-row rounded-lg border-1 border-d-lightblue bg-c-bg-surface shadow-sm transition-all hover:bg-d-lighterblue dark:border-s-dark dark:hover:bg-s-dark-3"
+	class="relative flex w-full flex-row rounded-lg border-1 border-d-lightblue bg-c-bg-surface shadow-sm transition-all hover:bg-d-lighterblue dark:border-s-dark dark:hover:bg-s-dark-3"
 	transition:fade
 >
+	<span class="absolute -top-2 left-4 rounded-full border-1 border-d-lightblue bg-c-bg-surface px-1.5 text-[10px] leading-4 text-c-neutral-5 dark:border-s-dark">
+		#{entry.id}
+	</span>
 	<Priority {entry} />
 	<div class="flex min-w-0 flex-1 flex-col gap-2 px-4 py-2 md:py-4">
 		{#if editOpen}
