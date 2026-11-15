@@ -22,7 +22,8 @@
 	</div>
 	<div class="flex flex-col gap-2.5">
 		{#each bookReleases as release (release.id)}
-			<a
+			<svelte:element
+				this={safeHref(release.url) ? 'a' : 'div'}
 				href={safeHref(release.url)}
 				target="_blank"
 				rel="noopener noreferrer"
@@ -51,7 +52,7 @@
 					size={13}
 					class="ml-auto shrink-0 text-c-neutral-4 opacity-0 transition-opacity group-hover:opacity-100"
 				/>
-			</a>
+			</svelte:element>
 		{/each}
 	</div>
 </div>

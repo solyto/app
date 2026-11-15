@@ -58,7 +58,7 @@ export type FeedEntrySize = 'compact' | 'comfortable' | 'card';
 
 export type FeedImportStage = 'parsed' | 'running' | 'finished';
 
-export type FeedImportStatus = 'pending' | 'subscribed' | 'already_subscribed' | 'unreachable' | 'not_a_feed';
+export type FeedImportStatus = 'pending' | 'subscribed' | 'already_subscribed' | 'unreachable' | 'not_a_feed' | 'limit_reached';
 
 export interface FeedImportEntry {
 	url: string;
@@ -73,3 +73,10 @@ export interface FeedImportState {
 	processed: number;
 	feeds: FeedImportEntry[];
 }
+
+export interface FeedImportResponse {
+	ok: boolean;
+	status: number;
+}
+
+export type FeedImportPollError = 'network' | 'rate_limited';

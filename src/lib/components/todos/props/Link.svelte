@@ -27,6 +27,7 @@
 	let explanationBoxX = $state<number>(0);
 	let explanationBoxY = $state<number>(0);
 	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
+	let href = $derived(safeHref(todo.link));
 
 	async function toggleEdit(): Promise<void> {
 		editing = !editing;
@@ -66,13 +67,12 @@
 	}
 
 	function openLink(): void {
-		const link = safeHref(todo.link);
-		if (!link) return;
-		if (link.startsWith('/')) {
+		if (!href) return;
+		if (href.startsWith('/')) {
 			// eslint-disable-next-line svelte/no-navigation-without-resolve -- user-entered path, not a known route
-			goto(link);
+			goto(href);
 		} else {
-			window.open(link, '_blank', 'noopener,noreferrer');
+			window.open(href, '_blank', 'noopener,noreferrer');
 		}
 	}
 
@@ -97,7 +97,9 @@
 			onblur={() => (showExplanationBox = false)}
 			onmousemove={(e) => setExplanationBoxPosition(e)}
 		>
-			{#if todo.link && viewPoint.isMobile}
+			{#if todo.link && !href}
+				<span class="block max-w-full truncate text-sm">{todo.link}</span>
+			{:else if todo.link && viewPoint.isMobile}
 				<div class="flex items-center gap-2">
 					<span class="min-w-0 truncate text-sm text-c-action underline">{todo.link}</span>
 					<button

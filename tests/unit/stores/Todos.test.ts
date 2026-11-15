@@ -403,37 +403,69 @@ describe('Todos store', () => {
 	});
 
 	describe('view persistence', () => {
-		it('saves the view on change', () => {
+		const stored = (values: Record<string, string>) =>
+			storage.get.mockImplementation((key: string) => values[key] ?? null);
+
+		it('saves the view under the desktop key on desktop', () => {
 			const t = new Todos();
+			t.loadView(true);
 			t.changeView('kanban');
 
 			expect(t.view).toBe('kanban');
-			expect(storage.set).toHaveBeenCalledWith(Todos.LS_VIEW_KEY, 'kanban');
+			expect(storage.set).toHaveBeenCalledWith(Todos.LS_VIEW_KEY_DESKTOP, 'kanban');
 		});
 
-		it('restores a saved view allowed for the viewport', () => {
-			storage.get.mockReturnValue('grouped');
+		it('saves the view under the mobile key on mobile', () => {
+			const t = new Todos();
+			t.loadView(false);
+			t.changeView('card');
+
+			expect(storage.set).toHaveBeenCalledWith(Todos.LS_VIEW_KEY_MOBILE, 'card');
+			expect(storage.set).not.toHaveBeenCalledWith(Todos.LS_VIEW_KEY_DESKTOP, expect.anything());
+		});
+
+		it('keeps desktop and mobile choices apart', () => {
+			stored({ [Todos.LS_VIEW_KEY_DESKTOP]: 'kanban', [Todos.LS_VIEW_KEY_MOBILE]: 'overview' });
 			const t = new Todos();
 
 			t.loadView(true);
-			expect(t.view).toBe('grouped');
+			expect(t.view).toBe('kanban');
 
 			t.loadView(false);
-			expect(t.view).toBe('grouped');
+			expect(t.view).toBe('overview');
+		});
+
+		it('falls back to the legacy key when the viewport key is unset', () => {
+			stored({ [Todos.LS_VIEW_KEY_LEGACY]: 'kanban' });
+			const t = new Todos();
+
+			t.loadView(true);
+			expect(t.view).toBe('kanban');
+
+			t.loadView(false);
+			expect(t.view).toBe('card');
+		});
+
+		it('ignores the legacy key once the viewport key is set', () => {
+			stored({ [Todos.LS_VIEW_KEY_LEGACY]: 'kanban', [Todos.LS_VIEW_KEY_DESKTOP]: 'overview' });
+			const t = new Todos();
+
+			t.loadView(true);
+			expect(t.view).toBe('overview');
 		});
 
 		it('falls back to the viewport default for invalid or disallowed views', () => {
 			const t = new Todos();
 
-			storage.get.mockReturnValue('kanban');
+			stored({ [Todos.LS_VIEW_KEY_MOBILE]: 'kanban' });
 			t.loadView(false);
 			expect(t.view).toBe('card');
 
-			storage.get.mockReturnValue('card');
+			stored({ [Todos.LS_VIEW_KEY_DESKTOP]: 'card' });
 			t.loadView(true);
 			expect(t.view).toBe('list');
 
-			storage.get.mockReturnValue(null);
+			stored({});
 			t.loadView(true);
 			expect(t.view).toBe('list');
 		});

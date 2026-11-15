@@ -15,7 +15,7 @@
 		input?: HTMLInputElement | null;
 		filename?: string;
 		accept?: string;
-		onfile?: (file: File) => void;
+		onfile?: (file: File) => Promise<boolean>;
 	} = $props();
 	/* eslint-enable no-useless-assignment */
 
@@ -23,6 +23,7 @@
 
 	let selectedFile = $state<File | null>(null);
 	let isUploading = $state(false);
+	let isHandingOver = $state(false);
 	let uploadProgress = $state(0);
 	let uploadError = $state<string | null>(null);
 	let uploadSuccess = $state(false);
@@ -33,7 +34,11 @@
 			selectedFile = inputElement.files[0];
 			uploadError = null;
 			uploadSuccess = false;
-			onfile?.(selectedFile);
+
+			if (onfile) {
+				await handOver(inputElement, selectedFile, onfile);
+				return;
+			}
 
 			try {
 				isUploading = true;
@@ -50,6 +55,20 @@
 			} finally {
 				isUploading = false;
 			}
+		}
+	}
+
+	async function handOver(inputElement: HTMLInputElement, file: File, deliver: (file: File) => Promise<boolean>): Promise<void> {
+		isHandingOver = true;
+		try {
+			if (await deliver(file)) {
+				uploadSuccess = true;
+				return;
+			}
+			selectedFile = null;
+			inputElement.value = '';
+		} finally {
+			isHandingOver = false;
 		}
 	}
 
@@ -96,6 +115,7 @@
 			id="file-upload"
 			type="file"
 			{accept}
+			disabled={isHandingOver}
 			bind:this={input}
 			onchange={handleFileChange}
 			class="block w-full text-sm text-c-neutral-5

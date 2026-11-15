@@ -3,6 +3,7 @@
 	import IconPlus from '@lucide/svelte/icons/plus';
 	import IconSearch from '@lucide/svelte/icons/search';
 	import IconFileUp from '@lucide/svelte/icons/file-up';
+	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import { getFeeds } from '$lib/state/Feeds.svelte';
 	import { getFeedImport } from '$lib/state/FeedImport.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -118,6 +119,10 @@
 			>
 				<IconFileUp size={16} class="shrink-0 text-c-neutral-5 dark:text-c-neutral-4" />
 				{ts.get.feeds.import_opml}
+				{#if feedImport.polling}
+					<IconLoaderCircle size={14} class="ml-auto shrink-0 animate-spin text-c-neutral-5 dark:text-c-neutral-4" />
+					<span class="sr-only">{ts.get.feeds.import_in_progress}</span>
+				{/if}
 			</button>
 		</div>
 	</div>
