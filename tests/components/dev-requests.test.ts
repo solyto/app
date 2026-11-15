@@ -191,6 +191,21 @@ describe('DevRequestEdit, edit', () => {
 		expect(onClose).not.toHaveBeenCalled();
 	});
 
+	it('saves other changes when an unchanged stored version is not X.X.X', async () => {
+		const user = userEvent.setup();
+		const entry = devRequest({ status: 'completed', fixed_in_version: '1.2' });
+		const { devRequests, error, onClose } = renderEdit(entry);
+
+		const title = screen.getByDisplayValue('Login fails');
+		await user.clear(title);
+		await user.type(title, 'Login broken');
+		await user.click(screen.getByRole('button', { name: 'Save' }));
+
+		await waitFor(() => expect(onClose).toHaveBeenCalled());
+		expect(error).not.toHaveBeenCalled();
+		expect(devRequests.update).toHaveBeenCalledWith(entry, { title: 'Login broken' });
+	});
+
 	it('saves the waiting-for-deployment status', async () => {
 		const user = userEvent.setup();
 		const entry = devRequest({ status: 'in-progress' });

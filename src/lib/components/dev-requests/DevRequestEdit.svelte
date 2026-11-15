@@ -70,8 +70,10 @@
 			return;
 		}
 
+		// Only a changed version is checked: older requests may hold e.g. `1.2`, which the API accepts.
 		const version = form.fixed_in_version.trim();
-		if (form.status === 'completed' && version !== '' && !isVersion(version)) {
+		const versionChanged = version !== (entry?.fixed_in_version ?? '');
+		if (form.status === 'completed' && version !== '' && versionChanged && !isVersion(version)) {
 			loadingIndicator.stop();
 			notifications.error(ts.get.dev.requests.version_validation_error);
 			return;
