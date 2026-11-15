@@ -65,14 +65,20 @@
 		--multiselect-focus-ring: var(--color-d-lightblue);
 	}
 
-	:global(html.dark) .multiselect-field,
-	:global(html.dark ul.options) {
+	:global(html:is(.dark, .theme-dark)) .multiselect-field,
+	:global(html:is(.dark, .theme-dark) ul.options) {
 		--sms-border: 1px solid var(--color-s-dark-3);
 		--sms-options-border: 1px solid var(--color-s-dark-3);
 		--sms-text-color: var(--color-white);
 		--sms-active-color: var(--color-s-dark-3);
 		--sms-selected-bg: var(--color-s-dark-3);
 		--multiselect-focus-ring: var(--color-c-primary);
+	}
+
+	/* Dark themes without dark mode keep a light colour scheme, so the library's light-dark() background would be white. */
+	/* Same background as the other inputs (forms.css). */
+	:global(html.theme-dark) .multiselect-field {
+		--sms-bg: var(--color-c-bg-elevated);
 	}
 
 	:global(div.multiselect) {

@@ -28,7 +28,7 @@
 	}
 </script>
 
-<span class="flex items-center gap-1.5 text-sm 2xl:gap-2">
+<span class="flex items-center gap-1.5 text-sm md:whitespace-nowrap 2xl:gap-2">
 	<span class="size-2 shrink-0 rounded-full {DOT_COLORS[entry.status]}"></span>
 	{getLabel(entry.status)}
 </span>

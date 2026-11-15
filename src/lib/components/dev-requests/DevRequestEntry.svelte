@@ -57,10 +57,12 @@
 				</div>
 			</div>
 			<div class="flex min-w-0 flex-1 flex-row flex-wrap items-center gap-x-4 gap-y-2 md:flex-none">
-				<div class="md:w-32">
+				<div class="md:w-56 md:shrink-0">
 					<Status {entry} />
 				</div>
-				<Type {entry} />
+				<div class="max-md:hidden">
+					<Type {entry} />
+				</div>
 				{#if entry.status === 'completed' && entry.fixed_in_version}
 					<div class="hidden md:ml-4 md:flex">
 						<FixedIn version={entry.fixed_in_version} />
@@ -73,6 +75,9 @@
 				{#if entry.updated_at !== entry.created_at}
 					<span class="text-sm text-c-btn">{formatDate(entry.updated_at)}</span>
 				{/if}
+				<div class="md:hidden">
+					<Type {entry} />
+				</div>
 				<span class="flex w-10 flex-row items-center gap-1 text-c-neutral-4">
 					{#if entry.comment_count > 0}
 						<IconMessageSquare class="h-4 w-4" />

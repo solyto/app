@@ -33,7 +33,7 @@
 	}
 </script>
 
-<div class="flex w-full flex-col gap-2">
+<div class="flex w-full flex-col gap-2 pl-1">
 	<div class="flex w-full items-center gap-2">
 		<div class="flex min-w-0 flex-1 flex-col">
 			<span class="truncate text-md">{externalCalendars.service.host(account.server_url)}</span>
