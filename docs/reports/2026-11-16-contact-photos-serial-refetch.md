@@ -1,4 +1,5 @@
 # Report: contacts without a photo are asked for again on every load, ten at a time, one request after another
+read: true
 
 Date: 2026-11-16
 Scope: `load()` / `loadContactPhotos()` in `src/lib/state/Contacts.svelte.ts`, the
