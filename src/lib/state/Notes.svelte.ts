@@ -16,11 +16,13 @@ import { urls } from '$lib/config/urls';
 import { resolve } from '$app/paths';
 import ApiService from '$lib/services/ApiService';
 import JournalService from '$lib/services/JournalService';
+import NoteSearchService from '$lib/services/NoteSearchService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 
 export class NotesSvelte {
 	static readonly LS_COLLAPSED_CATEGORIES_KEY: string = 'notes.collapsedCategories';
+	static readonly SEARCH_RESULT_LIMIT: number = 10;
 
 	loaded = $state<boolean>(false);
 	notes = $state<Note[]>([]);
@@ -31,6 +33,7 @@ export class NotesSvelte {
 	collapsedCategories = $state<number[]>([]);
 	activeNote = $state<Note | null>(null);
 	modalOpen = $state<boolean>(false);
+	deleteNoteModalOpen = $state<boolean>(false);
 	createType = $state<'note' | 'category'>('note');
 	createParent = $state<number | null>(null);
 	rightClickMenuOpen = $state<boolean>(false);
@@ -42,12 +45,17 @@ export class NotesSvelte {
 	dragTarget = $state<NoteCategory | null>(null);
 	input = $state<HTMLInputElement | null>(null);
 	inputValue = $state<string>('');
+	searchVisible = $state<boolean>(false);
+	searchTerm = $state<string>('');
+	searchResults = $state<Note[]>([]);
+	searchIndex = $state<number>(0);
 	auth: Auth;
 	ts: Translation;
 	notifications: UiNotifications;
 	apiService: ApiService;
 	localStorage: LocalStorageService;
 	journalService = new JournalService();
+	searchService = new NoteSearchService();
 
 	constructor(
 		auth: Auth = getAuth(),
@@ -205,6 +213,39 @@ export class NotesSvelte {
 
 	selectNote(noteId: string): void {
 		this.activeNote = this.notes.find((n) => n.id === noteId) ?? null;
+	}
+
+	openSearch(): void {
+		this.searchVisible = true;
+	}
+
+	closeSearch(): void {
+		this.searchVisible = false;
+		this.searchTerm = '';
+		this.searchResults = [];
+		this.searchIndex = 0;
+	}
+
+	search(): void {
+		this.searchResults = this.searchService.search(
+			this.getVisibleNotes(),
+			this.searchTerm,
+			NotesSvelte.SEARCH_RESULT_LIMIT
+		);
+		this.searchIndex = 0;
+	}
+
+	moveSearchSelection(delta: number): void {
+		const last = Math.max(this.searchResults.length - 1, 0);
+		this.searchIndex = Math.min(Math.max(this.searchIndex + delta, 0), last);
+	}
+
+	async openSearchResult(note: Note | undefined = this.searchResults[this.searchIndex]): Promise<void> {
+		if (note === undefined) return;
+
+		this.selectNote(note.id);
+		this.closeSearch();
+		await goto(resolve(urls.note, { id: note.id }));
 	}
 
 	async openModal(type: 'note' | 'category', edit: boolean = false): Promise<void> {

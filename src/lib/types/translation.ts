@@ -495,6 +495,7 @@ export interface NoteRecords {
 	remove_from_favorites: string;
 	no_entries: string;
 	note_not_found: string;
+	no_search_results: string;
 	insert_image: string;
 	insert_image_url: string;
 	insert_image_clipboard: string;

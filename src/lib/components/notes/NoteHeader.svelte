@@ -118,14 +118,12 @@
 		return auth.getTimeInUserPreferredFormat(date);
 	}
 
-	let deleteModalOpen = $state<boolean>(false);
-
 	async function onDeleteConfirm(): Promise<void> {
 		loadingIndicator.start();
 		const ok = await notes.deleteActiveNote();
 		if (ok) notifications.success(ts.get.notes.delete_success);
 		loadingIndicator.stop();
-		deleteModalOpen = false;
+		notes.deleteNoteModalOpen = false;
 	}
 
 	onMount(() => {
@@ -201,7 +199,7 @@
 				{#if !isDraft}
 					<DeleteButton
 						onClick={() => {
-							deleteModalOpen = true;
+							notes.deleteNoteModalOpen = true;
 						}}
 						inModal={false}
 						buttonStyle="plain"
@@ -216,14 +214,14 @@
 	</div>
 {/if}
 
-{#if deleteModalOpen}
+{#if notes.deleteNoteModalOpen}
 	<ConfirmationModal
 		title={ts.get.notes.delete_confirm_label}
 		description={ts.get.notes.delete_confirm_message}
 		type="confirm-delete"
 		onConfirm={onDeleteConfirm}
 		onCancel={() => {
-			deleteModalOpen = false;
+			notes.deleteNoteModalOpen = false;
 		}}
 	/>
 {/if}

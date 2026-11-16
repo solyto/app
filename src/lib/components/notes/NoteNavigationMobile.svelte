@@ -13,6 +13,7 @@
 	import IconArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import AddNoteButton from '$lib/components/notes/AddNoteButton.svelte';
 	import AddFolderButton from '$lib/components/notes/AddFolderButton.svelte';
+	import SearchNoteButton from '$lib/components/notes/SearchNoteButton.svelte';
 	import JournalArchivePicker from '$lib/components/notes/journal/JournalArchivePicker.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import HamburgerButton from '$lib/components/ui/buttons/HamburgerButton.svelte';
@@ -52,6 +53,11 @@
 
 	function close(): void {
 		open = false;
+	}
+
+	function openSearch(): void {
+		close();
+		notes.openSearch();
 	}
 
 	function handleNoteSelect(): void {
@@ -113,6 +119,7 @@
 						<div class="flex shrink-0 items-center justify-between border-b border-c-neutral-2 p-4 dark:border-s-dark-3">
 							<span class="text-2xl font-bold">{ts.get.notes.notebook}</span>
 							<div class="flex gap-1">
+								<SearchNoteButton onClick={openSearch} />
 								<AddNoteButton onClick={() => notes.openCreateNoteModal(null)} />
 								<AddFolderButton onClick={() => notes.openModal('category')} />
 								<CloseButton onClick={close} inModal={false} />

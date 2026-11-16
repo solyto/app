@@ -203,6 +203,107 @@ describe('Notes store', () => {
 		});
 	});
 
+	describe('search', () => {
+		function searchable(): NotesSvelte {
+			const n = new NotesSvelte();
+			n.journalCategory = category(9, 'Journal', { is_system: true });
+			n.notes = [
+				note({ id: '1', title: 'Milk prices' }),
+				note({ id: '2', title: 'Shopping', content: '<p>buy milk</p>' }),
+				note({ id: '3', title: '2026-01-01', content: '<p>milk</p>', category_id: 9 }),
+				note({ id: '4', title: 'Ideas' })
+			];
+			return n;
+		}
+
+		it('search fills the results from visible notes and resets the selection', () => {
+			const n = searchable();
+			n.searchIndex = 1;
+			n.searchTerm = 'milk';
+			n.search();
+
+			expect(n.searchResults.map((x) => x.id)).toEqual(['1', '2']);
+			expect(n.searchIndex).toBe(0);
+		});
+
+		it('search caps the results at the limit', () => {
+			const n = new NotesSvelte();
+			n.notes = Array.from({ length: 12 }, (_, i) => note({ id: String(i), title: `Note ${i}` }));
+			n.searchTerm = 'note';
+			n.search();
+
+			expect(n.searchResults).toHaveLength(NotesSvelte.SEARCH_RESULT_LIMIT);
+		});
+
+		it('moveSearchSelection stays within the results', () => {
+			const n = searchable();
+			n.searchTerm = 'milk';
+			n.search();
+
+			n.moveSearchSelection(-1);
+			expect(n.searchIndex).toBe(0);
+			n.moveSearchSelection(1);
+			expect(n.searchIndex).toBe(1);
+			n.moveSearchSelection(1);
+			expect(n.searchIndex).toBe(1);
+		});
+
+		it('moveSearchSelection keeps the index at 0 without results', () => {
+			const n = searchable();
+			n.moveSearchSelection(1);
+			expect(n.searchIndex).toBe(0);
+		});
+
+		it('closeSearch hides and clears the search', () => {
+			const n = searchable();
+			n.openSearch();
+			n.searchTerm = 'milk';
+			n.search();
+			n.moveSearchSelection(1);
+			n.closeSearch();
+
+			expect(n.searchVisible).toBe(false);
+			expect(n.searchTerm).toBe('');
+			expect(n.searchResults).toEqual([]);
+			expect(n.searchIndex).toBe(0);
+		});
+
+		it('openSearchResult opens the highlighted note and closes the search', async () => {
+			const n = searchable();
+			n.openSearch();
+			n.searchTerm = 'milk';
+			n.search();
+			n.moveSearchSelection(1);
+			await n.openSearchResult();
+
+			expect(n.activeNote?.id).toBe('2');
+			expect(n.searchVisible).toBe(false);
+			expect(n.searchTerm).toBe('');
+			expect(navigation.goto).toHaveBeenCalledWith('/notes/2');
+		});
+
+		it('openSearchResult opens the given note', async () => {
+			const n = searchable();
+			n.searchTerm = 'milk';
+			n.search();
+			await n.openSearchResult(n.searchResults[1]);
+
+			expect(n.activeNote?.id).toBe('2');
+			expect(navigation.goto).toHaveBeenCalledWith('/notes/2');
+		});
+
+		it('openSearchResult does nothing without results', async () => {
+			const n = searchable();
+			n.openSearch();
+			n.searchTerm = 'nothing';
+			n.search();
+			await n.openSearchResult();
+
+			expect(n.searchVisible).toBe(true);
+			expect(navigation.goto).not.toHaveBeenCalled();
+		});
+	});
+
 	describe('openCreateNoteModal', () => {
 		it('sets the create parent and opens the note modal', async () => {
 			const n = new NotesSvelte();

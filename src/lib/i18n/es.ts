@@ -516,6 +516,7 @@ const notes: NoteRecords = {
 	remove_from_favorites: 'Quitar de favoritos',
 	no_entries: 'Parece que aún no hay notas.',
 	note_not_found: 'Esta nota no existe.',
+	no_search_results: 'No se encontraron notas.',
 	insert_image: 'Insertar imagen',
 	insert_image_url: 'URL',
 	insert_image_clipboard: 'Portapapeles',

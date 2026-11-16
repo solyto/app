@@ -515,6 +515,7 @@ const notes: NoteRecords = {
 	remove_from_favorites: 'Убрать из избранного',
 	no_entries: 'Заметок пока нет.',
 	note_not_found: 'Заметка не найдена.',
+	no_search_results: 'Заметки не найдены.',
 	insert_image: 'Вставить изображение',
 	insert_image_url: 'URL',
 	insert_image_clipboard: 'Буфер обмена',
