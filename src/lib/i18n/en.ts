@@ -1150,7 +1150,15 @@ const clipboard: ClipboardRecords = {
 	image_too_large: 'The image could not be uploaded. It may be too large.',
 	image_reduce: 'Reduce size',
 	image_copy_success: 'Image copied to clipboard',
-	image_copy_error: 'Failed to copy image'
+	image_copy_error: 'Failed to copy image',
+	file_save_success: 'File saved',
+	file_save_error: 'Failed to save file',
+	file_too_large: 'Files can be at most 10 MB.',
+	file_invalid_type: 'This file type is not supported.',
+	file_limit_reached: 'You can upload 10 files per day.',
+	file_limit_reached_hours_singular: 'You can upload 10 files per day. Try again in 1 hour.',
+	file_limit_reached_hours_plural: 'You can upload 10 files per day. Try again in {n} hours.',
+	file_download_error: 'Failed to download file'
 };
 
 const profile: ProfileRecords = {

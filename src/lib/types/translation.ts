@@ -1142,6 +1142,14 @@ export interface ClipboardRecords {
 	image_reduce: string;
 	image_copy_success: string;
 	image_copy_error: string;
+	file_save_success: string;
+	file_save_error: string;
+	file_too_large: string;
+	file_invalid_type: string;
+	file_limit_reached: string;
+	file_limit_reached_hours_singular: string;
+	file_limit_reached_hours_plural: string;
+	file_download_error: string;
 }
 
 export interface ProfileRecords {

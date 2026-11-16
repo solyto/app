@@ -298,10 +298,12 @@ export const apiRoutes = {
 		}
 	},
 	clipboard: {
-		list: API_URL + '/clipboard',
+		list: API_URL + '/clipboard?include_files=1',
 		create: API_URL + '/clipboard',
 		createImage: API_URL + '/clipboard/image',
 		getImage: API_URL + '/clipboard/%d/image',
+		createFile: API_URL + '/clipboard/file',
+		getFile: API_URL + '/clipboard/%d/file',
 		delete: API_URL + '/clipboard/%d'
 	},
 	timeTracking: {

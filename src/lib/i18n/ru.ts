@@ -897,7 +897,15 @@ const clipboard: ClipboardRecords = {
 	image_too_large: 'Не удалось загрузить изображение. Возможно, файл слишком большой.',
 	image_reduce: 'Уменьшить размер',
 	image_copy_success: 'Изображение скопировано в буфер обмена',
-	image_copy_error: 'Не удалось скопировать изображение'
+	image_copy_error: 'Не удалось скопировать изображение',
+	file_save_success: 'Файл сохранён',
+	file_save_error: 'Не удалось сохранить файл',
+	file_too_large: 'Размер файла не может превышать 10 МБ.',
+	file_invalid_type: 'Этот тип файла не поддерживается.',
+	file_limit_reached: 'Можно загрузить не более 10 файлов в день.',
+	file_limit_reached_hours_singular: 'Можно загрузить не более 10 файлов в день. Попробуйте через 1 ч.',
+	file_limit_reached_hours_plural: 'Можно загрузить не более 10 файлов в день. Попробуйте через {n} ч.',
+	file_download_error: 'Не удалось скачать файл'
 };
 
 const profile: ProfileRecords = {

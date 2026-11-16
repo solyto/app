@@ -1152,7 +1152,15 @@ const clipboard: ClipboardRecords = {
 	image_too_large: 'Das Bild konnte nicht hochgeladen werden. Möglicherweise ist es zu groß.',
 	image_reduce: 'Größe reduzieren',
 	image_copy_success: 'Bild in die Zwischenablage kopiert',
-	image_copy_error: 'Bild konnte nicht kopiert werden'
+	image_copy_error: 'Bild konnte nicht kopiert werden',
+	file_save_success: 'Datei gespeichert',
+	file_save_error: 'Datei konnte nicht gespeichert werden',
+	file_too_large: 'Dateien dürfen höchstens 10 MB groß sein.',
+	file_invalid_type: 'Dieser Dateityp wird nicht unterstützt.',
+	file_limit_reached: 'Du kannst 10 Dateien pro Tag hochladen.',
+	file_limit_reached_hours_singular: 'Du kannst 10 Dateien pro Tag hochladen. Versuche es in 1 Stunde erneut.',
+	file_limit_reached_hours_plural: 'Du kannst 10 Dateien pro Tag hochladen. Versuche es in {n} Stunden erneut.',
+	file_download_error: 'Datei konnte nicht heruntergeladen werden'
 };
 
 const profile: ProfileRecords = {

@@ -1150,7 +1150,15 @@ const clipboard: ClipboardRecords = {
 	image_too_large: "Impossibile caricare l'immagine. Potrebbe essere troppo grande.",
 	image_reduce: 'Riduci dimensioni',
 	image_copy_success: 'Immagine copiata negli appunti',
-	image_copy_error: "Impossibile copiare l'immagine"
+	image_copy_error: "Impossibile copiare l'immagine",
+	file_save_success: 'File salvato',
+	file_save_error: 'Impossibile salvare il file',
+	file_too_large: 'I file possono pesare al massimo 10 MB.',
+	file_invalid_type: 'Questo tipo di file non è supportato.',
+	file_limit_reached: 'Puoi caricare 10 file al giorno.',
+	file_limit_reached_hours_singular: 'Puoi caricare 10 file al giorno. Riprova tra 1 ora.',
+	file_limit_reached_hours_plural: 'Puoi caricare 10 file al giorno. Riprova tra {n} ore.',
+	file_download_error: 'Impossibile scaricare il file'
 };
 
 const profile: ProfileRecords = {

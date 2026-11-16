@@ -1141,7 +1141,15 @@ const clipboard: ClipboardRecords = {
 	image_too_large: 'L\'image n\'a pas pu être envoyée. Elle est peut-être trop volumineuse.',
 	image_reduce: 'Réduire la taille',
 	image_copy_success: 'Image copiée dans le presse-papiers',
-	image_copy_error: 'Échec de la copie de l\'image'
+	image_copy_error: 'Échec de la copie de l\'image',
+	file_save_success: 'Fichier enregistré',
+	file_save_error: 'Échec de l\'enregistrement du fichier',
+	file_too_large: 'Les fichiers ne peuvent pas dépasser 10 Mo.',
+	file_invalid_type: 'Ce type de fichier n\'est pas pris en charge.',
+	file_limit_reached: 'Tu peux envoyer 10 fichiers par jour.',
+	file_limit_reached_hours_singular: 'Tu peux envoyer 10 fichiers par jour. Réessaie dans 1 heure.',
+	file_limit_reached_hours_plural: 'Tu peux envoyer 10 fichiers par jour. Réessaie dans {n} heures.',
+	file_download_error: 'Échec du téléchargement du fichier'
 };
 
 const dav: DavRecords = {

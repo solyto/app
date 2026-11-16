@@ -1140,7 +1140,15 @@ const clipboard: ClipboardRecords = {
 	image_too_large: 'No se pudo subir la imagen. Puede que sea demasiado grande.',
 	image_reduce: 'Reducir tamaño',
 	image_copy_success: 'Imagen copiada al portapapeles',
-	image_copy_error: 'Error al copiar la imagen'
+	image_copy_error: 'Error al copiar la imagen',
+	file_save_success: 'Archivo guardado',
+	file_save_error: 'Error al guardar el archivo',
+	file_too_large: 'Los archivos pueden ocupar como máximo 10 MB.',
+	file_invalid_type: 'Este tipo de archivo no es compatible.',
+	file_limit_reached: 'Puedes subir 10 archivos al día.',
+	file_limit_reached_hours_singular: 'Puedes subir 10 archivos al día. Inténtalo de nuevo en 1 hora.',
+	file_limit_reached_hours_plural: 'Puedes subir 10 archivos al día. Inténtalo de nuevo en {n} horas.',
+	file_download_error: 'Error al descargar el archivo'
 };
 
 const dav: DavRecords = {

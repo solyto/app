@@ -1,14 +1,18 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import { getClipboard } from '$lib/state/Clipboard.svelte';
 	import IconClipboardCopy from '@lucide/svelte/icons/clipboard-copy';
 	import IconTrash from '@lucide/svelte/icons/trash-2';
+	import IconDownload from '@lucide/svelte/icons/download';
 	import { formatDate } from '$lib/helpers/DateHelper';
 	import { truncate } from '$lib/helpers/FormatHelper';
+	import { downloadBlob } from '$lib/helpers/DownloadHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import Heading from '$lib/components/ui/Heading.svelte';
-	import { API_USER_STORAGE_URL, apiRoutes } from '$lib/config/apiRoutes';
+	import ClipboardImage from '$lib/components/clipboard/ClipboardImage.svelte';
+	import ClipboardFileInfo from '$lib/components/clipboard/ClipboardFileInfo.svelte';
 	import type { ClipboardEntry } from '$lib/types/clipboard';
 
 	const clipboard = getClipboard();
@@ -17,19 +21,16 @@
 	const loadingIndicator = getLoadingIndicator();
 
 	const MAX_TEXT_PREVIEW_LENGTH = 200;
+	const ACTION_BUTTON = 'flex size-8 cursor-pointer items-center justify-center rounded-full bg-c-action text-c-action-icon drop-shadow-md transition-all hover:drop-shadow-xl';
 
 	async function onCopyText(content: string): Promise<void> {
 		await navigator.clipboard.writeText(content);
 		notifications.success(ts.get.clipboard.copy_success);
 	}
 
-	function getImageApiUrl(id: number): string {
-		return apiRoutes.clipboard.getImage.replace('%d', id.toString());
-	}
-
 	async function onCopyImage(entry: ClipboardEntry): Promise<void> {
 		try {
-			const pngPromise = clipboard.apiService.image(getImageApiUrl(entry.id)).then((blob) => {
+			const pngPromise = clipboard.getImage(entry).then((blob) => {
 				if (!blob) throw new Error();
 				return convertToPng(blob);
 			});
@@ -63,6 +64,22 @@
 		});
 	}
 
+	async function onCopy(entry: ClipboardEntry): Promise<void> {
+		if (entry.type === 'image') await onCopyImage(entry);
+		else await onCopyText(entry.content);
+	}
+
+	async function onDownload(entry: ClipboardEntry): Promise<void> {
+		loadingIndicator.start();
+		const blob = await clipboard.getFile(entry);
+		loadingIndicator.stop();
+		if (!blob) {
+			notifications.error(ts.get.clipboard.file_download_error);
+			return;
+		}
+		downloadBlob(blob, entry.file_name ?? 'file');
+	}
+
 	async function onDelete(entry: ClipboardEntry): Promise<void> {
 		loadingIndicator.start();
 		const res = await clipboard.delete(entry);
@@ -73,13 +90,15 @@
 
 {#snippet actionButtons(entry: ClipboardEntry)}
 	<div class="flex gap-2">
-		<button
-			class="flex size-8 cursor-pointer items-center justify-center rounded-full bg-c-action text-c-action-icon drop-shadow-md transition-all hover:drop-shadow-xl"
-			onclick={() =>
-				entry.type === 'image' ? onCopyImage(entry) : onCopyText(entry.content)}
-		>
-			<IconClipboardCopy class="size-4" />
-		</button>
+		{#if entry.type === 'file'}
+			<button class={ACTION_BUTTON} onclick={() => onDownload(entry)}>
+				<IconDownload class="size-4" />
+			</button>
+		{:else}
+			<button class={ACTION_BUTTON} onclick={() => onCopy(entry)}>
+				<IconClipboardCopy class="size-4" />
+			</button>
+		{/if}
 		<button
 			class="flex size-8 cursor-pointer items-center justify-center rounded-full bg-c-danger text-white drop-shadow-md transition-all hover:drop-shadow-xl"
 			onclick={() => onDelete(entry)}
@@ -89,18 +108,36 @@
 	</div>
 {/snippet}
 
+{#snippet card(entry: ClipboardEntry, body: Snippet<[ClipboardEntry]>)}
+	<div class="relative w-full rounded-md p-4 shadow-sm dark:shadow-s-dark-shadow md:dark:bg-s-dark-2">
+		<div class="absolute top-[-10px] right-[-10px]">
+			{@render actionButtons(entry)}
+		</div>
+		{@render body(entry)}
+		<div class="mt-2 text-xs text-c-neutral-4">
+			{formatDate(entry.created_at)}
+		</div>
+	</div>
+{/snippet}
+
+{#snippet textBody(entry: ClipboardEntry)}
+	<p class="pr-16 text-sm break-words whitespace-pre-wrap">
+		{truncate(entry.content, MAX_TEXT_PREVIEW_LENGTH)}
+	</p>
+{/snippet}
+
+{#snippet fileBody(entry: ClipboardEntry)}
+	<ClipboardFileInfo name={entry.file_name ?? ''} size={entry.file_size ?? 0} />
+{/snippet}
+
 <div class="flex w-full flex-col gap-6 md:w-1/2">
 	<Heading title={ts.get.clipboard.history} my={0} mb={4} />
 	{#each clipboard.entries as entry (entry.id)}
-		{#if entry.type === 'image' && entry.file_path}
+		{#if entry.type === 'image'}
 			<div
 				class="relative inline-block self-start overflow-hidden rounded-md shadow-sm dark:shadow-s-dark-shadow"
 			>
-				<img
-					src={API_USER_STORAGE_URL + '/' + entry.file_path}
-					alt="Clipboard"
-					class="block max-h-64 rounded-md"
-				/>
+				<ClipboardImage {entry} />
 				<div class="absolute top-2 right-2">
 					{@render actionButtons(entry)}
 				</div>
@@ -110,20 +147,10 @@
 					{formatDate(entry.created_at)}
 				</div>
 			</div>
+		{:else if entry.type === 'file'}
+			{@render card(entry, fileBody)}
 		{:else}
-			<div
-				class="relative w-full rounded-md p-4 shadow-sm dark:shadow-s-dark-shadow md:dark:bg-s-dark-2"
-			>
-				<div class="absolute top-[-10px] right-[-10px]">
-					{@render actionButtons(entry)}
-				</div>
-				<p class="pr-16 text-sm break-words whitespace-pre-wrap">
-					{truncate(entry.content, MAX_TEXT_PREVIEW_LENGTH)}
-				</p>
-				<div class="mt-2 text-xs text-c-neutral-4">
-					{formatDate(entry.created_at)}
-				</div>
-			</div>
+			{@render card(entry, textBody)}
 		{/if}
 	{/each}
 </div>
