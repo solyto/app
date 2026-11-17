@@ -836,6 +836,10 @@ export interface FinanceRecords {
 	per_month: string;
 	per_quarter: string;
 	per_year: string;
+	range_1y: string;
+	range_3y: string;
+	range_5y: string;
+	range_all: string;
 }
 
 

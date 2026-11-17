@@ -856,7 +856,11 @@ const finances: FinanceRecords = {
 	interval_yearly: 'Jahr',
 	per_month: '/ Monat',
 	per_quarter: '/ Quartal',
-	per_year: '/ Jahr'
+	per_year: '/ Jahr',
+	range_1y: '1 Jahr',
+	range_3y: '3 Jahre',
+	range_5y: '5 Jahre',
+	range_all: 'Alle'
 };
 
 

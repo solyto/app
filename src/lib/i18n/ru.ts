@@ -679,7 +679,8 @@ const finances: FinanceRecords = {
 	delete_value_message: 'Удалить эту запись?', delete_item: 'Удалить %s',
 	delete_item_message: 'Удалить %s и все связанные записи?',
 	interval_monthly: 'Месяц', interval_quarterly: 'Квартал', interval_yearly: 'Год',
-	per_month: '/ месяц', per_quarter: '/ квартал', per_year: '/ год'
+	per_month: '/ месяц', per_quarter: '/ квартал', per_year: '/ год',
+	range_1y: '1 год', range_3y: '3 года', range_5y: '5 лет', range_all: 'Всё время'
 };
 
 const feeds: FeedRecords = {
