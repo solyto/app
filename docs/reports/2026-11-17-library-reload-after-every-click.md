@@ -1,4 +1,5 @@
 # Report: one star click in a library re-downloads the whole library, in up to three serial requests
+read: true
 
 Date: 2026-11-17
 Scope: `load()` and the mutation methods of the eight library stores
