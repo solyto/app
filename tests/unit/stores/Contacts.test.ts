@@ -304,7 +304,7 @@ describe('Contacts store', () => {
 			expect(s.loaded).toBe(true);
 			expect(s.addressBooks).toHaveLength(1);
 			expect(s.contacts).toHaveLength(1);
-			expect(s.contactPhotosLoaded).toBe(true);
+			await vi.waitFor(() => expect(s.contactPhotosLoaded).toBe(true));
 		});
 	});
 
