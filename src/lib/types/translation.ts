@@ -840,6 +840,10 @@ export interface FinanceRecords {
 	range_3y: string;
 	range_5y: string;
 	range_all: string;
+	tags: string;
+	tag_error: string;
+	all_tags: string;
+	tag_filter: string;
 }
 
 

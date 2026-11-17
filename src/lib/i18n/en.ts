@@ -859,7 +859,11 @@ const finances: FinanceRecords = {
 	range_1y: '1 year',
 	range_3y: '3 years',
 	range_5y: '5 years',
-	range_all: 'All'
+	range_all: 'All',
+	tags: 'Tags',
+	tag_error: 'Tag could not be created',
+	all_tags: 'All tags',
+	tag_filter: 'Filter by tag'
 };
 
 
@@ -1391,7 +1395,7 @@ const timeTracking: TimeTrackingRecords = {
 	resume: 'Resume',
 	skip: 'Skip',
 	reset: 'Reset',
-	filter_by_category: 'Filter by Category',
+	filter_by_category: 'Filter by category',
 	all_categories: 'All',
 	edit_entry: 'Edit Entry',
 	entry_deletion_title: 'Delete Entry',

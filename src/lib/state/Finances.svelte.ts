@@ -6,15 +6,18 @@ import type {
 	UpdateFinanceValueRequest,
 	FinanceValue,
 	Budget,
+	BudgetResponse,
 	BudgetValue,
 	CreateBudgetRequest,
 	UpdateBudgetRequest
 } from '$lib/types/finance';
+import type { Tag } from '$lib/types/tag';
 import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import BudgetIntervalService from '$lib/services/BudgetIntervalService';
+import BudgetTagService from '$lib/services/BudgetTagService';
 
 export class Finances {
 	budgetLoaded = $state<boolean>(false);
@@ -23,9 +26,12 @@ export class Finances {
 	expenses = $state<Budget[]>([]);
 	wealth = $state<WealthField[]>([]);
 	budgetValues = $state<BudgetValue[]>([]);
+	selectedTagId = $state<number | null>(null);
+	tagsSupported = $state<boolean>(true);
 	auth: Auth;
 	apiService: ApiService;
 	budgetIntervals = new BudgetIntervalService();
+	budgetTags = new BudgetTagService();
 
 	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
 		this.auth = auth;
@@ -35,10 +41,13 @@ export class Finances {
 	async loadIncome(): Promise<void> {
 		const res = await this.apiService.list(apiRoutes.finances.budget.list);
 		if (res) {
-			const budget = res.data as Budget[];
+			const responses = res.data as BudgetResponse[];
+			const budget = this.budgetTags.fromApi(responses);
 			const sorted = this.budgetIntervals.sortByMonthlyAmount(budget);
 			this.income = sorted.filter((i) => i.type === 'income');
 			this.expenses = sorted.filter((i) => i.type === 'expense');
+			this.tagsSupported = this.budgetTags.supportsTags(responses);
+			if (!this.availableTags().some((tag) => tag.id === this.selectedTagId)) this.selectedTagId = null;
 			this.budgetLoaded = true;
 		}
 	}
@@ -67,11 +76,23 @@ export class Finances {
 	}
 
 	getBudgetIncomeTotal(): number {
-		return this.budgetIntervals.monthlyTotal(this.income);
+		return this.budgetIntervals.monthlyTotal(this.filteredIncome());
 	}
 
 	getBudgetExpenseTotal(): number {
-		return this.budgetIntervals.monthlyTotal(this.expenses);
+		return this.budgetIntervals.monthlyTotal(this.filteredExpenses());
+	}
+
+	filteredIncome(): Budget[] {
+		return this.budgetTags.filterByTag(this.income, this.selectedTagId);
+	}
+
+	filteredExpenses(): Budget[] {
+		return this.budgetTags.filterByTag(this.expenses, this.selectedTagId);
+	}
+
+	availableTags(): Tag[] {
+		return this.budgetTags.usedTags([...this.income, ...this.expenses]);
 	}
 
 	async addBudget(request: CreateBudgetRequest): Promise<boolean> {

@@ -7,6 +7,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getFinances } from '$lib/state/Finances.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import TagFlexList from '$lib/components/tags/TagFlexList.svelte';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
@@ -36,7 +37,12 @@
 	onclick={() => onOpenHistory(budget)}
 >
 	<div class="flex w-full flex-row items-center justify-between">
-		<div class="text-lg">{budget.title}</div>
+		<div class="flex min-w-0 flex-wrap items-center gap-2">
+			<div class="text-lg">{budget.title}</div>
+			{#if budget.tags.length > 0}
+				<TagFlexList tags={budget.tags} />
+			{/if}
+		</div>
 		<div class="flex items-center gap-4">
 			<div class="hidden items-center gap-2 transition-all md:flex md:opacity-0 md:group-hover:opacity-100">
 				<button

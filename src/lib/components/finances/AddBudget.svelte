@@ -12,6 +12,8 @@
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
+	import type { MultiSelectEntry } from '$lib/components/forms/MultiSelect.svelte';
+	import BudgetTagPicker from '$lib/components/finances/BudgetTagPicker.svelte';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
@@ -19,7 +21,7 @@
 	const finances = getFinances();
 	const viewPoint = getViewPoint();
 
-	let { type }: { type: BudgetType } = $props();
+	let { type, showTags }: { type: BudgetType; showTags: boolean } = $props();
 
 	let formOpen = $state<boolean>(false);
 	let titleInput = $state<HTMLInputElement | null>(null);
@@ -27,6 +29,7 @@
 	let valueInput = $state<HTMLInputElement | null>(null);
 	let valueValue = $state<number | null>(null);
 	let intervalValue = $state<BudgetInterval>('monthly');
+	let selectedTags = $state<MultiSelectEntry[]>([]);
 	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
 	async function toggleForm() {
@@ -56,13 +59,15 @@
 				type: type,
 				title: titleValue.trim(),
 				value: valueValue,
-				interval: intervalValue
+				interval: intervalValue,
+				tags: selectedTags.length > 0 ? selectedTags.filter((tag) => tag.value).map((tag) => Number(tag.value)) : undefined
 			};
 			const res = await finances.addBudget(request);
 			if (res) {
 				titleValue = '';
 				valueValue = null;
 				intervalValue = 'monthly';
+				selectedTags = [];
 				await toggleForm();
 				loadingIndicator.stop();
 				keyManager.unregisterKeyDown(keyHandlers.Enter);
@@ -86,6 +91,11 @@
 				<TextInput placeholder="Title" bind:input={titleInput} bind:value={titleValue} />
 				<NumberInput placeholder="Value" bind:input={valueInput} bind:value={valueValue} />
 				<SegmentedControl bind:value={intervalValue} options={finances.budgetIntervals.options(ts.get.finances)} />
+				{#if showTags}
+					<div class="w-48">
+						<BudgetTagPicker bind:value={selectedTags} />
+					</div>
+				{/if}
 			</div>
 		{:else}
 			<BottomSheetModal title={ts.get.finances.add_entry} onClose={onblur}>
@@ -96,6 +106,11 @@
 				<div class="mt-4">
 					<SegmentedControl bind:value={intervalValue} options={finances.budgetIntervals.options(ts.get.finances)} />
 				</div>
+				{#if showTags}
+					<div class="mt-4">
+						<BudgetTagPicker bind:value={selectedTags} />
+					</div>
+				{/if}
 				<TextButton title={ts.get.layout.modal_confirm} type="action" onclick={onSubmit} class="mt-8 w-full" />
 			</BottomSheetModal>
 		{/if}

@@ -860,7 +860,11 @@ const finances: FinanceRecords = {
 	range_1y: '1 Jahr',
 	range_3y: '3 Jahre',
 	range_5y: '5 Jahre',
-	range_all: 'Alle'
+	range_all: 'Alle',
+	tags: 'Tags',
+	tag_error: 'Tag konnte nicht erstellt werden',
+	all_tags: 'Alle Tags',
+	tag_filter: 'Nach Tag filtern'
 };
 
 

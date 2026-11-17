@@ -6,7 +6,7 @@ import { en } from '$lib/i18n/en';
 const service = new BudgetIntervalService();
 
 function budget(id: number, value: number, interval?: BudgetInterval): Budget {
-	return { id, title: 'Item', type: 'expense', value, interval, created_at: '', updated_at: '' };
+	return { id, title: 'Item', type: 'expense', value, interval, tags: [], created_at: '', updated_at: '' };
 }
 
 describe('BudgetIntervalService', () => {

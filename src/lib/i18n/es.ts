@@ -859,7 +859,11 @@ const finances: FinanceRecords = {
 	range_1y: '1 año',
 	range_3y: '3 años',
 	range_5y: '5 años',
-	range_all: 'Todo'
+	range_all: 'Todo',
+	tags: 'Etiquetas',
+	tag_error: 'No se pudo crear la etiqueta',
+	all_tags: 'Todas las etiquetas',
+	tag_filter: 'Filtrar por etiqueta'
 };
 
 

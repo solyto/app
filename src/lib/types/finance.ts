@@ -1,3 +1,5 @@
+import type { Tag } from '$lib/types/tag';
+
 export type BudgetType = 'income' | 'expense';
 export type BudgetInterval = 'monthly' | 'quarterly' | 'yearly';
 
@@ -48,15 +50,19 @@ export interface Budget {
 	type: BudgetType;
 	value: number;
 	interval?: BudgetInterval;
+	tags: Tag[];
 	created_at: string;
 	updated_at: string;
 }
+
+export type BudgetResponse = Omit<Budget, 'tags'> & { tags?: Tag[] };
 
 export interface CreateBudgetRequest {
 	title: string;
 	type: string;
 	value: number;
 	interval?: BudgetInterval;
+	tags?: number[];
 }
 
 export interface UpdateBudgetRequest {
@@ -64,4 +70,5 @@ export interface UpdateBudgetRequest {
 	type?: string | null;
 	value?: number | null;
 	interval?: BudgetInterval;
+	tags?: number[];
 }
