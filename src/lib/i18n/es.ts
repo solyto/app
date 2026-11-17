@@ -308,6 +308,7 @@ const todos: TodoRecords = {
 	workspace_hide_it: 'Ocultar',
 	new_category: 'Nueva categoría',
 	rename_category: 'Renombrar categoría',
+	rename_workspace: 'Renombrar espacio de trabajo',
 	no_categories: 'Aún no tienes categorías.',
 	new_workspace: 'Nuevo espacio',
 	no_workspaces: 'Aún no tienes espacios de trabajo.',

@@ -309,6 +309,7 @@ const todos: TodoRecords = {
 	workspace_hide_it: 'Hide It',
 	new_category: 'Neue Kategorie',
 	rename_category: 'Kategorie umbenennen',
+	rename_workspace: 'Arbeitsbereich umbenennen',
 	no_categories: 'Du hast noch keine Kategorien.',
 	new_workspace: 'Neuer Arbeitsbereich',
 	no_workspaces: 'Du hast noch keine Arbeitsbereiche.',

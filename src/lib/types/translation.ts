@@ -278,6 +278,7 @@ export interface TodoRecords {
 	workspace_hide_it: string;
 	new_category: string;
 	rename_category: string;
+	rename_workspace: string;
 	no_categories: string;
 	new_workspace: string;
 	no_workspaces: string;

@@ -307,6 +307,7 @@ const todos: TodoRecords = {
 	workspace_hide_it: 'Скрыть дела',
 	new_category: 'Новая категория',
 	rename_category: 'Переименовать категорию',
+	rename_workspace: 'Переименовать рабочую область',
 	no_categories: 'Категорий пока нет.',
 	new_workspace: 'Новая рабочая область',
 	no_workspaces: 'Рабочих областей пока нет.',
