@@ -56,7 +56,7 @@
 	</div>
 	<a
 		href={resolve(urls.notes)}
-		class="mb-4 flex cursor-pointer items-center space-x-2 rounded-lg px-2 py-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
+		class="mt-[3px] mb-4 flex cursor-pointer items-center space-x-2 rounded-lg px-2 py-1 hover:bg-c-neutral dark:hover:bg-s-dark-3"
 		class:bg-c-neutral-1={page.url.pathname === urls.notes}
 		class:dark:bg-s-dark-3={page.url.pathname === urls.notes}
 	>

@@ -17,7 +17,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import FinanceHistory from '$lib/components/finances/FinanceHistory.svelte';
-	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
+	import Divider from '$lib/components/ui/Divider.svelte';
 	import BudgetTagPicker from '$lib/components/finances/BudgetTagPicker.svelte';
 	import type { MultiSelectEntry } from '$lib/components/forms/MultiSelect.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
@@ -208,18 +208,18 @@
 {/if}
 {#if historyBudget}
 	<ContentModal title={historyBudget.title} showTitleOnMobile={true} rounded="2xl" onClose={closeHistory} onRename={renameHistoryBudget}>
-		<div class="mb-6">
-			<SegmentedControl
+		<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+			<Select
 				value={finances.budgetIntervals.intervalOf(historyBudget)}
 				options={finances.budgetIntervals.options(ts.get.finances)}
 				onchange={changeHistoryInterval}
+				ariaLabel={ts.get.finances.interval}
 			/>
-		</div>
-		{#if finances.tagsSupported}
-			<div class="mb-6">
+			{#if finances.tagsSupported}
 				<BudgetTagPicker value={tagEntries(historyBudget)} onchange={changeHistoryTags} />
-			</div>
-		{/if}
+			{/if}
+		</div>
+		<Divider my={8} />
 		<FinanceHistory
 			values={finances.budgetValues}
 			minValues={1}

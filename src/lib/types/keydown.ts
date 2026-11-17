@@ -1,6 +1,6 @@
 export type KeyDownPriority = 0 | 1 | 2 | 3;
 export type HelperKey = 'Control' | 'Alt' | 'Shift';
-export type CharacterKey = 'e' | 'f' | 's' | 'n';
+export type CharacterKey = 'e' | 'f' | 'k' | 's' | 'n';
 export type PrimaryKey = 'Enter' | 'Escape' | 'Space' | 'ArrowLeft' | 'ArrowRight' | 'ArrowUp' | 'ArrowDown';
 export type FunctionKey = 'F1';
 export type SupportedKey =
@@ -13,6 +13,7 @@ export type SupportedKey =
 	| 'ArrowDown'
 	| 'e'
 	| 'f'
+	| 'k'
 	| 's'
 	| 'n'
 	| 'F1';

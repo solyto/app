@@ -37,7 +37,10 @@
 	let documentInput = $state<HTMLInputElement | null>(null);
 
 	const PICKER_BUTTON = 'flex cursor-pointer items-center gap-2 rounded-md bg-c-btn px-4 py-2 text-white transition-opacity hover:opacity-90';
-	const DOCUMENT_ACCEPT = Clipboard.FILE_EXTENSIONS.map((extension) => '.' + extension).join(',');
+	const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+	const IMAGE_ACCEPT = IMAGE_TYPES.join(',');
+	// The paperclip takes images too, so it is never the wrong button; the image button stays for the phone's gallery picker.
+	const DOCUMENT_ACCEPT = [...Clipboard.FILE_EXTENSIONS.map((extension) => '.' + extension), ...IMAGE_TYPES].join(',');
 
 	async function onSave(): Promise<void> {
 		loadingIndicator.start();
@@ -123,9 +126,16 @@
 
 	function onDocumentSelect(e: Event): void {
 		const input = e.target as HTMLInputElement;
-		if (input.files && input.files.length > 0) {
-			selectedFile = input.files[0];
+		if (!input.files || input.files.length === 0) return;
+
+		const file = input.files[0];
+		if (IMAGE_TYPES.includes(file.type)) {
+			// Reset now: the image flow only clears the image input, and the same file picked again must fire change.
+			input.value = '';
+			setImagePreview(file);
+			return;
 		}
+		selectedFile = file;
 	}
 
 	async function onSaveFile(): Promise<void> {
@@ -174,7 +184,7 @@
 		bind:this={fileInput}
 		onchange={onFileSelect}
 		class="hidden"
-		accept="image/jpeg,image/png,image/gif,image/webp"
+		accept={IMAGE_ACCEPT}
 	/>
 	<input type="file" bind:this={documentInput} onchange={onDocumentSelect} class="hidden" accept={DOCUMENT_ACCEPT} />
 

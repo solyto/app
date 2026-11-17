@@ -55,4 +55,20 @@ describe('KeyManager', () => {
 
 		expect(handler).not.toHaveBeenCalled();
 	});
+
+	it('runs a Control+K handler only while Control is held', () => {
+		const keyManager = new KeyManager();
+		const handler = vi.fn();
+		keyManager.registerKeyDown('k', handler, { withHelperKey: 'Control' });
+
+		keyManager.handleKeyDown(keydown('k'));
+		expect(handler).not.toHaveBeenCalled();
+
+		keyManager.handleKeyDown(keydown('Control'));
+		const event = keydown('k');
+		keyManager.handleKeyDown(event);
+
+		expect(handler).toHaveBeenCalledWith(event);
+		expect(event.preventDefault).toHaveBeenCalled();
+	});
 });

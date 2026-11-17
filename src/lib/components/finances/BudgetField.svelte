@@ -64,13 +64,14 @@
 					<IconTrash class="size-5 text-c-neutral-3 transition-all hover:text-c-danger" />
 				</button>
 			</div>
+			<!-- Left of the amount, so the monthly amounts stay in one right-aligned column. -->
+			{#if budgetIntervals.intervalOf(budget) !== 'monthly'}
+				<span class="hidden text-sm text-c-neutral-5 tabular-nums md:inline">
+					{europeanFormat(budget.value)} {budgetIntervals.suffix(budget, ts.get.finances)}
+				</span>
+			{/if}
 			<div class="text-lg tabular-nums">
 				{budget.type === 'income' ? '+ ' : '- '}{europeanFormat(budgetIntervals.monthlyAmount(budget))}
-				{#if budgetIntervals.intervalOf(budget) !== 'monthly'}
-					<span class="text-sm text-c-neutral-5">
-						{ts.get.finances.per_month} · {europeanFormat(budget.value)} {budgetIntervals.suffix(budget, ts.get.finances)}
-					</span>
-				{/if}
 			</div>
 		</div>
 	</div>

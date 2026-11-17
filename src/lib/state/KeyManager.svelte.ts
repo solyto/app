@@ -21,6 +21,7 @@ export class KeyManager {
 		ArrowDown: KeyDownHandler[];
 		e: KeyDownHandler[];
 		f: KeyDownHandler[];
+		k: KeyDownHandler[];
 		s: KeyDownHandler[];
 		n: KeyDownHandler[];
 		F1: KeyDownHandler[];
@@ -34,6 +35,7 @@ export class KeyManager {
 		ArrowDown: [],
 		e: [],
 		f: [],
+		k: [],
 		s: [],
 		n: [],
 		F1: []
@@ -48,7 +50,7 @@ export class KeyManager {
 		Alt: false
 	});
 	primaryKeys: PrimaryKey[] = ['Enter', 'Escape', 'Space', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-	characterKeys: CharacterKey[] = ['e', 'f', 's', 'n'];
+	characterKeys: CharacterKey[] = ['e', 'f', 'k', 's', 'n'];
 	helperKeys: HelperKey[] = ['Shift', 'Alt', 'Control'];
 	functionKeys: FunctionKey[] = ['F1'];
 	helperKeyTimeouts = $state<{

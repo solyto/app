@@ -496,6 +496,7 @@ export interface NoteRecords {
 	no_entries: string;
 	note_not_found: string;
 	no_search_results: string;
+	search_shortcut_hint: string;
 	insert_image: string;
 	insert_image_url: string;
 	insert_image_clipboard: string;
@@ -830,6 +831,7 @@ export interface FinanceRecords {
 	delete_value_message: string;
 	delete_item: string;
 	delete_item_message: string;
+	interval: string;
 	interval_monthly: string;
 	interval_quarterly: string;
 	interval_yearly: string;

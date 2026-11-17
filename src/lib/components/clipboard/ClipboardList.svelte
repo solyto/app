@@ -5,7 +5,7 @@
 	import IconTrash from '@lucide/svelte/icons/trash-2';
 	import IconDownload from '@lucide/svelte/icons/download';
 	import { formatDate } from '$lib/helpers/DateHelper';
-	import { truncate } from '$lib/helpers/FormatHelper';
+	import { getFileExtension, truncate } from '$lib/helpers/FormatHelper';
 	import { downloadBlob } from '$lib/helpers/DownloadHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -71,13 +71,19 @@
 
 	async function onDownload(entry: ClipboardEntry): Promise<void> {
 		loadingIndicator.start();
-		const blob = await clipboard.getFile(entry);
+		const blob = entry.type === 'image' ? await clipboard.getImage(entry) : await clipboard.getFile(entry);
 		loadingIndicator.stop();
 		if (!blob) {
 			notifications.error(ts.get.clipboard.file_download_error);
 			return;
 		}
-		downloadBlob(blob, entry.file_name ?? 'file');
+		downloadBlob(blob, entry.type === 'image' ? imageFileName(entry, blob) : (entry.file_name ?? 'file'));
+	}
+
+	// Images have no original name; the stored path keeps the original format's extension.
+	function imageFileName(entry: ClipboardEntry, blob: Blob): string {
+		const extension = getFileExtension(entry.file_path ?? '') || blob.type.split('/')[1]?.replace('jpeg', 'jpg') || 'png';
+		return `clipboard-${entry.id}.${extension}`;
 	}
 
 	async function onDelete(entry: ClipboardEntry): Promise<void> {
@@ -90,13 +96,14 @@
 
 {#snippet actionButtons(entry: ClipboardEntry)}
 	<div class="flex gap-2">
-		{#if entry.type === 'file'}
-			<button class={ACTION_BUTTON} onclick={() => onDownload(entry)}>
-				<IconDownload class="size-4" />
-			</button>
-		{:else}
+		{#if entry.type !== 'file'}
 			<button class={ACTION_BUTTON} onclick={() => onCopy(entry)}>
 				<IconClipboardCopy class="size-4" />
+			</button>
+		{/if}
+		{#if entry.type !== 'text'}
+			<button class={ACTION_BUTTON} onclick={() => onDownload(entry)}>
+				<IconDownload class="size-4" />
 			</button>
 		{/if}
 		<button
@@ -134,17 +141,18 @@
 	<Heading title={ts.get.clipboard.history} my={0} mb={4} />
 	{#each clipboard.entries as entry (entry.id)}
 		{#if entry.type === 'image'}
-			<div
-				class="relative inline-block self-start overflow-hidden rounded-md shadow-sm dark:shadow-s-dark-shadow"
-			>
-				<ClipboardImage {entry} />
-				<div class="absolute top-2 right-2">
-					{@render actionButtons(entry)}
+			<!-- Clipped inside, so the buttons can overhang the corner as on text and file entries. -->
+			<div class="relative inline-block self-start rounded-md shadow-sm dark:shadow-s-dark-shadow">
+				<div class="relative overflow-hidden rounded-md">
+					<ClipboardImage {entry} />
+					<div
+						class="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/50 to-transparent px-3 py-1.5 text-xs text-white/80"
+					>
+						{formatDate(entry.created_at)}
+					</div>
 				</div>
-				<div
-					class="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/50 to-transparent px-3 py-1.5 text-xs text-white/80"
-				>
-					{formatDate(entry.created_at)}
+				<div class="absolute top-[-10px] right-[-10px]">
+					{@render actionButtons(entry)}
 				</div>
 			</div>
 		{:else if entry.type === 'file'}

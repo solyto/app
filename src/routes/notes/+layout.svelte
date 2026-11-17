@@ -73,10 +73,11 @@
 		}
 	];
 
-	let keyHandlers: { [key: string]: string | null } = { f: null };
+	let keyHandlers: { [key: string]: string | null } = { k: null };
 
 	onMount(async () => {
-		keyHandlers.f = keyManager.registerKeyDown('f', openSearch, { withHelperKey: 'Control' });
+		// Ctrl+K, not Ctrl+F: Ctrl+F stays with the browser's find in page, to search inside the open note.
+		keyHandlers.k = keyManager.registerKeyDown('k', openSearch, { withHelperKey: 'Control' });
 		loadingIndicator.start();
 		await Promise.all([notes.loadCategories(), notes.load(), tags.load()]);
 		loadingIndicator.stop();

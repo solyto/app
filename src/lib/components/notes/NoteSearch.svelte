@@ -84,12 +84,12 @@
 	const oninput = () => notes.search();
 </script>
 
-<div class="pointer-events-none absolute inset-x-0 top-4 z-40 flex justify-center">
+<div class="pointer-events-none absolute inset-x-0 top-4 z-50 flex justify-center">
 	<div class="flex flex-col" {onfocusout}>
-		<div class="flex">
+		<div class="relative flex">
 			<input
 				type="text"
-				class="pointer-events-auto w-0 rounded-xl border-1 border-c-neutral-2 !bg-c-neutral/60 text-xl backdrop-blur-sm transition-all duration-300 dark:!bg-s-dark/80"
+				class="pointer-events-auto w-0 rounded-xl border-1 border-c-neutral-2 focus:border-c-neutral-2 focus:ring-0 !bg-c-neutral/60 text-xl backdrop-blur-sm transition-all duration-300 dark:!bg-s-dark/80"
 				class:w-72={inputExpanded}
 				class:md:w-96={inputExpanded}
 				class:rounded-b-none={hasTerm()}
@@ -99,14 +99,14 @@
 				{oninput}
 			/>
 			<button
-				class="pointer-events-auto z-20 ml-[-30px] cursor-pointer text-c-neutral-3 hover:text-c-neutral-5"
+				class="pointer-events-auto absolute inset-y-0 right-1.5 z-20 flex cursor-pointer items-center text-c-neutral-5 hover:text-c-neutral-7 dark:text-c-neutral-3 dark:hover:text-c-neutral-5"
 				onclick={closeSearch}
 			>
 				<IconCircleX />
 			</button>
 		</div>
 		{#if hasTerm() && inputExpanded}
-			<ul class="pointer-events-auto flex max-h-96 flex-col overflow-y-auto rounded-b-xl border-1 border-t-0 border-c-neutral-2 bg-c-neutral/60 p-1 backdrop-blur-sm dark:bg-s-dark/80">
+			<ul class="pointer-events-auto flex max-h-96 w-0 min-w-full flex-col overflow-y-auto rounded-b-xl border-1 border-t-0 border-c-neutral-2 bg-c-neutral/60 p-1 backdrop-blur-sm dark:bg-s-dark/80">
 				{#each notes.searchResults as note, index (note.id)}
 					<li>
 						<button
