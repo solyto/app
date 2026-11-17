@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TodoWorkspace, UpdateTodoWorkspaceRequest } from '$lib/types/todo';
+	import type { TodoCategory, TodoWorkspace, UpdateTodoWorkspaceRequest } from '$lib/types/todo';
 	import { fade } from 'svelte/transition';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -34,6 +34,11 @@
 		loadingIndicator.start();
 		await todos.deleteWorkspace(workspace);
 		loadingIndicator.stop();
+	}
+
+	// Only categories not in the workspace yet; the API ignores duplicates, but offering them looks like nothing happens.
+	function unattachedCategories(): TodoCategory[] {
+		return todos.categories.filter((category) => !workspace.categories.some((attached) => attached.id === category.id));
 	}
 
 	async function attachCategory(categoryId: number): Promise<void> {
@@ -86,22 +91,24 @@
 				</button>
 			</div>
 		{/each}
-		<div class="relative" bind:this={findCategoryAnchor}>
-			<button
-				class="cursor-pointer py-1.5 text-base text-c-neutral-4 transition-all hover:text-c-neutral-7 md:py-0 md:text-xs dark:hover:text-white"
-				onclick={openFindCategoryMenu}
-			>
-				+ {ts.get.todos.category}
-			</button>
-			{#if findCategoryMenuVisible && findCategoryAnchor}
-				<FindCategoryMenu
-					target={findCategoryAnchor}
-					categories={todos.categories}
-					onclick={attachCategory}
-					close={closeFindCategoryMenu}
-				/>
-			{/if}
-		</div>
+		{#if unattachedCategories().length > 0}
+			<div class="relative" bind:this={findCategoryAnchor}>
+				<button
+					class="cursor-pointer py-1.5 text-base text-c-neutral-4 transition-all hover:text-c-neutral-7 md:py-0 md:text-xs dark:hover:text-white"
+					onclick={openFindCategoryMenu}
+				>
+					+ {ts.get.todos.category}
+				</button>
+				{#if findCategoryMenuVisible && findCategoryAnchor}
+					<FindCategoryMenu
+						target={findCategoryAnchor}
+						categories={unattachedCategories()}
+						onclick={attachCategory}
+						close={closeFindCategoryMenu}
+					/>
+				{/if}
+			</div>
+		{/if}
 	</div>
 	<div class="md:shrink-0">
 		<Toggle
