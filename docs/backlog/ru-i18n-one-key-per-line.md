@@ -1,49 +1,53 @@
 # Backlog: format ru.ts with one key per line
 
 created: 2026-11-17
+updated: 2026-11-17 (rules decided by the owner, ready for implementation)
 
-## What
+## Job (decided, do exactly this)
 
-Reformat `src/lib/i18n/ru.ts` like the other locale files: one key per line,
-except the grouped lines that are grouped in every locale. Formatting only.
-No key or text changes.
+Reformat `src/lib/i18n/ru.ts` like the other locale files. **Formatting only:**
+no key, value, order or comment changes. Its own commit with nothing else in
+it.
 
-A possible shape:
+Rules:
+1. **One entry per line, at every nesting level**, like `en.ts`. This covers
+   top-level keys (e.g. the budget, wealth range and tag keys around
+   `ru.ts:683-689`) and entries inside nested objects (e.g. `weekdays`,
+   `weekdays_short` `:746`, `recurrence_ordinals` `:757`,
+   `recurrence_weekdays`). Compare with `en.ts`, e.g. `weekdays_short`
+   (`en.ts:961`) and `recurrence_ordinals` (`en.ts:994`), which put each
+   number on its own line.
+2. **Exception, keep grouped:** lines that hold the same group of keys on one
+   line in `en.ts` stay grouped in `ru.ts` too. Today these are 19 lines, the
+   same in en/de/es/fr/it, e.g. the check-in scales `mood_1 … mood_5`,
+   `sleep_1 … sleep_5`, and `day_today, day_yesterday`. Derive the list from
+   `en.ts`, don't hard-code it.
+3. **`recurrence_ordinals_by_weekday`** (`ru.ts:763-769`) exists only in ru
+   (Russian ordinals change by weekday). Keep the key and all values; format it
+   by rule 1 too (each weekday's inner entries one per line).
+4. Indentation, quotes and trailing commas follow the style already used in
+   `en.ts` (tabs, single quotes, escaped quotes kept as they are).
 
-- A one-off script that walks `ru.ts` section by section and splits every
-  line with several `key: 'value'` pairs, unless the matching line in `en.ts`
-  holds the same group of keys. Today these are 19 lines, the same in
-  en/de/es/fr/it, e.g. the check-in scales `mood_1 … mood_5`,
-  `sleep_1 … sleep_5`, `day_today, day_yesterday`.
-- The parser must handle commas, quotes and escaped quotes inside values.
-- Verify afterwards that the key list and every value are unchanged (e.g.
-  import both versions and compare the objects), and run `npm run check`.
-- Its own commit, with nothing else in it, so the large diff is easy to
-  review and to skip in `git blame` (`.git-blame-ignore-revs`, if used).
+How (suggested): a one-off script, not committed, that parses the sections and
+rewrites them. It must handle commas, quotes and escaped quotes inside values.
 
-## Why
+## Verification (required)
 
-`ru.ts` was added in `9793446` (`feat(i18n): add Russian (ru) localization`)
-in a compressed style. It has 233 lines with several keys per line. The other
-five locales have 19 each, all of them deliberate groups. ru is also
-noticeably shorter: 1,177 lines against ~1,516. Later changes followed the
-compressed style in ru, e.g. the budget interval, wealth range and tag keys
-(`ru.ts` around line 680), while the other locales got one line per key.
+- Import the old and the new `ru.ts` (e.g. with a small Node/tsx script) and
+  check that the exported objects are deeply equal: same keys, same values,
+  same nesting. Any difference means the job failed.
+- `npm run check` passes (it also checks that all locales have the same keys).
+- `npm run lint` (eslint) and `npm test` pass.
 
-Mixed formatting makes diffs across locales harder to compare and invites
-more drift. Found by the owner while reviewing the wealth range job
-(2026-11-17): "Consistency is key longterm."
+## Out of scope (do not do)
 
-## Out of scope
+- Any translation change, also where a Russian text looks wrong.
+- Changes to other locale files.
+- Adding formatter configs (there is no Prettier config in this repo).
 
-- The 19 grouped lines that are grouped in all locales. Splitting those
-  everywhere is a separate decision.
-- Translation content. `docs/I18N.md` covers that.
+## Background (for context, no action)
 
-## Notes
-
-- Until this is done, new ru keys could go on their own lines, to stop the
-  drift growing. `docs/I18N.md` could say so, as a one-line rule for the
-  translator agent (`docs/agents/translator.md`).
-- If a formatter (Prettier) is configured for `src/`, check whether it would
-  keep or undo the split, and whether ru.ts is excluded somewhere.
+`ru.ts` was added in `9793446` in a compressed style: 233 lines with several
+keys per line, against 19 deliberate groups in each other locale. Later changes
+followed that style in ru only. Mixed formatting makes diffs across locales
+hard to compare. Raised by the owner on 2026-11-17.

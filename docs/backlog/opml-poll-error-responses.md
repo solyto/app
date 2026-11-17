@@ -1,49 +1,68 @@
 # Backlog: OPML import polling ignores error responses
 
 created: 2026-11-15
+updated: 2026-11-17 (scope decided by the owner, ready for implementation)
 
-## What
+## Job (decided, do exactly this)
 
 While an OPML import runs, `FeedImport` (`src/lib/state/FeedImport.svelte.ts`)
-asks `GET /feeds/import/state` every second. Count an error response from the
-server as a failed poll, like a network error, instead of as "no change".
+polls `GET /feeds/import/state` every second. When the server answers with an
+error, treat that poll exactly like a failed poll from a network error.
 
-- `refresh()` (`:60-70`) returns `false` when `apiService.get()` gives no
-  result, which is what happens for a non-OK response that isn't a 429
-  (e.g. 500, 404, 401 without a successful token refresh).
-- `poll()` (`:110-126`) ignores that return value: it resets `failedPolls` and
-  `pollError` and polls again after one second.
-- Only `NetworkError` and `RateLimitedError` reach `backOff()`; anything else
-  thrown stalls at once.
+Today:
+- `refresh()` (`:59-69`) returns `false` when `apiService.get()` gives no
+  result. That is what happens for a non-OK response that isn't a 429 (e.g.
+  500, 404, 401 without a successful token refresh).
+- `poll()` (`:111-128`) ignores that return value: it resets `failedPolls` and
+  `pollError` and polls again after one second. The user only sees an error
+  when `POLL_TIMEOUT_MS` (5 minutes without progress) calls `stall()`.
+- Only a thrown `NetworkError` or `RateLimitedError` reaches `backOff()`
+  (`:130-137`).
 
-Possible change: in `poll()`, treat `refresh() === false` like a failed poll
-(raise `failedPolls`, back off, show the existing error state after a few
-attempts), or stall right away for a 404, because that means the import state
-is gone (it expires after an hour, `CACHE_TTL` in the API's
-`OpmlImportService`).
+Change, in `poll()` only:
+- When `refresh()` returns `false`: count it as a failed poll the same way a
+  `NetworkError` is counted today: `failedPolls` goes up, `pollError` becomes
+  `'network'`, and the next poll waits the same backed-off delay as for a
+  network error (`POLL_INTERVAL_MS * 2 ** failedPolls`, capped at
+  `MAX_POLL_INTERVAL_MS`).
+- When `refresh()` returns `true`: unchanged (reset `failedPolls` and
+  `pollError`).
+- Adjust `backOff()` so it can be used for this case without constructing a
+  fake `NetworkError` (e.g. pass the error kind and the retry-after delay).
+  Its behaviour for `NetworkError` and `RateLimitedError` must stay exactly
+  the same.
+- Everything else stays: the 5-minute no-progress timeout, `stall()` for
+  unexpected thrown errors, stopping when the import finishes or the layout is
+  destroyed.
 
-## Why
+## Out of scope (do not do)
 
-When the server answers with errors during an import, the progress bar just
-stops moving. The app keeps polling every second without telling the user,
-until `POLL_TIMEOUT_MS` (5 minutes without progress) calls `stall()` and shows
-the generic error.
+- A separate "server error" message or a new `pollError` variant. The existing
+  `'network'` message is shown (no new strings, no i18n work).
+- Special handling for 404 (e.g. stopping at once because the import state
+  expired). `apiService.get()` doesn't return the status, and adding a
+  status-returning GET is not part of this job.
+- Changes to `ApiService` or to the API.
 
-It's bounded: polling stops after those 5 minutes and when the feeds layout is
-destroyed (`onDestroy` in `src/routes/feeds/+layout.svelte`). Network errors
-and 429 already back off correctly. So this is about feedback and a few
-hundred unnecessary requests, not about a loop that never ends.
+## Tests
 
-New with the OPML import in 1.1.3. Found in the 1.1.3 release review
-(2026-11-15); kept out of the release because the polling logic was already
-changed several times in that release.
+In `tests/unit/stores/FeedImport.test.ts`, next to "backs off on network
+errors, reports them, and clears the error once a poll succeeds" (`:244`):
+- `api.get` resolves `null` for two polls, then a running state: `pollError`
+  is `'network'` after the first failed poll, the polls are spaced with the
+  same backed-off delays as in the network test, and `pollError` is `null`
+  again after the successful poll while polling continues.
+- The existing network, rate-limit, timeout and stall tests keep passing
+  unchanged.
 
-## Notes
+## Checks
 
-- Tests in `tests/unit/stores/FeedImport.test.ts` mock `ApiService`: add a
-  case where `get()` resolves to null for a few polls and check that the
-  error state appears before the 5-minute timeout, and that a later
-  successful poll clears it.
-- Check: stop the API (or make `/feeds/import/state` return 500) during a
-  running import; the import UI shows an error within a few seconds instead
-  of after 5 minutes.
+- `npm run check`, `npm run lint` (eslint) and `npm test` pass.
+- No new packages, no i18n changes.
+
+## Background (for context, no action)
+
+Bounded today: polling stops after 5 minutes without progress and when the
+feeds layout is destroyed (`onDestroy` in `src/routes/feeds/+layout.svelte`).
+This change is about feedback within seconds instead of 5 minutes, and fewer
+pointless requests. Found in the 1.1.3 release review (2026-11-15).
