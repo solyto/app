@@ -818,7 +818,9 @@ const dev: DevRecords = {
 		fixed_in: 'Fixed in %s',
 		fixed_in_included: 'Fixed in %s ✓',
 		fixed_in_pending: 'Fixed in %s · update pending',
-		fixed_in_current_version: "You're on %s"
+		fixed_in_current_version: "You're on %s",
+		filter_all: 'All',
+		filter_open: 'Open'
 	}
 };
 

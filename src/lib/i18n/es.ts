@@ -818,7 +818,9 @@ const dev: DevRecords = {
 		fixed_in: 'Corregido en %s',
 		fixed_in_included: 'Corregido en %s ✓',
 		fixed_in_pending: 'Corregido en %s · actualización pendiente',
-		fixed_in_current_version: 'Tu versión: %s'
+		fixed_in_current_version: 'Tu versión: %s',
+		filter_all: 'Todas',
+		filter_open: 'Abiertas'
 	}
 };
 

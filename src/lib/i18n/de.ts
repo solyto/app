@@ -819,7 +819,9 @@ const dev: DevRecords = {
 		fixed_in: 'Behoben in %s',
 		fixed_in_included: 'Behoben in %s ✓',
 		fixed_in_pending: 'Behoben in %s · Update ausstehend',
-		fixed_in_current_version: 'Deine Version: %s'
+		fixed_in_current_version: 'Deine Version: %s',
+		filter_all: 'Alle',
+		filter_open: 'Offen'
 	}
 };
 

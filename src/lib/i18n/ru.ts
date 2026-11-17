@@ -660,7 +660,9 @@ const dev: DevRecords = {
 		edit: 'Изменить обращение', fixed_in_version: 'Исправлено в версии',
 		fixed_in: 'Исправлено в %s', fixed_in_included: 'Исправлено в %s ✓',
 		fixed_in_pending: 'Исправлено в %s · ожидается обновление',
-		fixed_in_current_version: 'У вас версия %s'
+		fixed_in_current_version: 'У вас версия %s',
+		filter_all: 'Все',
+		filter_open: 'Открытые'
 	}
 };
 
