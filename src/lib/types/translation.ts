@@ -830,6 +830,12 @@ export interface FinanceRecords {
 	delete_value_message: string;
 	delete_item: string;
 	delete_item_message: string;
+	interval_monthly: string;
+	interval_quarterly: string;
+	interval_yearly: string;
+	per_month: string;
+	per_quarter: string;
+	per_year: string;
 }
 
 

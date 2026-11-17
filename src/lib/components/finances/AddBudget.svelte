@@ -5,12 +5,13 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
-	import type { BudgetType, CreateBudgetRequest } from '$lib/types/finance';
+	import type { BudgetInterval, BudgetType, CreateBudgetRequest } from '$lib/types/finance';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import BottomSheetModal from '$lib/components/ui/BottomSheetModal.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
@@ -25,6 +26,7 @@
 	let titleValue = $state<string>('');
 	let valueInput = $state<HTMLInputElement | null>(null);
 	let valueValue = $state<number | null>(null);
+	let intervalValue = $state<BudgetInterval>('monthly');
 	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
 	async function toggleForm() {
@@ -53,12 +55,14 @@
 			const request: CreateBudgetRequest = {
 				type: type,
 				title: titleValue.trim(),
-				value: valueValue
+				value: valueValue,
+				interval: intervalValue
 			};
 			const res = await finances.addBudget(request);
 			if (res) {
 				titleValue = '';
 				valueValue = null;
+				intervalValue = 'monthly';
 				await toggleForm();
 				loadingIndicator.stop();
 				keyManager.unregisterKeyDown(keyHandlers.Enter);
@@ -78,15 +82,19 @@
 <div class="flex justify-start">
 	{#if formOpen}
 		{#if viewPoint.isDesktop}
-			<div class="flex flex-row gap-2">
+			<div class="flex flex-row items-center gap-2">
 				<TextInput placeholder="Title" bind:input={titleInput} bind:value={titleValue} />
 				<NumberInput placeholder="Value" bind:input={valueInput} bind:value={valueValue} />
+				<SegmentedControl bind:value={intervalValue} options={finances.budgetIntervals.options(ts.get.finances)} />
 			</div>
 		{:else}
 			<BottomSheetModal title={ts.get.finances.add_entry} onClose={onblur}>
 				<div class="flex flex-row gap-2">
 					<TextInput placeholder="Title" bind:input={titleInput} bind:value={titleValue} />
 					<NumberInput placeholder="Value" bind:input={valueInput} bind:value={valueValue} />
+				</div>
+				<div class="mt-4">
+					<SegmentedControl bind:value={intervalValue} options={finances.budgetIntervals.options(ts.get.finances)} />
 				</div>
 				<TextButton title={ts.get.layout.modal_confirm} type="action" onclick={onSubmit} class="mt-8 w-full" />
 			</BottomSheetModal>

@@ -848,7 +848,13 @@ const finances: FinanceRecords = {
 	delete_value_label: 'Supprimer l\'entrée',
 	delete_value_message: 'Veux-tu vraiment supprimer cette entrée ?',
 	delete_item: 'Supprimer %s',
-	delete_item_message: 'Veux-tu vraiment supprimer %s et toutes ses entrées ?'
+	delete_item_message: 'Veux-tu vraiment supprimer %s et toutes ses entrées ?',
+	interval_monthly: 'Mensuel',
+	interval_quarterly: 'Trimestriel',
+	interval_yearly: 'Annuel',
+	per_month: '/ mois',
+	per_quarter: '/ trimestre',
+	per_year: '/ an'
 };
 
 

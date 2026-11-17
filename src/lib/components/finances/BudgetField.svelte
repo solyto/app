@@ -6,9 +6,12 @@
 	import IconPen from '@lucide/svelte/icons/pen';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getFinances } from '$lib/state/Finances.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
+	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const finances = getFinances();
+	const budgetIntervals = finances.budgetIntervals;
 
 	let { budget, sectionTotal, onOpenHistory }: {
 		budget: Budget;
@@ -24,7 +27,7 @@
 
 	function getShare(): number {
 		if (sectionTotal <= 0) return 0;
-		return (budget.value / sectionTotal) * 100;
+		return (budgetIntervals.monthlyAmount(budget) / sectionTotal) * 100;
 	}
 </script>
 
@@ -56,7 +59,12 @@
 				</button>
 			</div>
 			<div class="text-lg tabular-nums">
-				{budget.type === 'income' ? '+ ' : '- '}{europeanFormat(budget.value)}
+				{budget.type === 'income' ? '+ ' : '- '}{europeanFormat(budgetIntervals.monthlyAmount(budget))}
+				{#if budgetIntervals.intervalOf(budget) !== 'monthly'}
+					<span class="text-sm text-c-neutral-5">
+						{ts.get.finances.per_month} · {europeanFormat(budget.value)} {budgetIntervals.suffix(budget, ts.get.finances)}
+					</span>
+				{/if}
 			</div>
 		</div>
 	</div>

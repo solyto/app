@@ -849,7 +849,13 @@ const finances: FinanceRecords = {
 	delete_value_label: 'Elimina voce',
 	delete_value_message: 'Vuoi davvero eliminare questa voce?',
 	delete_item: 'Elimina %s',
-	delete_item_message: 'Vuoi davvero eliminare %s e tutte le sue voci?'
+	delete_item_message: 'Vuoi davvero eliminare %s e tutte le sue voci?',
+	interval_monthly: 'Mensile',
+	interval_quarterly: 'Trimestrale',
+	interval_yearly: 'Annuale',
+	per_month: '/ mese',
+	per_quarter: '/ trimestre',
+	per_year: '/ anno'
 };
 
 

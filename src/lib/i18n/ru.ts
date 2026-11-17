@@ -677,7 +677,9 @@ const finances: FinanceRecords = {
 	dashboard: 'Сводка', history_development: 'Динамика', history_composition: 'Структура',
 	new_entry: 'Новая запись', delete_value_label: 'Удалить запись',
 	delete_value_message: 'Удалить эту запись?', delete_item: 'Удалить %s',
-	delete_item_message: 'Удалить %s и все связанные записи?'
+	delete_item_message: 'Удалить %s и все связанные записи?',
+	interval_monthly: 'Месяц', interval_quarterly: 'Квартал', interval_yearly: 'Год',
+	per_month: '/ месяц', per_quarter: '/ квартал', per_year: '/ год'
 };
 
 const feeds: FeedRecords = {

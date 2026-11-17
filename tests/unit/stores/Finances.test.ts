@@ -2,13 +2,14 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { Finances } from '$lib/state/Finances.svelte';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { api, resetStoreMocks } from '../setup/storeMocks';
+import type { BudgetInterval } from '$lib/types/finance';
 
 beforeEach(() => {
 	resetStoreMocks();
 });
 
-function budget(type: 'income' | 'expense', value: number) {
-	return { id: type + value, type, value, title: type, created_at: '', updated_at: '' } as never;
+function budget(type: 'income' | 'expense', value: number, interval?: BudgetInterval) {
+	return { id: type + value, type, value, interval, title: type, created_at: '', updated_at: '' } as never;
 }
 
 describe('Finances store', () => {
@@ -25,6 +26,17 @@ describe('Finances store', () => {
 			expect(f.income.map((i) => i.value)).toEqual([100, 50]);
 			expect(f.expenses.map((e) => e.value)).toEqual([30]);
 		});
+
+		it('orders each section by monthly amount, largest first', async () => {
+			api.list.mockResolvedValue({
+				data: [budget('expense', 120, 'yearly'), budget('expense', 15), budget('expense', 60, 'quarterly')]
+			});
+
+			const f = new Finances();
+			await f.loadIncome();
+
+			expect(f.expenses.map((e) => e.value)).toEqual([60, 15, 120]);
+		});
 	});
 
 	describe('budget totals', () => {
@@ -36,6 +48,16 @@ describe('Finances store', () => {
 			expect(f.getBudgetIncomeTotal()).toBe(150);
 			expect(f.getBudgetExpenseTotal()).toBe(50);
 			expect(f.getBudgetTotal()).toBe(100);
+		});
+
+		it('converts yearly and quarterly items to monthly amounts', () => {
+			const f = new Finances();
+			f.income = [budget('income', 300, 'quarterly'), budget('income', 50)];
+			f.expenses = [budget('expense', 120, 'yearly'), budget('expense', 10, 'monthly')];
+
+			expect(f.getBudgetIncomeTotal()).toBe(150);
+			expect(f.getBudgetExpenseTotal()).toBe(20);
+			expect(f.getBudgetTotal()).toBe(130);
 		});
 	});
 

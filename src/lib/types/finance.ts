@@ -1,4 +1,5 @@
 export type BudgetType = 'income' | 'expense';
+export type BudgetInterval = 'monthly' | 'quarterly' | 'yearly';
 
 export interface FinanceValue {
 	id: number;
@@ -46,6 +47,7 @@ export interface Budget {
 	title: string;
 	type: BudgetType;
 	value: number;
+	interval?: BudgetInterval;
 	created_at: string;
 	updated_at: string;
 }
@@ -54,10 +56,12 @@ export interface CreateBudgetRequest {
 	title: string;
 	type: string;
 	value: number;
+	interval?: BudgetInterval;
 }
 
 export interface UpdateBudgetRequest {
 	title?: string | null;
 	type?: string | null;
 	value?: number | null;
+	interval?: BudgetInterval;
 }

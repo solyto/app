@@ -850,7 +850,13 @@ const finances: FinanceRecords = {
 	delete_value_label: 'Eintrag löschen',
 	delete_value_message: 'Möchtest du diesen Eintrag wirklich löschen?',
 	delete_item: '%s löschen',
-	delete_item_message: 'Möchtest du %s und alle Einträge wirklich löschen?'
+	delete_item_message: 'Möchtest du %s und alle Einträge wirklich löschen?',
+	interval_monthly: 'Monat',
+	interval_quarterly: 'Quartal',
+	interval_yearly: 'Jahr',
+	per_month: '/ Monat',
+	per_quarter: '/ Quartal',
+	per_year: '/ Jahr'
 };
 
 

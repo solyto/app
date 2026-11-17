@@ -849,7 +849,13 @@ const finances: FinanceRecords = {
 	delete_value_label: 'Delete entry',
 	delete_value_message: 'Do you really want to delete this entry?',
 	delete_item: 'Delete %s',
-	delete_item_message: 'Do you really want to delete %s and all its entries?'
+	delete_item_message: 'Do you really want to delete %s and all its entries?',
+	interval_monthly: 'Monthly',
+	interval_quarterly: 'Quarterly',
+	interval_yearly: 'Yearly',
+	per_month: '/ month',
+	per_quarter: '/ quarter',
+	per_year: '/ year'
 };
 
 

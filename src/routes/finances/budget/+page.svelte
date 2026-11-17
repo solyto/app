@@ -8,6 +8,7 @@
 	import BudgetField from '$lib/components/finances/BudgetField.svelte';
 	import type {
 		Budget,
+		BudgetInterval,
 		FinanceValue,
 		StoreFinanceValueRequest,
 		UpdateFinanceValueRequest
@@ -16,6 +17,7 @@
 	import { onMount } from 'svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import FinanceHistory from '$lib/components/finances/FinanceHistory.svelte';
+	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
@@ -54,6 +56,15 @@
 		loadingIndicator.stop();
 		if (ok) historyBudget = { ...historyBudget, title };
 		return ok;
+	}
+
+	async function changeHistoryInterval(value: string): Promise<void> {
+		if (historyBudget === null) return;
+		const interval = value as BudgetInterval;
+		loadingIndicator.start();
+		const ok = await finances.updateBudget(historyBudget, { interval });
+		loadingIndicator.stop();
+		if (ok) historyBudget = { ...historyBudget, interval };
 	}
 
 	async function addHistoryValue(request: StoreFinanceValueRequest): Promise<boolean> {
@@ -146,6 +157,13 @@
 {/if}
 {#if historyBudget}
 	<ContentModal title={historyBudget.title} showTitleOnMobile={true} rounded="2xl" onClose={closeHistory} onRename={renameHistoryBudget}>
+		<div class="mb-6">
+			<SegmentedControl
+				value={finances.budgetIntervals.intervalOf(historyBudget)}
+				options={finances.budgetIntervals.options(ts.get.finances)}
+				onchange={changeHistoryInterval}
+			/>
+		</div>
 		<FinanceHistory
 			values={finances.budgetValues}
 			minValues={1}

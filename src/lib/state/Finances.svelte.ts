@@ -14,6 +14,7 @@ import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
+import BudgetIntervalService from '$lib/services/BudgetIntervalService';
 
 export class Finances {
 	budgetLoaded = $state<boolean>(false);
@@ -24,6 +25,7 @@ export class Finances {
 	budgetValues = $state<BudgetValue[]>([]);
 	auth: Auth;
 	apiService: ApiService;
+	budgetIntervals = new BudgetIntervalService();
 
 	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
 		this.auth = auth;
@@ -34,8 +36,9 @@ export class Finances {
 		const res = await this.apiService.list(apiRoutes.finances.budget.list);
 		if (res) {
 			const budget = res.data as Budget[];
-			this.income = budget.filter((i) => i.type === 'income');
-			this.expenses = budget.filter((i) => i.type === 'expense');
+			const sorted = this.budgetIntervals.sortByMonthlyAmount(budget);
+			this.income = sorted.filter((i) => i.type === 'income');
+			this.expenses = sorted.filter((i) => i.type === 'expense');
 			this.budgetLoaded = true;
 		}
 	}
@@ -60,18 +63,15 @@ export class Finances {
 	}
 
 	getBudgetTotal(): number {
-		return (
-			this.income.reduce((acc, i) => acc + i.value, 0) -
-			this.expenses.reduce((acc, e) => acc + e.value, 0)
-		);
+		return this.getBudgetIncomeTotal() - this.getBudgetExpenseTotal();
 	}
 
 	getBudgetIncomeTotal(): number {
-		return this.income.reduce((acc, i) => acc + i.value, 0);
+		return this.budgetIntervals.monthlyTotal(this.income);
 	}
 
 	getBudgetExpenseTotal(): number {
-		return this.expenses.reduce((acc, e) => acc + e.value, 0);
+		return this.budgetIntervals.monthlyTotal(this.expenses);
 	}
 
 	async addBudget(request: CreateBudgetRequest): Promise<boolean> {
