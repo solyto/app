@@ -125,7 +125,8 @@ export class Contacts {
 		while (this.photoRun) await this.photoRun.catch(() => undefined);
 
 		this.photoRun = this.fetchContactPhotos(
-			this.contacts.filter((c) => !this.checkedPhotoUris.has(c.uri))
+			// A missing has_photo (older API) means unknown, so it is still requested.
+			this.contacts.filter((c) => c.has_photo !== false && !this.checkedPhotoUris.has(c.uri))
 		);
 		try {
 			await this.photoRun;

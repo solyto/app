@@ -226,6 +226,48 @@ describe('Contacts store', () => {
 			expect(s.getContactPhoto('c2')).toBeNull();
 		});
 
+		it('loadContactPhotos skips contacts the list marks as having no photo', async () => {
+			const s = new Contacts();
+			s.contacts = [
+				contact({ uri: 'with', has_photo: true }),
+				contact({ uri: 'without', has_photo: false }),
+				contact({ uri: 'unknown' })
+			];
+			api.post.mockResolvedValue({ data: { with: 'data:a' } });
+
+			await s.loadContactPhotos();
+
+			expect(api.post).toHaveBeenCalledTimes(1);
+			const uris = (api.post.mock.calls[0][1] as { contacts: { uri: string }[] }).contacts.map(
+				(c) => c.uri
+			);
+			expect(uris).toEqual(['with', 'unknown']);
+			expect(s.contactPhotosLoaded).toBe(true);
+		});
+
+		it('loadContactPhotos sends no request when no contact has a photo', async () => {
+			const s = new Contacts();
+			s.contacts = [contact({ has_photo: false }), contact({ uri: 'c2', has_photo: false })];
+
+			await s.loadContactPhotos();
+
+			expect(api.post).not.toHaveBeenCalled();
+			expect(s.contactPhotosLoaded).toBe(true);
+		});
+
+		it('loadContactPhotos requests a contact whose has_photo turned true', async () => {
+			const s = new Contacts();
+			s.contacts = [contact({ has_photo: false })];
+			await s.loadContactPhotos();
+
+			s.contacts = [contact({ has_photo: true })];
+			api.post.mockResolvedValue({ data: { 'contact-1': 'data:a' } });
+			await s.loadContactPhotos();
+
+			expect(api.post).toHaveBeenCalledTimes(1);
+			expect(s.getContactPhoto('contact-1')).toBe('data:a');
+		});
+
 		it('loadContactPhotos requests a failed batch again next time', async () => {
 			const s = new Contacts();
 			s.contacts = [contact()];
