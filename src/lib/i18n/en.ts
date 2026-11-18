@@ -629,6 +629,7 @@ const libraries: LibraryRecords = {
 		search_placeholder: 'Movie or series title...'
 	},
 	games: {
+		update_error: 'Failed to update game.',
 		title: 'Title',
 		platform: 'Platform',
 		platform_pc: 'PC',
@@ -712,6 +713,7 @@ const libraries: LibraryRecords = {
 		update_error: 'Failed to update recipe.'
 	},
 	plants: {
+		update_error: 'Failed to update plant.',
 		name: 'Name',
 		latin_name: 'Latin Name',
 		location: 'Location',

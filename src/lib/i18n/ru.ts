@@ -628,6 +628,7 @@ const libraries: LibraryRecords = {
 		search_placeholder: 'Название фильма или сериала…'
 	},
 	games: {
+		update_error: 'Не удалось изменить игру.',
 		title: 'Название',
 		platform: 'Платформа',
 		platform_pc: 'ПК',
@@ -711,6 +712,7 @@ const libraries: LibraryRecords = {
 		update_error: 'Не удалось изменить рецепт.'
 	},
 	plants: {
+		update_error: 'Не удалось изменить растение.',
 		name: 'Название',
 		latin_name: 'Латинское название',
 		location: 'Расположение',

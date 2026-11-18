@@ -628,6 +628,7 @@ const libraries: LibraryRecords = {
 		search_placeholder: 'Titre du film ou de la série...'
 	},
 	games: {
+		update_error: 'Impossible de modifier le jeu.',
 		title: 'Titre',
 		platform: 'Plateforme',
 		platform_pc: 'PC',
@@ -711,6 +712,7 @@ const libraries: LibraryRecords = {
 		update_error: 'Impossible de modifier la recette.'
 	},
 	plants: {
+		update_error: 'Impossible de modifier la plante.',
 		name: 'Nom',
 		latin_name: 'Nom latin',
 		location: 'Emplacement',

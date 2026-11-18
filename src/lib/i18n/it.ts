@@ -629,6 +629,7 @@ const libraries: LibraryRecords = {
 		search_placeholder: 'Titolo del film o della serie...'
 	},
 	games: {
+		update_error: 'Impossibile aggiornare il gioco.',
 		title: 'Titolo',
 		platform: 'Piattaforma',
 		platform_pc: 'PC',
@@ -712,6 +713,7 @@ const libraries: LibraryRecords = {
 		update_error: 'Impossibile aggiornare la ricetta.'
 	},
 	plants: {
+		update_error: 'Impossibile aggiornare la pianta.',
 		name: 'Nome',
 		latin_name: 'Nome latino',
 		location: 'Posizione',

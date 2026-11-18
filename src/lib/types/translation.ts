@@ -608,6 +608,7 @@ export interface LibraryRecords {
 		search_placeholder: string;
 	};
 	games: {
+		update_error: string;
 		title: string;
 		platform: string;
 		platform_pc: string;
@@ -691,6 +692,7 @@ export interface LibraryRecords {
 		update_error: string;
 	};
 	plants: {
+		update_error: string;
 		name: string;
 		latin_name: string;
 		location: string;
