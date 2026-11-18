@@ -212,7 +212,10 @@ export class NotesSvelte {
 	}
 
 	selectNote(noteId: string): void {
+		// The editor is not remounted for the same id, so it still shows (and saves) its own content.
+		const localContent = this.activeNote?.id === noteId ? this.activeNote.content : null;
 		this.activeNote = this.notes.find((n) => n.id === noteId) ?? null;
+		if (this.activeNote !== null && localContent !== null) this.activeNote.content = localContent;
 	}
 
 	openSearch(): void {

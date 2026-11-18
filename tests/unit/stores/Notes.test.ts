@@ -83,6 +83,15 @@ function mockLists(lists: Lists): void {
 	});
 }
 
+// Like the real API, every call returns new objects, so local edits never leak into the "server" copy.
+function mockServerNotes(notes: Note[]): void {
+	api.list.mockImplementation((url: string) =>
+		Promise.resolve({
+			data: url.endsWith('/notes/hidden') ? [] : notes.map((n) => structuredClone(n))
+		})
+	);
+}
+
 beforeEach(() => {
 	resetStoreMocks();
 	pageState.pathname = '/notes';
@@ -187,6 +196,21 @@ describe('Notes store', () => {
 			expect(n.activeNote?.id).toBe('2');
 		});
 
+		it('selectNote takes the server content of a different note', async () => {
+			mockServerNotes([
+				note({ id: '1', content: '<p>one</p>' }),
+				note({ id: '2', content: '<p>two</p>' })
+			]);
+			const n = new NotesSvelte();
+			await n.load();
+			n.selectNote('1');
+			n.activeNote!.content = '<p>one, edited</p>';
+
+			n.selectNote('2');
+
+			expect(n.activeNote?.content).toBe('<p>two</p>');
+		});
+
 		it('selectNote clears the active note when the id is unknown', () => {
 			const n = new NotesSvelte();
 			n.notes = [note({ id: '1' })];
@@ -200,6 +224,71 @@ describe('Notes store', () => {
 			n.notes = [note({ id: 'n7' }), note({ id: 'n8' })];
 			n.checkUrlForActiveNote();
 			expect(n.activeNote?.id).toBe('n7');
+		});
+	});
+
+	describe('reload of the open note', () => {
+		const tag = { id: 4, name: 'work', color: '#000', created_at: '', updated_at: '' };
+
+		async function openNote(server: Note): Promise<NotesSvelte> {
+			pageState.params = { id: server.id };
+			mockServerNotes([server]);
+			const n = new NotesSvelte();
+			await n.load();
+			n.activeNote!.content = '<p>old</p><p>typed</p>';
+			api.update.mockResolvedValue(true);
+			return n;
+		}
+
+		it('updateFavoriteStatus keeps the local content and takes the server favourite', async () => {
+			const server = note({ content: '<p>old</p>' });
+			const n = await openNote(server);
+			server.is_favorite = true;
+
+			await n.updateFavoriteStatus(n.activeNote!, true);
+
+			expect(n.activeNote?.content).toBe('<p>old</p><p>typed</p>');
+			expect(n.activeNote?.is_favorite).toBe(true);
+		});
+
+		it('changeTitle keeps the local content and takes the server title', async () => {
+			const server = note({ content: '<p>old</p>' });
+			const n = await openNote(server);
+			server.title = 'Renamed';
+
+			await n.changeTitle('Renamed');
+
+			expect(n.activeNote?.content).toBe('<p>old</p><p>typed</p>');
+			expect(n.activeNote?.title).toBe('Renamed');
+		});
+
+		it('addTag keeps the local content and takes the server tags', async () => {
+			const server = note({ content: '<p>old</p>' });
+			const n = await openNote(server);
+			server.tags = [tag];
+
+			await n.addTag(tag.id);
+
+			expect(n.activeNote?.content).toBe('<p>old</p><p>typed</p>');
+			expect(n.activeNote?.tags).toEqual([tag]);
+		});
+
+		it('saveContent keeps content typed while the save is pending', async () => {
+			const server = note({ content: '<p>old</p>' });
+			const n = await openNote(server);
+			let resolveUpdate!: (value: boolean) => void;
+			api.update.mockReturnValueOnce(new Promise((resolve) => (resolveUpdate = resolve)));
+
+			const saving = n.saveContent();
+			n.activeNote!.content = '<p>old</p><p>typed</p><p>more</p>';
+			server.content = '<p>old</p><p>typed</p>';
+			resolveUpdate(true);
+			await saving;
+
+			expect(api.update).toHaveBeenCalledWith(expect.stringContaining('/notes'), 'n1', {
+				content: '<p>old</p><p>typed</p>'
+			});
+			expect(n.activeNote?.content).toBe('<p>old</p><p>typed</p><p>more</p>');
 		});
 	});
 
