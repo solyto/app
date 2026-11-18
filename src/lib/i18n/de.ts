@@ -1182,7 +1182,8 @@ const clipboard: ClipboardRecords = {
 	file_limit_reached: 'Du kannst 10 Dateien pro Tag hochladen.',
 	file_limit_reached_hours_singular: 'Du kannst 10 Dateien pro Tag hochladen. Versuche es in 1 Stunde erneut.',
 	file_limit_reached_hours_plural: 'Du kannst 10 Dateien pro Tag hochladen. Versuche es in {n} Stunden erneut.',
-	file_download_error: 'Datei konnte nicht heruntergeladen werden'
+	file_download_error: 'Datei konnte nicht heruntergeladen werden',
+	image_load_error: 'Bild konnte nicht geladen werden'
 };
 
 const profile: ProfileRecords = {

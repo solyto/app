@@ -1172,6 +1172,7 @@ export interface ClipboardRecords {
 	file_limit_reached_hours_singular: string;
 	file_limit_reached_hours_plural: string;
 	file_download_error: string;
+	image_load_error: string;
 }
 
 export interface ProfileRecords {

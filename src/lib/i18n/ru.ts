@@ -1230,7 +1230,8 @@ const clipboard: ClipboardRecords = {
 	file_limit_reached: 'Можно загрузить не более 10 файлов в день.',
 	file_limit_reached_hours_singular: 'Можно загрузить не более 10 файлов в день. Попробуйте через 1 ч.',
 	file_limit_reached_hours_plural: 'Можно загрузить не более 10 файлов в день. Попробуйте через {n} ч.',
-	file_download_error: 'Не удалось скачать файл'
+	file_download_error: 'Не удалось скачать файл',
+	image_load_error: 'Не удалось загрузить изображение'
 };
 
 const profile: ProfileRecords = {

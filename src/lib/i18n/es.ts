@@ -1170,7 +1170,8 @@ const clipboard: ClipboardRecords = {
 	file_limit_reached: 'Puedes subir 10 archivos al día.',
 	file_limit_reached_hours_singular: 'Puedes subir 10 archivos al día. Inténtalo de nuevo en 1 hora.',
 	file_limit_reached_hours_plural: 'Puedes subir 10 archivos al día. Inténtalo de nuevo en {n} horas.',
-	file_download_error: 'Error al descargar el archivo'
+	file_download_error: 'Error al descargar el archivo',
+	image_load_error: 'No se pudo cargar la imagen'
 };
 
 const dav: DavRecords = {

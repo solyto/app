@@ -1180,7 +1180,8 @@ const clipboard: ClipboardRecords = {
 	file_limit_reached: 'You can upload 10 files per day.',
 	file_limit_reached_hours_singular: 'You can upload 10 files per day. Try again in 1 hour.',
 	file_limit_reached_hours_plural: 'You can upload 10 files per day. Try again in {n} hours.',
-	file_download_error: 'Failed to download file'
+	file_download_error: 'Failed to download file',
+	image_load_error: 'Image could not be loaded'
 };
 
 const profile: ProfileRecords = {

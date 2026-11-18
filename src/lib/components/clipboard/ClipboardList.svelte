@@ -70,9 +70,13 @@
 	}
 
 	async function onDownload(entry: ClipboardEntry): Promise<void> {
+		let blob: Blob | null;
 		loadingIndicator.start();
-		const blob = entry.type === 'image' ? await clipboard.getImage(entry) : await clipboard.getFile(entry);
-		loadingIndicator.stop();
+		try {
+			blob = entry.type === 'image' ? await clipboard.getImage(entry) : await clipboard.getFile(entry);
+		} finally {
+			loadingIndicator.stop();
+		}
 		if (!blob) {
 			notifications.error(ts.get.clipboard.file_download_error);
 			return;
