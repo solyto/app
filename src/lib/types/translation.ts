@@ -515,6 +515,9 @@ export interface NoteRecords {
 	other: string;
 	journal_empty: string;
 	journal_create_error: string;
+	move_note: string;
+	no_folder: string;
+	move_error: string;
 }
 
 export interface LibraryRecords {

@@ -325,6 +325,60 @@ describe('Notes store', () => {
 		});
 	});
 
+	describe('move', () => {
+		it('openMoveNoteModal picks the note by id and closes the right-click menu', () => {
+			const n = new NotesSvelte();
+			n.notes = [note({ id: 'n1' }), note({ id: 'n2', category_id: 3 })];
+			n.rightClickMenuOpen = true;
+			n.openMoveNoteModal('n2');
+
+			expect(n.noteToMove?.id).toBe('n2');
+			expect(n.rightClickMenuOpen).toBe(false);
+		});
+
+		it('closeMoveNoteModal clears the note to move', () => {
+			const n = new NotesSvelte();
+			n.notes = [note({ id: 'n1' })];
+			n.openMoveNoteModal('n1');
+			n.closeMoveNoteModal();
+
+			expect(n.noteToMove).toBeNull();
+		});
+
+		it('moveToCategory sends the target folder and reloads', async () => {
+			api.update.mockResolvedValue(true);
+			mockLists({ notes: [note({ id: 'n1', category_id: 5 })], hiddenNotes: [] });
+
+			const n = new NotesSvelte();
+			await expect(n.moveToCategory('n1', 5)).resolves.toBe(true);
+
+			expect(api.update).toHaveBeenCalledWith(expect.stringContaining('/notes'), 'n1', {
+				category_id: 5
+			});
+			expect(n.notes[0].category_id).toBe(5);
+		});
+
+		it('moveToCategory sends null to move a note out of every folder', async () => {
+			api.update.mockResolvedValue(true);
+			mockLists({ notes: [], hiddenNotes: [] });
+
+			const n = new NotesSvelte();
+			await n.moveToCategory('n1', null);
+
+			expect(api.update).toHaveBeenCalledWith(expect.stringContaining('/notes'), 'n1', {
+				category_id: null
+			});
+		});
+
+		it('moveToCategory does not reload when the request fails', async () => {
+			api.update.mockResolvedValue(false);
+
+			const n = new NotesSvelte();
+			await expect(n.moveToCategory('n1', 5)).resolves.toBe(false);
+			expect(api.list).not.toHaveBeenCalled();
+		});
+	});
+
 	describe('create', () => {
 		it('does nothing when the input is empty', async () => {
 			const n = new NotesSvelte();

@@ -120,7 +120,7 @@
 			ondragleave={() => (notes.dragTarget = null)}
 			ondrop={(e: DragEvent) => {
 				e.preventDefault();
-				notes.dragToCategory();
+				if (notes.draggedNote) notes.moveToCategory(notes.draggedNote.id, null);
 			}}
 			class:bg-d-lightblue={notes.draggedNote !== null && notes.dragTarget === null}
 			class:animate-pulse={notes.draggedNote !== null && notes.dragTarget === null}

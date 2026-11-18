@@ -536,7 +536,10 @@ const notes: NoteRecords = {
 	yesterday: 'Gestern',
 	other: 'Andere',
 	journal_empty: 'Für diesen Tag gibt es noch keinen Eintrag.',
-	journal_create_error: 'Der Journaleintrag konnte nicht erstellt werden.'
+	journal_create_error: 'Der Journaleintrag konnte nicht erstellt werden.',
+	move_note: 'In Ordner verschieben',
+	no_folder: 'Kein Ordner',
+	move_error: 'Notiz konnte nicht verschoben werden.'
 };
 
 const libraries: LibraryRecords = {

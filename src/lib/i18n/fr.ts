@@ -534,7 +534,10 @@ const notes: NoteRecords = {
 	yesterday: 'Hier',
 	other: 'Autre',
 	journal_empty: "Il n'y a pas encore d'entrée pour ce jour.",
-	journal_create_error: "Échec de la création de l'entrée du journal."
+	journal_create_error: "Échec de la création de l'entrée du journal.",
+	move_note: 'Déplacer vers un dossier',
+	no_folder: 'Aucun dossier',
+	move_error: 'Échec du déplacement de la note.'
 };
 
 const libraries: LibraryRecords = {

@@ -534,7 +534,10 @@ const notes: NoteRecords = {
 	yesterday: 'Вчера',
 	other: 'Другое',
 	journal_empty: 'За этот день записей пока нет.',
-	journal_create_error: 'Не удалось создать запись в дневнике.'
+	journal_create_error: 'Не удалось создать запись в дневнике.',
+	move_note: 'Переместить в папку',
+	no_folder: 'Без папки',
+	move_error: 'Не удалось переместить заметку.'
 };
 
 const libraries: LibraryRecords = {

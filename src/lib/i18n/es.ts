@@ -535,7 +535,10 @@ const notes: NoteRecords = {
 	yesterday: 'Ayer',
 	other: 'Otro',
 	journal_empty: 'Todavía no hay una entrada para este día.',
-	journal_create_error: 'No se pudo crear la entrada del diario.'
+	journal_create_error: 'No se pudo crear la entrada del diario.',
+	move_note: 'Mover a carpeta',
+	no_folder: 'Sin carpeta',
+	move_error: 'No se pudo mover la nota.'
 };
 
 const libraries: LibraryRecords = {
