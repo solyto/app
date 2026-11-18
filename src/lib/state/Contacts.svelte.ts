@@ -339,7 +339,7 @@ export class Contacts {
 			await this.loadAddressBooks();
 			await this.loadContacts();
 		}
-		return res !== null;
+		return res;
 	}
 
 	async deleteAddressBook(addressBook: AddressBook): Promise<boolean> {
@@ -353,7 +353,7 @@ export class Contacts {
 		}
 		this.activeAddressBook = null;
 		this.deleteModal = false;
-		return res !== null;
+		return res;
 	}
 
 	async startImport(request: ImportRequest): Promise<boolean> {

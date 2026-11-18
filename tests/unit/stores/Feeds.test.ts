@@ -307,4 +307,24 @@ describe('Feeds store', () => {
 			await expect(s.loadFriendFeeds()).resolves.toEqual([]);
 		});
 	});
+
+	describe('update', () => {
+		it('returns false and does not reload when the server rejects the update', async () => {
+			api.update.mockResolvedValue(false);
+			const s = new Feeds();
+			const load = vi.spyOn(s, 'load').mockResolvedValue();
+
+			await expect(s.update(feed(), { title: 'New' })).resolves.toBe(false);
+			expect(load).not.toHaveBeenCalled();
+		});
+
+		it('returns true and reloads after a successful update', async () => {
+			api.update.mockResolvedValue(true);
+			const s = new Feeds();
+			const load = vi.spyOn(s, 'load').mockResolvedValue();
+
+			await expect(s.update(feed(), { title: 'New' })).resolves.toBe(true);
+			expect(load).toHaveBeenCalled();
+		});
+	});
 });
