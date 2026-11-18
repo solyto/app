@@ -1,6 +1,11 @@
-# Backlog: links library: category menu on mobile
+# Brief: links library: category menu on mobile
 
-created: 2026-10-31
+type: feature
+id: station
+branch: feature/station_links-library-category-menu-on-mobile
+date: 2026-11-17
+author: Leander Muskalla
+
 updated: 2026-11-17 (pattern decided by the owner, ready for implementation)
 
 ## Job (decided, do exactly this)

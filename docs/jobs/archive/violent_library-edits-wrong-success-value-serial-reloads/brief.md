@@ -1,6 +1,11 @@
-# Backlog: library edits — wrong success value, serial reloads
+# Brief: library edits — wrong success value, serial reloads
 
-created: 2026-11-17
+type: feature
+id: violent
+branch: feature/violent_library-edits-wrong-success-value-serial-reloads
+date: 2026-11-17
+author: Leander Muskalla
+
 updated: 2026-11-17 (scope decided by the owner, ready for implementation)
 
 ## Job (decided, do exactly this)

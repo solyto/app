@@ -1,6 +1,11 @@
-# Backlog: OPML import polling ignores error responses
+# Brief: OPML import polling ignores error responses
 
-created: 2026-11-15
+type: feature
+id: assume
+branch: feature/assume_opml-import-polling-ignores-error-responses
+date: 2026-11-17
+author: Leander Muskalla
+
 updated: 2026-11-17 (scope decided by the owner, ready for implementation)
 
 ## Job (decided, do exactly this)
@@ -66,3 +71,5 @@ Bounded today: polling stops after 5 minutes without progress and when the
 feeds layout is destroyed (`onDestroy` in `src/routes/feeds/+layout.svelte`).
 This change is about feedback within seconds instead of 5 minutes, and fewer
 pointless requests. Found in the 1.1.3 release review (2026-11-15).
+
+You are allowed to run all npm commands you need.

@@ -1,6 +1,11 @@
-# Backlog: format ru.ts with one key per line
+# Brief: format ru.ts with one key per line
 
-created: 2026-11-17
+type: feature
+id: sort
+branch: feature/sort_format-ru-ts-with-one-key-per-line
+date: 2026-11-17
+author: Leander Muskalla
+
 updated: 2026-11-17 (rules decided by the owner, ready for implementation)
 
 ## Job (decided, do exactly this)
