@@ -56,6 +56,7 @@
 	--color-c-btn: var(--color-s-lightblue);
 	--color-c-btn-hover: var(--color-s-blue);
 	--color-c-btn-text: #f9fafb;
+	--color-c-btn-icon: var(--color-white);
 	--color-c-action: var(--color-s-orange);
 	--color-c-action-hover: var(--color-s-yellow);
 	--color-c-action-text: var(--color-c-heading);
@@ -64,7 +65,9 @@
 	--color-c-avatar-text: var(--color-black);
 	--color-c-danger: var(--color-s-red);
 	--color-c-danger-hover: var(--color-s-purple);
+	--color-c-danger-icon: var(--color-white);
 	--color-c-success: var(--color-s-green);
+	--color-c-success-icon: var(--color-white);
 	--color-c-warning: var(--color-s-yellow);
 
 	--animate-shake: shake 0.5s ease-out;

@@ -29,6 +29,7 @@
 	{#each views as view (view.type)}
 		<button
 			class="cursor-pointer rounded-lg p-2 transition-all hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
+			class:view-switcher-selected={view.type === currentlySelected}
 			class:bg-c-neutral-1={view.type === currentlySelected}
 			class:dark:bg-s-dark-3={view.type === currentlySelected}
 			onclick={() => onChange(view.type)}
