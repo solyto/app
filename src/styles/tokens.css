@@ -46,6 +46,7 @@
 	--color-c-neutral-7: var(--color-gray-700);
 	--color-c-neutral-8: var(--color-gray-800);
 	--color-c-neutral-9: var(--color-gray-900);
+	--color-c-highlight: var(--color-c-neutral-1);
 
 	--color-c-primary: var(--color-s-teal);
 	--color-c-primary-text: var(--color-c-btn-text);

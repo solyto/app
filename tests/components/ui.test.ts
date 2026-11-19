@@ -83,7 +83,7 @@ describe('ViewSwitcher', () => {
 			props: { views, currentlySelected: 'list', onChange: vi.fn() }
 		});
 		const buttons = container.querySelectorAll('button');
-		expect(buttons[0].classList.contains('bg-c-neutral-1')).toBe(true);
-		expect(buttons[1].classList.contains('bg-c-neutral-1')).toBe(false);
+		expect(buttons[0].classList.contains('bg-c-highlight')).toBe(true);
+		expect(buttons[1].classList.contains('bg-c-highlight')).toBe(false);
 	});
 });
