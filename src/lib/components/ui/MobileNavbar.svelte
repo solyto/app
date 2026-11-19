@@ -7,7 +7,7 @@
 	import NavProfileEntry from '$lib/components/ui/NavProfileEntry.svelte';
 	import NavLegalEntry from '$lib/components/ui/NavLegalEntry.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
-	import { urls, hasLegalUrls } from '$lib/config/urls';
+	import { urls } from '$lib/config/urls';
 	import { navItems } from '$lib/config/navigation';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import NavEntryIcon from '$lib/components/ui/NavEntryIcon.svelte';
@@ -36,7 +36,7 @@
 	}
 
 	function itemIn(index: number): { y: number; duration: number; delay: number } {
-		const count = nav.mobileOverflowItems().length + (hasLegalUrls ? 4 : 3);
+		const count = nav.mobileOverflowItems().length + 4;
 		return { y: 20, duration: 200, delay: (count - 1 - index) * 26 };
 	}
 
@@ -139,11 +139,9 @@
 					<div in:fly|global={itemIn(nav.mobileOverflowItems().length + 2)}>
 						<NavProfileEntry active={active === 'profile'} mobile={true} onSelect={select} />
 					</div>
-					{#if hasLegalUrls}
-						<div in:fly|global={itemIn(nav.mobileOverflowItems().length + 3)}>
-							<NavLegalEntry mobile={true} />
-						</div>
-					{/if}
+					<div in:fly|global={itemIn(nav.mobileOverflowItems().length + 3)}>
+						<NavLegalEntry mobile={true} onSelect={select} />
+					</div>
 				</div>
 			{/if}
 		</div>
