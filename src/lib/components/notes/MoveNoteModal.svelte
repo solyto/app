@@ -5,7 +5,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
-	import IconFolder from '@lucide/svelte/icons/folder';
+	import IconFolder from '$lib/icons/lucide/folder.svelte';
 
 	const notes = getNotes();
 	const ts = getTranslation();

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import ColorPicker from 'svelte-awesome-color-picker';
 	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
-	import IconEye from '@lucide/svelte/icons/eye';
-	import IconEyeOff from '@lucide/svelte/icons/eye-off';
+	import IconEye from '$lib/icons/lucide/eye.svelte';
+	import IconEyeOff from '$lib/icons/lucide/eye-off.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';

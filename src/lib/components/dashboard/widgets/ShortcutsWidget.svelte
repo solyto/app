@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { grabFaviconFromUrl } from '$lib/helpers/ImageHelper';
 	import ManageShortcuts from '$lib/components/shortcuts/ManageShortcuts.svelte';
-	import IconExternalLink from '@lucide/svelte/icons/external-link';
-	import IconGlobe from '@lucide/svelte/icons/globe';
-	import IconPen from '@lucide/svelte/icons/pen';
+	import IconExternalLink from '$lib/icons/lucide/external-link.svelte';
+	import IconGlobe from '$lib/icons/lucide/globe.svelte';
+	import IconPen from '$lib/icons/lucide/pen.svelte';
 	import { onMount } from 'svelte';
 	import { getShortcuts } from '$lib/state/Shortcuts.svelte';
 	import type { Translation } from '$lib/state/Translation.svelte';

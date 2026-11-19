@@ -7,8 +7,8 @@
 	import NoteTags from '$lib/components/notes/NoteTags.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onDestroy, onMount, tick } from 'svelte';
-	import IconStar from '@lucide/svelte/icons/star';
-	import IconFolderInput from '@lucide/svelte/icons/folder-input';
+	import IconStar from '$lib/icons/lucide/star.svelte';
+	import IconFolderInput from '$lib/icons/lucide/folder-input.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';

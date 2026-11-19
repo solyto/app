@@ -12,11 +12,11 @@
 	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import type { Passkey } from '$lib/types/auth';
-	import IconKey from '@lucide/svelte/icons/key';
-	import IconTrash2 from '@lucide/svelte/icons/trash-2';
-	import IconCheck from '@lucide/svelte/icons/check';
-	import IconPencil from '@lucide/svelte/icons/pencil';
-	import IconX from '@lucide/svelte/icons/x';
+	import IconKey from '$lib/icons/lucide/key.svelte';
+	import IconTrash2 from '$lib/icons/lucide/trash.svelte';
+	import IconCheck from '$lib/icons/lucide/check.svelte';
+	import IconPencil from '$lib/icons/lucide/pencil.svelte';
+	import IconX from '$lib/icons/lucide/x.svelte';
 
 	const auth = getAuth();
 	const ts = getTranslation();

@@ -9,8 +9,8 @@
 	import { getDateMinusDays, getUrlFormat } from '$lib/helpers/DateHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
-	import IconArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import IconChevronRight from '$lib/icons/lucide/chevron-right.svelte';
+	import IconArrowLeft from '$lib/icons/lucide/arrow-left.svelte';
 	import AddNoteButton from '$lib/components/notes/AddNoteButton.svelte';
 	import AddFolderButton from '$lib/components/notes/AddFolderButton.svelte';
 	import SearchNoteButton from '$lib/components/notes/SearchNoteButton.svelte';

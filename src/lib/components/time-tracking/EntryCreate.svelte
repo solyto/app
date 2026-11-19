@@ -6,7 +6,7 @@
 	import DateTimeInput from '$lib/components/forms/DateTimeInput.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import IconChevronDown from '@lucide/svelte/icons/chevron-down';
+	import IconChevronDown from '$lib/icons/lucide/chevron-down.svelte';
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';

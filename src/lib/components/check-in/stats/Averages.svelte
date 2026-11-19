@@ -2,17 +2,17 @@
 	import type { CheckIn, CheckInType } from '$lib/types/check_in';
 	import { getMeanValue, getTotalMeanValue } from '$lib/helpers/CheckInHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import IconBedSingle from '@lucide/svelte/icons/bed-single';
-	import IconSparkles from '@lucide/svelte/icons/sparkles';
-	import IconBriefcaseBusiness from '@lucide/svelte/icons/briefcase-business';
-	import IconApple from '@lucide/svelte/icons/apple';
-	import IconDroplets from '@lucide/svelte/icons/droplets';
-	import IconDroplet from '@lucide/svelte/icons/droplet';
-	import IconWine from '@lucide/svelte/icons/wine';
-	import IconCigarette from '@lucide/svelte/icons/cigarette';
-	import IconUsersRound from '@lucide/svelte/icons/users-round';
-	import IconSmile from '@lucide/svelte/icons/smile';
-	import IconPizza from '@lucide/svelte/icons/pizza';
+	import IconBedSingle from '$lib/icons/lucide/bed-single.svelte';
+	import IconSparkles from '$lib/icons/lucide/sparkles.svelte';
+	import IconBriefcaseBusiness from '$lib/icons/lucide/briefcase-business.svelte';
+	import IconApple from '$lib/icons/lucide/apple.svelte';
+	import IconDroplets from '$lib/icons/lucide/droplets.svelte';
+	import IconDroplet from '$lib/icons/lucide/droplet.svelte';
+	import IconWine from '$lib/icons/lucide/wine.svelte';
+	import IconCigarette from '$lib/icons/lucide/cigarette.svelte';
+	import IconUsersRound from '$lib/icons/lucide/users-round.svelte';
+	import IconSmile from '$lib/icons/lucide/face-slightly-smiling.svelte';
+	import IconPizza from '$lib/icons/lucide/pizza.svelte';
 	import AverageRow from '$lib/components/check-in/stats/AverageRow.svelte';
 	const ts = getTranslation();
 

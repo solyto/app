@@ -1,8 +1,8 @@
 <script lang="ts">
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import IconPlus from '@lucide/svelte/icons/plus';
-	import IconKeyRound from '@lucide/svelte/icons/key-round';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
+	import IconKeyRound from '$lib/icons/lucide/key-round.svelte';
 	import { getExternalCalendars } from '$lib/state/ExternalCalendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { ExternalCalendarAccount } from '$lib/types/calendar';

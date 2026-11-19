@@ -1,4 +1,5 @@
 # Report: starring or renaming an open note silently drops its unsaved text on the next save
+read: true
 
 Date: 2026-11-18
 Scope: `load()` / `selectNote()` and the mutation methods of

@@ -4,8 +4,8 @@
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import IconTrash from '@lucide/svelte/icons/trash-2';
-	import IconCalendarClock from '@lucide/svelte/icons/calendar-clock';
+	import IconTrash from '$lib/icons/lucide/trash.svelte';
+	import IconCalendarClock from '$lib/icons/lucide/calendar-clock.svelte';
 	import DatePicker from '$lib/components/forms/DatePicker.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { portalToBody } from '$lib/helpers/PortalHelper';

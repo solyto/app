@@ -6,10 +6,10 @@
 	import { tick, untrack } from 'svelte';
 	import { page } from '$app/state';
 	import { scale } from 'svelte/transition';
-	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
-	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
-	import IconX from '@lucide/svelte/icons/x';
-	import IconCheck from '@lucide/svelte/icons/check';
+	import IconChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
+	import IconChevronRight from '$lib/icons/lucide/chevron-right.svelte';
+	import IconX from '$lib/icons/lucide/x.svelte';
+	import IconCheck from '$lib/icons/lucide/check.svelte';
 
 	const tour = getWelcomeTour();
 	const ts = getTranslation();

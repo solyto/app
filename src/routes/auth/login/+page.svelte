@@ -10,8 +10,8 @@
 
 	import { fade } from 'svelte/transition';
 	import { startAuthentication } from '@simplewebauthn/browser';
-	import IconFingerprint from '@lucide/svelte/icons/fingerprint';
-	import IconSettings from '@lucide/svelte/icons/settings';
+	import IconFingerprint from '$lib/icons/lucide/fingerprint-pattern.svelte';
+	import IconSettings from '$lib/icons/lucide/settings.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';

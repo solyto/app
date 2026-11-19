@@ -8,8 +8,8 @@
 	import OverviewMobile from '$lib/components/check-in/overview/OverviewMobile.svelte';
 	import CheckInSummaries from '$lib/components/check-in/overview/CheckInSummaries.svelte';
 	import Averages from '$lib/components/check-in/stats/Averages.svelte';
-	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
-	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
+	import IconChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
+	import IconChevronRight from '$lib/icons/lucide/chevron-right.svelte';
 
 	const viewPoint = getViewPoint();
 	const checkInData = getCheckInData();

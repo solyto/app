@@ -8,8 +8,8 @@
 	import { apiRoutes, API_USER_STORAGE_URL } from '$lib/config/apiRoutes.js';
 	import type { Friend } from '$lib/types/friend.js';
 	import type { Calendar, CalendarSharee } from '$lib/types/calendar.js';
-	import IconUserPlus from '@lucide/svelte/icons/user-plus';
-	import IconX from '@lucide/svelte/icons/x';
+	import IconUserPlus from '$lib/icons/lucide/user-plus.svelte';
+	import IconX from '$lib/icons/lucide/x.svelte';
 	import { onMount } from 'svelte';
 
 	const ts = getTranslation();

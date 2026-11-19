@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
-	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import ChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
+	import ChevronRight from '$lib/icons/lucide/chevron-right.svelte';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';

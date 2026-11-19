@@ -7,17 +7,17 @@
 	import { onMount } from 'svelte';
 	import { getUrlFormat } from '$lib/helpers/DateHelper';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import IconSmile from '@lucide/svelte/icons/smile';
-	import IconBedSingle from '@lucide/svelte/icons/bed-single';
-	import IconSparkles from '@lucide/svelte/icons/sparkles';
-	import IconBriefcaseBusiness from '@lucide/svelte/icons/briefcase-business';
-	import IconApple from '@lucide/svelte/icons/apple';
-	import IconPizza from '@lucide/svelte/icons/pizza';
-	import IconDroplets from '@lucide/svelte/icons/droplets';
-	import IconDroplet from '@lucide/svelte/icons/droplet';
-	import IconWine from '@lucide/svelte/icons/wine';
-	import IconCigarette from '@lucide/svelte/icons/cigarette';
-	import IconUsersRound from '@lucide/svelte/icons/users-round';
+	import IconSmile from '$lib/icons/lucide/face-slightly-smiling.svelte';
+	import IconBedSingle from '$lib/icons/lucide/bed-single.svelte';
+	import IconSparkles from '$lib/icons/lucide/sparkles.svelte';
+	import IconBriefcaseBusiness from '$lib/icons/lucide/briefcase-business.svelte';
+	import IconApple from '$lib/icons/lucide/apple.svelte';
+	import IconPizza from '$lib/icons/lucide/pizza.svelte';
+	import IconDroplets from '$lib/icons/lucide/droplets.svelte';
+	import IconDroplet from '$lib/icons/lucide/droplet.svelte';
+	import IconWine from '$lib/icons/lucide/wine.svelte';
+	import IconCigarette from '$lib/icons/lucide/cigarette.svelte';
+	import IconUsersRound from '$lib/icons/lucide/users-round.svelte';
 
 	type Range = '30d' | '3m' | '6m' | 'all';
 

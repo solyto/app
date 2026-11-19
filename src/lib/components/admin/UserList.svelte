@@ -2,8 +2,8 @@
 	import { getUserManagement } from '$lib/state/UserManagement.svelte';
 	import UserEntry from '$lib/components/admin/UserEntry.svelte';
 	import { fade } from 'svelte/transition';
-	import IconSearch from '@lucide/svelte/icons/search';
-	import IconX from '@lucide/svelte/icons/x';
+	import IconSearch from '$lib/icons/lucide/search.svelte';
+	import IconX from '$lib/icons/lucide/x.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 

@@ -7,7 +7,7 @@
 	import { onDestroy, tick } from 'svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import InputAutocomplete from '$lib/components/forms/InputAutocomplete.svelte';
-	import IconTrash from '@lucide/svelte/icons/trash-2';
+	import IconTrash from '$lib/icons/lucide/trash.svelte';
 
 	const ts = getTranslation();
 	const todos = getTodos();

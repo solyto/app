@@ -3,7 +3,7 @@
 	import { withDecimals } from '$lib/helpers/NumberHelper';
 	import { Translation } from '$lib/state/Translation.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
-	import IconTrendingUp from '@lucide/svelte/icons/trending-up';
+	import IconTrendingUp from '$lib/icons/lucide/trending-up.svelte';
 
 	let { scoredTodos, handleCheck, ts, mt = false }: {
 		scoredTodos: Todo[];

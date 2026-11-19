@@ -9,11 +9,11 @@
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
-	import IconDumbbell from '@lucide/svelte/icons/dumbbell';
-	import IconBike from '@lucide/svelte/icons/bike';
-	import IconMountain from '@lucide/svelte/icons/mountain';
-	import IconWavesLadder from '@lucide/svelte/icons/waves-ladder';
-	import IconFootprints from '@lucide/svelte/icons/footprints';
+	import IconDumbbell from '$lib/icons/lucide/dumbbell.svelte';
+	import IconBike from '$lib/icons/lucide/bike.svelte';
+	import IconMountain from '$lib/icons/lucide/mountain.svelte';
+	import IconWavesLadder from '$lib/icons/lucide/waves-ladder.svelte';
+	import IconFootprints from '$lib/icons/lucide/footprints.svelte';
 	import IconYoga from '$lib/components/ui/icons/IconYoga.svelte';
 	import HelpTooltip from '$lib/components/ui/HelpTooltip.svelte';
 	import SelectedSportButton from '$lib/components/check-in/SelectedSportButton.svelte';

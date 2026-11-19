@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade, slide } from 'svelte/transition';
 	import type { Todo } from '$lib/types/todo';
-	import IconChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+	import IconChevronsUpDown from '$lib/icons/lucide/chevrons-up-down.svelte';
 	import Category from '$lib/components/todos/props/Category.svelte';
 	import Priority from '$lib/components/todos/props/Priority.svelte';
 	import Tags from '$lib/components/todos/props/Tags.svelte';

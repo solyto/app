@@ -5,7 +5,7 @@
 	import { contextMenu } from '$lib/helpers/ContextMenuHelper';
 	import NoteNavigationCategoryRenderer from '$lib/components/notes/NoteNavigationCategoryRenderer.svelte';
 	import NoteNavigationNoteRenderer from '$lib/components/notes/NoteNavigationNoteRenderer.svelte';
-	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
+	import IconChevronRight from '$lib/icons/lucide/chevron-right.svelte';
 
 	const notes = getNotes();
 

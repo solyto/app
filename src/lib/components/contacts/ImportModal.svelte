@@ -12,7 +12,7 @@
 		SelectImportAddressBooksRequest
 	} from '$lib/types/contact';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import IconLoaderCircle from '$lib/icons/lucide/loader-circle.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';

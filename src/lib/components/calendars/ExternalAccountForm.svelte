@@ -3,7 +3,7 @@
 	import PasswordInput from '$lib/components/forms/PasswordInput.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import IconLoaderCircle from '$lib/icons/lucide/loader-circle.svelte';
 	import { getExternalCalendars } from '$lib/state/ExternalCalendars.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';

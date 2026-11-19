@@ -46,6 +46,8 @@ const layout: LayoutRecords = {
 	legal_notice: 'Impressum',
 	privacy_policy: 'Datenschutzerklärung',
 	terms_of_service: 'Nutzungsbedingungen',
+	legal: 'Rechtliches',
+	open_source_licenses: 'Open-Source-Lizenzen',
 	reload: 'Neu laden',
 	remove: 'Entfernen',
 	rename: 'Umbenennen',

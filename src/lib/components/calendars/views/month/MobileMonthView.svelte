@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { blur } from 'svelte/transition';
-	import IconPlus from '@lucide/svelte/icons/plus';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { isDateToday, formatDate, formatTime, getWeekdayOrder } from '$lib/helpers/DateHelper';

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Tag } from '$lib/types/tag';
-	import IconX from '@lucide/svelte/icons/x';
+	import IconX from '$lib/icons/lucide/x.svelte';
 
 	let { tags, onRemove }: {
 		tags: Tag[];

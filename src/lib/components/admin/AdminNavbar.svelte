@@ -1,9 +1,9 @@
 <script lang="ts">
 	import NavEntry from '$lib/components/ui/NavEntry.svelte';
 	import logo from '$lib/assets/logo_cut.png';
-	import IconHouse from '@lucide/svelte/icons/house';
-	import IconArrowBigLeft from '@lucide/svelte/icons/arrow-big-left';
-	import IconUsers from '@lucide/svelte/icons/users';
+	import IconHouse from '$lib/icons/lucide/house.svelte';
+	import IconArrowBigLeft from '$lib/icons/lucide/arrow-big-left.svelte';
+	import IconUsers from '$lib/icons/lucide/users.svelte';
 	import { slide } from 'svelte/transition';
 
 	import { page } from '$app/state';

@@ -2,7 +2,7 @@
 	import type { TodoCategory, TodoWorkspace, UpdateTodoWorkspaceRequest } from '$lib/types/todo';
 	import { fade } from 'svelte/transition';
 	import { onDestroy, tick } from 'svelte';
-	import IconPen from '@lucide/svelte/icons/pen';
+	import IconPen from '$lib/icons/lucide/pen.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -12,7 +12,7 @@
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
-	import IconX from '@lucide/svelte/icons/x';
+	import IconX from '$lib/icons/lucide/x.svelte';
 
 	const ts = getTranslation();
 	const todos = getTodos();

@@ -2,8 +2,8 @@
 	import { getCalendarMonth, getUrlFormat, getWeekdayOrder } from '$lib/helpers/DateHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
-	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
+	import IconChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
+	import IconChevronRight from '$lib/icons/lucide/chevron-right.svelte';
 
 	const ts = getTranslation();
 	const auth = getAuth();

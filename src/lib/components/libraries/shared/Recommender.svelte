@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import IconBot from '@lucide/svelte/icons/bot';
-	import IconRotateCcw from '@lucide/svelte/icons/rotate-ccw';
+	import IconBot from '$lib/icons/lucide/bot.svelte';
+	import IconRotateCcw from '$lib/icons/lucide/rotate-ccw.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';

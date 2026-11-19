@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Todo, TodoEffort } from '$lib/types/todo';
-	import IconClock from '@lucide/svelte/icons/clock';
+	import IconClock from '$lib/icons/lucide/clock.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';

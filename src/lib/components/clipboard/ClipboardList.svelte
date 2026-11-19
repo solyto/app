@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { getClipboard } from '$lib/state/Clipboard.svelte';
-	import IconClipboardCopy from '@lucide/svelte/icons/clipboard-copy';
-	import IconTrash from '@lucide/svelte/icons/trash-2';
-	import IconDownload from '@lucide/svelte/icons/download';
+	import IconClipboardCopy from '$lib/icons/lucide/clipboard-copy.svelte';
+	import IconTrash from '$lib/icons/lucide/trash.svelte';
+	import IconDownload from '$lib/icons/lucide/download.svelte';
 	import { formatDate } from '$lib/helpers/DateHelper';
 	import { getFileExtension, truncate } from '$lib/helpers/FormatHelper';
 	import { downloadBlob } from '$lib/helpers/DownloadHelper';

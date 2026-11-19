@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import IconCircleX from '@lucide/svelte/icons/circle-x';
+	import IconCircleX from '$lib/icons/lucide/circle-x.svelte';
 	import { onDestroy, onMount, tick } from 'svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getNotes } from '$lib/state/Notes.svelte';

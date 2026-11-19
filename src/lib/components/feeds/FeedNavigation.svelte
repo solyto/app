@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import IconPlus from '@lucide/svelte/icons/plus';
-	import IconSearch from '@lucide/svelte/icons/search';
-	import IconFileUp from '@lucide/svelte/icons/file-up';
-	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
+	import IconSearch from '$lib/icons/lucide/search.svelte';
+	import IconFileUp from '$lib/icons/lucide/file-up.svelte';
+	import IconLoaderCircle from '$lib/icons/lucide/loader-circle.svelte';
 	import { getFeeds } from '$lib/state/Feeds.svelte';
 	import { getFeedImport } from '$lib/state/FeedImport.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';

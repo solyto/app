@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { formatTime } from '$lib/helpers/DateHelper';
-	import IconCalendarDays from '@lucide/svelte/icons/calendar-days';
+	import IconCalendarDays from '$lib/icons/lucide/calendar-days.svelte';
 	import { Translation } from '$lib/state/Translation.svelte';
 	import { Auth } from '$lib/state/Auth.svelte';
 	import type { CalendarEvent } from '$lib/types/calendar';

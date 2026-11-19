@@ -2,7 +2,7 @@
 	import { slide, fade } from 'svelte/transition';
 	import type { DevRequest } from '$lib/types/dev_request';
 	import { formatDate } from '$lib/helpers/DateHelper';
-	import IconChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+	import IconChevronsUpDown from '$lib/icons/lucide/chevrons-up-down.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { API_STORAGE_URL } from '$lib/config/apiRoutes';
@@ -17,7 +17,7 @@
 	import Comments from '$lib/components/dev-requests/Comments.svelte';
 	import DevRequestEdit from '$lib/components/dev-requests/DevRequestEdit.svelte';
 	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
-	import IconMessageSquare from '@lucide/svelte/icons/message-square';
+	import IconMessageSquare from '$lib/icons/lucide/message-square.svelte';
 
 	const auth = getAuth();
 	const ts = getTranslation();

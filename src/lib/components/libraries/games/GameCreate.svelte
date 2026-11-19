@@ -25,7 +25,7 @@
 	import CreateModalImport from '$lib/components/libraries/shared/CreateModalImport.svelte';
 	import GameSearch from '$lib/components/libraries/games/GameSearch.svelte';
 	import SteamIcon from '$lib/assets/services/steam_icon.svg';
-	import Dices from '@lucide/svelte/icons/dices';
+	import Dices from '$lib/icons/lucide/dices.svelte';
 	import { getIntegrations } from '$lib/state/Integrations.svelte';
 
 	const ts = getTranslation();

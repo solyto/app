@@ -16,8 +16,8 @@
 	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import IconPen from '@lucide/svelte/icons/pen';
-	import IconTrash from '@lucide/svelte/icons/trash-2';
+	import IconPen from '$lib/icons/lucide/pen.svelte';
+	import IconTrash from '$lib/icons/lucide/trash.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import SmoothLineChart from '$lib/components/charts/SmoothLineChart.svelte';
 

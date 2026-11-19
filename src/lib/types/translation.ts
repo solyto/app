@@ -17,6 +17,8 @@ export interface LayoutRecords {
 	legal_notice: string;
 	privacy_policy: string;
 	terms_of_service: string;
+	legal: string;
+	open_source_licenses: string;
 	reload: string;
 	remove: string;
 	rename: string;

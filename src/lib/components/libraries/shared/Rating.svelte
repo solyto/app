@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconStar from '@lucide/svelte/icons/star';
+	import IconStar from '$lib/icons/lucide/star.svelte';
 
 	let { startRating = 0, onchange }: {
 		startRating?: number;

@@ -3,7 +3,7 @@
 	import { resolve } from '$app/paths';
 	import { blur } from 'svelte/transition';
 	import { formatDate } from '$lib/helpers/DateHelper';
-	import IconNotebookPen from '@lucide/svelte/icons/notebook-pen';
+	import IconNotebookPen from '$lib/icons/lucide/notebook-pen.svelte';
 	import type { Note } from '$lib/types/note';
 	import type { Translation } from '$lib/state/Translation.svelte';
 

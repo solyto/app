@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
 
-// NavLegalEntry only renders when legal URLs are configured through the public
-// env, so this file registers its own $env mock (overriding the empty one from
-// the shared component setup) before importing the component.
+// The legal links come from the public env, so this file registers its own $env
+// mock (overriding the empty one from the shared component setup) before
+// importing the component.
 vi.mock('$env/dynamic/public', () => ({
 	env: {
 		PUBLIC_LEGAL_NOTICE_URL: 'https://example.com/legal',
@@ -22,18 +22,19 @@ describe('NavLegalEntry', () => {
 		const user = userEvent.setup();
 		renderWithContext(NavLegalEntry, {});
 
-		await user.click(screen.getByTitle('Legal Notice'));
+		await user.click(screen.getByTitle('Legal'));
 
 		expect(screen.getByText('Legal Notice')).toBeInTheDocument();
 		expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
 		expect(screen.getByText('Terms of Service')).toBeInTheDocument();
+		expect(screen.getByText('Open-source licenses')).toBeInTheDocument();
 	});
 
 	it('links to the configured legal urls', async () => {
 		const user = userEvent.setup();
 		renderWithContext(NavLegalEntry, {});
 
-		await user.click(screen.getByTitle('Legal Notice'));
+		await user.click(screen.getByTitle('Legal'));
 
 		expect(screen.getByText('Legal Notice')).toHaveAttribute(
 			'href',
@@ -47,5 +48,16 @@ describe('NavLegalEntry', () => {
 			'href',
 			'https://example.com/terms'
 		);
+	});
+
+	it('opens the licenses page inside the app', async () => {
+		const user = userEvent.setup();
+		renderWithContext(NavLegalEntry, {});
+
+		await user.click(screen.getByTitle('Legal'));
+
+		const link = screen.getByText('Open-source licenses');
+		expect(link).toHaveAttribute('href', '/licenses');
+		expect(link).not.toHaveAttribute('target');
 	});
 });

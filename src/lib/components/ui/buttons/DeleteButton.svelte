@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconTrash from '@lucide/svelte/icons/trash-2';
+	import IconTrash from '$lib/icons/lucide/trash.svelte';
 
 	let {
 		onClick,

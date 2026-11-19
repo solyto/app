@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Todo } from '$lib/types/todo';
-	import IconStickyNote from '@lucide/svelte/icons/sticky-note';
-	import IconListTodo from '@lucide/svelte/icons/list-todo';
-	import IconLink from '@lucide/svelte/icons/link';
-	import IconRepeat from '@lucide/svelte/icons/repeat';
+	import IconStickyNote from '$lib/icons/lucide/sticky-note.svelte';
+	import IconListTodo from '$lib/icons/lucide/list-todo.svelte';
+	import IconLink from '$lib/icons/lucide/link.svelte';
+	import IconRepeat from '$lib/icons/lucide/repeat.svelte';
 
 	let { todo }: {
 		todo: Todo;

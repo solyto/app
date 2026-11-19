@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { scale, fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
-	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
-	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
+	import IconChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
+	import IconChevronRight from '$lib/icons/lucide/chevron-right.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import OnboardingModalStepWelcome from './onboarding-modal/OnboardingModalStepWelcome.svelte';
