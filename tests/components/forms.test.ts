@@ -6,6 +6,8 @@ import TextInput from '$lib/components/forms/TextInput.svelte';
 import Toggle from '$lib/components/forms/Toggle.svelte';
 import Select from '$lib/components/forms/Select.svelte';
 import TextInputHarness from './helpers/TextInputHarness.svelte';
+import ColorPicker from 'svelte-awesome-color-picker';
+import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
 
 describe('Checkbox', () => {
 	it('renders a checkbox reflecting its checked state', () => {
@@ -77,5 +79,38 @@ describe('Select', () => {
 		render(Select, { props: { value: 'apple', options, onchange } });
 		await user.selectOptions(screen.getByRole('combobox'), 'banana');
 		expect(onchange).toHaveBeenCalledWith('banana');
+	});
+});
+
+describe('ColorPickerInput', () => {
+	function renderPicker() {
+		return render(ColorPicker, {
+			props: {
+				hex: '#123456',
+				components: { input: ColorPickerInput },
+				isAlpha: false,
+				nullable: false,
+				label: '',
+				isTextInput: false
+			}
+		});
+	}
+
+	it('draws the colour without the transparency checkerboard behind it', () => {
+		const { container } = renderPicker();
+		const swatch = container.querySelector('label span') as HTMLElement;
+
+		expect(swatch.style.background).toBe('rgb(18, 52, 86)');
+		expect(container.querySelector('.alpha')).toBeNull();
+	});
+
+	it('opens the picker when the colour is clicked', async () => {
+		const user = userEvent.setup();
+		const { container } = renderPicker();
+		const dialog = screen.getByRole('dialog', { name: 'color picker' });
+
+		expect(dialog).not.toHaveClass('is-open');
+		await user.click(container.querySelector('label span') as HTMLElement);
+		expect(dialog).toHaveClass('is-open');
 	});
 });

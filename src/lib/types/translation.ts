@@ -781,6 +781,7 @@ export interface DevRecords {
 		status_pending: string;
 		status_in_progress: string;
 		status_waiting_for_deployment: string;
+		status_waiting_for_user: string;
 		status_completed: string;
 		status_cancelled: string;
 		validation_error: string;

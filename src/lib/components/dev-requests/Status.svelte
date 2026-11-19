@@ -11,6 +11,7 @@
 		pending: 'bg-c-action',
 		'in-progress': 'bg-c-btn-hover',
 		'waiting-for-deployment': 'bg-c-warning',
+		'waiting-for-user': 'bg-c-primary',
 		completed: 'bg-c-success',
 		cancelled: 'bg-c-danger'
 	};
@@ -21,6 +22,7 @@
 			pending: ts.get.dev.requests.status_pending,
 			'in-progress': ts.get.dev.requests.status_in_progress,
 			'waiting-for-deployment': ts.get.dev.requests.status_waiting_for_deployment,
+			'waiting-for-user': ts.get.dev.requests.status_waiting_for_user,
 			completed: ts.get.dev.requests.status_completed,
 			cancelled: ts.get.dev.requests.status_cancelled
 		};

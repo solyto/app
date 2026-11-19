@@ -5,6 +5,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import ColorPicker from 'svelte-awesome-color-picker';
+	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
 	import type { Calendar, UpdateCalendarRequest } from '$lib/types/calendar';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
@@ -64,6 +65,8 @@
 <div class="flex w-full min-w-0 items-center gap-4">
 	<div use:clickOutside={onColorChange}>
 		<ColorPicker
+			components={{ input: ColorPickerInput }}
+			isAlpha={false}
 			bind:hex
 			position="responsive"
 			nullable={false}

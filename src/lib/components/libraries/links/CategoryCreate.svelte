@@ -8,6 +8,7 @@
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import ColorPicker from 'svelte-awesome-color-picker';
+	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 
@@ -77,6 +78,8 @@
 		<div class="flex w-full items-center gap-4">
 			<div class="fixed" use:clickOutside={() => {}}>
 				<ColorPicker
+					components={{ input: ColorPickerInput }}
+					isAlpha={false}
 					bind:hex
 					position="responsive"
 					nullable={false}

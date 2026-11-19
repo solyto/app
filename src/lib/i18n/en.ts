@@ -801,6 +801,7 @@ const dev: DevRecords = {
 		status_pending: 'Pending',
 		status_in_progress: 'In Progress',
 		status_waiting_for_deployment: 'Waiting for Deployment',
+		status_waiting_for_user: 'Waiting for User',
 		status_completed: 'Completed',
 		status_cancelled: 'Rejected',
 		validation_error: 'Please add a title and a description',

@@ -800,6 +800,7 @@ const dev: DevRecords = {
 		status_pending: 'Ожидает рассмотрения',
 		status_in_progress: 'В работе',
 		status_waiting_for_deployment: 'Ожидает развёртывания',
+		status_waiting_for_user: 'Ожидает ответа',
 		status_completed: 'Завершено',
 		status_cancelled: 'Отклонено',
 		validation_error: 'Укажите название и описание',

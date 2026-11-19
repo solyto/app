@@ -10,6 +10,7 @@
 	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import ColorPicker from 'svelte-awesome-color-picker';
+	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -269,6 +270,8 @@
 					<div class="flex flex-row items-center gap-2">
 						<div use:clickOutside={() => handleColorChange(category.id)}>
 							<ColorPicker
+								components={{ input: ColorPickerInput }}
+								isAlpha={false}
 								hex={getCategoryHex(category.id, category.color)}
 								onInput={(e) => { if (e.hex) setCategoryHex(category.id, e.hex); }}
 								position="responsive"

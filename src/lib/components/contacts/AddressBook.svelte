@@ -68,6 +68,7 @@
 		}}
 	>
 		<ColorPicker
+			isAlpha={false}
 			bind:hex
 			position="responsive"
 			nullable={false}

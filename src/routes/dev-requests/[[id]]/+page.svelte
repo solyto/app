@@ -20,7 +20,7 @@
 	const loadingIndicator = getLoadingIndicator();
 	const filterService = new DevRequestFilterService();
 
-	const FILTERS: DevRequestFilter[] = ['all', 'backlog', 'open', 'in-progress', 'waiting-for-deployment'];
+	const FILTERS: DevRequestFilter[] = ['all', 'backlog', 'open', 'in-progress', 'waiting-for-deployment', 'waiting-for-user'];
 
 	const isAdmin = auth.isAdmin();
 
@@ -38,7 +38,8 @@
 			'backlog': ts.get.dev.requests.status_backlog,
 			'open': ts.get.dev.requests.filter_open,
 			'in-progress': ts.get.dev.requests.status_in_progress,
-			'waiting-for-deployment': ts.get.dev.requests.status_waiting_for_deployment
+			'waiting-for-deployment': ts.get.dev.requests.status_waiting_for_deployment,
+			'waiting-for-user': ts.get.dev.requests.status_waiting_for_user
 		};
 
 		return FILTERS.map((value) => ({

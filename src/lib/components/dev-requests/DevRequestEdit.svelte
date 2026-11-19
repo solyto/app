@@ -51,6 +51,7 @@
 		{ value: 'pending', label: ts.get.dev.requests.status_pending },
 		{ value: 'in-progress', label: ts.get.dev.requests.status_in_progress },
 		{ value: 'waiting-for-deployment', label: ts.get.dev.requests.status_waiting_for_deployment },
+		{ value: 'waiting-for-user', label: ts.get.dev.requests.status_waiting_for_user },
 		{ value: 'completed', label: ts.get.dev.requests.status_completed },
 		{ value: 'cancelled', label: ts.get.dev.requests.status_cancelled }
 	];

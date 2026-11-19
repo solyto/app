@@ -2,6 +2,7 @@
 	import type { Tag } from '$lib/types/tag';
 	import { fade } from 'svelte/transition';
 	import ColorPicker from 'svelte-awesome-color-picker';
+	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
@@ -39,6 +40,8 @@
 >
 	<div use:clickOutside={onColorChange}>
 		<ColorPicker
+			components={{ input: ColorPickerInput }}
+			isAlpha={false}
 			bind:hex
 			bind:isOpen={pickerOpen}
 			position="responsive"
