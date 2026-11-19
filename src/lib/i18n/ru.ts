@@ -993,6 +993,10 @@ const calendar: CalendarRecords = {
 	recurrence_monthly_weekday: 'Ежемесячно в этот день недели',
 	recurrence_yearly: 'Каждый год',
 	recurrence_on_the: 'в',
+	recurrence_ends: 'Окончание',
+	recurrence_ends_never: 'Никогда',
+	recurrence_ends_on_date: 'Дата',
+	recurrence_ends_after_count: 'Число повторений: %s',
 	recurrence_not_editable: 'Это правило повторения нельзя изменить здесь. Оно останется прежним.',
 	recurrence_ordinals: {
 		1: '1-й',

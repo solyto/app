@@ -1,5 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
+	dateInTimeZone,
+	floatingToUtc,
 	formatDate,
 	formatDateWithoutYear,
 	formatMonth,
@@ -420,5 +422,27 @@ describe('parseUrlFormat', () => {
 		expect(parseUrlFormat('15.08.2025')).toBeNull();
 		expect(parseUrlFormat('aaaa-bb-cc')).toBeNull();
 		expect(parseUrlFormat('2025-08-00')).toBeNull();
+	});
+});
+
+describe('floatingToUtc', () => {
+	it.each([
+		['2027-12-31T23:59:59', 'Europe/Berlin', '2027-12-31T22:59:59.000Z'],
+		['2027-07-15T23:59:59', 'Europe/Berlin', '2027-07-15T21:59:59.000Z'],
+		['2027-03-14T23:59:59', 'America/New_York', '2027-03-15T03:59:59.000Z'],
+		['2027-03-14T01:30:00', 'America/New_York', '2027-03-14T06:30:00.000Z'],
+		['2027-12-31T23:59:59', 'UTC', '2027-12-31T23:59:59.000Z']
+	])('reads %s in %s as %s', (floating, timeZone, utc) => {
+		expect(floatingToUtc(floating, timeZone).toISOString()).toBe(utc);
+	});
+});
+
+describe('dateInTimeZone', () => {
+	it.each([
+		['2027-12-31T23:30:00Z', 'Europe/Berlin', '2028-01-01'],
+		['2028-01-01T02:00:00Z', 'America/New_York', '2027-12-31'],
+		['2027-12-31T23:30:00Z', 'UTC', '2027-12-31']
+	])('dates %s in %s as %s', (instant, timeZone, date) => {
+		expect(dateInTimeZone(new Date(instant), timeZone)).toBe(date);
 	});
 });

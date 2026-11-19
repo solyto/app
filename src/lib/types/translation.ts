@@ -977,6 +977,10 @@ export interface CalendarRecords {
 	recurrence_monthly_weekday: string;
 	recurrence_yearly: string;
 	recurrence_on_the: string;
+	recurrence_ends: string;
+	recurrence_ends_never: string;
+	recurrence_ends_on_date: string;
+	recurrence_ends_after_count: string;
 	recurrence_not_editable: string;
 	recurrence_ordinals: {
 		[key: number]: string;

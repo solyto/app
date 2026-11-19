@@ -2,10 +2,13 @@
 	import { slide } from 'svelte/transition';
 	import Select from '$lib/components/forms/Select.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
+	import DateInput from '$lib/components/forms/DateInput.svelte';
+	import { getUrlFormat } from '$lib/helpers/DateHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import RecurrenceRuleService, { WEEKDAYS } from '$lib/services/RecurrenceRuleService';
 	import type {
 		MonthlyOrdinal,
+		RecurrenceEnd,
 		RecurrenceSelection,
 		RecurrenceType,
 		Weekday
@@ -19,6 +22,8 @@
 	const ts = getTranslation();
 	const recurrenceRuleService = new RecurrenceRuleService();
 	const ORDINALS: MonthlyOrdinal[] = [1, 2, 3, 4];
+
+	let lastValidUntil = selection.until;
 
 	function typeOptions(): { label: string; value: RecurrenceType }[] {
 		return [
@@ -47,6 +52,22 @@
 		}));
 	}
 
+	function endOptions(): { label: string; value: RecurrenceEnd }[] {
+		const options: { label: string; value: RecurrenceEnd }[] = [
+			{ label: ts.get.calendar.recurrence_ends_never, value: 'never' },
+			{ label: ts.get.calendar.recurrence_ends_on_date, value: 'until' }
+		];
+
+		if (selection.count !== null) {
+			options.push({
+				label: ts.get.calendar.recurrence_ends_after_count.replace('%s', String(selection.count)),
+				value: 'count'
+			});
+		}
+
+		return options;
+	}
+
 	function weekdayNumber(day: Weekday): number {
 		return WEEKDAYS.indexOf(day) + 1;
 	}
@@ -73,6 +94,26 @@
 	function setMonthlyWeekday(value: string): void {
 		selection.monthlyWeekday = value as Weekday;
 	}
+
+	function setEnd(value: string): void {
+		selection.end = value as RecurrenceEnd;
+
+		if (selection.end === 'until' && !selection.until) {
+			selection.until = recurrenceRuleService.defaultUntil(selection, startDate);
+			lastValidUntil = selection.until;
+		}
+	}
+
+	function rememberUntil(): void {
+		if (selection.until) {
+			lastValidUntil = selection.until;
+		}
+	}
+
+	function restoreUntil(): void {
+		selection.until = recurrenceRuleService.untilNotBeforeStart(selection.until || lastValidUntil, startDate);
+		lastValidUntil = selection.until;
+	}
 </script>
 
 <div class="flex w-full flex-col gap-2 p-1" transition:slide>
@@ -96,4 +137,27 @@
 			<Select value={selection.monthlyWeekday} options={weekdayOptions()} onchange={setMonthlyWeekday} />
 		</div>
 	{/if}
+
+	<div class="mt-1 flex flex-wrap items-center gap-2">
+		<span class="shrink-0 text-sm">{ts.get.calendar.recurrence_ends}</span>
+		<div class="min-w-28 flex-1">
+			<Select
+				value={selection.end}
+				options={endOptions()}
+				onchange={setEnd}
+				ariaLabel={ts.get.calendar.recurrence_ends}
+			/>
+		</div>
+		{#if selection.end === 'until'}
+			<div class="min-w-36 flex-1">
+				<DateInput
+					bind:value={selection.until}
+					min={getUrlFormat(startDate)}
+					oninput={rememberUntil}
+					onblur={restoreUntil}
+					class="h-10"
+				/>
+			</div>
+		{/if}
+	</div>
 </div>

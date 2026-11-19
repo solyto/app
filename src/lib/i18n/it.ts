@@ -995,6 +995,10 @@ const calendar: CalendarRecords = {
 	recurrence_monthly_weekday: 'Ogni mese nel giorno della settimana',
 	recurrence_yearly: 'Ogni anno',
 	recurrence_on_the: 'il',
+	recurrence_ends: 'Termina',
+	recurrence_ends_never: 'Mai',
+	recurrence_ends_on_date: 'In una data',
+	recurrence_ends_after_count: 'Dopo %s occorrenze',
 	recurrence_not_editable: "Questa ricorrenza non può essere modificata qui. Viene mantenuta così com'è.",
 	recurrence_ordinals: {
 		1: '1º',
