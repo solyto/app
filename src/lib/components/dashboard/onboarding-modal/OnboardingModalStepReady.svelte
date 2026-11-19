@@ -3,8 +3,8 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getPwaInstall } from '$lib/state/PwaInstall.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
-	import IconRocket from '@lucide/svelte/icons/rocket';
-	import IconSmartphone from '@lucide/svelte/icons/smartphone';
+	import IconRocket from '$lib/icons/lucide/rocket.svelte';
+	import IconSmartphone from '$lib/icons/lucide/smartphone.svelte';
 
 	const ts = getTranslation();
 	const pwa = getPwaInstall();

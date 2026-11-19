@@ -2,7 +2,7 @@
 	import { fly, scale } from 'svelte/transition';
 	import { backOut, cubicIn } from 'svelte/easing';
 	import { onMount, onDestroy } from 'svelte';
-	import IconEllipsisVertical from '@lucide/svelte/icons/ellipsis-vertical';
+	import IconEllipsisVertical from '$lib/icons/lucide/ellipsis-vertical.svelte';
 	import NavEntry from '$lib/components/ui/NavEntry.svelte';
 	import NavProfileEntry from '$lib/components/ui/NavProfileEntry.svelte';
 	import NavLegalEntry from '$lib/components/ui/NavLegalEntry.svelte';

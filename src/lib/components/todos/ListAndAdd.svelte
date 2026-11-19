@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconPlus from '@lucide/svelte/icons/plus';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';

@@ -7,7 +7,7 @@
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import { scale } from 'svelte/transition';
-	import IconRepeat from '@lucide/svelte/icons/repeat';
+	import IconRepeat from '$lib/icons/lucide/repeat.svelte';
 	import NumberInput from '$lib/components/forms/NumberInput.svelte';
 	import DateInput from '$lib/components/forms/DateInput.svelte';
 	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';

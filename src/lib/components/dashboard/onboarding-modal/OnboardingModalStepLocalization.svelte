@@ -2,7 +2,7 @@
 	import { blur } from 'svelte/transition';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import IconSettings from '@lucide/svelte/icons/settings';
+	import IconSettings from '$lib/icons/lucide/settings.svelte';
 	import type { Language } from '$lib/types/translation';
 
 	const ts = getTranslation();

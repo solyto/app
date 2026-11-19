@@ -9,10 +9,10 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
-	import IconShare2 from '@lucide/svelte/icons/share-2';
-	import IconEye from '@lucide/svelte/icons/eye';
-	import IconEyeOff from '@lucide/svelte/icons/eye-off';
-	import IconKeyRound from '@lucide/svelte/icons/key-round';
+	import IconShare2 from '$lib/icons/lucide/share-2.svelte';
+	import IconEye from '$lib/icons/lucide/eye.svelte';
+	import IconEyeOff from '$lib/icons/lucide/eye-off.svelte';
+	import IconKeyRound from '$lib/icons/lucide/key-round.svelte';
 
 	const calendars = getCalendars();
 	const calendarSharing = getCalendarSharing();

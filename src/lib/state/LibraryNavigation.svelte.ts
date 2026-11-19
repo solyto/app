@@ -2,14 +2,14 @@ import type { LibraryType } from '$lib/types/library';
 import { getContext, setContext, type Component } from 'svelte';
 import { page } from '$app/state';
 import { urls } from '$lib/config/urls';
-import IconMusic from '@lucide/svelte/icons/music';
-import IconBook from '@lucide/svelte/icons/book';
-import IconClapperboard from '@lucide/svelte/icons/clapperboard';
-import IconGamepad2 from '@lucide/svelte/icons/gamepad-2';
-import IconLink from '@lucide/svelte/icons/link';
-import IconQuote from '@lucide/svelte/icons/quote';
-import IconCookingPot from '@lucide/svelte/icons/cooking-pot';
-import IconLeaf from '@lucide/svelte/icons/leaf';
+import IconMusic from '$lib/icons/lucide/eighth-notes.svelte';
+import IconBook from '$lib/icons/lucide/book.svelte';
+import IconClapperboard from '$lib/icons/lucide/clapperboard.svelte';
+import IconGamepad2 from '$lib/icons/lucide/gamepad-2.svelte';
+import IconLink from '$lib/icons/lucide/link.svelte';
+import IconQuote from '$lib/icons/lucide/quote.svelte';
+import IconCookingPot from '$lib/icons/lucide/cooking-pot.svelte';
+import IconLeaf from '$lib/icons/lucide/leaf.svelte';
 
 export const navigationItems: { type: LibraryType; url: `/libraries/${LibraryType}`; icon: Component }[] = [
 	{ type: 'music', url: urls.musicLibrary, icon: IconMusic },

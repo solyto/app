@@ -3,10 +3,10 @@
 	import type { Component } from 'svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import IconUsers from '@lucide/svelte/icons/users';
-	import IconCloud from '@lucide/svelte/icons/cloud';
-	import IconCloudOff from '@lucide/svelte/icons/cloud-off';
-	import IconKeyRound from '@lucide/svelte/icons/key-round';
+	import IconUsers from '$lib/icons/lucide/users.svelte';
+	import IconCloud from '$lib/icons/lucide/cloud.svelte';
+	import IconCloudOff from '$lib/icons/lucide/cloud-off.svelte';
+	import IconKeyRound from '$lib/icons/lucide/key-round.svelte';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
 
 	const calendars = getCalendars();

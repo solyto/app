@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconFunnel from '@lucide/svelte/icons/funnel';
+	import IconFunnel from '$lib/icons/lucide/funnel.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { FilterLibrary, GenreLibrary, RatingLibrary } from '$lib/types/library';
 	import { clickOutside } from '$lib/helpers/ClickHelper';

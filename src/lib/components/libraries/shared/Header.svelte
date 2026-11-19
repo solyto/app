@@ -2,8 +2,8 @@
 	import type { Snippet } from 'svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
-	import IconTag from '@lucide/svelte/icons/tag';
-	import IconPlus from '@lucide/svelte/icons/plus';
+	import IconTag from '$lib/icons/lucide/tag.svelte';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import ViewSwitcher from '$lib/components/libraries/shared/ViewSwitcher.svelte';
 	import Search from '$lib/components/libraries/shared/Search.svelte';

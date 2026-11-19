@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+	import IconChevronsUpDown from '$lib/icons/lucide/chevrons-up-down.svelte';
 
 	let { onClick }: {
 		onClick: (e: MouseEvent) => void | Promise<void>;

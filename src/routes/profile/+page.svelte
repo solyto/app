@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import IconPlus from '@lucide/svelte/icons/plus';
-	import IconLogout from '@lucide/svelte/icons/log-out';
-	import IconShieldUser from '@lucide/svelte/icons/shield-user';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
+	import IconLogout from '$lib/icons/lucide/log-out.svelte';
+	import IconShieldUser from '$lib/icons/lucide/shield-user.svelte';
 	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 	import { onMount } from 'svelte';
 	import { getFriends } from '$lib/state/Friends.svelte';

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
-	import IconGripVertical from '@lucide/svelte/icons/grip-vertical';
-	import IconLock from '@lucide/svelte/icons/lock';
+	import IconGripVertical from '$lib/icons/lucide/grip-vertical.svelte';
+	import IconLock from '$lib/icons/lucide/lock.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';

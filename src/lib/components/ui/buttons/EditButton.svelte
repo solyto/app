@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconPen from '@lucide/svelte/icons/pen';
+	import IconPen from '$lib/icons/lucide/pen.svelte';
 
 	let {
 		onClick,

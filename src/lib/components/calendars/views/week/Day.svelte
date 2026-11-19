@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { blur } from 'svelte/transition';
-	import IconPlus from '@lucide/svelte/icons/plus';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { formatDate, getDateDiffInMinutes, getHoursOfDay, getMobileTimeOffsetRem, isOffHour, parseDateSlug } from '$lib/helpers/DateHelper';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';

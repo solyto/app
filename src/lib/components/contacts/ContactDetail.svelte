@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { getInitials } from '$lib/helpers/NameHelper';
-	import IconPhone from '@lucide/svelte/icons/phone';
-	import IconMail from '@lucide/svelte/icons/mail';
-	import IconUsersRound from '@lucide/svelte/icons/users-round';
-	import IconCardSim from '@lucide/svelte/icons/card-sim';
-	import IconHouse from '@lucide/svelte/icons/house';
-	import IconBriefcaseBusiness from '@lucide/svelte/icons/briefcase-business';
-	import IconBookUser from '@lucide/svelte/icons/book-user';
-	import IconBuilding from '@lucide/svelte/icons/building-2';
-	import IconMapPinHouse from '@lucide/svelte/icons/map-pin-house';
-	import IconPlus from '@lucide/svelte/icons/plus';
+	import IconPhone from '$lib/icons/lucide/phone.svelte';
+	import IconMail from '$lib/icons/lucide/mail.svelte';
+	import IconUsersRound from '$lib/icons/lucide/users-round.svelte';
+	import IconCardSim from '$lib/icons/lucide/card-sim.svelte';
+	import IconHouse from '$lib/icons/lucide/house.svelte';
+	import IconBriefcaseBusiness from '$lib/icons/lucide/briefcase-business.svelte';
+	import IconBookUser from '$lib/icons/lucide/book-user.svelte';
+	import IconBuilding from '$lib/icons/lucide/building-complex.svelte';
+	import IconMapPinHouse from '$lib/icons/lucide/map-pin-house.svelte';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import Divider from '$lib/components/ui/Divider.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';

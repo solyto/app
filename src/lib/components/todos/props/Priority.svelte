@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
 	import type { Todo, TodoPriority } from '$lib/types/todo';
-	import IconUp from '@lucide/svelte/icons/circle-arrow-up';
-	import IconRight from '@lucide/svelte/icons/circle-arrow-right';
-	import IconDown from '@lucide/svelte/icons/circle-arrow-down';
+	import IconUp from '$lib/icons/lucide/circle-arrow-up.svelte';
+	import IconRight from '$lib/icons/lucide/circle-arrow-right.svelte';
+	import IconDown from '$lib/icons/lucide/circle-arrow-down.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import QuickSelectOverlay from '$lib/components/ui/QuickSelectOverlay.svelte';

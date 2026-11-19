@@ -1,6 +1,6 @@
 <script lang="ts">
-	import IconBookmarkPlus from '@lucide/svelte/icons/bookmark-plus';
-	import IconBookmarkCheck from '@lucide/svelte/icons/bookmark-check';
+	import IconBookmarkPlus from '$lib/icons/lucide/bookmark-plus.svelte';
+	import IconBookmarkCheck from '$lib/icons/lucide/bookmark-check.svelte';
 	import { getLinkLibrary } from '$lib/state/LinkLibrary.svelte';
 	import type { FeedItem } from '$lib/types/feed';
 	import { getFeeds } from '$lib/state/Feeds.svelte';

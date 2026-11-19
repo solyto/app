@@ -3,9 +3,9 @@
 	import { tick } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import IconLayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
-	import IconList from '@lucide/svelte/icons/list';
-	import IconChartPie from '@lucide/svelte/icons/chart-pie';
+	import IconLayoutDashboard from '$lib/icons/lucide/layout-dashboard.svelte';
+	import IconList from '$lib/icons/lucide/list.svelte';
+	import IconChartPie from '$lib/icons/lucide/chart-pie.svelte';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
 	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';

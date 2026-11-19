@@ -1,6 +1,6 @@
 <script lang="ts">
-	import IconRefreshCw from '@lucide/svelte/icons/refresh-cw';
-	import IconDownload from '@lucide/svelte/icons/download';
+	import IconRefreshCw from '$lib/icons/lucide/refresh-cw.svelte';
+	import IconDownload from '$lib/icons/lucide/download.svelte';
 
 	import type { UpdaterStatus } from '$lib/types/platform';
 

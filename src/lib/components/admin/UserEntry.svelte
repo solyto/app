@@ -5,10 +5,10 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import IconShield from '@lucide/svelte/icons/shield';
-	import IconShieldCheck from '@lucide/svelte/icons/shield-check';
-	import IconUser from '@lucide/svelte/icons/user';
-	import IconBadgeCheck from '@lucide/svelte/icons/badge-check';
+	import IconShield from '$lib/icons/lucide/shield.svelte';
+	import IconShieldCheck from '$lib/icons/lucide/shield-check.svelte';
+	import IconUser from '$lib/icons/lucide/user.svelte';
+	import IconBadgeCheck from '$lib/icons/lucide/badge-check.svelte';
 
 	const userManagement = getUserManagement();
 	const auth = getAuth();

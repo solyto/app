@@ -6,24 +6,24 @@
 	import { fly } from 'svelte/transition';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import Bold from '@lucide/svelte/icons/bold';
-	import Italic from '@lucide/svelte/icons/italic';
-	import Strikethrough from '@lucide/svelte/icons/strikethrough';
-	import Code from '@lucide/svelte/icons/code';
-	import CodeXml from '@lucide/svelte/icons/code-xml';
-	import Heading1 from '@lucide/svelte/icons/heading-1';
-	import Heading2 from '@lucide/svelte/icons/heading-2';
-	import Heading3 from '@lucide/svelte/icons/heading-3';
-	import List from '@lucide/svelte/icons/list';
-	import ListOrdered from '@lucide/svelte/icons/list-ordered';
-	import Quote from '@lucide/svelte/icons/quote';
-	import Minus from '@lucide/svelte/icons/minus';
-	import Link2 from '@lucide/svelte/icons/link-2';
-	import TableIcon from '@lucide/svelte/icons/table';
-	import ImageIcon from '@lucide/svelte/icons/image';
-	import Undo from '@lucide/svelte/icons/undo';
-	import Redo from '@lucide/svelte/icons/redo';
-	import PenLine from '@lucide/svelte/icons/pen-line';
+	import Bold from '$lib/icons/lucide/bold.svelte';
+	import Italic from '$lib/icons/lucide/italic.svelte';
+	import Strikethrough from '$lib/icons/lucide/strikethrough.svelte';
+	import Code from '$lib/icons/lucide/code.svelte';
+	import CodeXml from '$lib/icons/lucide/code-xml.svelte';
+	import Heading1 from '$lib/icons/lucide/heading-1.svelte';
+	import Heading2 from '$lib/icons/lucide/heading-2.svelte';
+	import Heading3 from '$lib/icons/lucide/heading-3.svelte';
+	import List from '$lib/icons/lucide/list.svelte';
+	import ListOrdered from '$lib/icons/lucide/list-ordered.svelte';
+	import Quote from '$lib/icons/lucide/quote.svelte';
+	import Minus from '$lib/icons/lucide/minus.svelte';
+	import Link2 from '$lib/icons/lucide/link-2.svelte';
+	import TableIcon from '$lib/icons/lucide/table.svelte';
+	import ImageIcon from '$lib/icons/lucide/image.svelte';
+	import Undo from '$lib/icons/lucide/undo.svelte';
+	import Redo from '$lib/icons/lucide/redo.svelte';
+	import PenLine from '$lib/icons/lucide/pen-line.svelte';
 
 	export type ActiveStates = {
 		bold: boolean

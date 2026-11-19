@@ -3,7 +3,7 @@
 	import { legalUrls, urls } from '$lib/config/urls';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
-	import IconScale from '@lucide/svelte/icons/scale';
+	import IconScale from '$lib/icons/lucide/scale.svelte';
 
 	const ts = getTranslation();
 

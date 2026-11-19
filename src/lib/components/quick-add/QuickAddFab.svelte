@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade, scale } from 'svelte/transition';
 	import { getQuickAdd } from '$lib/state/QuickAdd.svelte';
-	import IconPlus from '@lucide/svelte/icons/plus';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const quickAdd = getQuickAdd();

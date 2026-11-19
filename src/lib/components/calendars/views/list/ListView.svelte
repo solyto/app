@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconPlus from '@lucide/svelte/icons/plus';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getNextXDays } from '$lib/helpers/DateHelper';
 	import Day from '$lib/components/calendars/views/list/Day.svelte';

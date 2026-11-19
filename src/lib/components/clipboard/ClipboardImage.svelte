@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import IconImageOff from '@lucide/svelte/icons/image-off';
+	import IconImageOff from '$lib/icons/lucide/image-off.svelte';
 	import { getClipboard } from '$lib/state/Clipboard.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { ClipboardEntry } from '$lib/types/clipboard';
