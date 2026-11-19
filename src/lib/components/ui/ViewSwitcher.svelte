@@ -28,8 +28,8 @@
 <div class="flex items-center gap-1 {className}">
 	{#each views as view (view.type)}
 		<button
-			class="cursor-pointer rounded-lg p-2 transition-all hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
-			class:bg-c-neutral-1={view.type === currentlySelected}
+			class="cursor-pointer rounded-lg p-2 transition-all hover:bg-c-highlight dark:hover:bg-s-dark-3"
+			class:bg-c-highlight={view.type === currentlySelected}
 			class:dark:bg-s-dark-3={view.type === currentlySelected}
 			onclick={() => onChange(view.type)}
 			title={view.title}

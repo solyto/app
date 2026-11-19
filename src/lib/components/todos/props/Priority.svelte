@@ -47,9 +47,9 @@
 		loadingIndicator.stop();
 	}
 
-	function getIconClass(colorClass: string): string {
+	function getIconClass(colorClass: string, filledColorClass: string): string {
 		if (filled) {
-			return 'cursor-pointer text-white';
+			return `cursor-pointer ${filledColorClass}`;
 		}
 
 		return `cursor-pointer rounded-full ${colorClass} hover:bg-c-neutral dark:hover:bg-s-dark-3`;
@@ -60,7 +60,6 @@
 	bind:this={trigger}
 	class={[
 		'relative flex items-center rounded-l-md transition-all duration-300 max-2xl:rounded-full',
-		filled && 'todo-priority-filled',
 		filled && getPriorityColorClass(todo.priority)
 	]}
 	class:justify-center={!left}
@@ -76,17 +75,17 @@
 			<span class="flex" in:scale={{ start: 0.6, duration: 250 }}>
 				{#if todo.priority === 'high'}
 					<IconUp
-						class={getIconClass('text-c-danger')}
+						class={getIconClass('text-c-danger', 'text-c-danger-icon')}
 						onclick={togglePriorityMenu}
 					/>
 				{:else if todo.priority === 'medium'}
 					<IconRight
-						class={getIconClass('text-c-btn')}
+						class={getIconClass('text-c-btn', 'text-c-btn-icon')}
 						onclick={togglePriorityMenu}
 					/>
 				{:else if todo.priority === 'low'}
 					<IconDown
-						class={getIconClass('text-c-success')}
+						class={getIconClass('text-c-success', 'text-c-success-icon')}
 						onclick={togglePriorityMenu}
 					/>
 				{/if}

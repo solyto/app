@@ -534,7 +534,10 @@ const notes: NoteRecords = {
 	yesterday: 'Вчера',
 	other: 'Другое',
 	journal_empty: 'За этот день записей пока нет.',
-	journal_create_error: 'Не удалось создать запись в дневнике.'
+	journal_create_error: 'Не удалось создать запись в дневнике.',
+	move_note: 'Переместить в папку',
+	no_folder: 'Без папки',
+	move_error: 'Не удалось переместить заметку.'
 };
 
 const libraries: LibraryRecords = {
@@ -625,6 +628,7 @@ const libraries: LibraryRecords = {
 		search_placeholder: 'Название фильма или сериала…'
 	},
 	games: {
+		update_error: 'Не удалось изменить игру.',
 		title: 'Название',
 		platform: 'Платформа',
 		platform_pc: 'ПК',
@@ -708,6 +712,7 @@ const libraries: LibraryRecords = {
 		update_error: 'Не удалось изменить рецепт.'
 	},
 	plants: {
+		update_error: 'Не удалось изменить растение.',
 		name: 'Название',
 		latin_name: 'Латинское название',
 		location: 'Расположение',
@@ -988,6 +993,10 @@ const calendar: CalendarRecords = {
 	recurrence_monthly_weekday: 'Ежемесячно в этот день недели',
 	recurrence_yearly: 'Каждый год',
 	recurrence_on_the: 'в',
+	recurrence_ends: 'Окончание',
+	recurrence_ends_never: 'Никогда',
+	recurrence_ends_on_date: 'Дата',
+	recurrence_ends_after_count: 'Число повторений: %s',
 	recurrence_not_editable: 'Это правило повторения нельзя изменить здесь. Оно останется прежним.',
 	recurrence_ordinals: {
 		1: '1-й',
@@ -1227,7 +1236,8 @@ const clipboard: ClipboardRecords = {
 	file_limit_reached: 'Можно загрузить не более 10 файлов в день.',
 	file_limit_reached_hours_singular: 'Можно загрузить не более 10 файлов в день. Попробуйте через 1 ч.',
 	file_limit_reached_hours_plural: 'Можно загрузить не более 10 файлов в день. Попробуйте через {n} ч.',
-	file_download_error: 'Не удалось скачать файл'
+	file_download_error: 'Не удалось скачать файл',
+	image_load_error: 'Не удалось загрузить изображение'
 };
 
 const profile: ProfileRecords = {

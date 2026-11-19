@@ -515,6 +515,9 @@ export interface NoteRecords {
 	other: string;
 	journal_empty: string;
 	journal_create_error: string;
+	move_note: string;
+	no_folder: string;
+	move_error: string;
 }
 
 export interface LibraryRecords {
@@ -605,6 +608,7 @@ export interface LibraryRecords {
 		search_placeholder: string;
 	};
 	games: {
+		update_error: string;
 		title: string;
 		platform: string;
 		platform_pc: string;
@@ -688,6 +692,7 @@ export interface LibraryRecords {
 		update_error: string;
 	};
 	plants: {
+		update_error: string;
 		name: string;
 		latin_name: string;
 		location: string;
@@ -972,6 +977,10 @@ export interface CalendarRecords {
 	recurrence_monthly_weekday: string;
 	recurrence_yearly: string;
 	recurrence_on_the: string;
+	recurrence_ends: string;
+	recurrence_ends_never: string;
+	recurrence_ends_on_date: string;
+	recurrence_ends_after_count: string;
 	recurrence_not_editable: string;
 	recurrence_ordinals: {
 		[key: number]: string;
@@ -1169,6 +1178,7 @@ export interface ClipboardRecords {
 	file_limit_reached_hours_singular: string;
 	file_limit_reached_hours_plural: string;
 	file_download_error: string;
+	image_load_error: string;
 }
 
 export interface ProfileRecords {

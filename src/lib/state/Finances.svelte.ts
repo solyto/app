@@ -104,7 +104,7 @@ export class Finances {
 	async deleteBudget(budget: Budget): Promise<boolean> {
 		const res = await this.apiService.delete(apiRoutes.finances.budget.delete, budget.id);
 		if (res) await this.loadIncome();
-		return Promise.resolve(res !== null);
+		return res;
 	}
 
 	async updateBudget(budget: Budget, request: UpdateBudgetRequest): Promise<boolean> {
@@ -205,7 +205,7 @@ export class Finances {
 	async deleteWealthField(wealth: WealthField): Promise<boolean> {
 		const res = await this.apiService.delete(apiRoutes.finances.wealth.deleteField, wealth.id);
 		if (res) await this.loadWealth();
-		return Promise.resolve(res !== null);
+		return res;
 	}
 
 	private async reloadBudget(budget: Budget): Promise<void> {

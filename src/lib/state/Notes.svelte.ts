@@ -43,6 +43,7 @@ export class NotesSvelte {
 	rightClickId = $state<number | string | null>(null);
 	draggedNote = $state<Note | null>(null);
 	dragTarget = $state<NoteCategory | null>(null);
+	noteToMove = $state<Note | null>(null);
 	input = $state<HTMLInputElement | null>(null);
 	inputValue = $state<string>('');
 	searchVisible = $state<boolean>(false);
@@ -276,12 +277,10 @@ export class NotesSvelte {
 		await this.openModal('note');
 	}
 
-	openRightClickMenu(event: MouseEvent, type: 'note' | 'category', id: number | string): void {
-		event.preventDefault();
-
+	openRightClickMenu(x: number, y: number, type: 'note' | 'category', id: number | string): void {
 		this.rightClickType = type;
-		this.rightClickMenuX = event.clientX;
-		this.rightClickMenuY = event.clientY;
+		this.rightClickMenuX = x;
+		this.rightClickMenuY = y;
 		this.rightClickId = id;
 		this.createParent = type === 'category' ? id as number : null;
 		this.rightClickMenuOpen = true;
@@ -291,19 +290,20 @@ export class NotesSvelte {
 		this.rightClickMenuOpen = false;
 	}
 
-	async dragToCategory(): Promise<void> {
-		if (this.draggedNote === null) return;
+	openMoveNoteModal(noteId: string): void {
+		this.noteToMove = this.notes.find((n) => n.id === noteId) ?? null;
+		this.closeRightClickMenu();
+	}
 
-		const request: UpdateNoteRequest = {
-			category_id: this.dragTarget ? this.dragTarget.id : null
-		};
-		const ok = await this.apiService.update(
-			apiRoutes.notes.update,
-			this.draggedNote.id,
-			request
-		);
+	closeMoveNoteModal(): void {
+		this.noteToMove = null;
+	}
+
+	async moveToCategory(noteId: string, categoryId: number | null): Promise<boolean> {
+		const request: UpdateNoteRequest = { category_id: categoryId };
+		const ok = await this.apiService.update(apiRoutes.notes.update, noteId, request);
 		if (ok) await this.load();
-		return Promise.resolve();
+		return ok;
 	}
 
 	async create(): Promise<Note | null> {

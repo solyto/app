@@ -5,6 +5,7 @@
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import NoteSearch from '$lib/components/notes/NoteSearch.svelte';
+	import MoveNoteModal from '$lib/components/notes/MoveNoteModal.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTags, setTags } from '$lib/state/Tags.svelte';
@@ -64,6 +65,11 @@
 	];
 
 	const rightClickMenuNoteEntries: RightClickMenuEntry[] = [
+		{
+			icon: 'move',
+			label: ts.get.notes.move_note,
+			action: () => notes.openMoveNoteModal(notes.rightClickId as string)
+		},
 		{
 			icon: 'delete',
 			label: ts.get.notes.delete_note,
@@ -170,6 +176,10 @@
 			entries={rightClickMenuCategoryEntries}
 		/>
 	{/if}
+{/if}
+
+{#if notes.noteToMove}
+	<MoveNoteModal note={notes.noteToMove} />
 {/if}
 
 {#if pendingDelete}

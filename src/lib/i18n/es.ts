@@ -535,7 +535,10 @@ const notes: NoteRecords = {
 	yesterday: 'Ayer',
 	other: 'Otro',
 	journal_empty: 'Todavía no hay una entrada para este día.',
-	journal_create_error: 'No se pudo crear la entrada del diario.'
+	journal_create_error: 'No se pudo crear la entrada del diario.',
+	move_note: 'Mover a carpeta',
+	no_folder: 'Sin carpeta',
+	move_error: 'No se pudo mover la nota.'
 };
 
 const libraries: LibraryRecords = {
@@ -626,6 +629,7 @@ const libraries: LibraryRecords = {
 		search_placeholder: 'Título de película o serie...'
 	},
 	games: {
+		update_error: 'No se pudo actualizar el juego.',
 		title: 'Título',
 		platform: 'Plataforma',
 		platform_pc: 'PC',
@@ -709,6 +713,7 @@ const libraries: LibraryRecords = {
 		update_error: 'No se pudo actualizar la receta.'
 	},
 	plants: {
+		update_error: 'No se pudo actualizar la planta.',
 		name: 'Nombre',
 		latin_name: 'Nombre latino',
 		location: 'Ubicación',
@@ -990,6 +995,10 @@ const calendar: CalendarRecords = {
 	recurrence_monthly_weekday: 'Mensualmente en un día de la semana',
 	recurrence_yearly: 'Cada año',
 	recurrence_on_the: 'el',
+	recurrence_ends: 'Termina',
+	recurrence_ends_never: 'Nunca',
+	recurrence_ends_on_date: 'En una fecha',
+	recurrence_ends_after_count: 'Tras %s repeticiones',
 	recurrence_not_editable: 'Esta repetición no se puede editar aquí. Se mantiene sin cambios.',
 	recurrence_ordinals: {
 		1: '1.º',
@@ -1167,7 +1176,8 @@ const clipboard: ClipboardRecords = {
 	file_limit_reached: 'Puedes subir 10 archivos al día.',
 	file_limit_reached_hours_singular: 'Puedes subir 10 archivos al día. Inténtalo de nuevo en 1 hora.',
 	file_limit_reached_hours_plural: 'Puedes subir 10 archivos al día. Inténtalo de nuevo en {n} horas.',
-	file_download_error: 'Error al descargar el archivo'
+	file_download_error: 'Error al descargar el archivo',
+	image_load_error: 'No se pudo cargar la imagen'
 };
 
 const dav: DavRecords = {

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
+	import { getAuth } from '$lib/state/Auth.svelte';
 	import SlidingSideBar from '$lib/components/ui/SlidingSideBar.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
@@ -27,10 +28,12 @@
 	import type { RecurrenceSelection } from '$lib/services/RecurrenceRuleService';
 
 	const calendars = getCalendars();
+	const auth = getAuth();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 	const recurrenceRuleService = new RecurrenceRuleService();
+	const timeZone = auth.user?.settings.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
 	const newEventStartHour = calendars.newEventPreset.hour ?? 12;
 	const newEventEnd = new Date(
 		combineDateAndTime(calendars.selectedDate ?? new Date(), newEventStartHour, 0).getTime() + 60 * 60 * 1000
@@ -71,7 +74,7 @@
 	};
 	let form = $state<EventForm>(initialForm);
 	let recurrence = $state<RecurrenceSelection | null>(
-		recurrenceRuleService.parse(initialForm.recurrence_rule, initialForm.start_date)
+		recurrenceRuleService.parse(initialForm.recurrence_rule, initialForm.start_date, timeZone)
 	);
 	// Plain variable: only read inside afterSelect, never rendered.
 	let duration = getDuration();
@@ -120,6 +123,9 @@
 		form.end_hours = end.getHours();
 		form.end_minutes = end.getMinutes();
 		duration = getDuration();
+		if (recurrence) {
+			recurrence.until = recurrenceRuleService.untilNotBeforeStart(recurrence.until, start);
+		}
 	}
 
 	function buildRequest(): CreateEventRequest | UpdateEventRequest {
@@ -146,7 +152,9 @@
 	}
 
 	function recurrenceRule(): string | null {
-		return recurrence ? recurrenceRuleService.build(recurrence, form.start_date) : form.recurrence_rule;
+		return recurrence
+			? recurrenceRuleService.build(recurrence, form.start_date, form.is_all_day, timeZone)
+			: form.recurrence_rule;
 	}
 
 	async function onsubmit(): Promise<void> {
@@ -182,7 +190,7 @@
 		loadingIndicator.stop();
 		if (result === 'ok') {
 			form = { ...emptyForm };
-			recurrence = recurrenceRuleService.parse(null, form.start_date);
+			recurrence = recurrenceRuleService.parse(null, form.start_date, timeZone);
 			calendars.hideSidebar();
 		} else {
 			await handleWriteError(result, ts.get.calendar.entry_create_error);

@@ -169,7 +169,7 @@ export class Feeds {
 	async update(feed: FeedSubscription, request: UpdateFeedSubscriptionRequest): Promise<boolean> {
 		const res = await this.apiService.update(apiRoutes.feeds.update, feed.id, request);
 		if (res) await this.load();
-		return Promise.resolve(res !== null);
+		return res;
 	}
 
 	async delete(feed: FeedSubscription): Promise<boolean> {

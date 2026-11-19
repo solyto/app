@@ -1,3 +1,5 @@
+import { dateInTimeZone, floatingToUtc, getUrlFormat, parseUrlFormat } from '$lib/helpers/DateHelper';
+
 export type Weekday = 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA' | 'SU';
 
 export const WEEKDAYS: Weekday[] = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
@@ -6,11 +8,16 @@ export type RecurrenceType = 'daily' | 'weekly' | 'monthly_date' | 'monthly_week
 
 export type MonthlyOrdinal = 1 | 2 | 3 | 4;
 
+export type RecurrenceEnd = 'never' | 'until' | 'count';
+
 export interface RecurrenceSelection {
 	type: RecurrenceType;
 	weekdays: Weekday[];
 	monthlyOrdinal: MonthlyOrdinal;
 	monthlyWeekday: Weekday;
+	end: RecurrenceEnd;
+	until: string;
+	count: number | null;
 	preserved: string[];
 }
 
@@ -20,13 +27,18 @@ interface RuleFields {
 	bySetPos: string | null;
 	byMonthDay: string | null;
 	byMonth: string | null;
+	until: string | null;
+	count: string | null;
 	preserved: string[];
 }
 
 const MODELLED_KEYS = ['FREQ', 'BYDAY', 'BYSETPOS', 'BYMONTHDAY', 'BYMONTH'];
 
+// UNTIL and COUNT stay in `preserved` so an untouched end is written back verbatim and in place.
+const END_KEYS = ['UNTIL', 'COUNT'];
+
 export default class RecurrenceRuleService {
-	parse(rule: string | null, startDate: Date): RecurrenceSelection | null {
+	parse(rule: string | null, startDate: Date, timeZone: string): RecurrenceSelection | null {
 		const selection = this.defaults(startDate);
 
 		if (!rule) {
@@ -39,6 +51,13 @@ export default class RecurrenceRuleService {
 			return null;
 		}
 
+		const end = this.readEnd(fields, timeZone);
+
+		if (!end) {
+			return null;
+		}
+
+		Object.assign(selection, end);
 		selection.preserved = fields.preserved;
 
 		switch (fields.freq) {
@@ -55,8 +74,29 @@ export default class RecurrenceRuleService {
 		}
 	}
 
-	build(selection: RecurrenceSelection, startDate: Date): string {
-		return [...this.modelledParts(selection, startDate), ...selection.preserved].join(';');
+	build(selection: RecurrenceSelection, startDate: Date, isAllDay: boolean, timeZone: string): string {
+		return [
+			...this.modelledParts(selection, startDate),
+			...this.preservedParts(selection, isAllDay, timeZone)
+		].join(';');
+	}
+
+	defaultUntil(selection: RecurrenceSelection, startDate: Date): string {
+		const until = new Date(startDate);
+
+		if (selection.type === 'yearly') {
+			until.setFullYear(until.getFullYear() + 1);
+		} else {
+			until.setMonth(until.getMonth() + 1);
+		}
+
+		return getUrlFormat(until);
+	}
+
+	untilNotBeforeStart(until: string, startDate: Date): string {
+		const earliest = getUrlFormat(startDate);
+
+		return until && until < earliest ? earliest : until;
 	}
 
 	effectiveWeekdays(selection: RecurrenceSelection, startDate: Date): Weekday[] {
@@ -73,6 +113,9 @@ export default class RecurrenceRuleService {
 			weekdays: [],
 			monthlyOrdinal: Math.min(Math.ceil(startDate.getDate() / 7), 4) as MonthlyOrdinal,
 			monthlyWeekday: this.weekdayOf(startDate),
+			end: 'never',
+			until: '',
+			count: null,
 			preserved: []
 		};
 	}
@@ -89,9 +132,13 @@ export default class RecurrenceRuleService {
 			}
 
 			const key = part.slice(0, separator);
+			const isModelled = MODELLED_KEYS.includes(key);
 
-			if (!MODELLED_KEYS.includes(key)) {
+			if (!isModelled) {
 				preserved.push(part);
+			}
+
+			if (!isModelled && !END_KEYS.includes(key)) {
 				continue;
 			}
 
@@ -114,8 +161,50 @@ export default class RecurrenceRuleService {
 			bySetPos: values.get('BYSETPOS') ?? null,
 			byMonthDay: values.get('BYMONTHDAY') ?? null,
 			byMonth: values.get('BYMONTH') ?? null,
+			until: values.get('UNTIL') ?? null,
+			count: values.get('COUNT') ?? null,
 			preserved
 		};
+	}
+
+	private readEnd(
+		fields: RuleFields,
+		timeZone: string
+	): Pick<RecurrenceSelection, 'end' | 'until' | 'count'> | null {
+		if (fields.until !== null && fields.count !== null) {
+			return null;
+		}
+
+		if (fields.count !== null) {
+			return /^[1-9]\d*$/.test(fields.count)
+				? { end: 'count', until: '', count: Number(fields.count) }
+				: null;
+		}
+
+		if (fields.until !== null) {
+			const until = this.untilDate(fields.until, timeZone);
+
+			return until ? { end: 'until', until, count: null } : null;
+		}
+
+		return { end: 'never', until: '', count: null };
+	}
+
+	private untilDate(value: string, timeZone: string): string | null {
+		const match = /^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})(Z?))?$/.exec(value);
+
+		if (!match) {
+			return null;
+		}
+
+		const [, year, month, day, hours, minutes, seconds, utc] = match;
+		const date = `${year}-${month}-${day}`;
+
+		if (!this.isDate(date)) {
+			return null;
+		}
+
+		return utc ? dateInTimeZone(new Date(`${date}T${hours}:${minutes}:${seconds}Z`), timeZone) : date;
 	}
 
 	private parseDaily(fields: RuleFields, selection: RecurrenceSelection): RecurrenceSelection | null {
@@ -228,6 +317,75 @@ export default class RecurrenceRuleService {
 					'BYMONTHDAY=' + startDate.getDate()
 				];
 		}
+	}
+
+	private preservedParts(selection: RecurrenceSelection, isAllDay: boolean, timeZone: string): string[] {
+		const parts = selection.preserved.filter((part) => !this.isEndPart(part));
+		const endPart = this.endPart(selection, isAllDay, timeZone);
+
+		if (endPart === null) {
+			return parts;
+		}
+
+		const position = selection.preserved.findIndex((part) => this.isEndPart(part));
+		parts.splice(position === -1 ? parts.length : position, 0, endPart);
+
+		return parts;
+	}
+
+	private endPart(selection: RecurrenceSelection, isAllDay: boolean, timeZone: string): string | null {
+		const existing = selection.preserved.find((part) => this.isEndPart(part)) ?? null;
+
+		switch (selection.end) {
+			case 'never':
+				return null;
+			case 'count':
+				return existing?.startsWith('COUNT=') ? existing : null;
+			case 'until':
+				return this.untilPart(selection.until, existing, isAllDay, timeZone);
+		}
+	}
+
+	private untilPart(
+		until: string,
+		existing: string | null,
+		isAllDay: boolean,
+		timeZone: string
+	): string | null {
+		const existingUntil = existing?.startsWith('UNTIL=') ? existing.slice('UNTIL='.length) : null;
+
+		if (!this.isDate(until)) {
+			return existingUntil === null ? null : existing;
+		}
+
+		if (existingUntil !== null && this.isUnchangedUntil(existingUntil, until, isAllDay, timeZone)) {
+			return existing;
+		}
+
+		if (isAllDay) {
+			return 'UNTIL=' + until.replaceAll('-', '');
+		}
+
+		const endOfDay = floatingToUtc(`${until}T23:59:59`, timeZone);
+
+		return 'UNTIL=' + endOfDay.toISOString().replace(/[-:]|\.\d{3}/g, '');
+	}
+
+	// RFC 5545: UNTIL is a DATE for all-day events and UTC otherwise, so a mismatched one is rewritten.
+	private isUnchangedUntil(existing: string, until: string, isAllDay: boolean, timeZone: string): boolean {
+		const isDateValue = existing.length === 8;
+
+		return isDateValue === isAllDay && this.untilDate(existing, timeZone) === until;
+	}
+
+	private isDate(value: string): boolean {
+		const parsed = parseUrlFormat(value);
+
+		return parsed !== null && getUrlFormat(parsed) === value;
+	}
+
+	private isEndPart(part: string): boolean {
+		return END_KEYS.some((key) => part.startsWith(key + '='));
 	}
 
 	private weekdayOf(date: Date): Weekday {
