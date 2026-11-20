@@ -59,9 +59,9 @@
 <div class="flex flex-col">
 	<div class="flex items-center justify-between gap-4 py-1.5">
 		<div class="flex min-w-0 items-center gap-3">
-			<TrackerGlyph {tracker} class="size-6 shrink-0 self-center text-c-neutral-5 dark:text-c-neutral-4" />
+			<TrackerGlyph {tracker} class="size-4 shrink-0 self-center text-c-neutral-5 dark:text-c-neutral-4" />
 			<div class="min-w-0">
-				<div class="line-clamp-2 text-lg font-bold break-words">{label}</div>
+				<div class="line-clamp-2 text-sm font-medium break-words text-c-neutral-7 dark:text-c-neutral-3">{label}</div>
 				{#if goalLine}
 					<GoalProgressLine line={goalLine} />
 				{/if}
@@ -79,7 +79,7 @@
 				</button>
 				<button
 					type="button"
-					class="h-10 min-w-14 cursor-pointer rounded-lg px-2 text-lg font-bold tabular-nums transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
+					class="h-8 min-w-12 cursor-pointer rounded-lg px-2 text-sm font-semibold tabular-nums transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 					aria-expanded={panelOpen}
 					onclick={openPanel}
 				>
@@ -100,7 +100,7 @@
 		<div class="min-w-0 flex-1">
 			<NumberInput bind:value={amount} min={0} max={MAX_CHECK_IN_COUNT} step={1} />
 		</div>
-		<TextButton title={ts.get.layout.save} type="primary" disabled={!amountValid} />
+		<TextButton title={ts.get.layout.save} disabled={!amountValid} />
 	</form>
 	</QuickSelectOverlay>
 {/if}

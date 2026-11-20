@@ -8,7 +8,6 @@
 	import { AVAILABLE_SPORTS, type CheckInTracker, type SportId } from '$lib/types/check_in';
 	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
-	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
@@ -20,6 +19,7 @@
 	import IconFootprints from '$lib/icons/lucide/footprints.svelte';
 	import IconChevronUp from '$lib/icons/lucide/chevron-up.svelte';
 	import IconChevronDown from '$lib/icons/lucide/chevron-down.svelte';
+	import IconChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
 	import IconPencil from '$lib/icons/lucide/pencil.svelte';
 	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import IconYoga from '$lib/components/ui/icons/IconYoga.svelte';
@@ -36,12 +36,11 @@
 	const ICON_BUTTON =
 		'flex size-7 cursor-pointer items-center justify-center rounded-md text-c-neutral-5 transition-all hover:bg-c-neutral disabled:cursor-default disabled:opacity-30 dark:hover:bg-s-dark-3';
 
-	let editing = $state<CheckInTracker | 'new' | null>(startWithNewTracker ? 'new' : null);
+	// 'sports' is the choice of the five sports shown for the Sports tracker.
+	let editing = $state<CheckInTracker | 'new' | 'sports' | null>(startWithNewTracker ? 'new' : null);
 	let sportToReplace = $state<SportId | null>(null);
 	// Bumped when a save fails, so the switches re-render from the store instead of keeping their flipped state.
 	let failedSaves = $state<number>(0);
-
-	const sportsEnabled = $derived(checkInData.trackers.some((t) => t.type === 'sport' && t.enabled));
 
 	async function run(action: () => Promise<boolean>): Promise<void> {
 		loadingIndicator.start();
@@ -106,14 +105,25 @@
 
 <ContentModal onClose={close} title={editing === null ? ts.get.checkIn.settings : editing === 'new' ? ts.get.checkIn.add_tracker : ts.get.checkIn.edit_tracker} rounded="2xl" p="4">
 	<div class="flex w-full flex-col gap-2">
-		<div class="mb-1 flex items-center justify-between md:hidden">
-			<span class="text-lg font-bold text-c-heading dark:text-c-primary">
-				{editing === null ? ts.get.checkIn.settings : editing === 'new' ? ts.get.checkIn.add_tracker : ts.get.checkIn.edit_tracker}
-			</span>
-			<CloseButton onClick={close} inModal={false} />
-		</div>
-
-		{#if editing !== null}
+		{#if editing === 'sports'}
+			<div class="flex w-full flex-col gap-3">
+				<button type="button" class="flex cursor-pointer items-center gap-1 self-start text-sm" onclick={() => (editing = null)}>
+					<IconChevronLeft class="size-4" />
+					{ts.get.checkIn.sports}
+				</button>
+				<div class="flex gap-2">
+					{#each checkInData.selectedSports as sportId, i (sportId)}
+						<SelectedSportButton
+							title={sportLabel(sportId)}
+							position={i + 1}
+							replacing={sportToReplace === sportId}
+							icon={sportIcons[sportId]}
+							onClick={() => onSportClick(sportId)}
+						/>
+					{/each}
+				</div>
+			</div>
+		{:else if editing !== null}
 			<TrackerEditor tracker={editing === 'new' ? null : editing} onDone={closeEditor} />
 		{:else}
 			<!-- Same columns as the rows below: centred over the checkboxes, then the toggle's width. -->
@@ -131,9 +141,9 @@
 							<span class="truncate">{trackerLabel(tracker, ts.get.checkIn)}</span>
 						</div>
 						<div class="flex shrink-0 items-center gap-1">
-							<!-- Only your own trackers can be edited; the controls are right-aligned, so the others stay in line without it. -->
-							{#if tracker.key === null}
-								<button type="button" class={ICON_BUTTON} aria-label={ts.get.checkIn.edit_tracker} title={ts.get.checkIn.edit_tracker} onclick={() => (editing = tracker)}>
+							<!-- Your own trackers and Sports (which sports to show) can be edited; the controls are right-aligned, so the others stay in line without it. -->
+							{#if tracker.key === null || tracker.type === 'sport'}
+								<button type="button" class={ICON_BUTTON} aria-label={ts.get.checkIn.edit_tracker} title={ts.get.checkIn.edit_tracker} onclick={() => (editing = tracker.type === 'sport' ? 'sports' : tracker)}>
 									<IconPencil class="size-4" />
 								</button>
 							{/if}
@@ -160,23 +170,6 @@
 				<IconPlus class="size-4" />
 				{ts.get.checkIn.add_tracker}
 			</button>
-
-			{#if sportsEnabled}
-				<div class="mt-2 border-t border-c-neutral-1 pt-3 dark:border-s-dark">
-					<p class="mb-2 text-sm font-semibold text-c-neutral-5 dark:text-c-neutral-4">{ts.get.checkIn.sports}</p>
-					<div class="flex gap-2">
-						{#each checkInData.selectedSports as sportId, i (sportId)}
-							<SelectedSportButton
-								title={sportLabel(sportId)}
-								position={i + 1}
-								replacing={sportToReplace === sportId}
-								icon={sportIcons[sportId]}
-								onClick={() => onSportClick(sportId)}
-							/>
-						{/each}
-					</div>
-				</div>
-			{/if}
 		{/if}
 	</div>
 </ContentModal>

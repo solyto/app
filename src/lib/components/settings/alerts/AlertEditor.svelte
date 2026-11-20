@@ -122,7 +122,7 @@
 			{:else}
 				<span></span>
 			{/if}
-			<TextButton title={alert ? ts.get.layout.save : ts.get.alerts.new_alert} type="primary" disabled={!canSave} onclick={save} />
+			<TextButton title={alert ? ts.get.layout.save : ts.get.alerts.new_alert} disabled={!canSave} onclick={save} />
 		</div>
 	</div>
 </ContentModal>

@@ -1424,8 +1424,6 @@ export interface GoalRecords {
 	title: string;
 	new_goal: string;
 	edit_goal: string;
-	empty: string;
-	empty_hint: string;
 	no_trackers_left: string;
 	tracker: string;
 	target: string;

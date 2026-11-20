@@ -137,9 +137,9 @@
 				<span></span>
 			{/if}
 			{#if current}
-				<TextButton title={ts.get.layout.save} type="primary" disabled={!canSave} onclick={save} />
+				<TextButton title={ts.get.layout.save} disabled={!canSave} onclick={save} />
 			{:else}
-				<TextButton title={ts.get.checkIn.add_tracker} type="primary" disabled={!canSave} onclick={create} />
+				<TextButton title={ts.get.checkIn.add_tracker} disabled={!canSave} onclick={create} />
 			{/if}
 		</div>
 	</div>

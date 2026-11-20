@@ -482,8 +482,6 @@ const goals: GoalRecords = {
 	title: 'Obiettivi',
 	new_goal: 'Nuovo obiettivo',
 	edit_goal: 'Modifica obiettivo',
-	empty: 'Ancora nessun obiettivo',
-	empty_hint: 'Impostane uno per qualsiasi tracker, per esempio sport tre volte a settimana.',
 	no_trackers_left: 'Ogni tracker ha già un obiettivo.',
 	tracker: 'Tracker',
 	target: 'Obiettivo',

@@ -22,9 +22,9 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 
-	// From 2xl on: a card in the right-hand grid column; narrower, a plain list below the ratings.
-	const SIDE_CARD =
-		'2xl:col-start-3 2xl:mr-0 2xl:ml-16 2xl:w-auto 2xl:max-w-[22rem] 2xl:rounded-lg 2xl:bg-c-bg-surface 2xl:px-4 2xl:py-4 2xl:shadow-sm';
+	// From 2xl on: a side column set off by a line, like the averages on the History page; narrower, a plain list below the ratings.
+	const SIDE_COLUMN =
+		'2xl:col-start-3 2xl:mr-0 2xl:ml-16 2xl:w-auto 2xl:max-w-[22rem] 2xl:border-l-2 2xl:border-c-neutral-1 2xl:pl-6 dark:2xl:border-s-dark';
 
 	const pending = new SvelteMap<CheckInTracker, number | null>();
 
@@ -112,7 +112,7 @@
 
 		{#if checkInData.logTrackers.length > 0}
 			<section
-				class="flex flex-col gap-1 px-5 md:mx-auto md:w-[26rem] md:px-0 {checkInData.ratingTrackers.length > 0 ? SIDE_CARD : ''}"
+				class="flex flex-col gap-1 px-5 md:mx-auto md:w-[26rem] md:px-0 {checkInData.ratingTrackers.length > 0 ? SIDE_COLUMN : ''}"
 			>
 				{#each checkInData.logTrackers as tracker (tracker.id)}
 					<DailyLogTracker

@@ -14,7 +14,7 @@
 	let addingTracker = $state(false);
 </script>
 
-<div class="relative flex w-full flex-row items-center space-x-3 p-4 pt-0 sm:space-x-4">
+<div class="relative flex w-full flex-row items-center space-x-3 p-4 pt-2 sm:space-x-4 xl:pt-0">
 	<a href={resolve(urls.checkInDate, { date: getUrlFormat(new Date()) })}>
 		<h1
 			class="text-lg sm:text-2xl"
@@ -39,10 +39,15 @@
 		</h1>
 	</a>
 	<div class="ml-auto flex items-center gap-2">
-		<!-- Both are about trackers; Goals has its own "New goal" and edits goals on their cards. -->
-		{#if page.url.pathname !== '/check-in/goals'}
-			<InlineAddButton label={ts.get.checkIn.add_tracker} onClick={() => { addingTracker = true; }} />
-			<InlineEditButton onClick={() => { settingsOpen = true; }} />
+		<!-- Both are about trackers; Goals has its own "New goal" and edits goals on their cards.
+			 There a spacer of the buttons' height keeps the header from changing size between tabs. -->
+		{#if page.url.pathname === '/check-in/goals'}
+			<div class="h-[34px]" aria-hidden="true"></div>
+		{:else}
+			<div class="flex items-center gap-2">
+				<InlineAddButton label={ts.get.checkIn.add_tracker} onClick={() => { addingTracker = true; }} />
+				<InlineEditButton onClick={() => { settingsOpen = true; }} />
+			</div>
 		{/if}
 	</div>
 </div>

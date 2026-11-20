@@ -131,7 +131,7 @@
 				{:else}
 					<span></span>
 				{/if}
-				<TextButton title={goal ? ts.get.layout.save : ts.get.goals.new_goal} type="primary" disabled={!canSave} onclick={save} />
+				<TextButton title={goal ? ts.get.layout.save : ts.get.goals.new_goal} disabled={!canSave} onclick={save} />
 			</div>
 		{/if}
 	</div>

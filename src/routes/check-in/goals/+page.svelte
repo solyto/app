@@ -6,7 +6,6 @@
 	import GoalCard from '$lib/components/goals/GoalCard.svelte';
 	import GoalEditor from '$lib/components/goals/GoalEditor.svelte';
 	import IconPlus from '$lib/icons/lucide/plus.svelte';
-	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 
 	const checkInData = getCheckInData();
 	const goals = getGoals();
@@ -25,9 +24,6 @@
 
 <div class="flex flex-col gap-6 pt-2">
 	{#if goals.loaded && checkInData.loaded}
-		{#if shown.length === 0}
-			<EmptyState title={ts.get.goals.empty} description={ts.get.goals.empty_hint} py={6} />
-		{/if}
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{#each shown as { goal, tracker } (goal.id)}
 				<GoalCard {goal} {tracker} onEdit={() => (editing = goal)} />
@@ -35,7 +31,7 @@
 			<!-- Adding sits where the goals are; the dashed style is the one of the notes image upload. -->
 			<button
 				type="button"
-				class="flex min-h-40 cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-c-neutral-2 text-sm text-c-neutral-4 transition-colors hover:border-s-teal hover:text-s-teal dark:border-s-dark dark:hover:border-s-teal"
+				class="flex min-h-40 cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-c-neutral-2 px-4 text-sm text-c-neutral-4 transition-colors hover:border-s-teal hover:text-s-teal dark:border-s-dark dark:hover:border-s-teal"
 				onclick={() => (editing = 'new')}
 			>
 				<IconPlus class="size-5" />
