@@ -414,6 +414,7 @@ const checkIn: CheckInRecords = {
 	range_all: 'All',
 	add_tracker: 'Add tracker',
 	edit_tracker: 'Edit tracker',
+	all_entries: 'All entries',
 	tracker_name_hint: 'e.g. Glasses of water',
 	type_scale: 'Rating 1–5',
 	type_scale_hint: '1 = bad … 5 = good',

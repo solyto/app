@@ -33,6 +33,10 @@
 	const checkInData = getCheckInData();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
+	const trackerGroups = $derived([
+		checkInData.trackers.filter((t) => checkInData.trackerService.isRating(t)),
+		checkInData.trackers.filter((t) => !checkInData.trackerService.isRating(t))
+	]);
 	const ICON_BUTTON =
 		'flex size-7 cursor-pointer items-center justify-center rounded-md text-c-neutral-5 transition-all hover:bg-c-neutral disabled:cursor-default disabled:opacity-30 dark:hover:bg-s-dark-3';
 
@@ -134,7 +138,12 @@
 				<span class="w-11" aria-hidden="true"></span>
 			</div>
 			{#key failedSaves}
-				{#each checkInData.trackers as tracker, i (tracker.id)}
+				{#each trackerGroups as group, g (g)}
+					<!-- Ratings and logs sit in separate areas of the daily page, so each group is ordered on its own. -->
+					{#if g === 1 && trackerGroups[0].length > 0 && group.length > 0}
+						<div class="my-1 border-t border-dashed border-c-neutral-3" aria-hidden="true"></div>
+					{/if}
+					{#each group as tracker, i (tracker.id)}
 					<div class="flex w-full items-center justify-between gap-3">
 						<div class="flex min-w-0 items-center gap-2" class:opacity-50={!tracker.enabled}>
 							<TrackerGlyph {tracker} class="size-4 shrink-0 text-c-heading dark:text-c-primary" />
@@ -150,7 +159,7 @@
 							<button type="button" class={ICON_BUTTON} disabled={i === 0} aria-label={ts.get.checkIn.move_up} title={ts.get.checkIn.move_up} onclick={() => run(() => checkInData.moveTracker(tracker, -1))}>
 								<IconChevronUp class="size-4" />
 							</button>
-							<button type="button" class={ICON_BUTTON} disabled={i === checkInData.trackers.length - 1} aria-label={ts.get.checkIn.move_down} title={ts.get.checkIn.move_down} onclick={() => run(() => checkInData.moveTracker(tracker, 1))}>
+							<button type="button" class={ICON_BUTTON} disabled={i === group.length - 1} aria-label={ts.get.checkIn.move_down} title={ts.get.checkIn.move_down} onclick={() => run(() => checkInData.moveTracker(tracker, 1))}>
 								<IconChevronDown class="size-4" />
 							</button>
 							<div class="flex w-9 items-center justify-center" class:opacity-30={!tracker.enabled} class:pointer-events-none={!tracker.enabled}>
@@ -163,6 +172,7 @@
 							</div>
 						</div>
 					</div>
+					{/each}
 				{/each}
 			{/key}
 

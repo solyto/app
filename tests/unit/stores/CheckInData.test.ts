@@ -279,20 +279,40 @@ describe('CheckInData store', () => {
 			expect(s.values).toEqual([value(1, '2026-08-14', 4)]);
 		});
 
-		it('moves a tracker by swapping it with its neighbour', async () => {
+		it('moves a rating by swapping it with the rating next to it', async () => {
 			api.put.mockResolvedValue(true);
-			const s = loaded([mood, sports, meditated]);
+			const s = loaded([mood, sports, meditated, glasses]);
 
-			await s.moveTracker(meditated, -1);
+			await s.moveTracker(sports, -1);
 
-			expect(api.put).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/trackers\/order$/), { ids: [1, 3, 2] });
+			expect(api.put).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/trackers\/order$/), { ids: [2, 1, 3, 4] });
 		});
 
-		it('does not move the first tracker up or the last one down', async () => {
-			const s = loaded([mood, sports]);
+		it('moves a log by swapping it with the log next to it', async () => {
+			api.put.mockResolvedValue(true);
+			const s = loaded([mood, sports, meditated, glasses]);
+
+			await s.moveTracker(glasses, -1);
+
+			expect(api.put).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/trackers\/order$/), { ids: [1, 2, 4, 3] });
+		});
+
+		it('saves ratings first, tidying up a mixed order', async () => {
+			api.put.mockResolvedValue(true);
+			const s = loaded([meditated, mood, glasses, sports]);
+
+			await s.moveTracker(sports, -1);
+
+			expect(api.put).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/trackers\/order$/), { ids: [2, 1, 3, 4] });
+		});
+
+		it('does not move past the edges of its group', async () => {
+			const s = loaded([mood, sports, meditated, glasses]);
 
 			expect(await s.moveTracker(mood, -1)).toBe(false);
 			expect(await s.moveTracker(sports, 1)).toBe(false);
+			expect(await s.moveTracker(meditated, -1)).toBe(false);
+			expect(await s.moveTracker(glasses, 1)).toBe(false);
 			expect(api.put).not.toHaveBeenCalled();
 		});
 	});

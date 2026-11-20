@@ -414,6 +414,7 @@ const checkIn: CheckInRecords = {
 	range_all: 'Tutto',
 	add_tracker: 'Aggiungi tracker',
 	edit_tracker: 'Modifica tracker',
+	all_entries: 'Tutte le voci',
 	tracker_name_hint: 'es. Bicchieri d\'acqua',
 	type_scale: 'Valutazione 1–5',
 	type_scale_hint: '1 = male … 5 = bene',

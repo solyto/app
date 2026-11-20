@@ -166,13 +166,17 @@ export class CheckInData {
 		return ok;
 	}
 
+	// Ratings and logs are shown apart, so a tracker only moves within its group; the order is saved ratings first.
 	async moveTracker(tracker: CheckInTracker, offset: -1 | 1): Promise<boolean> {
-		const ids = this.trackers.map((t) => t.id);
-		const from = ids.indexOf(tracker.id);
+		const isRating = this.trackerService.isRating(tracker);
+		const group = this.trackers.filter((t) => this.trackerService.isRating(t) === isRating).map((t) => t.id);
+		const others = this.trackers.filter((t) => this.trackerService.isRating(t) !== isRating).map((t) => t.id);
+		const from = group.indexOf(tracker.id);
 		const to = from + offset;
-		if (from === -1 || to < 0 || to >= ids.length) return false;
+		if (from === -1 || to < 0 || to >= group.length) return false;
 
-		[ids[from], ids[to]] = [ids[to], ids[from]];
+		[group[from], group[to]] = [group[to], group[from]];
+		const ids = isRating ? [...group, ...others] : [...others, ...group];
 		return this.writeAndReload(this.apiService.put(apiRoutes.checkIn.trackerOrder, { ids }));
 	}
 

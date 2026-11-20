@@ -413,6 +413,7 @@ const checkIn: CheckInRecords = {
 	range_all: 'Всё время',
 	add_tracker: 'Добавить трекер',
 	edit_tracker: 'Изменить трекер',
+	all_entries: 'Все записи',
 	tracker_name_hint: 'Например, стаканы воды',
 	type_scale: 'Оценка 1–5',
 	type_scale_hint: '1 = плохо … 5 = хорошо',

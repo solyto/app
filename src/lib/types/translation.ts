@@ -382,6 +382,7 @@ export interface CheckInRecords {
 	range_all: string;
 	add_tracker: string;
 	edit_tracker: string;
+	all_entries: string;
 	tracker_name_hint: string;
 	type_scale: string;
 	type_scale_hint: string;

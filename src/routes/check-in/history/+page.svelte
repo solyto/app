@@ -1,17 +1,33 @@
 <script lang="ts">
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
-	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import { getDaysInMonth, getUrlFormat } from '$lib/helpers/DateHelper';
 	import { fade } from 'svelte/transition';
-	import OverviewDesktop from '$lib/components/check-in/overview/OverviewDesktop.svelte';
-	import OverviewMobile from '$lib/components/check-in/overview/OverviewMobile.svelte';
+	import CheckInCalendar from '$lib/components/check-in/overview/CheckInCalendar.svelte';
+	import Select from '$lib/components/forms/Select.svelte';
+	import { trackerLabel } from '$lib/helpers/CheckInHelper';
+	import type { CheckInTracker } from '$lib/types/check_in';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import CheckInSummaries from '$lib/components/check-in/overview/CheckInSummaries.svelte';
 	import Averages from '$lib/components/check-in/stats/Averages.svelte';
 	import IconChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
 	import IconChevronRight from '$lib/icons/lucide/chevron-right.svelte';
 
-	const viewPoint = getViewPoint();
 	const checkInData = getCheckInData();
+	const ts = getTranslation();
+
+	// The calendar shows everything ('all'), the day's score ('total'), or one tracker.
+	let selected = $state<string>('all');
+	const shown = $derived<CheckInTracker | 'total' | 'all'>(
+		selected === 'all' || selected === 'total' ? selected : (checkInData.activeTrackers.find((t) => String(t.id) === selected) ?? 'all')
+	);
+
+	function trackerOptions(): { label: string; value: string }[] {
+		return [
+			{ label: ts.get.checkIn.all_entries, value: 'all' },
+			...(checkInData.scoredTrackers.length > 0 ? [{ label: ts.get.checkIn.total, value: 'total' }] : []),
+			...checkInData.activeTrackers.map((t) => ({ label: trackerLabel(t, ts.get.checkIn), value: String(t.id) }))
+		];
+	}
 
 	const dates = $derived(getDaysInMonth(checkInData.historyMonth.year, checkInData.historyMonth.month).reverse());
 
@@ -44,23 +60,15 @@
 		</button>
 	</div>
 
-	{#if viewPoint.isDesktop}
-		<div class="hidden 2xl:flex 2xl:flex-row 2xl:items-start gap-0">
-			<div class="w-3/4 2xl:w-[70%]">
-				<OverviewDesktop {dates} trackers={checkInData.activeTrackers} />
+	<div class="flex flex-col gap-6 2xl:flex-row 2xl:items-start 2xl:gap-0">
+		<div class="flex flex-col gap-2 2xl:w-[70%] 2xl:pr-6">
+			<!-- The calendar's own filter, at its top right; it doesn't affect the column on the right. -->
+			<div class="sm:w-64 sm:self-end">
+				<Select value={selected} options={trackerOptions()} onchange={(value) => (selected = value)} ariaLabel={ts.get.checkIn.history} />
 			</div>
-			<div class="w-1/4 2xl:w-[30%] flex flex-col 2xl:border-l-2 border-c-neutral-1 dark:border-s-dark 2xl:pl-6">
-				{#if checkInData.loaded}
-					<div transition:fade={{ duration: 150 }}>
-						<Averages dates={monthDates} />
-						<CheckInSummaries {dates} trackers={builtInTrackers} />
-					</div>
-				{/if}
-			</div>
+			<CheckInCalendar tracker={shown} />
 		</div>
-	{:else}
-		<div class="flex flex-col gap-6 2xl:hidden">
-			<OverviewMobile {dates} trackers={checkInData.activeTrackers} />
+		<div class="flex flex-col border-c-neutral-1 2xl:w-[30%] 2xl:border-l-2 2xl:pl-6 dark:border-s-dark">
 			{#if checkInData.loaded}
 				<div transition:fade={{ duration: 150 }}>
 					<Averages dates={monthDates} />
@@ -68,5 +76,5 @@
 				</div>
 			{/if}
 		</div>
-	{/if}
+	</div>
 </div>
