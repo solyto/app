@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { CheckInType } from '$lib/types/check_in';
+	import type { CheckInTracker } from '$lib/types/check_in';
+	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getUrlFormat } from '$lib/helpers/DateHelper';
 	import { urls } from '$lib/config/urls';
@@ -10,25 +11,20 @@
 
 	let { dates, trackers }: {
 		dates: Date[];
-		trackers: CheckInType[];
+		trackers: CheckInTracker[];
 	} = $props();
 
 	const checkInData = getCheckInData();
 	const ts = getTranslation();
 
-	function getData(date: string, type: CheckInType): number | null {
-		const dayData = checkInData.getDayData(date);
-		if (!dayData) return null;
-		return dayData[type];
-	}
 </script>
 
 <div class="flex">
 	<div class="flex flex-col w-32 shrink-0">
 		<div class="h-10">&nbsp;</div>
-		{#each trackers as tracker (tracker)}
+		{#each trackers as tracker (tracker.id)}
 			<div class="flex w-full items-center justify-start font-bold h-12 p-3">
-				<p>{ts.get.checkIn[tracker as keyof typeof ts.get.checkIn]}</p>
+				<p class="truncate" title={trackerLabel(tracker, ts.get.checkIn)}>{trackerLabel(tracker, ts.get.checkIn)}</p>
 			</div>
 		{/each}
 	</div>
@@ -42,9 +38,9 @@
 				>
 					{date.getDate()}
 				</button>
-				{#each trackers as tracker (tracker)}
+				{#each trackers as tracker (tracker.id)}
 					<div class="size-12 flex items-center justify-center p-3">
-						<CheckInIcon type={tracker} value={getData(getUrlFormat(date), tracker)} />
+						<CheckInIcon {tracker} value={checkInData.getValue(tracker, getUrlFormat(date))} />
 					</div>
 				{/each}
 			</div>

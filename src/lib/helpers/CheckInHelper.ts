@@ -1,33 +1,6 @@
-import type { CheckIn, CheckInType } from '$lib/types/check_in';
-
-export function getMeanValue(data: CheckIn[], type: CheckInType): number {
-	const values: number[] = [];
-
-	for (const entry of data) {
-		if (entry[type] !== null && entry[type] !== 0) {
-			let value = entry[type] as number;
-
-			if (type === 'food_amount') {
-				switch (entry[type]) {
-					case 1: value = 1.25; break;
-					case 2: value = 2.5; break;
-					case 3: value = 3.75; break;
-					case 4: value = 5; break;
-					case 5: value = 3; break;
-				}
-			}
-
-			values.push(value);
-		}
-	}
-
-	return values.reduce((a, b) => a + b, 0) / values.length;
-}
-
-export function getTotalMeanValue(data: CheckIn[], types: CheckInType[]): number {
-	const values = types.map((t) => getMeanValue(data, t)).filter((v) => !isNaN(v));
-	return values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0;
-}
+import type { CheckInTracker } from '$lib/types/check_in';
+import type { GoalProgress } from '$lib/services/CheckInTrackerService';
+import type { CheckInRecords } from '$lib/types/translation';
 
 export function getScoreColor(value: number): string {
 	if (value >= 4) return 'bg-c-success';
@@ -35,4 +8,18 @@ export function getScoreColor(value: number): string {
 	if (value >= 2) return 'bg-c-warning';
 	if (value >= 1.5) return 'bg-c-action';
 	return 'bg-c-danger';
+}
+
+export function trackerLabel(tracker: CheckInTracker, texts: CheckInRecords): string {
+	return tracker.key !== null ? texts[tracker.key] : (tracker.name ?? '');
+}
+
+export function goalProgressText(tracker: CheckInTracker, progress: GoalProgress, texts: CheckInRecords): string {
+	const goal = tracker.goal!;
+	const format = (n: number) => (tracker.type === 'scale' ? n.toFixed(1) : String(n));
+	const current = progress.current === null ? '–' : format(progress.current);
+	const target = `${goal.comparison === 'at_most' ? '≤ ' : ''}${format(goal.target)}`;
+	const period = { day: texts.goal_today, week: texts.goal_this_week, month: texts.goal_this_month }[goal.period];
+
+	return `${current} / ${target} ${period}`;
 }

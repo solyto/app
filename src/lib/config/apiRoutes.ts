@@ -94,7 +94,14 @@ export const apiRoutes = {
 		list: API_URL + '/check-in',
 		create: API_URL + '/check-in',
 		update: API_URL + '/check-in/%s',
-		marks: API_URL + '/check-in/marks'
+		marks: API_URL + '/check-in/marks',
+		values: API_URL + '/check-in/values',
+		trackers: API_URL + '/check-in/trackers',
+		trackerOrder: API_URL + '/check-in/trackers/order',
+		tracker: API_URL + '/check-in/trackers/%d',
+		trackerGoal: API_URL + '/check-in/trackers/%d/goal',
+		trackerAlerts: API_URL + '/check-in/trackers/%d/alerts',
+		alert: API_URL + '/check-in/alerts/%d'
 	},
 	notes: {
 		list: API_URL + '/notes',

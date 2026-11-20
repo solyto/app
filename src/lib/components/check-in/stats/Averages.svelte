@@ -1,66 +1,26 @@
 <script lang="ts">
-	import type { CheckIn, CheckInType } from '$lib/types/check_in';
-	import { getMeanValue, getTotalMeanValue } from '$lib/helpers/CheckInHelper';
+	import type { CheckInTracker } from '$lib/types/check_in';
+	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import IconBedSingle from '$lib/icons/lucide/bed-single.svelte';
-	import IconSparkles from '$lib/icons/lucide/sparkles.svelte';
-	import IconBriefcaseBusiness from '$lib/icons/lucide/briefcase-business.svelte';
-	import IconApple from '$lib/icons/lucide/apple.svelte';
-	import IconDroplets from '$lib/icons/lucide/droplets.svelte';
-	import IconDroplet from '$lib/icons/lucide/droplet.svelte';
-	import IconWine from '$lib/icons/lucide/wine.svelte';
-	import IconCigarette from '$lib/icons/lucide/cigarette.svelte';
-	import IconUsersRound from '$lib/icons/lucide/users-round.svelte';
-	import IconSmile from '$lib/icons/lucide/face-slightly-smiling.svelte';
-	import IconPizza from '$lib/icons/lucide/pizza.svelte';
+	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import AverageRow from '$lib/components/check-in/stats/AverageRow.svelte';
+
+	let { dates }: { dates: string[] } = $props();
+
+	const checkInData = getCheckInData();
 	const ts = getTranslation();
 
-	let { data, activeTrackers, scoredTrackers }: { data: CheckIn[]; activeTrackers: CheckInType[]; scoredTrackers: CheckInType[] } = $props();
+	const totalMean = $derived(checkInData.trackerService.totalMean(checkInData.scoredTrackers, checkInData.index, dates));
 
-	const entries = $derived(activeTrackers.filter((t: CheckInType) => t !== 'sports' && scoredTrackers.includes(t)));
-	const totalMean = $derived(getTotalMeanValue(data, entries));
-
-
-	function getIcon(type: CheckInType) {
-		switch (type) {
-			case 'mood':
-				return IconSmile;
-			case 'sleep':
-				return IconBedSingle;
-			case 'dreams':
-				return IconSparkles;
-			case 'work':
-				return IconBriefcaseBusiness;
-			case 'food_quality':
-				return IconApple;
-			case 'food_amount':
-				return IconPizza;
-			case 'water':
-				return IconDroplets;
-			case 'menstruation':
-				return IconDroplet;
-			case 'alcohol':
-				return IconWine;
-			case 'smoking':
-				return IconCigarette;
-			case 'social_life':
-				return IconUsersRound;
-			default:
-				return null;
-		}
+	function mean(tracker: CheckInTracker): number {
+		return checkInData.trackerService.mean(tracker, checkInData.index, dates);
 	}
 </script>
 
 <div class="max-2xl:px-4 pb-8 border-c-neutral-1 dark:border-s-dark">
 	<div class="flex flex-col gap-3">
-		{#each entries as entry, index (entry)}
-			<AverageRow
-				label={ts.get.checkIn[entry as keyof typeof ts.get.checkIn]}
-				value={getMeanValue(data, entry)}
-				position={index + 1}
-				icon={getIcon(entry)}
-			/>
+		{#each checkInData.scoredTrackers as tracker (tracker.id)}
+			<AverageRow label={trackerLabel(tracker, ts.get.checkIn)} value={mean(tracker)} {tracker} />
 		{/each}
 		<div class="mt-1 border-t border-c-neutral-1 pt-3 dark:border-s-dark-3">
 			<div class="flex items-center gap-3">

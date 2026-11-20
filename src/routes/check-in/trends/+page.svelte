@@ -3,21 +3,11 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TrendChart from '$lib/components/check-in/stats/TrendChart.svelte';
-	import type { CheckIn, CheckInType } from '$lib/types/check_in';
+	import type { CheckInTracker } from '$lib/types/check_in';
 	import { onMount } from 'svelte';
 	import { getUrlFormat } from '$lib/helpers/DateHelper';
+	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import IconSmile from '$lib/icons/lucide/face-slightly-smiling.svelte';
-	import IconBedSingle from '$lib/icons/lucide/bed-single.svelte';
-	import IconSparkles from '$lib/icons/lucide/sparkles.svelte';
-	import IconBriefcaseBusiness from '$lib/icons/lucide/briefcase-business.svelte';
-	import IconApple from '$lib/icons/lucide/apple.svelte';
-	import IconPizza from '$lib/icons/lucide/pizza.svelte';
-	import IconDroplets from '$lib/icons/lucide/droplets.svelte';
-	import IconDroplet from '$lib/icons/lucide/droplet.svelte';
-	import IconWine from '$lib/icons/lucide/wine.svelte';
-	import IconCigarette from '$lib/icons/lucide/cigarette.svelte';
-	import IconUsersRound from '$lib/icons/lucide/users-round.svelte';
 
 	type Range = '30d' | '3m' | '6m' | 'all';
 
@@ -35,45 +25,29 @@
 		{ label: ts.get.checkIn.range_all, value: 'all' }
 	];
 
-	const trackers = $derived(checkInData.activeTrackers.filter((t) => t !== 'sports'));
+	const trackers = $derived(checkInData.activeTrackers.filter((t) => t.type === 'scale' || t.type === 'count'));
 
-	const filteredData = $derived.by((): CheckIn[] => {
-		if (selectedRange === 'all') return checkInData.data;
+	const dates = $derived.by((): string[] => {
+		const all = [...checkInData.index.keys()].sort();
+		if (selectedRange === 'all') return all;
 
 		const days = selectedRange === '30d' ? 30 : selectedRange === '3m' ? 90 : 180;
 		const cutoff = new Date();
 		cutoff.setDate(cutoff.getDate() - days);
 		const cutoffStr = getUrlFormat(cutoff);
 
-		return checkInData.data.filter((e) => e.date >= cutoffStr);
+		return all.filter((date) => date >= cutoffStr);
 	});
 
-	function getChartData(type: CheckInType): { categories: string[]; values: number[] } {
-		const entries = filteredData
-			.filter((e) => e[type] !== null && e[type] !== 0)
-			.sort((a, b) => a.date.localeCompare(b.date));
+	function getChartData(tracker: CheckInTracker): { categories: string[]; values: number[] } {
+		const points = dates
+			.map((date) => ({ date, value: checkInData.getValue(tracker, date) }))
+			.filter((point): point is { date: string; value: number } => point.value !== null && (tracker.type === 'count' || point.value !== 0));
 
 		return {
-			categories: entries.map((e) => auth.getDateWithoutYearInUserPreferredFormat(e.date)),
-			values: entries.map((e) => e[type] as number)
+			categories: points.map((point) => auth.getDateWithoutYearInUserPreferredFormat(point.date)),
+			values: points.map((point) => point.value)
 		};
-	}
-
-	function getIcon(type: CheckInType) {
-		switch (type) {
-			case 'mood': return IconSmile;
-			case 'sleep': return IconBedSingle;
-			case 'dreams': return IconSparkles;
-			case 'work': return IconBriefcaseBusiness;
-			case 'food_quality': return IconApple;
-			case 'food_amount': return IconPizza;
-			case 'water': return IconDroplets;
-			case 'menstruation': return IconDroplet;
-			case 'alcohol': return IconWine;
-			case 'smoking': return IconCigarette;
-			case 'social_life': return IconUsersRound;
-			default: return null;
-		}
 	}
 
 	onMount(async () => {
@@ -100,9 +74,15 @@
 	</div>
 
 	<div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
-		{#each trackers as type (type)}
+		{#each trackers as tracker (tracker.id)}
 			{#key selectedRange}
-				<TrendChart label={ts.get.checkIn[type]} icon={getIcon(type)} {...getChartData(type)} />
+				<TrendChart
+					label={trackerLabel(tracker, ts.get.checkIn)}
+					{tracker}
+					min={tracker.type === 'scale' ? 1 : 0}
+					max={tracker.type === 'scale' ? 5 : undefined}
+					{...getChartData(tracker)}
+				/>
 			{/key}
 		{/each}
 	</div>

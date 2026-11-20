@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CheckInType } from '$lib/types/check_in';
+	import type { CheckInTracker } from '$lib/types/check_in';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getUrlFormat } from '$lib/helpers/DateHelper';
 	import { urls } from '$lib/config/urls';
@@ -10,17 +10,12 @@
 
 	let { dates, trackers }: {
 		dates: Date[];
-		trackers: CheckInType[];
+		trackers: CheckInTracker[];
 	} = $props();
 
 	const checkInData = getCheckInData();
 	const auth = getAuth();
 
-	function getData(date: string, type: CheckInType): number | null {
-		const dayData = checkInData.getDayData(date);
-		if (!dayData) return null;
-		return dayData[type];
-	}
 </script>
 
 <div class="flex flex-col space-y-2 p-4 pt-8">
@@ -34,13 +29,10 @@
 			>
 				{auth.getDateInUserPreferredFormat(date)}
 			</button>
-			<div class="mt-4 flex flex-row">
-				{#each trackers as tracker (tracker)}
+			<div class="mt-4 flex flex-row flex-wrap">
+				{#each trackers as tracker (tracker.id)}
 					<div class="w-1/7">
-						<CheckInIcon
-							type={tracker}
-							value={getData(getUrlFormat(new Date(date)), tracker)}
-						/>
+						<CheckInIcon {tracker} value={checkInData.getValue(tracker, getUrlFormat(new Date(date)))} />
 					</div>
 				{/each}
 			</div>

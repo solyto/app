@@ -3,7 +3,6 @@
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import { getDaysInMonth, getUrlFormat } from '$lib/helpers/DateHelper';
 	import { fade } from 'svelte/transition';
-	import type { CheckIn } from '$lib/types/check_in';
 	import OverviewDesktop from '$lib/components/check-in/overview/OverviewDesktop.svelte';
 	import OverviewMobile from '$lib/components/check-in/overview/OverviewMobile.svelte';
 	import CheckInSummaries from '$lib/components/check-in/overview/CheckInSummaries.svelte';
@@ -16,10 +15,8 @@
 
 	const dates = $derived(getDaysInMonth(checkInData.historyMonth.year, checkInData.historyMonth.month).reverse());
 
-	const monthData = $derived.by((): CheckIn[] => {
-		const dateStrings = new Set(dates.map((d) => getUrlFormat(d)));
-		return checkInData.data.filter((c) => dateStrings.has(c.date));
-	});
+	const monthDates = $derived(dates.map((d) => getUrlFormat(d)));
+	const builtInTrackers = $derived(checkInData.activeTrackers.flatMap((t) => (t.key === null ? [] : [t.key])));
 
 	const monthLabel = $derived(
 		new Date(checkInData.historyMonth.year, checkInData.historyMonth.month, 1)
@@ -55,8 +52,8 @@
 			<div class="w-1/4 2xl:w-[30%] flex flex-col 2xl:border-l-2 border-c-neutral-1 dark:border-s-dark 2xl:pl-6">
 				{#if checkInData.loaded}
 					<div transition:fade={{ duration: 150 }}>
-						<Averages data={monthData} activeTrackers={checkInData.activeTrackers} scoredTrackers={checkInData.scoredTrackers} />
-						<CheckInSummaries {dates} trackers={checkInData.activeTrackers} />
+						<Averages dates={monthDates} />
+						<CheckInSummaries {dates} trackers={builtInTrackers} />
 					</div>
 				{/if}
 			</div>
@@ -66,8 +63,8 @@
 			<OverviewMobile {dates} trackers={checkInData.activeTrackers} />
 			{#if checkInData.loaded}
 				<div transition:fade={{ duration: 150 }}>
-					<Averages data={monthData} activeTrackers={checkInData.activeTrackers} scoredTrackers={checkInData.scoredTrackers} />
-					<CheckInSummaries {dates} trackers={checkInData.activeTrackers} />
+					<Averages dates={monthDates} />
+					<CheckInSummaries {dates} trackers={builtInTrackers} />
 				</div>
 			{/if}
 		</div>

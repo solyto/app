@@ -30,6 +30,7 @@
 		{ key: 'movie_release', label: 'New Screen Release' },
 		{ key: 'friend_request', label: 'New Friend Request' },
 		{ key: 'daily_check_in_reminder', label: 'Reminder for daily check-in' },
+		{ key: 'check_in_alert', label: 'Check-in tracker reminders' },
 		{ key: 'daily_day_reminder', label: 'Reminder for the upcoming day' },
 		{ key: 'calendar_share', label: 'Calendar Shares' },
 		{ key: 'dev_request_comment', label: 'Dev Request Comments' },

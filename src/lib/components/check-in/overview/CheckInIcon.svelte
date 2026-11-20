@@ -20,13 +20,16 @@
 	import IconWine from '$lib/icons/lucide/wine.svelte';
 	import IconCigarette from '$lib/icons/lucide/cigarette.svelte';
 	import IconUsersRound from '$lib/icons/lucide/users-round.svelte';
-	import type { CheckInType } from '$lib/types/check_in';
+	import TrackerIcon from '$lib/components/check-in/TrackerIcon.svelte';
+	import type { CheckInTracker } from '$lib/types/check_in';
 	import { SPORT_BY_ID } from '$lib/types/check_in';
 
-	let { type, value }: {
-		type: CheckInType;
+	let { tracker, value }: {
+		tracker: CheckInTracker;
 		value: number | null;
 	} = $props();
+
+	const type = $derived(tracker.key);
 
 	const sportId = $derived(type === 'sports' && value !== null ? SPORT_BY_ID[value] : undefined);
 
@@ -63,9 +66,17 @@
 	}
 </script>
 
-{#if value !== null}
+{#if value !== null && tracker.type === 'count'}
+	<span class="flex size-10 items-center justify-center text-sm font-bold tabular-nums">{value}</span>
+{:else if value !== null && tracker.type === 'yes_no'}
+	<span class="flex size-10 items-center justify-center text-c-primary">
+		<TrackerIcon name={tracker.icon} class="size-6" />
+	</span>
+{:else if value !== null}
 	<button class="group size-10 text-{type === 'sports' ? 'c-primary' : getColor(value)}">
-		{#if type === 'water'}
+		{#if type === null}
+			<TrackerIcon name={tracker.icon} class="size-full" />
+		{:else if type === 'water'}
 			<IconWater fill={getFill(value)} />
 		{:else if type === 'sleep'}
 			<IconBedSingle class="size-full" />
