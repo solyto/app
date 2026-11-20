@@ -28,6 +28,7 @@ export const urls = {
 	confirmAccountDeletion: '/auth/confirm-account-deletion',
 	profile: '/profile',
 	checkIn: '/check-in',
+	goals: '/goals',
 	checkInHistory: '/check-in/history',
 	checkInDate: '/check-in/date/[date]',
 	checkInTrends: '/check-in/trends',

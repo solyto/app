@@ -108,7 +108,7 @@ describe('DailyCheckInIcon', () => {
 });
 
 function checkInTracker(overrides: Partial<CheckInTracker> = {}): CheckInTracker {
-	return { id: 1, key: 'mood', name: null, type: 'scale', icon: null, position: 0, enabled: true, scored: true, goal: null, alerts: [], ...overrides };
+	return { id: 1, key: 'mood', name: null, type: 'scale', icon: null, position: 0, enabled: true, scored: true, ...overrides };
 }
 
 describe('CheckInIcon', () => {

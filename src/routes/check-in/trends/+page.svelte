@@ -18,6 +18,15 @@
 
 	let selectedRange = $state<Range>('30d');
 
+	async function selectRange(range: Range): Promise<void> {
+		selectedRange = range;
+		if (range !== 'all') return;
+
+		loadingIndicator.start();
+		await checkInData.loadValuesFrom(null);
+		loadingIndicator.stop();
+	}
+
 	const ranges: { label: string; value: Range }[] = [
 		{ label: ts.get.checkIn.range_30_days, value: '30d' },
 		{ label: ts.get.checkIn.range_3_months, value: '3m' },
@@ -66,7 +75,7 @@
 				class:bg-c-bg-elevated={selectedRange !== range.value}
 				class:bg-c-btn={selectedRange === range.value}
 				class:text-white={selectedRange === range.value}
-				onclick={() => (selectedRange = range.value)}
+				onclick={() => selectRange(range.value)}
 			>
 				{range.label}
 			</button>

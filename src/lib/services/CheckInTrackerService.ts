@@ -1,6 +1,7 @@
 import type { CheckIn, CheckInTracker, CheckInType, CheckInValue } from '$lib/types/check_in';
 import { ALL_CHECK_IN_TRACKERS } from '$lib/types/check_in';
 import type { WeekStart } from '$lib/types/auth';
+import type { Goal } from '$lib/types/goal';
 import { getStartOfWeek, getUrlFormat } from '$lib/helpers/DateHelper';
 
 export type CheckInIndex = Map<string, Map<number, number>>;
@@ -79,11 +80,11 @@ export default class CheckInTrackerService {
 		return trackers.filter((tracker) => tracker.enabled && tracker.type === 'scale' && tracker.scored);
 	}
 
-	goalDates(tracker: CheckInTracker, today: Date, weekStart: WeekStart): string[] {
-		if (!tracker.goal || tracker.goal.period === 'day') return [getUrlFormat(today)];
+	goalDates(goal: Goal, today: Date, weekStart: WeekStart): string[] {
+		if (goal.period === 'day') return [getUrlFormat(today)];
 
 		const start =
-			tracker.goal.period === 'week'
+			goal.period === 'week'
 				? getStartOfWeek(today, weekStart)
 				: new Date(today.getFullYear(), today.getMonth(), 1);
 
@@ -94,16 +95,15 @@ export default class CheckInTrackerService {
 		return dates;
 	}
 
-	goalProgress(tracker: CheckInTracker, index: CheckInIndex, today: Date, weekStart: WeekStart): GoalProgress | null {
-		const goal = tracker.goal;
-		if (!goal) return null;
-
-		const values = this.goalDates(tracker, today, weekStart)
+	// Progress up to and including `today`, from the loaded values, so it follows edits right away.
+	goalProgress(goal: Goal, tracker: CheckInTracker, index: CheckInIndex, today: Date, weekStart: WeekStart): GoalProgress {
+		const values = this.goalDates(goal, today, weekStart)
 			.map((date) => this.value(index, tracker.id, date))
 			.filter((value): value is number => value !== null);
 
 		const current = this.measure(tracker, values);
-		if (current === null) return { current: null, met: goal.comparison === 'at_most' };
+		// Nothing to measure is never met, as on the server.
+		if (current === null) return { current: null, met: false };
 
 		return { current, met: goal.comparison === 'at_least' ? current >= goal.target : current <= goal.target };
 	}
@@ -116,8 +116,10 @@ export default class CheckInTrackerService {
 				return values.length;
 			case 'count':
 				return values.reduce((a, b) => a + b, 0);
-			case 'scale':
-				return values.length === 0 ? null : values.reduce((a, b) => a + b, 0) / values.length;
+			case 'scale': {
+				const rated = values.filter((value) => value > 0);
+				return rated.length === 0 ? null : rated.reduce((a, b) => a + b, 0) / rated.length;
+			}
 		}
 	}
 }

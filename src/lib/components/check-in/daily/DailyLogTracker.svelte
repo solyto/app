@@ -2,7 +2,7 @@
 	import { slide } from 'svelte/transition';
 	import type { CheckInTracker } from '$lib/types/check_in';
 	import { MAX_CHECK_IN_COUNT } from '$lib/types/check_in';
-	import type { GoalProgress } from '$lib/services/CheckInTrackerService';
+	import type { GoalLine } from '$lib/helpers/CheckInHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
 	import GoalProgressLine from '$lib/components/check-in/daily/GoalProgressLine.svelte';
@@ -12,11 +12,11 @@
 	import IconMinus from '$lib/icons/lucide/minus.svelte';
 	import IconPlus from '$lib/icons/lucide/plus.svelte';
 
-	let { tracker, label, value, progress = null, onSet }: {
+	let { tracker, label, value, goalLine = null, onSet }: {
 		tracker: CheckInTracker;
 		label: string;
 		value: number | null;
-		progress?: GoalProgress | null;
+		goalLine?: GoalLine | null;
 		onSet: (value: number | null) => void;
 	} = $props();
 
@@ -69,8 +69,8 @@
 			</span>
 			<div class="min-w-0">
 				<div class="line-clamp-2 text-lg font-semibold break-words">{label}</div>
-				{#if progress}
-					<GoalProgressLine {tracker} {progress} />
+				{#if goalLine}
+					<GoalProgressLine line={goalLine} />
 				{/if}
 			</div>
 		</div>

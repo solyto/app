@@ -21,6 +21,7 @@ export class Navigation {
 		libraries: true,
 		contacts: true,
 		checkIn: true,
+		goals: true,
 		finances: true,
 		feeds: true,
 		clipboard: true,

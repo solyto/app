@@ -98,10 +98,17 @@ export const apiRoutes = {
 		values: API_URL + '/check-in/values',
 		trackers: API_URL + '/check-in/trackers',
 		trackerOrder: API_URL + '/check-in/trackers/order',
-		tracker: API_URL + '/check-in/trackers/%d',
-		trackerGoal: API_URL + '/check-in/trackers/%d/goal',
-		trackerAlerts: API_URL + '/check-in/trackers/%d/alerts',
-		alert: API_URL + '/check-in/alerts/%d'
+		tracker: API_URL + '/check-in/trackers/%d'
+	},
+	goals: {
+		list: API_URL + '/goals',
+		goal: API_URL + '/goals/%d'
+	},
+	alerts: {
+		list: API_URL + '/alerts',
+		alert: API_URL + '/alerts/%d',
+		suggestions: API_URL + '/alerts/suggestions',
+		suggestion: API_URL + '/alerts/suggestions/%s'
 	},
 	notes: {
 		list: API_URL + '/notes',

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CheckInData } from '$lib/state/CheckInData.svelte';
 import { api, auth, pageState, resetStoreMocks } from '../setup/storeMocks';
 import { DEFAULT_SPORTS } from '$lib/types/check_in';
@@ -14,8 +14,6 @@ function tracker(overrides: Partial<CheckInTracker> = {}): CheckInTracker {
 		position: 0,
 		enabled: true,
 		scored: true,
-		goal: null,
-		alerts: [],
 		...overrides
 	};
 }
@@ -100,6 +98,19 @@ describe('CheckInData store', () => {
 			expect(s.selectedSports).toEqual(['yoga', 'bike']);
 		});
 
+		it('loads the values of the last twelve months', async () => {
+			vi.useFakeTimers();
+			vi.setSystemTime(new Date(2026, 10, 20));
+			api.list.mockResolvedValue({ data: [] });
+
+			const s = new CheckInData();
+			await s.load();
+			vi.useRealTimers();
+
+			expect(api.list).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/values\?from=2025-11-01$/));
+			expect(s.valuesFrom).toBe('2025-11-01');
+		});
+
 		it('stays unloaded when the trackers or values fail', async () => {
 			api.list.mockImplementation(async (url: string) => (url.endsWith('/check-in/trackers') ? { data: [mood] } : null));
 			api.get.mockResolvedValue(null);
@@ -110,6 +121,52 @@ describe('CheckInData store', () => {
 			expect(s.loaded).toBe(false);
 			expect(s.trackers).toEqual([]);
 			expect(s.selectedSports).toEqual(DEFAULT_SPORTS);
+		});
+	});
+
+	describe('loadValuesFrom', () => {
+		it('loads only the missing older values and puts them first', async () => {
+			const s = loaded(undefined, [value(1, '2026-01-10', 4)]);
+			s.valuesFrom = '2026-01-01';
+			api.list.mockResolvedValue({ data: [value(1, '2025-12-05', 2)] });
+
+			await s.loadValuesFrom('2025-12-01');
+
+			expect(api.list).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/values\?from=2025-12-01&to=2025-12-31$/));
+			expect(s.values).toEqual([value(1, '2025-12-05', 2), value(1, '2026-01-10', 4)]);
+			expect(s.valuesFrom).toBe('2025-12-01');
+		});
+
+		it('loads everything before the loaded months for null', async () => {
+			const s = loaded();
+			s.valuesFrom = '2026-01-01';
+			api.list.mockResolvedValue({ data: [] });
+
+			await s.loadValuesFrom(null);
+
+			expect(api.list).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/values\?to=2025-12-31$/));
+			expect(s.valuesFrom).toBeNull();
+		});
+
+		it('does nothing when the values are already there', async () => {
+			const s = loaded();
+			s.valuesFrom = '2026-01-01';
+
+			await s.loadValuesFrom('2026-03-01');
+			s.valuesFrom = null;
+			await s.loadValuesFrom('2020-01-01');
+
+			expect(api.list).not.toHaveBeenCalled();
+		});
+
+		it('keeps the loaded range when loading fails', async () => {
+			const s = loaded();
+			s.valuesFrom = '2026-01-01';
+			api.list.mockResolvedValue(null);
+
+			await s.loadValuesFrom('2025-01-01');
+
+			expect(s.valuesFrom).toBe('2026-01-01');
 		});
 	});
 
@@ -237,25 +294,6 @@ describe('CheckInData store', () => {
 			expect(await s.moveTracker(mood, -1)).toBe(false);
 			expect(await s.moveTracker(sports, 1)).toBe(false);
 			expect(api.put).not.toHaveBeenCalled();
-		});
-
-		it('sets and removes goals and reminders on their URLs', async () => {
-			api.put.mockResolvedValue(true);
-			api.delete.mockResolvedValue(true);
-			api.create.mockResolvedValue({ data: meditated });
-			const s = loaded();
-
-			await s.setGoal(meditated, { period: 'week', comparison: 'at_least', target: 5 });
-			await s.deleteGoal(meditated);
-			await s.addAlert(meditated, { time: '20:00' });
-			await s.updateAlert(7, { time: '21:00' });
-			await s.deleteAlert(7);
-
-			expect(api.put).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/trackers\/3\/goal$/), { period: 'week', comparison: 'at_least', target: 5 });
-			expect(api.delete).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/trackers\/%d\/goal$/), 3);
-			expect(api.create).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/trackers\/3\/alerts$/), { time: '20:00' });
-			expect(api.put).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/alerts\/7$/), { time: '21:00' });
-			expect(api.delete).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/alerts\/%d$/), 7);
 		});
 	});
 

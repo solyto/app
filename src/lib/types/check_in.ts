@@ -87,22 +87,6 @@ export type CheckInTrackerType = 'scale' | 'yes_no' | 'count' | 'sport';
 
 export type CustomCheckInTrackerType = Exclude<CheckInTrackerType, 'sport'>;
 
-export type CheckInGoalPeriod = 'day' | 'week' | 'month';
-
-export type CheckInGoalComparison = 'at_least' | 'at_most';
-
-export interface CheckInGoal {
-	period: CheckInGoalPeriod;
-	comparison: CheckInGoalComparison;
-	target: number;
-}
-
-export interface CheckInAlert {
-	id: number;
-	time: string;
-	target: number | null;
-}
-
 export interface CheckInTracker {
 	id: number;
 	key: CheckInType | null;
@@ -112,8 +96,8 @@ export interface CheckInTracker {
 	position: number;
 	enabled: boolean;
 	scored: boolean;
-	goal: CheckInGoal | null;
-	alerts: CheckInAlert[];
+	// Only in the list.
+	values_count?: number;
 }
 
 export interface CheckInValue {
@@ -133,11 +117,6 @@ export interface UpdateCheckInTrackerRequest {
 	icon?: string | null;
 	enabled?: boolean;
 	scored?: boolean;
-}
-
-export interface CheckInAlertRequest {
-	time: string;
-	target?: number;
 }
 
 export const MAX_CHECK_IN_COUNT = 1000000;

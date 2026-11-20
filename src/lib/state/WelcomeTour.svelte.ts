@@ -22,6 +22,7 @@ const FEATURE_STEPS: StepDef[] = [
 	{ key: 'libraries', route: urls.libraries },
 	{ key: 'contacts', route: urls.contacts },
 	{ key: 'checkIn', route: urls.checkIn },
+	{ key: 'goals', route: urls.goals },
 	{ key: 'finances', route: urls.finances },
 	{ key: 'timeTracking', route: urls.timeTracking },
 	{ key: 'feeds', route: urls.feeds },

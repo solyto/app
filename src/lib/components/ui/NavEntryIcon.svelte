@@ -3,6 +3,7 @@
 	import IconCheckCheck from '$lib/icons/lucide/check-check.svelte';
 	import IconSettings from '$lib/icons/lucide/settings.svelte';
 	import IconGoal from '$lib/icons/lucide/goal.svelte';
+	import IconTrophy from '$lib/icons/lucide/trophy.svelte';
 	import IconNotebook from '$lib/icons/lucide/notebook.svelte';
 	import IconBug from '$lib/icons/lucide/bug.svelte';
 	import IconLibraryBig from '$lib/icons/lucide/library-big.svelte';
@@ -31,6 +32,8 @@
 	<IconContactRound />
 {:else if type === 'checkIn'}
 	<IconGoal />
+{:else if type === 'goals'}
+	<IconTrophy />
 {:else if type === 'finances'}
 	<IconEuro />
 {:else if type === 'feeds'}

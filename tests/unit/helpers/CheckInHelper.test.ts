@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { getScoreColor, goalProgressText, trackerLabel } from '$lib/helpers/CheckInHelper';
 import type { CheckInTracker } from '$lib/types/check_in';
+import type { Goal } from '$lib/types/goal';
 import type { CheckInRecords } from '$lib/types/translation';
 
 function tracker(overrides: Partial<CheckInTracker> = {}): CheckInTracker {
@@ -13,8 +14,20 @@ function tracker(overrides: Partial<CheckInTracker> = {}): CheckInTracker {
 		position: 0,
 		enabled: true,
 		scored: false,
-		goal: null,
-		alerts: [],
+		...overrides
+	};
+}
+
+function goal(overrides: Partial<Goal> = {}): Goal {
+	return {
+		id: 1,
+		source: 'check_in_tracker',
+		check_in_tracker_id: 1,
+		period: 'week',
+		comparison: 'at_least',
+		target: 5,
+		notify_when_reached: false,
+		progress: { current: null, met: false, period_start: '2026-10-12', period_end: '2026-10-18', history: [] },
 		...overrides
 	};
 }
@@ -52,20 +65,18 @@ describe('goalProgressText', () => {
 	const texts = { goal_today: 'today', goal_this_week: 'this week', goal_this_month: 'this month' } as CheckInRecords;
 
 	it('shows days or counts as whole numbers', () => {
-		const t = tracker({ goal: { period: 'week', comparison: 'at_least', target: 5 } });
-
-		expect(goalProgressText(t, { current: 3, met: false }, texts)).toBe('3 / 5 this week');
+		expect(goalProgressText(goal(), tracker(), { current: 3, met: false }, texts)).toBe('3 / 5 this week');
 	});
 
 	it('shows a 1–5 average with one decimal and marks an "at most" target', () => {
-		const t = tracker({ type: 'scale', goal: { period: 'month', comparison: 'at_most', target: 2 } });
+		const g = goal({ period: 'month', comparison: 'at_most', target: 2 });
 
-		expect(goalProgressText(t, { current: 1.75, met: true }, texts)).toBe('1.8 / ≤ 2.0 this month');
+		expect(goalProgressText(g, tracker({ type: 'scale' }), { current: 1.75, met: true }, texts)).toBe('1.8 / ≤ 2.0 this month');
 	});
 
 	it('shows a dash when there is nothing to measure yet', () => {
-		const t = tracker({ type: 'scale', goal: { period: 'day', comparison: 'at_least', target: 4 } });
+		const g = goal({ period: 'day', target: 4 });
 
-		expect(goalProgressText(t, { current: null, met: false }, texts)).toBe('– / 4.0 today');
+		expect(goalProgressText(g, tracker({ type: 'scale' }), { current: null, met: false }, texts)).toBe('– / 4.0 today');
 	});
 });

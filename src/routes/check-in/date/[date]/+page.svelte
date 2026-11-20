@@ -5,31 +5,28 @@
 	import CheckInSettings from '$lib/components/check-in/CheckInSettings.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconPlus from '$lib/icons/lucide/plus.svelte';
-	import IconX from '$lib/icons/lucide/x.svelte';
 	import { page } from '$app/state';
 	import { afterNavigate } from '$app/navigation';
 	import { SvelteMap } from 'svelte/reactivity';
 	import { formatDate, isDateToday, isDateYesterday, parseUrlFormat } from '$lib/helpers/DateHelper';
-	import { trackerLabel } from '$lib/helpers/CheckInHelper';
+	import { goalProgressText, trackerLabel, type GoalLine } from '$lib/helpers/CheckInHelper';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
+	import { getGoals } from '$lib/state/Goals.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import LocalStorageService from '$lib/services/LocalStorageService';
 
 	const checkInData = getCheckInData();
+	const goals = getGoals();
 	const auth = getAuth();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
-	const localStorage = new LocalStorageService();
-	const INTRO_DISMISSED_KEY = 'check_in_trackers_intro_dismissed';
 	const AREA_TITLE = 'text-sm font-semibold tracking-wider text-c-heading uppercase dark:text-c-primary';
 
 	const pending = new SvelteMap<CheckInTracker, number | null>();
 	let addingTracker = $state<boolean>(false);
-	let introVisible = $state<boolean>(!localStorage.getBool(INTRO_DISMISSED_KEY));
 
 	let date = $derived(page.params.date ?? '');
 	let parsedDate = $derived(parseUrlFormat(date));
@@ -38,11 +35,17 @@
 
 	afterNavigate(() => {
 		pending.clear();
+		// A day from before the loaded months, e.g. opened from the calendar.
+		if (date !== '') void checkInData.loadValuesFrom(date);
 	});
 
-	function goalProgress(tracker: CheckInTracker) {
-		if (!tracker.goal || parsedDate === null) return null;
-		return checkInData.trackerService.goalProgress(tracker, checkInData.index, parsedDate, auth.getWeekStart());
+	// Today only: the goal's period is the one running now.
+	function goalLine(tracker: CheckInTracker): GoalLine | null {
+		const goal = goals.forTracker(tracker.id);
+		if (!goal || !isToday || parsedDate === null) return null;
+
+		const progress = checkInData.trackerService.goalProgress(goal, tracker, checkInData.index, parsedDate, auth.getWeekStart());
+		return { text: goalProgressText(goal, tracker, progress, ts.get.checkIn), met: progress.met };
 	}
 
 	function ratingValue(tracker: CheckInTracker): number | null {
@@ -66,11 +69,6 @@
 	async function setLog(tracker: CheckInTracker, value: number | null): Promise<void> {
 		if (!(await checkInData.setValue(tracker, date, value))) notifications.error(ts.get.checkIn.save_error);
 	}
-
-	function dismissIntro(): void {
-		introVisible = false;
-		localStorage.setBool(INTRO_DISMISSED_KEY, true);
-	}
 </script>
 
 <div class="relative mt-8 flex flex-col gap-8">
@@ -92,16 +90,6 @@
 		</div>
 	{/if}
 
-	{#if introVisible && checkInData.loaded}
-		<div class="mx-auto flex w-full max-w-3xl items-center gap-3 rounded-xl bg-c-bg-surface px-4 py-3 text-sm shadow-sm">
-			<span class="flex-1">{ts.get.checkIn.intro_text}</span>
-			<button type="button" class="flex cursor-pointer items-center gap-1 font-semibold text-c-heading dark:text-c-primary" onclick={dismissIntro}>
-				<IconX class="size-4" />
-				{ts.get.checkIn.intro_dismiss}
-			</button>
-		</div>
-	{/if}
-
 	<div class="flex flex-col gap-12 md:mx-auto md:w-fit 2xl:flex-row 2xl:items-start 2xl:gap-24">
 		{#if checkInData.ratingTrackers.length > 0}
 			<section class="flex flex-col space-y-4">
@@ -113,7 +101,7 @@
 						currentValue={ratingValue(tracker)}
 						onChange={(changed, value) => pending.set(changed, value)}
 						selectedSports={checkInData.selectedSports}
-						progress={goalProgress(tracker)}
+						goalLine={goalLine(tracker)}
 					/>
 				{/each}
 			</section>
@@ -138,7 +126,7 @@
 						{tracker}
 						label={trackerLabel(tracker, ts.get.checkIn)}
 						value={checkInData.getValue(tracker, date)}
-						progress={goalProgress(tracker)}
+						goalLine={goalLine(tracker)}
 						onSet={(value) => setLog(tracker, value)}
 					/>
 				{/each}

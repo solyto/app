@@ -143,7 +143,8 @@
 							<div class:pointer-events-none={isLastEnabled(tracker)} class:opacity-50={isLastEnabled(tracker)}>
 								<Toggle checked={tracker.enabled} onchange={() => run(() => checkInData.updateTracker(tracker, { enabled: !tracker.enabled }))} />
 							</div>
-							<button type="button" class={ICON_BUTTON} aria-label={ts.get.checkIn.edit_tracker} title={ts.get.checkIn.edit_tracker} onclick={() => (editing = tracker)}>
+							<!-- Built-in trackers have nothing to edit; the hidden button keeps the columns aligned. -->
+							<button type="button" class={ICON_BUTTON} class:invisible={tracker.key !== null} disabled={tracker.key !== null} aria-label={ts.get.checkIn.edit_tracker} title={ts.get.checkIn.edit_tracker} onclick={() => (editing = tracker)}>
 								<IconPencil class="size-4" />
 							</button>
 						</div>

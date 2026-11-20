@@ -9,6 +9,7 @@
 	import IconUsers from '$lib/icons/lucide/users.svelte';
 	import IconActivity from '$lib/icons/lucide/activity.svelte';
 	import IconClock from '$lib/icons/lucide/clock.svelte';
+	import IconTrophy from '$lib/icons/lucide/trophy.svelte';
 	import IconWallet from '$lib/icons/lucide/wallet.svelte';
 	import IconRss from '$lib/icons/lucide/rss.svelte';
 	import IconClipboard from '$lib/icons/lucide/clipboard.svelte';
@@ -31,6 +32,7 @@
 		{ key: 'libraries' as FeatureType, icon: IconLibrary, labelKey: 'feature_libraries', descKey: 'feature_libraries_desc' },
 		{ key: 'contacts' as FeatureType, icon: IconUsers, labelKey: 'feature_contacts', descKey: 'feature_contacts_desc' },
 		{ key: 'checkIn' as FeatureType, icon: IconActivity, labelKey: 'feature_check_in', descKey: 'feature_check_in_desc' },
+		{ key: 'goals' as FeatureType, icon: IconTrophy, labelKey: 'feature_goals', descKey: 'feature_goals_desc' },
 		{ key: 'timeTracking' as FeatureType, icon: IconClock, labelKey: 'feature_time_tracking', descKey: 'feature_time_tracking_desc' },
 		{ key: 'finances' as FeatureType, icon: IconWallet, labelKey: 'feature_finances', descKey: 'feature_finances_desc' },
 		{ key: 'feeds' as FeatureType, icon: IconRss, labelKey: 'feature_feeds', descKey: 'feature_feeds_desc' },

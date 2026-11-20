@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import CheckInTrackerService from '$lib/services/CheckInTrackerService';
-import type { CheckInGoal, CheckInTracker, CheckInValue } from '$lib/types/check_in';
+import type { CheckInTracker, CheckInValue } from '$lib/types/check_in';
+import type { Goal } from '$lib/types/goal';
 
 const service = new CheckInTrackerService();
 
@@ -14,8 +15,6 @@ function tracker(overrides: Partial<CheckInTracker> = {}): CheckInTracker {
 		position: 0,
 		enabled: true,
 		scored: false,
-		goal: null,
-		alerts: [],
 		...overrides
 	};
 }
@@ -24,8 +23,18 @@ function value(trackerId: number, date: string, v: number): CheckInValue {
 	return { tracker_id: trackerId, date, value: v };
 }
 
-function goal(overrides: Partial<CheckInGoal> = {}): CheckInGoal {
-	return { period: 'week', comparison: 'at_least', target: 3, ...overrides };
+function goal(overrides: Partial<Goal> = {}): Goal {
+	return {
+		id: 1,
+		source: 'check_in_tracker',
+		check_in_tracker_id: 1,
+		period: 'week',
+		comparison: 'at_least',
+		target: 3,
+		notify_when_reached: false,
+		progress: { current: null, met: false, period_start: '', period_end: '', history: [] },
+		...overrides
+	};
 }
 
 // Thursday; with weeks starting on Monday the week runs from 2026-10-12.
@@ -117,12 +126,7 @@ describe('scored', () => {
 });
 
 describe('goalProgress', () => {
-	it('is null without a goal', () => {
-		expect(service.goalProgress(tracker(), service.index([]), today, 'monday')).toBeNull();
-	});
-
 	it('counts the ticked days of the week for yes/no', () => {
-		const t = tracker({ goal: goal({ target: 3 }) });
 		const index = service.index([
 			value(1, '2026-10-11', 1),
 			value(1, '2026-10-12', 1),
@@ -130,38 +134,40 @@ describe('goalProgress', () => {
 			value(1, '2026-10-15', 1)
 		]);
 
-		expect(service.goalProgress(t, index, today, 'monday')).toEqual({ current: 3, met: true });
+		expect(service.goalProgress(goal(), tracker(), index, today, 'monday')).toEqual({ current: 3, met: true });
 	});
 
 	it('follows the user\'s week start', () => {
-		const t = tracker({ goal: goal({ target: 3 }) });
 		const index = service.index([value(1, '2026-10-11', 1), value(1, '2026-10-12', 1)]);
 
-		expect(service.goalProgress(t, index, today, 'sunday')?.current).toBe(2);
-		expect(service.goalProgress(t, index, today, 'monday')?.current).toBe(1);
+		expect(service.goalProgress(goal(), tracker(), index, today, 'sunday').current).toBe(2);
+		expect(service.goalProgress(goal(), tracker(), index, today, 'monday').current).toBe(1);
 	});
 
 	it('adds up a count for the day and for the month', () => {
 		const index = service.index([value(1, '2026-09-30', 9), value(1, '2026-10-01', 3), value(1, '2026-10-15', 2)]);
 
-		expect(service.goalProgress(tracker({ type: 'count', goal: goal({ period: 'day', target: 5 }) }), index, today, 'monday'))
+		expect(service.goalProgress(goal({ period: 'day', target: 5 }), tracker({ type: 'count' }), index, today, 'monday'))
 			.toEqual({ current: 2, met: false });
-		expect(service.goalProgress(tracker({ type: 'count', goal: goal({ period: 'month', target: 5 }) }), index, today, 'monday'))
+		expect(service.goalProgress(goal({ period: 'month', target: 5 }), tracker({ type: 'count' }), index, today, 'monday'))
 			.toEqual({ current: 5, met: true });
 	});
 
-	it('averages a 1–5 tracker and has no current value without data', () => {
-		const t = tracker({ type: 'scale', goal: goal({ target: 3.5 }) });
+	it('averages a 1–5 tracker over the ratings given and has no current value without them', () => {
+		const g = goal({ target: 3.5 });
+		const scale = tracker({ type: 'scale' });
+		const index = service.index([value(1, '2026-10-13', 3), value(1, '2026-10-14', 5), value(1, '2026-10-15', 0)]);
 
-		expect(service.goalProgress(t, service.index([value(1, '2026-10-13', 3), value(1, '2026-10-14', 5)]), today, 'monday'))
-			.toEqual({ current: 4, met: true });
-		expect(service.goalProgress(t, service.index([]), today, 'monday')).toEqual({ current: null, met: false });
+		expect(service.goalProgress(g, scale, index, today, 'monday')).toEqual({ current: 4, met: true });
+		expect(service.goalProgress(g, scale, service.index([]), today, 'monday')).toEqual({ current: null, met: false });
+		expect(service.goalProgress(goal({ comparison: 'at_most' }), scale, service.index([]), today, 'monday').met).toBe(false);
 	});
 
 	it('meets an "at most" goal while staying at or below the target', () => {
-		const t = tracker({ type: 'count', goal: goal({ period: 'week', comparison: 'at_most', target: 4 }) });
+		const g = goal({ period: 'week', comparison: 'at_most', target: 4 });
+		const count = tracker({ type: 'count' });
 
-		expect(service.goalProgress(t, service.index([value(1, '2026-10-13', 4)]), today, 'monday')?.met).toBe(true);
-		expect(service.goalProgress(t, service.index([value(1, '2026-10-13', 5)]), today, 'monday')?.met).toBe(false);
+		expect(service.goalProgress(g, count, service.index([value(1, '2026-10-13', 4)]), today, 'monday').met).toBe(true);
+		expect(service.goalProgress(g, count, service.index([value(1, '2026-10-13', 5)]), today, 'monday').met).toBe(false);
 	});
 });

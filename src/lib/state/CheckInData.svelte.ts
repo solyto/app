@@ -1,7 +1,5 @@
 import type {
 	CheckIn,
-	CheckInAlertRequest,
-	CheckInGoal,
 	CheckInTracker,
 	CheckInValue,
 	CreateCheckInTrackerRequest,
@@ -15,8 +13,26 @@ import ApiService from '$lib/services/ApiService';
 import CheckInTrackerService from '$lib/services/CheckInTrackerService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { page } from '$app/state';
+import { getPrevDay, getUrlFormat, parseUrlFormat } from '$lib/helpers/DateHelper';
 
 const trackerService = new CheckInTrackerService();
+
+// Values are loaded for this many months back; views that look further load the rest on demand.
+const LOADED_MONTHS = 12;
+
+function defaultValuesFrom(): string {
+	const from = new Date();
+	from.setMonth(from.getMonth() - LOADED_MONTHS, 1);
+	return getUrlFormat(from);
+}
+
+function valuesUrl(from: string | null, to: string | null): string {
+	const query = new URLSearchParams();
+	if (from !== null) query.set('from', from);
+	if (to !== null) query.set('to', to);
+	const search = query.toString();
+	return search === '' ? apiRoutes.checkIn.values : `${apiRoutes.checkIn.values}?${search}`;
+}
 
 export interface HistoryMonth {
 	year: number;
@@ -27,6 +43,8 @@ export class CheckInData {
 	loaded = $state<boolean>(false);
 	trackers = $state<CheckInTracker[]>([]);
 	values = $state<CheckInValue[]>([]);
+	// The first day whose values are loaded; null once everything is.
+	valuesFrom = $state<string | null>(defaultValuesFrom());
 	selectedSports = $state<SportId[]>([...DEFAULT_SPORTS]);
 	historyMonth = $state<HistoryMonth>({ year: new Date().getFullYear(), month: new Date().getMonth() });
 	index = $derived(trackerService.index(this.values));
@@ -45,15 +63,18 @@ export class CheckInData {
 	}
 
 	async load(): Promise<void> {
+		const from = this.valuesFrom;
 		const [trackersRes, valuesRes, settingsRes] = await Promise.all([
 			this.apiService.list(apiRoutes.checkIn.trackers),
-			this.apiService.list(apiRoutes.checkIn.values),
+			this.apiService.list(valuesUrl(from, null)),
 			this.apiService.get(apiRoutes.users.settings.updateCheckInSettings, null)
 		]);
 
 		if (trackersRes && valuesRes) {
 			this.trackers = trackersRes.data as CheckInTracker[];
 			this.values = valuesRes.data as CheckInValue[];
+			// Older values loaded meanwhile were just replaced.
+			this.valuesFrom = from;
 			this.loaded = true;
 		}
 
@@ -61,6 +82,23 @@ export class CheckInData {
 			const data = settingsRes.data as { selected_sports?: SportId[] };
 			this.selectedSports = data.selected_sports ?? [...DEFAULT_SPORTS];
 		}
+	}
+
+	// Loads the values from `from` on (null: all of them), if they aren't loaded yet.
+	async loadValuesFrom(from: string | null): Promise<void> {
+		const loadedFrom = this.valuesFrom;
+		if (loadedFrom === null || (from !== null && from >= loadedFrom)) return;
+
+		const res = await this.apiService.list(valuesUrl(from, getUrlFormat(getPrevDay(parseUrlFormat(loadedFrom)!))));
+		if (!res) return;
+
+		this.values = [...(res.data as CheckInValue[]), ...this.values];
+		this.valuesFrom = from;
+	}
+
+	async loadTrackers(): Promise<void> {
+		const res = await this.apiService.list(apiRoutes.checkIn.trackers);
+		if (res) this.trackers = res.data as CheckInTracker[];
 	}
 
 	getValue(tracker: CheckInTracker, date: string): number | null {
@@ -114,7 +152,7 @@ export class CheckInData {
 		const res = await this.apiService.create(apiRoutes.checkIn.trackers, request);
 		if (!res) return null;
 
-		await this.reloadTrackers();
+		await this.loadTrackers();
 		return this.trackers.find((tracker) => tracker.id === (res.data as CheckInTracker).id) ?? null;
 	}
 
@@ -138,31 +176,10 @@ export class CheckInData {
 		return this.writeAndReload(this.apiService.put(apiRoutes.checkIn.trackerOrder, { ids }));
 	}
 
-	async setGoal(tracker: CheckInTracker, goal: CheckInGoal): Promise<boolean> {
-		return this.writeAndReload(this.apiService.put(apiRoutes.checkIn.trackerGoal.replace('%d', String(tracker.id)), goal));
-	}
-
-	async deleteGoal(tracker: CheckInTracker): Promise<boolean> {
-		return this.writeAndReload(this.apiService.delete(apiRoutes.checkIn.trackerGoal, tracker.id));
-	}
-
-	async addAlert(tracker: CheckInTracker, request: CheckInAlertRequest): Promise<boolean> {
-		return this.writeAndReload(
-			this.apiService.create(apiRoutes.checkIn.trackerAlerts.replace('%d', String(tracker.id)), request).then(Boolean)
-		);
-	}
-
-	async updateAlert(alertId: number, request: CheckInAlertRequest): Promise<boolean> {
-		return this.writeAndReload(this.apiService.put(apiRoutes.checkIn.alert.replace('%d', String(alertId)), request));
-	}
-
-	async deleteAlert(alertId: number): Promise<boolean> {
-		return this.writeAndReload(this.apiService.delete(apiRoutes.checkIn.alert, alertId));
-	}
-
-	prevMonth(): void {
+	async prevMonth(): Promise<void> {
 		const d = new Date(this.historyMonth.year, this.historyMonth.month - 1, 1);
 		this.historyMonth = { year: d.getFullYear(), month: d.getMonth() };
+		await this.loadValuesFrom(getUrlFormat(d));
 	}
 
 	nextMonth(): void {
@@ -179,14 +196,9 @@ export class CheckInData {
 		const ok = await write;
 		if (!ok) return false;
 
-		await this.reloadTrackers();
+		await this.loadTrackers();
 		this.auth.widgetBridge.notifyChanged();
 		return true;
-	}
-
-	private async reloadTrackers(): Promise<void> {
-		const res = await this.apiService.list(apiRoutes.checkIn.trackers);
-		if (res) this.trackers = res.data as CheckInTracker[];
 	}
 }
 

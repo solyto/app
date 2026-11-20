@@ -38,6 +38,7 @@ export interface NavigationRecords {
 	logout: string;
 	profile: string;
 	checkIn: string;
+	goals: string;
 	libraries: string;
 	dev_requests: string;
 	finances: string;
@@ -383,8 +384,6 @@ export interface CheckInRecords {
 	area_ratings: string;
 	area_logs: string;
 	logs_empty: string;
-	intro_text: string;
-	intro_dismiss: string;
 	add_tracker: string;
 	edit_tracker: string;
 	tracker_name: string;
@@ -401,26 +400,10 @@ export interface CheckInRecords {
 	choose_icon: string;
 	icon_search: string;
 	icon_none: string;
-	goal: string;
-	goal_none: string;
-	goal_at_least: string;
-	goal_at_most: string;
-	goal_per_day: string;
-	goal_per_week: string;
-	goal_per_month: string;
-	goal_unit_days: string;
-	goal_unit_average: string;
 	goal_today: string;
 	goal_this_week: string;
 	goal_this_month: string;
 	goal_met: string;
-	reminders: string;
-	reminder_add: string;
-	reminder_if_below: string;
-	reminder_hint_yes_no: string;
-	reminder_hint_count: string;
-	reminder_hint_rating: string;
-	reminder_channels_hint: string;
 	delete_tracker: string;
 	delete_tracker_question: string;
 	move_up: string;
@@ -1273,6 +1256,8 @@ export interface WelcomeTourRecords {
 	feature_contacts_desc: string;
 	feature_check_in: string;
 	feature_check_in_desc: string;
+	feature_goals: string;
+	feature_goals_desc: string;
 	feature_finances: string;
 	feature_finances_desc: string;
 	feature_feeds: string;
@@ -1448,6 +1433,67 @@ export interface UpdateRequiredRecords {
 	server_outdated: string;
 }
 
+export interface GoalRecords {
+	new_goal: string;
+	edit_goal: string;
+	empty: string;
+	no_trackers_left: string;
+	tracker: string;
+	target: string;
+	at_least: string;
+	at_most: string;
+	per_day: string;
+	per_week: string;
+	per_month: string;
+	unit_days: string;
+	unit_average: string;
+	notify_when_reached: string;
+	notify_hint: string;
+	days_left: string;
+	last_day: string;
+	history: string;
+	history_met: string;
+	history_missed: string;
+	delete_goal: string;
+	delete_goal_question: string;
+	save_error: string;
+}
+
+export interface AlertRecords {
+	title: string;
+	description: string;
+	new_alert: string;
+	edit_alert: string;
+	empty: string;
+	suggestions: string;
+	suggestion_add: string;
+	suggestion_no_sport_week: string;
+	suggestion_mood_trending_down: string;
+	suggestion_sleep_trending_down: string;
+	suggestion_drinking_more: string;
+	tracker: string;
+	rule: string;
+	rule_average_below: string;
+	rule_average_above: string;
+	rule_no_entry_days: string;
+	rule_entry_days: string;
+	threshold: string;
+	over: string;
+	days: string;
+	describe_average_below: string;
+	describe_average_above: string;
+	describe_no_entry_days: string;
+	describe_entry_days: string;
+	describe_goal_reached: string;
+	active_now: string;
+	last_sent: string;
+	goal_alert_hint: string;
+	channels_hint: string;
+	delete_alert: string;
+	delete_alert_question: string;
+	save_error: string;
+}
+
 export interface LanguageFile {
 	layout: LayoutRecords;
 	nav: NavigationRecords;
@@ -1458,6 +1504,8 @@ export interface LanguageFile {
 	todos: TodoRecords;
 	checkIn: CheckInRecords;
 	checkInSummary: CheckInSummaryRecords;
+	goals: GoalRecords;
+	alerts: AlertRecords;
 	widgets: WidgetRecords;
 	notes: NoteRecords;
 	libraries: LibraryRecords;

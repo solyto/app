@@ -5,6 +5,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { setWeather } from '$lib/state/Weather.svelte';
 	import { setCheckInData } from '$lib/state/CheckInData.svelte';
+	import { setGoals } from '$lib/state/Goals.svelte';
 	import { setShortcuts } from '$lib/state/Shortcuts.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getNavigation } from '$lib/state/Navigation.svelte';
@@ -21,6 +22,7 @@
 	setCalendars();
 	setWeather();
 	setCheckInData();
+	setGoals();
 	setShortcuts();
 	setTimeTracking();
 

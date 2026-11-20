@@ -3,15 +3,15 @@
 	import { DEFAULT_SPORTS, SPORT_ID, SPORT_BY_ID } from '$lib/types/check_in';
 	import DailyCheckInIcon from './DailyCheckInIcon.svelte';
 	import GoalProgressLine from '$lib/components/check-in/daily/GoalProgressLine.svelte';
-	import type { GoalProgress } from '$lib/services/CheckInTrackerService';
+	import type { GoalLine } from '$lib/helpers/CheckInHelper';
 
-	let { tracker, label, currentValue, onChange, selectedSports = DEFAULT_SPORTS, progress = null }: {
+	let { tracker, label, currentValue, onChange, selectedSports = DEFAULT_SPORTS, goalLine = null }: {
 		tracker: CheckInTracker;
 		label: string;
 		currentValue?: number | null;
 		onChange: (tracker: CheckInTracker, value: number | null) => void;
 		selectedSports?: SportId[];
-		progress?: GoalProgress | null;
+		goalLine?: GoalLine | null;
 	} = $props();
 
 	let selected = $derived<number | null>(currentValue ?? null);
@@ -46,8 +46,8 @@
 <div class="flex flex-col items-center justify-center space-x-2 md:flex-row lg:space-x-16">
 	<div class="w-full pl-5 text-left md:w-48 md:pl-0">
 		<div class="text-xl font-bold">{label}</div>
-		{#if progress}
-			<GoalProgressLine {tracker} {progress} />
+		{#if goalLine}
+			<GoalProgressLine line={goalLine} />
 		{/if}
 	</div>
 	<div class="flex w-full flex-row items-center justify-between gap-0 md:w-auto lg:gap-4">
