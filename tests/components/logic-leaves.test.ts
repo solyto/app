@@ -137,9 +137,9 @@ describe('CheckInIcon', () => {
 		expect(container.textContent?.trim()).toBe('7');
 	});
 
-	it('shows a ticked yes/no tracker in the primary color', () => {
+	it('shows a ticked yes/no tracker in grey', () => {
 		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker({ key: null, name: 'Meditated', type: 'yes_no', icon: 'flower-2' }), value: 1 } });
-		expect(container.querySelector('.text-c-primary')).toBeInTheDocument();
+		expect(container.querySelector('.text-c-neutral-5')).toBeInTheDocument();
 	});
 });
 

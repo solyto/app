@@ -64,7 +64,6 @@ describe('Navigation store', () => {
 				'contacts',
 				'finances',
 				'time-tracking',
-				'goals',
 				'feeds',
 				'clipboard',
 				'dev-requests'
@@ -128,7 +127,7 @@ describe('Navigation store', () => {
 			storage.getJson.mockReturnValue(null);
 			const s = new Navigation();
 			await s.loadMobileOrder();
-			expect(s.mobileOrder).toHaveLength(13);
+			expect(s.mobileOrder).toHaveLength(12);
 		});
 
 		it('saveMobileOrder persists the current order', () => {

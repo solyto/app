@@ -95,6 +95,20 @@ export default class CheckInTrackerService {
 		return dates;
 	}
 
+	// Days with an entry in each week from the week of `from` to the week of `today`, oldest first.
+	weeklyDays(tracker: CheckInTracker, index: CheckInIndex, from: Date, today: Date, weekStart: WeekStart): { start: string; days: number }[] {
+		const weeks: { start: string; days: number }[] = [];
+		for (const start = getStartOfWeek(from, weekStart); start <= today; start.setDate(start.getDate() + 7)) {
+			let days = 0;
+			for (let i = 0; i < 7; i++) {
+				const day = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+				if (day <= today && this.value(index, tracker.id, getUrlFormat(day)) !== null) days++;
+			}
+			weeks.push({ start: getUrlFormat(start), days });
+		}
+		return weeks;
+	}
+
 	// Progress up to and including `today`, from the loaded values, so it follows edits right away.
 	goalProgress(goal: Goal, tracker: CheckInTracker, index: CheckInIndex, today: Date, weekStart: WeekStart): GoalProgress {
 		const values = this.goalDates(goal, today, weekStart)

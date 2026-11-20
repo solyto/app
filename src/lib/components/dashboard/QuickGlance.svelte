@@ -17,8 +17,6 @@
 <div class="flex flex-col gap-12" in:blur>
 	{#if nav.features.checkIn}
 		<CheckInWidget {ts} />
-	{/if}
-	{#if nav.features.goals}
 		<GoalsWidget {ts} />
 	{/if}
 	{#if nav.features.timeTracking}

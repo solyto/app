@@ -11,7 +11,6 @@ function allFeatures(enabled: boolean): Record<FeatureType, boolean> {
 		libraries: enabled,
 		contacts: enabled,
 		checkIn: enabled,
-		goals: enabled,
 		finances: enabled,
 		feeds: enabled,
 		clipboard: enabled,
@@ -34,7 +33,7 @@ describe('WelcomeTour store', () => {
 		s.start(allFeatures(true));
 
 		expect(s.active).toBe(true);
-		expect(s.totalSteps).toBe(17); // intro + 15 steps + outro
+		expect(s.totalSteps).toBe(16); // intro + 14 steps + outro
 		expect(s.currentStep?.key).toBe('intro');
 		expect(s.currentStep?.selector).toBeNull();
 		expect(s.steps[s.totalSteps - 1].key).toBe('outro');

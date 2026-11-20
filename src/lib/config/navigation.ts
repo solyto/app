@@ -8,7 +8,6 @@ export type FeatureType =
 	| 'libraries'
 	| 'contacts'
 	| 'checkIn'
-	| 'goals'
 	| 'finances'
 	| 'clipboard'
 	| 'dev_requests'
@@ -37,7 +36,6 @@ export const navItems: Record<string, NavItem> = {
 	'todos':         { slug: 'todos',         href: urls.todos,        iconType: 'todos',        translationKey: 'todos',        featureFlag: 'todos',        dataTour: 'todos' },
 	'notes':         { slug: 'notes',         href: urls.notes,        iconType: 'notes',        translationKey: 'notes',        featureFlag: 'notes',        dataTour: 'notes' },
 	'check-in':      { slug: 'check-in',      href: urls.checkIn,      iconType: 'checkIn',      translationKey: 'checkIn',      featureFlag: 'checkIn',      dataTour: 'checkIn' },
-	'goals':         { slug: 'goals',         href: urls.goals,        iconType: 'goals',        translationKey: 'goals',        featureFlag: 'goals',        dataTour: 'goals' },
 	'libraries':     { slug: 'libraries',     href: urls.libraries,    iconType: 'libraries',    translationKey: 'libraries',    featureFlag: 'libraries',    dataTour: 'libraries' },
 	'calendar':      { slug: 'calendar',      href: urls.calendar,     iconType: 'calendar',     translationKey: 'calendar',     featureFlag: 'calendar',     dataTour: 'calendar' },
 	'contacts':      { slug: 'contacts',      href: urls.contacts,     iconType: 'contacts',     translationKey: 'contacts',     featureFlag: 'contacts',     dataTour: 'contacts' },
@@ -49,11 +47,11 @@ export const navItems: Record<string, NavItem> = {
 };
 
 export const desktopOrder: string[] = [
-	'home', 'calendar', 'todos', 'notes', 'libraries', 'contacts', 'check-in', 'goals', 'finances', 'time-tracking', 'feeds', 'clipboard'
+	'home', 'calendar', 'todos', 'notes', 'libraries', 'contacts', 'check-in', 'finances', 'time-tracking', 'feeds', 'clipboard'
 ];
 
 export const mobileDefaultOrder: string[] = [
-	'home', 'todos', 'calendar', 'check-in', 'libraries', 'notes', 'contacts', 'finances', 'time-tracking', 'goals', 'feeds', 'clipboard', 'dev-requests'
+	'home', 'todos', 'calendar', 'check-in', 'libraries', 'notes', 'contacts', 'finances', 'time-tracking', 'feeds', 'clipboard', 'dev-requests'
 ];
 
 export const mobileVisibleCount = 5;

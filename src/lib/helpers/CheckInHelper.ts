@@ -15,13 +15,19 @@ export function trackerLabel(tracker: CheckInTracker, texts: CheckInRecords): st
 	return tracker.key !== null ? texts[tracker.key] : (tracker.name ?? '');
 }
 
-export function goalProgressText(goal: Goal, tracker: CheckInTracker, progress: GoalProgress, texts: CheckInRecords): string {
+// The progress ("3 / 5") and the period it's in ("this week"), for showing them apart.
+export function goalProgressParts(goal: Goal, tracker: CheckInTracker, progress: GoalProgress, texts: CheckInRecords): { value: string; period: string } {
 	const format = (n: number) => (tracker.type === 'scale' ? n.toFixed(1) : String(n));
 	const current = progress.current === null ? '–' : format(progress.current);
 	const target = `${goal.comparison === 'at_most' ? '≤ ' : ''}${format(goal.target)}`;
 	const period = { day: texts.goal_today, week: texts.goal_this_week, month: texts.goal_this_month }[goal.period];
 
-	return `${current} / ${target} ${period}`;
+	return { value: `${current} / ${target}`, period };
+}
+
+export function goalProgressText(goal: Goal, tracker: CheckInTracker, progress: GoalProgress, texts: CheckInRecords): string {
+	const { value, period } = goalProgressParts(goal, tracker, progress, texts);
+	return `${value} ${period}`;
 }
 
 export interface GoalLine {

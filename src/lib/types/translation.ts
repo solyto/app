@@ -38,7 +38,6 @@ export interface NavigationRecords {
 	logout: string;
 	profile: string;
 	checkIn: string;
-	goals: string;
 	libraries: string;
 	dev_requests: string;
 	finances: string;
@@ -381,21 +380,15 @@ export interface CheckInRecords {
 	range_3_months: string;
 	range_6_months: string;
 	range_all: string;
-	area_ratings: string;
-	area_logs: string;
-	logs_empty: string;
 	add_tracker: string;
 	edit_tracker: string;
-	tracker_name: string;
 	tracker_name_hint: string;
-	tracker_type: string;
 	type_scale: string;
 	type_scale_hint: string;
 	type_yes_no: string;
 	type_yes_no_hint: string;
 	type_count: string;
 	type_count_hint: string;
-	type_fixed: string;
 	tracker_icon: string;
 	choose_icon: string;
 	icon_search: string;
@@ -408,10 +401,6 @@ export interface CheckInRecords {
 	delete_tracker_question: string;
 	move_up: string;
 	move_down: string;
-	count_add_amount: string;
-	count_add: string;
-	count_set_total: string;
-	count_set: string;
 	count_decrease: string;
 	count_increase: string;
 	save_error: string;
@@ -1256,8 +1245,6 @@ export interface WelcomeTourRecords {
 	feature_contacts_desc: string;
 	feature_check_in: string;
 	feature_check_in_desc: string;
-	feature_goals: string;
-	feature_goals_desc: string;
 	feature_finances: string;
 	feature_finances_desc: string;
 	feature_feeds: string;
@@ -1434,9 +1421,11 @@ export interface UpdateRequiredRecords {
 }
 
 export interface GoalRecords {
+	title: string;
 	new_goal: string;
 	edit_goal: string;
 	empty: string;
+	empty_hint: string;
 	no_trackers_left: string;
 	tracker: string;
 	target: string;
@@ -1448,10 +1437,11 @@ export interface GoalRecords {
 	unit_days: string;
 	unit_average: string;
 	notify_when_reached: string;
-	notify_hint: string;
 	days_left: string;
 	last_day: string;
-	history: string;
+	history_summary_day: string;
+	history_summary_week: string;
+	history_summary_month: string;
 	history_met: string;
 	history_missed: string;
 	delete_goal: string;
@@ -1487,8 +1477,6 @@ export interface AlertRecords {
 	describe_goal_reached: string;
 	active_now: string;
 	last_sent: string;
-	goal_alert_hint: string;
-	channels_hint: string;
 	delete_alert: string;
 	delete_alert_question: string;
 	save_error: string;

@@ -4,15 +4,14 @@
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getGoals } from '$lib/state/Goals.svelte';
 	import { goalProgressText, trackerLabel } from '$lib/helpers/CheckInHelper';
-	import GoalService from '$lib/services/GoalService';
 	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
+	import GoalBar from '$lib/components/goals/GoalBar.svelte';
 	import { onMount } from 'svelte';
 
 	let { ts } = $props();
 
 	const checkInData = getCheckInData();
 	const goals = getGoals();
-	const goalService = new GoalService();
 
 	let loaded = $state(false);
 
@@ -35,7 +34,7 @@
 		<div class="mb-3 flex items-center gap-2">
 			<IconTrophy size={15} class="text-c-heading dark:text-c-primary" />
 			<span class="text-xs font-semibold tracking-wider text-c-heading uppercase dark:text-c-primary">
-				{ts.get.nav.goals}
+				{ts.get.goals.title}
 			</span>
 		</div>
 		<div class="flex flex-col gap-2.5">
@@ -52,14 +51,7 @@
 								{/if}
 							</span>
 						</div>
-						<div class="h-1 overflow-hidden rounded-full bg-c-neutral-1 dark:bg-s-dark-3">
-							<div
-								class="h-full rounded-full transition-all duration-300"
-								class:bg-c-success={goal.progress.met}
-								class:bg-c-primary={!goal.progress.met}
-								style="width: {goalService.ratio(goal) * 100}%"
-							></div>
-						</div>
+						<GoalBar {goal} {tracker} />
 					</div>
 				</div>
 			{/each}

@@ -33,6 +33,16 @@ export default class GoalService {
 		return target >= min && target <= max && (type === 'scale' || Number.isInteger(target));
 	}
 
+	// A 1–5 average isn't built up over the period, so it's shown on the scale rather than as a filling bar.
+	isAverage(type: CheckInTrackerType): boolean {
+		return type === 'scale';
+	}
+
+	// Where a 1–5 value sits on the scale, from 0 (1) to 1 (5).
+	scalePosition(value: number): number {
+		return Math.min(1, Math.max(0, (value - 1) / 4));
+	}
+
 	// How far the bar is filled: the share of the target reached so far.
 	ratio(goal: Goal): number {
 		const current = goal.progress.current ?? 0;

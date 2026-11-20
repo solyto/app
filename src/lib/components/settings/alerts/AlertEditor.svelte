@@ -25,7 +25,7 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 	const alertService = new AlertService();
-	const SECTION_TITLE = 'mb-2 text-sm font-semibold text-c-neutral-5 dark:text-c-neutral-4';
+	const SECTION_TITLE = 'mb-1 text-sm font-medium text-c-neutral-5 dark:text-c-neutral-4';
 	const title = alert ? ts.get.alerts.edit_alert : ts.get.alerts.new_alert;
 
 	let trackerId = $state<number | null>(alert?.check_in_tracker_id ?? checkInData.activeTrackers[0]?.id ?? null);
@@ -89,8 +89,8 @@
 			<p class={SECTION_TITLE}>{ts.get.alerts.tracker}</p>
 			{#if alert && tracker}
 				<div class="flex items-center gap-2">
-					<TrackerGlyph {tracker} class="size-5 text-c-heading dark:text-c-primary" />
-					<span class="font-semibold">{trackerLabel(tracker, ts.get.checkIn)}</span>
+					<TrackerGlyph {tracker} class="size-4 text-c-neutral-4 dark:text-c-neutral-5" />
+					<span>{trackerLabel(tracker, ts.get.checkIn)}</span>
 				</div>
 			{:else}
 				<Select value={String(trackerId)} options={trackerOptions()} onchange={chooseTracker} ariaLabel={ts.get.alerts.tracker} />
@@ -106,11 +106,11 @@
 					</div>
 					{#if alertService.isAverage(rule)}
 						<div class="w-20">
-							<NumberInput bind:value={threshold} min={bounds.min} max={bounds.max} step={bounds.step} placeholder={ts.get.alerts.threshold} />
+							<NumberInput bind:value={threshold} min={bounds.min} max={bounds.max} step={bounds.step} placeholder={ts.get.alerts.threshold} class="h-10" />
 						</div>
 						<span class="text-sm">{ts.get.alerts.over}</span>
 					{/if}
-					<div class="w-20"><NumberInput bind:value={days} min={1} max={MAX_ALERT_DAYS} step={1} /></div>
+					<div class="w-20"><NumberInput bind:value={days} min={1} max={MAX_ALERT_DAYS} step={1} class="h-10" /></div>
 					<span class="text-sm">{ts.get.alerts.days}</span>
 				</div>
 			</div>

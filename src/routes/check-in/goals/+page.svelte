@@ -1,21 +1,18 @@
 <script lang="ts">
 	import type { Goal } from '$lib/types/goal';
-	import { onMount } from 'svelte';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getGoals } from '$lib/state/Goals.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import GoalCard from '$lib/components/goals/GoalCard.svelte';
 	import GoalEditor from '$lib/components/goals/GoalEditor.svelte';
-	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
+	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 
 	const checkInData = getCheckInData();
 	const goals = getGoals();
 	const ts = getTranslation();
-	const loadingIndicator = getLoadingIndicator();
 
 	let editing = $state<Goal | 'new' | null>(null);
-	let loaded = $state<boolean>(false);
 
 	// Goals on trackers that were switched off stay, but only show while their tracker is on.
 	const shown = $derived(
@@ -24,31 +21,29 @@
 			return tracker ? [{ goal, tracker }] : [];
 		})
 	);
-
-	onMount(async () => {
-		loadingIndicator.start();
-		await Promise.all([checkInData.loadTrackers(), goals.load()]);
-		loadingIndicator.stop();
-		loaded = true;
-	});
 </script>
 
-<div class="flex items-center gap-4 p-4 pt-0">
-	<h1 class="text-2xl font-bold">{ts.get.nav.goals}</h1>
-	<TextButton title={ts.get.goals.new_goal} class="ml-auto px-3" onclick={() => (editing = 'new')} />
-</div>
-
-{#if loaded}
-	{#if shown.length === 0}
-		<p class="px-4 text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.goals.empty}</p>
-	{:else}
-		<div class="grid grid-cols-1 gap-4 px-4 md:grid-cols-2 2xl:grid-cols-3">
+<div class="flex flex-col gap-6 pt-2">
+	{#if goals.loaded && checkInData.loaded}
+		{#if shown.length === 0}
+			<EmptyState title={ts.get.goals.empty} description={ts.get.goals.empty_hint} py={6} />
+		{/if}
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{#each shown as { goal, tracker } (goal.id)}
 				<GoalCard {goal} {tracker} onEdit={() => (editing = goal)} />
 			{/each}
+			<!-- Adding sits where the goals are; the dashed style is the one of the notes image upload. -->
+			<button
+				type="button"
+				class="flex min-h-40 cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-c-neutral-2 text-sm text-c-neutral-4 transition-colors hover:border-s-teal hover:text-s-teal dark:border-s-dark dark:hover:border-s-teal"
+				onclick={() => (editing = 'new')}
+			>
+				<IconPlus class="size-5" />
+				{ts.get.goals.new_goal}
+			</button>
 		</div>
 	{/if}
-{/if}
+</div>
 
 {#if editing !== null}
 	<GoalEditor goal={editing === 'new' ? null : editing} onClose={() => (editing = null)} />

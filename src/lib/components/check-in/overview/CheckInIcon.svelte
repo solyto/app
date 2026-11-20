@@ -69,7 +69,7 @@
 {#if value !== null && tracker.type === 'count'}
 	<span class="flex size-10 items-center justify-center text-sm font-bold tabular-nums">{value}</span>
 {:else if value !== null && tracker.type === 'yes_no'}
-	<span class="flex size-10 items-center justify-center text-c-primary">
+	<span class="flex size-10 items-center justify-center text-c-neutral-5 dark:text-c-neutral-4">
 		<TrackerIcon name={tracker.icon} class="size-6" />
 	</span>
 {:else if value !== null}

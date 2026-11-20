@@ -5,7 +5,7 @@
 	import TrendChart from '$lib/components/check-in/stats/TrendChart.svelte';
 	import type { CheckInTracker } from '$lib/types/check_in';
 	import { onMount } from 'svelte';
-	import { getUrlFormat } from '$lib/helpers/DateHelper';
+	import { getUrlFormat, parseUrlFormat } from '$lib/helpers/DateHelper';
 	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import { getAuth } from '$lib/state/Auth.svelte';
 
@@ -35,6 +35,8 @@
 	];
 
 	const trackers = $derived(checkInData.activeTrackers.filter((t) => t.type === 'scale' || t.type === 'count'));
+	// Yes/no and sports have no value worth a line; they show days done per week.
+	const dayTrackers = $derived(checkInData.activeTrackers.filter((t) => t.type === 'yes_no' || t.type === 'sport'));
 
 	const dates = $derived.by((): string[] => {
 		const all = [...checkInData.index.keys()].sort();
@@ -56,6 +58,29 @@
 		return {
 			categories: points.map((point) => auth.getDateWithoutYearInUserPreferredFormat(point.date)),
 			values: points.map((point) => point.value)
+		};
+	}
+
+	// Weeks cover the whole selected range (for "all": from the first entry, but at least two weeks).
+	function weeklyFrom(): Date {
+		const from = new Date();
+		if (selectedRange !== 'all') {
+			from.setDate(from.getDate() - (selectedRange === '30d' ? 30 : selectedRange === '3m' ? 90 : 180));
+			return from;
+		}
+
+		from.setDate(from.getDate() - 7);
+		const first = dates[0] === undefined ? null : parseUrlFormat(dates[0]);
+		return first !== null && first < from ? first : from;
+	}
+
+	function getWeeklyData(tracker: CheckInTracker): { categories: string[]; values: number[] } {
+		const weeks = checkInData.trackerService.weeklyDays(tracker, checkInData.index, weeklyFrom(), new Date(), auth.getWeekStart());
+		if (weeks.every((week) => week.days === 0)) return { categories: [], values: [] };
+
+		return {
+			categories: weeks.map((week) => auth.getDateWithoutYearInUserPreferredFormat(week.start)),
+			values: weeks.map((week) => week.days)
 		};
 	}
 
@@ -92,6 +117,11 @@
 					max={tracker.type === 'scale' ? 5 : undefined}
 					{...getChartData(tracker)}
 				/>
+			{/key}
+		{/each}
+		{#each dayTrackers as tracker (tracker.id)}
+			{#key selectedRange}
+				<TrendChart label={trackerLabel(tracker, ts.get.checkIn)} {tracker} min={0} max={7} {...getWeeklyData(tracker)} />
 			{/key}
 		{/each}
 	</div>

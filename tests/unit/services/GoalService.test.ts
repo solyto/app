@@ -67,3 +67,18 @@ describe('daysLeft', () => {
 		expect(service.daysLeft(goal({ period: 'day' }), new Date(2026, 10, 20))).toBeNull();
 	});
 });
+
+describe('isAverage and scalePosition', () => {
+	it('shows only 1–5 trackers on the scale', () => {
+		expect(service.isAverage('scale')).toBe(true);
+		expect(service.isAverage('count')).toBe(false);
+		expect(service.isAverage('yes_no')).toBe(false);
+	});
+
+	it('places a value between 1 and 5 on the scale', () => {
+		expect(service.scalePosition(1)).toBe(0);
+		expect(service.scalePosition(3)).toBe(0.5);
+		expect(service.scalePosition(5)).toBe(1);
+		expect(service.scalePosition(1.5)).toBe(0.125);
+	});
+});

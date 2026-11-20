@@ -135,8 +135,7 @@
 	}
 </script>
 
-<div class="flex flex-col gap-8">
-<div class="flex gap-8 max-lg:flex-col">
+<div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 xl:grid-cols-3">
 <PasswordSettings />
 <SettingsSection label={ts.get.settings.passkeys}>
 	{#if loading}
@@ -205,7 +204,6 @@
 		</div>
 	{/if}
 </SettingsSection>
-</div>
 <AccountDeletionSettings />
 </div>
 

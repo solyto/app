@@ -3,11 +3,13 @@
 	import type { CheckInTracker } from '$lib/types/check_in';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import { goalProgressText, trackerLabel } from '$lib/helpers/CheckInHelper';
+	import { goalProgressParts, trackerLabel } from '$lib/helpers/CheckInHelper';
 	import GoalService from '$lib/services/GoalService';
+	import { parseUrlFormat } from '$lib/helpers/DateHelper';
 	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
 	import IconCheck from '$lib/icons/lucide/check.svelte';
-	import IconPencil from '$lib/icons/lucide/pencil.svelte';
+	import GoalBar from '$lib/components/goals/GoalBar.svelte';
+	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 
 	let { goal, tracker, onEdit }: { goal: Goal; tracker: CheckInTracker; onEdit: () => void } = $props();
 
@@ -16,67 +18,62 @@
 	const goalService = new GoalService();
 
 	const daysLeft = $derived(goalService.daysLeft(goal, new Date()));
+	const parts = $derived(goalProgressParts(goal, tracker, goal.progress, ts.get.checkIn));
 	// Oldest first, so the row reads towards the running period.
 	const history = $derived([...goal.progress.history].reverse());
+	const metCount = $derived(history.filter((period) => period.met).length);
 
-	function historyLabel(period: { period_start: string; met: boolean }): string {
-		return `${auth.getDateWithoutYearInUserPreferredFormat(period.period_start)}: ${period.met ? ts.get.goals.history_met : ts.get.goals.history_missed}`;
+	function periodLabel(start: string): string {
+		return goal.period === 'month'
+			? parseUrlFormat(start)!.toLocaleDateString(undefined, { month: 'short' })
+			: auth.getDateWithoutYearInUserPreferredFormat(start);
+	}
+
+	function historySummary(): string {
+		const template = { day: ts.get.goals.history_summary_day, week: ts.get.goals.history_summary_week, month: ts.get.goals.history_summary_month }[goal.period];
+		return template.replace('{met}', String(metCount)).replace('{n}', String(history.length));
 	}
 </script>
 
-<div class="flex flex-col gap-3 rounded-xl bg-c-bg-surface p-4 shadow-sm">
+<div class="flex flex-col gap-4 rounded-lg bg-c-bg-surface p-4 shadow-sm">
 	<div class="flex items-center gap-2">
-		<TrackerGlyph {tracker} class="size-5 shrink-0 text-c-heading dark:text-c-primary" />
-		<span class="min-w-0 flex-1 truncate font-semibold">{trackerLabel(tracker, ts.get.checkIn)}</span>
-		<button
-			type="button"
-			class="flex size-7 cursor-pointer items-center justify-center rounded-md text-c-neutral-5 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
-			aria-label={ts.get.goals.edit_goal}
-			title={ts.get.goals.edit_goal}
-			onclick={onEdit}
-		>
-			<IconPencil class="size-4" />
-		</button>
+		<TrackerGlyph {tracker} class="size-4 shrink-0 text-c-neutral-4 dark:text-c-neutral-5" />
+		<span class="min-w-0 flex-1 truncate">{trackerLabel(tracker, ts.get.checkIn)}</span>
+		<EditButton title={ts.get.goals.edit_goal} onClick={onEdit} inModal={false} buttonStyle="fill-on-hover" />
 	</div>
 
-	<div class="flex flex-col gap-1.5">
-		<div class="flex items-center justify-between gap-2 text-sm">
-			<span class="flex items-center gap-1">
-				{goalProgressText(goal, tracker, goal.progress, ts.get.checkIn)}
+	<div class="flex flex-col gap-2">
+		<div>
+			<div class="flex items-center gap-2">
+				<span class="text-3xl font-bold tabular-nums">{parts.value}</span>
 				{#if goal.progress.met}
-					<IconCheck class="size-4 text-c-success" aria-label={ts.get.checkIn.goal_met} />
+					<IconCheck class="size-6 text-c-success" aria-label={ts.get.checkIn.goal_met} />
 				{/if}
+			</div>
+			<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">
+				{parts.period}{#if daysLeft !== null}
+					· {daysLeft === 1 ? ts.get.goals.last_day : ts.get.goals.days_left.replace('{n}', String(daysLeft))}{/if}
 			</span>
-			{#if daysLeft !== null}
-				<span class="text-xs text-c-neutral-5 dark:text-c-neutral-4">
-					{daysLeft === 1 ? ts.get.goals.last_day : ts.get.goals.days_left.replace('{n}', String(daysLeft))}
-				</span>
-			{/if}
 		</div>
-		<div class="h-1.5 overflow-hidden rounded-full bg-c-neutral-1 dark:bg-s-dark-3">
-			<div
-				class="h-full rounded-full transition-all duration-300"
-				class:bg-c-success={goal.progress.met}
-				class:bg-c-primary={!goal.progress.met}
-				style="width: {goalService.ratio(goal) * 100}%"
-			></div>
-		</div>
+		<GoalBar {goal} {tracker} size="md" />
 	</div>
 
-	<div class="flex items-center gap-2">
-		<span class="text-xs text-c-neutral-5 dark:text-c-neutral-4">{ts.get.goals.history}</span>
-		<div class="flex items-center gap-1.5">
-			{#each history as period (period.period_start)}
-				<span
-					class="size-2.5 rounded-full"
-					class:bg-c-success={period.met}
-					class:bg-c-neutral-2={!period.met}
-					class:dark:bg-s-dark-3={!period.met}
-					title={historyLabel(period)}
-					aria-label={historyLabel(period)}
-					role="img"
-				></span>
-			{/each}
+	{#if history.length > 0}
+		<div class="flex flex-col gap-2">
+			<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{historySummary()}</span>
+			<div class="grid grid-cols-6 gap-1">
+				{#each history as period (period.period_start)}
+					<div class="flex flex-col items-center gap-1" title={period.met ? ts.get.goals.history_met : ts.get.goals.history_missed}>
+						<span
+							class="h-2 w-full rounded-full"
+							class:bg-c-success={period.met}
+							class:bg-c-neutral-2={!period.met}
+							class:dark:bg-s-dark-3={!period.met}
+						></span>
+						<span class="text-xs text-c-neutral-4 tabular-nums dark:text-c-neutral-5">{periodLabel(period.period_start)}</span>
+					</div>
+				{/each}
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>

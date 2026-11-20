@@ -116,10 +116,12 @@
 		{#if editing !== null}
 			<TrackerEditor tracker={editing === 'new' ? null : editing} onDone={closeEditor} />
 		{:else}
-			<div class="flex w-full items-center justify-end gap-2 pr-[5.5rem]">
-				<span class="text-xs">
+			<!-- Same columns as the rows below: centred over the checkboxes, then the toggle's width. -->
+			<div class="flex w-full items-center justify-end gap-1">
+				<span class="flex w-9 justify-center text-xs whitespace-nowrap">
 					<HelpTooltip label={ts.get.checkIn.score} description={ts.get.checkIn.score_description} />
 				</span>
+				<span class="w-11" aria-hidden="true"></span>
 			</div>
 			{#key failedSaves}
 				{#each checkInData.trackers as tracker, i (tracker.id)}
@@ -129,13 +131,19 @@
 							<span class="truncate">{trackerLabel(tracker, ts.get.checkIn)}</span>
 						</div>
 						<div class="flex shrink-0 items-center gap-1">
+							<!-- Only your own trackers can be edited; the controls are right-aligned, so the others stay in line without it. -->
+							{#if tracker.key === null}
+								<button type="button" class={ICON_BUTTON} aria-label={ts.get.checkIn.edit_tracker} title={ts.get.checkIn.edit_tracker} onclick={() => (editing = tracker)}>
+									<IconPencil class="size-4" />
+								</button>
+							{/if}
 							<button type="button" class={ICON_BUTTON} disabled={i === 0} aria-label={ts.get.checkIn.move_up} title={ts.get.checkIn.move_up} onclick={() => run(() => checkInData.moveTracker(tracker, -1))}>
 								<IconChevronUp class="size-4" />
 							</button>
 							<button type="button" class={ICON_BUTTON} disabled={i === checkInData.trackers.length - 1} aria-label={ts.get.checkIn.move_down} title={ts.get.checkIn.move_down} onclick={() => run(() => checkInData.moveTracker(tracker, 1))}>
 								<IconChevronDown class="size-4" />
 							</button>
-							<div class="flex w-9 justify-center pt-2" class:opacity-30={!tracker.enabled} class:pointer-events-none={!tracker.enabled}>
+							<div class="flex w-9 items-center justify-center" class:opacity-30={!tracker.enabled} class:pointer-events-none={!tracker.enabled}>
 								{#if tracker.type === 'scale'}
 									<Checkbox isChecked={tracker.scored} onchange={() => run(() => checkInData.updateTracker(tracker, { scored: !tracker.scored }))} />
 								{/if}
@@ -143,10 +151,6 @@
 							<div class:pointer-events-none={isLastEnabled(tracker)} class:opacity-50={isLastEnabled(tracker)}>
 								<Toggle checked={tracker.enabled} onchange={() => run(() => checkInData.updateTracker(tracker, { enabled: !tracker.enabled }))} />
 							</div>
-							<!-- Built-in trackers have nothing to edit; the hidden button keeps the columns aligned. -->
-							<button type="button" class={ICON_BUTTON} class:invisible={tracker.key !== null} disabled={tracker.key !== null} aria-label={ts.get.checkIn.edit_tracker} title={ts.get.checkIn.edit_tracker} onclick={() => (editing = tracker)}>
-								<IconPencil class="size-4" />
-							</button>
 						</div>
 					</div>
 				{/each}

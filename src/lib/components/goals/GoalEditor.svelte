@@ -24,7 +24,6 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 	const goalService = new GoalService();
-	const SECTION_TITLE = 'mb-2 text-sm font-semibold text-c-neutral-5 dark:text-c-neutral-4';
 
 	// One goal per tracker: a new goal can only go on an enabled tracker without one.
 	const available = checkInData.activeTrackers.filter((t) => goals.forTracker(t.id) === null);
@@ -87,11 +86,10 @@
 			<p class="text-sm">{ts.get.goals.no_trackers_left}</p>
 		{:else}
 			<div>
-				<p class={SECTION_TITLE}>{ts.get.goals.tracker}</p>
 				{#if goal && tracker}
 					<div class="flex items-center gap-2">
-						<TrackerGlyph {tracker} class="size-5 text-c-heading dark:text-c-primary" />
-						<span class="font-semibold">{trackerLabel(tracker, ts.get.checkIn)}</span>
+						<TrackerGlyph {tracker} class="size-4 text-c-neutral-4 dark:text-c-neutral-5" />
+						<span>{trackerLabel(tracker, ts.get.checkIn)}</span>
 					</div>
 				{:else}
 					<Select value={String(trackerId)} options={trackerOptions()} onchange={chooseTracker} ariaLabel={ts.get.goals.tracker} />
@@ -100,7 +98,6 @@
 
 			{#if tracker && bounds}
 				<div>
-					<p class={SECTION_TITLE}>{ts.get.goals.target}</p>
 					<div class="flex flex-wrap items-center gap-2">
 						<div class="w-32">
 							<Select
@@ -113,7 +110,7 @@
 								ariaLabel={ts.get.goals.target}
 							/>
 						</div>
-						<div class="w-20"><NumberInput bind:value={target} min={bounds.min} max={bounds.max} step={bounds.step} /></div>
+						<div class="w-20"><NumberInput bind:value={target} min={bounds.min} max={bounds.max} step={bounds.step} class="h-10" /></div>
 						{#if goalService.countsDays(tracker.type)}
 							<span class="text-sm">{ts.get.goals.unit_days}</span>
 						{:else if tracker.type === 'scale'}
@@ -125,10 +122,7 @@
 					</div>
 				</div>
 
-				<div class="flex flex-col gap-1">
-					<Toggle checked={notify} label={ts.get.goals.notify_when_reached} onchange={(value) => (notify = value)} />
-					<p class="text-xs text-c-neutral-5 dark:text-c-neutral-4">{ts.get.goals.notify_hint}</p>
-				</div>
+				<Toggle checked={notify} label={ts.get.goals.notify_when_reached} onchange={(value) => (notify = value)} />
 			{/if}
 
 			<div class="flex items-center justify-between gap-2">

@@ -78,7 +78,7 @@
 </script>
 
 <button
-	class="group size-22 cursor-pointer rounded-lg p-4 text-{color} flex items-center justify-center border-3 border-c-neutral-1 shadow-xs transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
+	class="group size-19 cursor-pointer rounded-lg p-3.5 text-{color} flex items-center justify-center border-3 border-c-neutral-1 shadow-xs transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 	class:bg-c-neutral={isHighlighted(index)}
 	class:border-transparent={!isHighlighted(index)}
 	class:dark:bg-s-dark-3={isHighlighted(index)}

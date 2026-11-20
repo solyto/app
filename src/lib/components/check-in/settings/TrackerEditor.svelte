@@ -18,7 +18,6 @@
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
-	const SECTION_TITLE = 'mb-2 text-sm font-semibold text-c-neutral-5 dark:text-c-neutral-4';
 	const TYPES: CustomCheckInTrackerType[] = ['yes_no', 'count', 'scale'];
 
 	const current = $derived(checkInData.trackers.find((t) => t.id === tracker?.id) ?? null);
@@ -86,7 +85,6 @@
 {:else}
 	<div class="flex w-full flex-col gap-5">
 		<div>
-			<p class={SECTION_TITLE}>{ts.get.checkIn.tracker_name}</p>
 			<div class="flex items-center gap-2">
 				<button
 					type="button"
@@ -102,27 +100,33 @@
 		</div>
 
 		<div>
-			<p class={SECTION_TITLE}>{ts.get.checkIn.tracker_type}</p>
 			{#if current}
 				<p class="text-sm">{typeLabel(current.type)}</p>
 			{:else}
+				<!-- Option rows as in the library recommendations; the chosen one gets the coloured bar. -->
 				<div class="flex flex-col gap-2">
 					{#each TYPES as option (option)}
 						<button
 							type="button"
-							class="cursor-pointer rounded-lg border-2 p-2 text-left transition-all"
-							class:border-c-primary={type === option}
-							class:border-c-neutral-1={type !== option}
-							class:dark:border-s-dark-3={type !== option}
+							class="relative w-full cursor-pointer rounded-lg border-1 border-c-neutral-1 bg-c-bg-surface text-left shadow-sm transition-all hover:bg-c-neutral dark:border-s-dark-2 dark:hover:bg-s-dark-3"
+							class:bg-c-neutral={type === option}
+							class:dark:bg-s-dark-3={type === option}
 							aria-pressed={type === option}
 							onclick={() => (type = option)}
 						>
-							<span class="block text-sm font-semibold">{typeLabel(option)}</span>
-							<span class="block text-xs text-c-neutral-5 dark:text-c-neutral-4">{typeHint(option)}</span>
+							<div
+								class="absolute top-2 bottom-2 left-3 w-1 rounded-lg"
+								class:bg-c-btn={type === option}
+								class:bg-c-neutral-2={type !== option}
+								class:dark:bg-s-dark-2={type !== option}
+							></div>
+							<div class="ml-4 px-4 py-2">
+								<span class="block">{typeLabel(option)}</span>
+								<span class="block text-xs text-c-neutral-5 dark:text-c-neutral-4">{typeHint(option)}</span>
+							</div>
 						</button>
 					{/each}
 				</div>
-				<p class="mt-2 text-xs text-c-neutral-5 dark:text-c-neutral-4">{ts.get.checkIn.type_fixed}</p>
 			{/if}
 		</div>
 

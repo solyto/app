@@ -43,9 +43,9 @@
 	}
 </script>
 
-<div class="flex flex-col items-center justify-center space-x-2 md:flex-row lg:space-x-16">
-	<div class="w-full pl-5 text-left md:w-48 md:pl-0">
-		<div class="text-xl font-bold">{label}</div>
+<div class="flex flex-col items-center justify-center space-x-2 md:flex-row lg:space-x-10">
+	<div class="w-full pl-5 text-left md:w-40 md:pl-0">
+		<div class="text-lg font-bold">{label}</div>
 		{#if goalLine}
 			<GoalProgressLine line={goalLine} />
 		{/if}

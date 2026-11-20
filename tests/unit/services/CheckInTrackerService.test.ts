@@ -171,3 +171,25 @@ describe('goalProgress', () => {
 		expect(service.goalProgress(g, count, service.index([value(1, '2026-10-13', 5)]), today, 'monday').met).toBe(false);
 	});
 });
+
+describe('weeklyDays', () => {
+	it('counts the days with an entry per week, oldest first, up to today', () => {
+		const index = service.index([
+			value(1, '2026-10-05', 1),
+			value(1, '2026-10-07', 1),
+			value(1, '2026-10-12', 1),
+			value(2, '2026-10-13', 1)
+		]);
+
+		expect(service.weeklyDays(tracker(), index, new Date(2026, 9, 6), today, 'monday')).toEqual([
+			{ start: '2026-10-05', days: 2 },
+			{ start: '2026-10-12', days: 1 }
+		]);
+	});
+
+	it('follows the user\'s week start', () => {
+		const index = service.index([value(1, '2026-10-11', 1)]);
+
+		expect(service.weeklyDays(tracker(), index, new Date(2026, 9, 11), today, 'sunday')).toEqual([{ start: '2026-10-11', days: 1 }]);
+	});
+});

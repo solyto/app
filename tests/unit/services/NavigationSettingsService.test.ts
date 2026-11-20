@@ -11,7 +11,6 @@ const defaults: Record<FeatureType, boolean> = {
 	libraries: true,
 	contacts: true,
 	checkIn: true,
-	goals: true,
 	finances: true,
 	feeds: true,
 	clipboard: true,

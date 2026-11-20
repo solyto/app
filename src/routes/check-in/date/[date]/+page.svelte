@@ -2,9 +2,7 @@
 	import type { CheckInTracker } from '$lib/types/check_in';
 	import DailyCheckIn from '$lib/components/check-in/daily/DailyCheckIn.svelte';
 	import DailyLogTracker from '$lib/components/check-in/daily/DailyLogTracker.svelte';
-	import CheckInSettings from '$lib/components/check-in/CheckInSettings.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import { page } from '$app/state';
 	import { afterNavigate } from '$app/navigation';
 	import { SvelteMap } from 'svelte/reactivity';
@@ -23,10 +21,12 @@
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
-	const AREA_TITLE = 'text-sm font-semibold tracking-wider text-c-heading uppercase dark:text-c-primary';
+
+	// From 2xl on: a card in the right-hand grid column; narrower, a plain list below the ratings.
+	const SIDE_CARD =
+		'2xl:col-start-3 2xl:mr-0 2xl:ml-16 2xl:w-auto 2xl:max-w-[22rem] 2xl:rounded-lg 2xl:bg-c-bg-surface 2xl:px-4 2xl:py-4 2xl:shadow-sm';
 
 	const pending = new SvelteMap<CheckInTracker, number | null>();
-	let addingTracker = $state<boolean>(false);
 
 	let date = $derived(page.params.date ?? '');
 	let parsedDate = $derived(parseUrlFormat(date));
@@ -48,7 +48,8 @@
 		return { text: goalProgressText(goal, tracker, progress, ts.get.checkIn), met: progress.met };
 	}
 
-	function ratingValue(tracker: CheckInTracker): number | null {
+	// Unsaved changes show right away; only Save stores them.
+	function shownValue(tracker: CheckInTracker): number | null {
 		return pending.has(tracker) ? pending.get(tracker)! : checkInData.getValue(tracker, date);
 	}
 
@@ -61,13 +62,11 @@
 		if (ok) {
 			pending.clear();
 			notifications.success(ts.get.checkIn.save_success);
+			// Goal progress is worked out on the server, so the Goals tab needs it fresh.
+			void goals.load();
 		} else {
 			notifications.error(ts.get.checkIn.save_error);
 		}
-	}
-
-	async function setLog(tracker: CheckInTracker, value: number | null): Promise<void> {
-		if (!(await checkInData.setValue(tracker, date, value))) notifications.error(ts.get.checkIn.save_error);
 	}
 </script>
 
@@ -84,21 +83,25 @@
 		</h2>
 	</div>
 
-	{#if checkInData.ratingTrackers.length > 0}
-		<div class="flex w-full justify-center sm:absolute sm:top-0 sm:right-8 sm:w-auto">
-			<TextButton title={ts.get.layout.save} onclick={onSave} disabled={pending.size === 0} class="max-sm:h-14 max-sm:w-full" />
+	{#if checkInData.activeTrackers.length > 0}
+		<!-- On phones it floats at the bottom, and only once there's something to save; wider, it sits top right. -->
+		<div
+			class="z-10 flex w-full justify-center max-sm:sticky max-sm:bottom-4 max-sm:order-last max-sm:px-4 sm:absolute sm:top-0 sm:right-8 sm:w-auto"
+			class:max-sm:hidden={pending.size === 0}
+		>
+			<TextButton title={ts.get.layout.save} onclick={onSave} disabled={pending.size === 0} class="max-sm:h-14 max-sm:w-full max-sm:shadow-md" />
 		</div>
 	{/if}
 
-	<div class="flex flex-col gap-12 md:mx-auto md:w-fit 2xl:flex-row 2xl:items-start 2xl:gap-24">
+	<!-- The ratings stay centred in the middle column; your own trackers sit a fixed distance to their right. -->
+	<div class="flex flex-col gap-12 md:mx-auto md:w-fit 2xl:grid 2xl:w-full 2xl:grid-cols-[1fr_auto_1fr] 2xl:items-start 2xl:gap-0">
 		{#if checkInData.ratingTrackers.length > 0}
-			<section class="flex flex-col space-y-4">
-				<h3 class="{AREA_TITLE} pl-4 md:pl-0">{ts.get.checkIn.area_ratings}</h3>
+			<section class="flex flex-col space-y-3 2xl:col-start-2">
 				{#each checkInData.ratingTrackers as tracker (tracker.id)}
 					<DailyCheckIn
 						{tracker}
 						label={trackerLabel(tracker, ts.get.checkIn)}
-						currentValue={ratingValue(tracker)}
+						currentValue={shownValue(tracker)}
 						onChange={(changed, value) => pending.set(changed, value)}
 						selectedSports={checkInData.selectedSports}
 						goalLine={goalLine(tracker)}
@@ -107,34 +110,21 @@
 			</section>
 		{/if}
 
-		<section class="flex flex-col gap-2 px-4 md:px-0 2xl:w-[26rem] 2xl:shrink-0">
-			<h3 class={AREA_TITLE}>{ts.get.checkIn.area_logs}</h3>
-			{#if checkInData.logTrackers.length === 0}
-				<button
-					type="button"
-					class="flex cursor-pointer items-center gap-1 self-start text-sm text-c-neutral-5 transition-all hover:text-c-heading dark:text-c-neutral-4 dark:hover:text-c-primary"
-					onclick={() => (addingTracker = true)}
-				>
-					{ts.get.checkIn.logs_empty}
-					<span aria-hidden="true">→</span>
-					<IconPlus class="size-4" />
-					<span class="font-semibold">{ts.get.checkIn.add_tracker}</span>
-				</button>
-			{:else}
+		{#if checkInData.logTrackers.length > 0}
+			<section
+				class="flex flex-col gap-1 px-5 md:mx-auto md:w-[26rem] md:px-0 {checkInData.ratingTrackers.length > 0 ? SIDE_CARD : ''}"
+			>
 				{#each checkInData.logTrackers as tracker (tracker.id)}
 					<DailyLogTracker
 						{tracker}
 						label={trackerLabel(tracker, ts.get.checkIn)}
-						value={checkInData.getValue(tracker, date)}
+						value={shownValue(tracker)}
 						goalLine={goalLine(tracker)}
-						onSet={(value) => setLog(tracker, value)}
+						onSet={(value) => pending.set(tracker, value)}
 					/>
 				{/each}
-			{/if}
-		</section>
+			</section>
+		{/if}
 	</div>
 </div>
 
-{#if addingTracker}
-	<CheckInSettings startWithNewTracker onClose={() => (addingTracker = false)} />
-{/if}

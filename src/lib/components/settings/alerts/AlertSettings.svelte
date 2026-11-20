@@ -9,11 +9,12 @@
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import AlertService from '$lib/services/AlertService';
-	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
 	import AlertEditor from '$lib/components/settings/alerts/AlertEditor.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
-	import IconPencil from '$lib/icons/lucide/pencil.svelte';
-	import IconPlus from '$lib/icons/lucide/plus.svelte';
+	import SettingsSection from '$lib/components/settings/SettingsSection.svelte';
+	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
+	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
 	const checkInData = setCheckInData();
 	const alerts = setAlerts();
@@ -22,9 +23,6 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 	const alertService = new AlertService();
-	const ICON_BUTTON =
-		'flex size-7 cursor-pointer items-center justify-center rounded-md text-c-neutral-5 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3';
-
 	let editing = $state<Alert | 'new' | null>(null);
 
 	onMount(async () => {
@@ -33,6 +31,16 @@
 
 	function tracker(id: number | null) {
 		return checkInData.trackers.find((t) => t.id === id) ?? null;
+	}
+
+	// What the rule sees now and when it last sent.
+	function details(alert: Alert): string {
+		return [
+			alert.state.active ? ts.get.alerts.active_now : null,
+			alert.last_triggered_on ? ts.get.alerts.last_sent.replace('%s', auth.getDateWithoutYearInUserPreferredFormat(alert.last_triggered_on)) : null
+		]
+			.filter((part) => part !== null)
+			.join(' · ');
 	}
 
 	function suggestionLabel(suggestion: AlertSuggestion): string {
@@ -47,87 +55,55 @@
 	}
 </script>
 
-<div class="flex max-w-2xl flex-col gap-4">
+<div class="absolute top-0 right-0 flex h-8 items-center">
+	<AddButton onClick={() => (editing = 'new')} title={ts.get.alerts.new_alert} />
+</div>
+
+<div class="flex w-full max-w-2xl flex-col gap-4">
 	<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.alerts.description}</p>
 
 	{#if alerts.loaded}
 		{#if alerts.alerts.length === 0}
-			<p class="text-sm">{ts.get.alerts.empty}</p>
+			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.alerts.empty}</p>
 		{:else}
-			<div class="flex flex-col gap-3">
+			<div class="flex w-full flex-col gap-2">
 				{#each alerts.alerts as alert (alert.id)}
 					{@const alertTracker = tracker(alert.check_in_tracker_id)}
 					{#if alertTracker}
-						<div class="flex items-center gap-3" class:opacity-50={!alert.enabled}>
-							<TrackerGlyph tracker={alertTracker} class="size-4 shrink-0 text-c-heading dark:text-c-primary" />
-							<div class="flex min-w-0 flex-1 flex-col">
-								<span class="text-sm">
-									<span class="font-semibold">{trackerLabel(alertTracker, ts.get.checkIn)}:</span>
-									{alertService.describe(alert.rule, alert.threshold, alert.days, ts.get.alerts)}
-								</span>
-								<span class="text-xs text-c-neutral-5 dark:text-c-neutral-4">
-									{#if alert.state.active}
-										<span class="font-semibold text-c-heading dark:text-c-primary">{ts.get.alerts.active_now}</span>
-									{/if}
-									{#if alert.last_triggered_on}
-										{ts.get.alerts.last_sent.replace('%s', auth.getDateWithoutYearInUserPreferredFormat(alert.last_triggered_on))}
-									{/if}
-									{#if alert.source === 'goal'}
-										{ts.get.alerts.goal_alert_hint}
-									{/if}
-								</span>
+						<div class="flex w-full items-center justify-between gap-3">
+							<div class="flex min-w-0 flex-col" class:opacity-50={!alert.enabled}>
+								<span>{trackerLabel(alertTracker, ts.get.checkIn)}: {alertService.describe(alert.rule, alert.threshold, alert.days, ts.get.alerts)}</span>
+								{#if details(alert) !== ''}
+									<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">{details(alert)}</span>
+								{/if}
 							</div>
-							<Toggle checked={alert.enabled} onchange={() => run(() => alerts.update(alert, { enabled: !alert.enabled }))} />
-							<button
-								type="button"
-								class={ICON_BUTTON}
-								class:invisible={alert.source === 'goal'}
-								disabled={alert.source === 'goal'}
-								aria-label={ts.get.alerts.edit_alert}
-								title={ts.get.alerts.edit_alert}
-								onclick={() => (editing = alert)}
-							>
-								<IconPencil class="size-4" />
-							</button>
+							<div class="flex shrink-0 items-center gap-2">
+								<!-- Goal alerts are changed on the Goals page; the hidden button keeps the columns aligned. -->
+								<div class:invisible={alert.source === 'goal'}>
+									<EditButton title={ts.get.alerts.edit_alert} onClick={() => (editing = alert)} inModal={false} buttonStyle="fill-on-hover" />
+								</div>
+								<Toggle checked={alert.enabled} onchange={() => run(() => alerts.update(alert, { enabled: !alert.enabled }))} />
+							</div>
 						</div>
 					{/if}
 				{/each}
 			</div>
 		{/if}
 
-		<button
-			type="button"
-			class="flex cursor-pointer items-center gap-1 self-start text-sm font-semibold text-c-heading dark:text-c-primary"
-			onclick={() => (editing = 'new')}
-		>
-			<IconPlus class="size-4" />
-			{ts.get.alerts.new_alert}
-		</button>
-
 		{#if alerts.suggestions.length > 0}
-			<div class="flex flex-col gap-2 border-t border-c-neutral-1 pt-3 dark:border-s-dark">
-				<p class="text-sm font-semibold text-c-neutral-5 dark:text-c-neutral-4">{ts.get.alerts.suggestions}</p>
-				{#each alerts.suggestions as suggestion (suggestion.key)}
-					{@const suggestionTracker = tracker(suggestion.check_in_tracker_id)}
-					<div class="flex items-center gap-3">
-						{#if suggestionTracker}
-							<TrackerGlyph tracker={suggestionTracker} class="size-4 shrink-0 text-c-neutral-5 dark:text-c-neutral-4" />
-						{/if}
-						<span class="flex-1 text-sm">{suggestionLabel(suggestion)}</span>
-						<button
-							type="button"
-							class="flex cursor-pointer items-center gap-1 text-sm font-semibold text-c-heading dark:text-c-primary"
-							onclick={() => run(() => alerts.enableSuggestion(suggestion.key))}
-						>
-							<IconPlus class="size-4" />
-							{ts.get.alerts.suggestion_add}
-						</button>
+			<div class="mt-4">
+				<SettingsSection label={ts.get.alerts.suggestions}>
+					<div class="flex w-full flex-col gap-2">
+						{#each alerts.suggestions as suggestion (suggestion.key)}
+							<div class="flex w-full items-center justify-between gap-3">
+								<span>{suggestionLabel(suggestion)}</span>
+								<TextButton title={ts.get.alerts.suggestion_add} type="slight" onclick={() => run(() => alerts.enableSuggestion(suggestion.key))} />
+							</div>
+						{/each}
 					</div>
-				{/each}
+				</SettingsSection>
 			</div>
 		{/if}
-
-		<p class="text-xs text-c-neutral-5 dark:text-c-neutral-4">{ts.get.alerts.channels_hint}</p>
 	{/if}
 </div>
 

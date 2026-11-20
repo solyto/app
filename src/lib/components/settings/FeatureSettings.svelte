@@ -29,10 +29,13 @@
 	}
 </script>
 
-<div>
-	<NavigationOrder />
+<div class="flex flex-col gap-8 xl:flex-row xl:items-start xl:gap-16">
+	<div class="xl:flex-1">
+		<NavigationOrder />
+	</div>
 
-	<div class="mt-8">
+	<!-- Side by side, the rows start level with the feature list below its hint. -->
+	<div class="xl:flex-1 xl:pt-6">
 		<SettingsSection label={ts.get.settings.calendar_life_marks}>
 			<div class="flex w-full flex-col gap-2">
 				<div class="flex w-full justify-between">
