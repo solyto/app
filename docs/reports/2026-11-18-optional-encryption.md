@@ -1,4 +1,5 @@
 # Report: optional end-to-end encryption, app side
+read: true
 
 Date: 2026-11-18
 Scope: the whole app (`src/`), with a summary of the API findings. The API side has its own report in the api repo: `docs/reports/encryption-feasibility-2026-11-18.md` (gwendolyn).
