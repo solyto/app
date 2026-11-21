@@ -20,11 +20,13 @@
 	import IconWine from '$lib/icons/lucide/wine.svelte';
 	import IconCigarette from '$lib/icons/lucide/cigarette.svelte';
 	import IconUsersRound from '$lib/icons/lucide/users-round.svelte';
+	import TrackerIcon from '$lib/components/check-in/TrackerIcon.svelte';
 	import type { CheckInType, SportId } from '$lib/types/check_in';
 	import { DEFAULT_SPORTS } from '$lib/types/check_in';
 
-	let { type, index, onSelect, isHighlighted, selectedSports = DEFAULT_SPORTS }: {
-		type: CheckInType;
+	let { type, icon, index, onSelect, isHighlighted, selectedSports = DEFAULT_SPORTS }: {
+		type: CheckInType | null;
+		icon: string | null;
 		index: number;
 		onSelect: (index: number) => void;
 		isHighlighted: (index: number) => boolean;
@@ -76,14 +78,16 @@
 </script>
 
 <button
-	class="group size-22 cursor-pointer rounded-lg p-4 text-{color} flex items-center justify-center border-3 border-c-neutral-1 shadow-xs transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
+	class="group size-19 cursor-pointer rounded-lg p-3.5 text-{color} flex items-center justify-center border-3 border-c-neutral-1 shadow-xs transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3"
 	class:bg-c-neutral={isHighlighted(index)}
 	class:border-transparent={!isHighlighted(index)}
 	class:dark:bg-s-dark-3={isHighlighted(index)}
 	class:p-0!={type === 'food_amount'}
 	onclick={() => onSelect(index)}
 >
-	{#if type === 'water'}
+	{#if type === null}
+		<TrackerIcon name={icon} class="size-full" />
+	{:else if type === 'water'}
 		<IconWater {fill} />
 	{:else if type === 'sleep'}
 		<IconBedSingle class="size-full" />

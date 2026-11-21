@@ -17,7 +17,6 @@ const LICENSE_FILE = /^(licen[cs]es?|copying|notice)([-._][\w-]*)?(\.(md|txt|mar
 
 // SvelteKit lists these as devDependencies, but their code or CSS ends up in the client bundle.
 export const BUNDLED_DEV_DEPENDENCIES = [
-	'@lucide/svelte',
 	'@sveltejs/kit',
 	'@tailwindcss/forms',
 	'marked',
@@ -25,6 +24,9 @@ export const BUNDLED_DEV_DEPENDENCIES = [
 	'svelte-awesome-color-picker',
 	'tailwindcss'
 ];
+
+// Third-party code copied into the repo instead of installed, so no package lookup finds it.
+export const VENDORED = [{ name: '@lucide/svelte', version: '1.59.0', license: 'ISC', dir: 'src/lib/icons/lucide' }];
 
 export function resolvePackageDir(name: string, fromDir: string, rootDir: string): string | null {
 	let dir = fromDir;
@@ -76,7 +78,13 @@ export function collectLicenses(rootDir: string, extraRoots: string[] = []): Ope
 		}
 	}
 
-	return [...licenses.values()].sort((a, b) => a.name.localeCompare(b.name) || a.version.localeCompare(b.version));
+	return [...licenses.values()].sort(compareLicenses);
+}
+
+export function allLicenses(rootDir: string): OpenSourceLicense[] {
+	const vendored = VENDORED.map(({ dir, ...entry }) => ({ ...entry, text: readLicenseText(join(rootDir, dir)) }));
+
+	return [...collectLicenses(rootDir, BUNDLED_DEV_DEPENDENCIES), ...vendored].sort(compareLicenses);
 }
 
 export function licenses(rootDir: string = process.cwd()): Plugin {
@@ -87,9 +95,13 @@ export function licenses(rootDir: string = process.cwd()): Plugin {
 		},
 		load(id) {
 			if (id !== RESOLVED_VIRTUAL_ID) return null;
-			return `export default ${JSON.stringify(collectLicenses(rootDir, BUNDLED_DEV_DEPENDENCIES))};`;
+			return `export default ${JSON.stringify(allLicenses(rootDir))};`;
 		}
 	};
+}
+
+function compareLicenses(a: OpenSourceLicense, b: OpenSourceLicense): number {
+	return a.name.localeCompare(b.name) || a.version.localeCompare(b.version);
 }
 
 function readPackageJson(dir: string): PackageJson {

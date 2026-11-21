@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { BUNDLED_DEV_DEPENDENCIES, collectLicenses, licenseType, readLicenseText, resolvePackageDir } from '../../../scripts/licenses';
+import { allLicenses, collectLicenses, licenseType, readLicenseText, resolvePackageDir } from '../../../scripts/licenses';
 
 let root: string;
 
@@ -113,11 +113,19 @@ describe('collectLicenses', () => {
 	});
 });
 
-describe('collectLicenses on this repository', () => {
+describe('allLicenses on this repository', () => {
 	it('includes the bundled packages and the icons', () => {
-		const names = collectLicenses(process.cwd(), BUNDLED_DEV_DEPENDENCIES).map((l) => l.name);
+		const names = allLicenses(process.cwd()).map((l) => l.name);
 		for (const name of ['svelte', '@lucide/svelte', '@tiptap/core', 'prosemirror-model', 'echarts', 'zrender', 'dompurify']) {
 			expect(names).toContain(name);
 		}
+	});
+
+	it('takes the icons licence from the copy in the repo, including the Feather MIT part', () => {
+		const lucide = allLicenses(process.cwd()).find((l) => l.name === '@lucide/svelte');
+
+		expect(lucide).toMatchObject({ version: '1.59.0', license: 'ISC' });
+		expect(lucide?.text).toContain('ISC License');
+		expect(lucide?.text).toContain('Copyright (c) 2013-present Cole Bemis');
 	});
 });

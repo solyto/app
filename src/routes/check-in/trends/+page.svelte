@@ -3,21 +3,11 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TrendChart from '$lib/components/check-in/stats/TrendChart.svelte';
-	import type { CheckIn, CheckInType } from '$lib/types/check_in';
+	import type { CheckInTracker } from '$lib/types/check_in';
 	import { onMount } from 'svelte';
-	import { getUrlFormat } from '$lib/helpers/DateHelper';
+	import { getUrlFormat, parseUrlFormat } from '$lib/helpers/DateHelper';
+	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import IconSmile from '$lib/icons/lucide/face-slightly-smiling.svelte';
-	import IconBedSingle from '$lib/icons/lucide/bed-single.svelte';
-	import IconSparkles from '$lib/icons/lucide/sparkles.svelte';
-	import IconBriefcaseBusiness from '$lib/icons/lucide/briefcase-business.svelte';
-	import IconApple from '$lib/icons/lucide/apple.svelte';
-	import IconPizza from '$lib/icons/lucide/pizza.svelte';
-	import IconDroplets from '$lib/icons/lucide/droplets.svelte';
-	import IconDroplet from '$lib/icons/lucide/droplet.svelte';
-	import IconWine from '$lib/icons/lucide/wine.svelte';
-	import IconCigarette from '$lib/icons/lucide/cigarette.svelte';
-	import IconUsersRound from '$lib/icons/lucide/users-round.svelte';
 
 	type Range = '30d' | '3m' | '6m' | 'all';
 
@@ -28,6 +18,15 @@
 
 	let selectedRange = $state<Range>('30d');
 
+	async function selectRange(range: Range): Promise<void> {
+		selectedRange = range;
+		if (range !== 'all') return;
+
+		loadingIndicator.start();
+		await checkInData.loadValuesFrom(null);
+		loadingIndicator.stop();
+	}
+
 	const ranges: { label: string; value: Range }[] = [
 		{ label: ts.get.checkIn.range_30_days, value: '30d' },
 		{ label: ts.get.checkIn.range_3_months, value: '3m' },
@@ -35,45 +34,54 @@
 		{ label: ts.get.checkIn.range_all, value: 'all' }
 	];
 
-	const trackers = $derived(checkInData.activeTrackers.filter((t) => t !== 'sports'));
+	const trackers = $derived(checkInData.activeTrackers.filter((t) => t.type === 'scale' || t.type === 'count'));
+	// Yes/no and sports have no value worth a line; they show days done per week.
+	const dayTrackers = $derived(checkInData.activeTrackers.filter((t) => t.type === 'yes_no' || t.type === 'sport'));
 
-	const filteredData = $derived.by((): CheckIn[] => {
-		if (selectedRange === 'all') return checkInData.data;
+	const dates = $derived.by((): string[] => {
+		const all = [...checkInData.index.keys()].sort();
+		if (selectedRange === 'all') return all;
 
 		const days = selectedRange === '30d' ? 30 : selectedRange === '3m' ? 90 : 180;
 		const cutoff = new Date();
 		cutoff.setDate(cutoff.getDate() - days);
 		const cutoffStr = getUrlFormat(cutoff);
 
-		return checkInData.data.filter((e) => e.date >= cutoffStr);
+		return all.filter((date) => date >= cutoffStr);
 	});
 
-	function getChartData(type: CheckInType): { categories: string[]; values: number[] } {
-		const entries = filteredData
-			.filter((e) => e[type] !== null && e[type] !== 0)
-			.sort((a, b) => a.date.localeCompare(b.date));
+	function getChartData(tracker: CheckInTracker): { categories: string[]; values: number[] } {
+		const points = dates
+			.map((date) => ({ date, value: checkInData.getValue(tracker, date) }))
+			.filter((point): point is { date: string; value: number } => point.value !== null && (tracker.type === 'count' || point.value !== 0));
 
 		return {
-			categories: entries.map((e) => auth.getDateWithoutYearInUserPreferredFormat(e.date)),
-			values: entries.map((e) => e[type] as number)
+			categories: points.map((point) => auth.getDateWithoutYearInUserPreferredFormat(point.date)),
+			values: points.map((point) => point.value)
 		};
 	}
 
-	function getIcon(type: CheckInType) {
-		switch (type) {
-			case 'mood': return IconSmile;
-			case 'sleep': return IconBedSingle;
-			case 'dreams': return IconSparkles;
-			case 'work': return IconBriefcaseBusiness;
-			case 'food_quality': return IconApple;
-			case 'food_amount': return IconPizza;
-			case 'water': return IconDroplets;
-			case 'menstruation': return IconDroplet;
-			case 'alcohol': return IconWine;
-			case 'smoking': return IconCigarette;
-			case 'social_life': return IconUsersRound;
-			default: return null;
+	// Weeks cover the whole selected range (for "all": from the first entry, but at least two weeks).
+	function weeklyFrom(): Date {
+		const from = new Date();
+		if (selectedRange !== 'all') {
+			from.setDate(from.getDate() - (selectedRange === '30d' ? 30 : selectedRange === '3m' ? 90 : 180));
+			return from;
 		}
+
+		from.setDate(from.getDate() - 7);
+		const first = dates[0] === undefined ? null : parseUrlFormat(dates[0]);
+		return first !== null && first < from ? first : from;
+	}
+
+	function getWeeklyData(tracker: CheckInTracker): { categories: string[]; values: number[] } {
+		const weeks = checkInData.trackerService.weeklyDays(tracker, checkInData.index, weeklyFrom(), new Date(), auth.getWeekStart());
+		if (weeks.every((week) => week.days === 0)) return { categories: [], values: [] };
+
+		return {
+			categories: weeks.map((week) => auth.getDateWithoutYearInUserPreferredFormat(week.start)),
+			values: weeks.map((week) => week.days)
+		};
 	}
 
 	onMount(async () => {
@@ -92,7 +100,7 @@
 				class:bg-c-bg-elevated={selectedRange !== range.value}
 				class:bg-c-btn={selectedRange === range.value}
 				class:text-white={selectedRange === range.value}
-				onclick={() => (selectedRange = range.value)}
+				onclick={() => selectRange(range.value)}
 			>
 				{range.label}
 			</button>
@@ -100,9 +108,20 @@
 	</div>
 
 	<div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
-		{#each trackers as type (type)}
+		{#each trackers as tracker (tracker.id)}
 			{#key selectedRange}
-				<TrendChart label={ts.get.checkIn[type]} icon={getIcon(type)} {...getChartData(type)} />
+				<TrendChart
+					label={trackerLabel(tracker, ts.get.checkIn)}
+					{tracker}
+					min={tracker.type === 'scale' ? 1 : 0}
+					max={tracker.type === 'scale' ? 5 : undefined}
+					{...getChartData(tracker)}
+				/>
+			{/key}
+		{/each}
+		{#each dayTrackers as tracker (tracker.id)}
+			{#key selectedRange}
+				<TrendChart label={trackerLabel(tracker, ts.get.checkIn)} {tracker} min={0} max={7} {...getWeeklyData(tracker)} />
 			{/key}
 		{/each}
 	</div>

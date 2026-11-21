@@ -101,18 +101,20 @@
 {#snippet actionButtons(entry: ClipboardEntry)}
 	<div class="flex gap-2">
 		{#if entry.type !== 'file'}
-			<button class={ACTION_BUTTON} onclick={() => onCopy(entry)}>
+			<button class={ACTION_BUTTON} onclick={() => onCopy(entry)} title={ts.get.clipboard.copy} aria-label={ts.get.clipboard.copy}>
 				<IconClipboardCopy class="size-4" />
 			</button>
 		{/if}
 		{#if entry.type !== 'text'}
-			<button class={ACTION_BUTTON} onclick={() => onDownload(entry)}>
+			<button class={ACTION_BUTTON} onclick={() => onDownload(entry)} title={ts.get.clipboard.download} aria-label={ts.get.clipboard.download}>
 				<IconDownload class="size-4" />
 			</button>
 		{/if}
 		<button
 			class="flex size-8 cursor-pointer items-center justify-center rounded-full bg-c-danger text-white drop-shadow-md transition-all hover:drop-shadow-xl"
 			onclick={() => onDelete(entry)}
+			title={ts.get.clipboard.delete_entry}
+			aria-label={ts.get.clipboard.delete_entry}
 		>
 			<IconTrash class="size-4" />
 		</button>

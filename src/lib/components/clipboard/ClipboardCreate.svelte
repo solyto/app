@@ -222,10 +222,10 @@
 			<TextInput multiLine={true} bind:value height={200} />
 		</div>
 		<div class="mt-4 flex w-full justify-end gap-4">
-			<button class={PICKER_BUTTON} onclick={() => fileInput?.click()}>
+			<button class={PICKER_BUTTON} onclick={() => fileInput?.click()} title={ts.get.clipboard.attach_image} aria-label={ts.get.clipboard.attach_image}>
 				<IconImage class="size-4" />
 			</button>
-			<button class={PICKER_BUTTON} onclick={() => documentInput?.click()}>
+			<button class={PICKER_BUTTON} onclick={() => documentInput?.click()} title={ts.get.clipboard.attach_file} aria-label={ts.get.clipboard.attach_file}>
 				<IconPaperclip class="size-4" />
 			</button>
 			<TextButton title={ts.get.clipboard.save} onclick={onSave} />

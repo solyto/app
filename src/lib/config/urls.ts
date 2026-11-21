@@ -31,6 +31,7 @@ export const urls = {
 	checkInHistory: '/check-in/history',
 	checkInDate: '/check-in/date/[date]',
 	checkInTrends: '/check-in/trends',
+	checkInGoals: '/check-in/goals',
 	libraries: '/libraries',
 	musicLibrary: '/libraries/music',
 	bookLibrary: '/libraries/books',

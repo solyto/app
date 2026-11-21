@@ -5,10 +5,12 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import ColorPicker from 'svelte-awesome-color-picker';
+	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
 	import type { Calendar, UpdateCalendarRequest } from '$lib/types/calendar';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
+	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
 	import IconShare2 from '$lib/icons/lucide/share-2.svelte';
 	import IconEye from '$lib/icons/lucide/eye.svelte';
 	import IconEyeOff from '$lib/icons/lucide/eye-off.svelte';
@@ -64,6 +66,8 @@
 <div class="flex w-full min-w-0 items-center gap-4">
 	<div use:clickOutside={onColorChange}>
 		<ColorPicker
+			components={{ input: ColorPickerInput }}
+			isAlpha={false}
 			bind:hex
 			position="responsive"
 			nullable={false}
@@ -99,23 +103,14 @@
 	<div class="flex items-center">
 		{#if !calendar.is_shared && calendar.invite_status === null}
 			{#if calendars.isCalendarCredentialsRejected(calendar.id)}
-				<button
-					class="cursor-pointer rounded-full p-2 text-c-danger transition-colors hover:bg-c-neutral-1 hover:text-c-primary dark:hover:bg-s-dark-3"
-					onclick={onChangePassword}
-					title={ts.get.calendar.account_change_password}
-					aria-label={ts.get.calendar.account_change_password}
-				>
+				<GhostIconButton onclick={onChangePassword} label={ts.get.calendar.account_change_password} color="text-c-danger">
 					<IconKeyRound class="size-4" />
-				</button>
+				</GhostIconButton>
 			{/if}
 			{#if !calendar.is_external}
-				<button
-					class="cursor-pointer rounded-full p-2 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-primary dark:hover:bg-s-dark-3"
-					onclick={onShare}
-					title={ts.get.calendar.share_calendar}
-				>
+				<GhostIconButton onclick={onShare} label={ts.get.calendar.share_calendar}>
 					<IconShare2 class="size-4" />
-				</button>
+				</GhostIconButton>
 			{/if}
 			<InlineDeleteButton onClick={onDelete} />
 		{:else if calendar.is_shared}

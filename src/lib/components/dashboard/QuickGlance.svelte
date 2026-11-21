@@ -6,6 +6,7 @@
 
 	import TimeTrackingWidget from '$lib/components/dashboard/widgets/TimeTrackingWidget.svelte';
 	import CheckInWidget from '$lib/components/dashboard/widgets/CheckInWidget.svelte';
+	import GoalsWidget from '$lib/components/dashboard/widgets/GoalsWidget.svelte';
 	import ShortcutsWidget from '$lib/components/dashboard/widgets/ShortcutsWidget.svelte';
 
 	const ts = getTranslation();
@@ -16,6 +17,7 @@
 <div class="flex flex-col gap-12" in:blur>
 	{#if nav.features.checkIn}
 		<CheckInWidget {ts} />
+		<GoalsWidget {ts} />
 	{/if}
 	{#if nav.features.timeTracking}
 		<TimeTrackingWidget {ts} weekStart={auth.getWeekStart()} />
