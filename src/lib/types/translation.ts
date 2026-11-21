@@ -1175,6 +1175,10 @@ export interface ClipboardRecords {
 	file_limit_reached_hours_plural: string;
 	file_download_error: string;
 	image_load_error: string;
+	download: string;
+	delete_entry: string;
+	attach_image: string;
+	attach_file: string;
 }
 
 export interface ProfileRecords {

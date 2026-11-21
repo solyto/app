@@ -1183,7 +1183,11 @@ const clipboard: ClipboardRecords = {
 	file_limit_reached_hours_singular: 'Puoi caricare 10 file al giorno. Riprova tra 1 ora.',
 	file_limit_reached_hours_plural: 'Puoi caricare 10 file al giorno. Riprova tra {n} ore.',
 	file_download_error: 'Impossibile scaricare il file',
-	image_load_error: "Impossibile caricare l'immagine"
+	image_load_error: "Impossibile caricare l'immagine",
+	download: 'Scarica',
+	delete_entry: 'Elimina voce',
+	attach_image: 'Allega immagine',
+	attach_file: 'Allega file'
 };
 
 const profile: ProfileRecords = {

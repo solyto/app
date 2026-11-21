@@ -1174,7 +1174,11 @@ const clipboard: ClipboardRecords = {
 	file_limit_reached_hours_singular: 'Tu peux envoyer 10 fichiers par jour. Réessaie dans 1 heure.',
 	file_limit_reached_hours_plural: 'Tu peux envoyer 10 fichiers par jour. Réessaie dans {n} heures.',
 	file_download_error: 'Échec du téléchargement du fichier',
-	image_load_error: "Impossible de charger l'image"
+	image_load_error: "Impossible de charger l'image",
+	download: 'Télécharger',
+	delete_entry: "Supprimer l'entrée",
+	attach_image: 'Joindre une image',
+	attach_file: 'Joindre un fichier'
 };
 
 const dav: DavRecords = {

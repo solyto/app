@@ -1183,7 +1183,11 @@ const clipboard: ClipboardRecords = {
 	file_limit_reached_hours_singular: 'You can upload 10 files per day. Try again in 1 hour.',
 	file_limit_reached_hours_plural: 'You can upload 10 files per day. Try again in {n} hours.',
 	file_download_error: 'Failed to download file',
-	image_load_error: 'Image could not be loaded'
+	image_load_error: 'Image could not be loaded',
+	download: 'Download',
+	delete_entry: 'Delete entry',
+	attach_image: 'Attach image',
+	attach_file: 'Attach file'
 };
 
 const profile: ProfileRecords = {

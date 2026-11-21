@@ -2,7 +2,6 @@
 	import type { TodoCategory, TodoWorkspace, UpdateTodoWorkspaceRequest } from '$lib/types/todo';
 	import { fade } from 'svelte/transition';
 	import { onDestroy, tick } from 'svelte';
-	import IconPen from '@lucide/svelte/icons/pen';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -11,6 +10,7 @@
 	import FindCategoryMenu from '$lib/components/todos/FindCategoryMenu.svelte';
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
+	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import IconX from '@lucide/svelte/icons/x';
 
@@ -129,14 +129,7 @@
 		{:else}
 			<span class="truncate font-semibold">{workspace.title}</span>
 			<div class="flex items-center gap-1 pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100">
-				<button
-					class="flex shrink-0 cursor-pointer items-center justify-center rounded-full text-c-neutral-3 transition-all hover:text-c-heading"
-					title={ts.get.todos.rename_workspace}
-					aria-label={ts.get.todos.rename_workspace}
-					onclick={startTitleEdit}
-				>
-					<IconPen class="size-5 md:size-4" />
-				</button>
+				<EditButton onClick={startTitleEdit} title={ts.get.todos.rename_workspace} inModal={false} buttonStyle="minimal" iconClass="size-5 md:size-4" />
 				<DeleteButton onClick={openDeleteModal} inModal={false} buttonStyle="minimal" />
 			</div>
 		{/if}
