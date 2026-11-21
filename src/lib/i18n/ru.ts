@@ -54,7 +54,10 @@ const layout: LayoutRecords = {
 	network_error: 'Проблема с подключением. Проверьте соединение и попробуйте ещё раз.',
 	rate_limited: 'Слишком много попыток. Попробуйте чуть позже.',
 	rate_limited_minutes_singular: 'Слишком много попыток. Попробуйте через 1 минуту.',
-	rate_limited_minutes_plural: 'Слишком много попыток. Попробуйте через {n} мин.'
+	rate_limited_minutes_plural: 'Слишком много попыток. Попробуйте через {n} мин.',
+	previous_page: 'Предыдущая страница',
+	next_page: 'Следующая страница',
+	page_of: 'Страница {n} из {total}'
 };
 
 const nav: NavigationRecords = {
@@ -1256,7 +1259,10 @@ const profile: ProfileRecords = {
 const admin: AdminRecords = {
 	role_update_success: 'Роль пользователя изменена.',
 	role_update_error: 'Не удалось изменить роль пользователя.',
-	search_placeholder: 'Поиск по имени или адресу почты…'
+	search_placeholder: 'Поиск по имени или адресу почты…',
+	no_users: 'Пользователи не найдены.',
+	no_search_results: 'По вашему запросу пользователи не найдены.',
+	loading_users: 'Загрузка пользователей…'
 };
 
 const welcome_tour: WelcomeTourRecords = {

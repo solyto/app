@@ -26,6 +26,9 @@ export interface LayoutRecords {
 	rate_limited: string;
 	rate_limited_minutes_singular: string;
 	rate_limited_minutes_plural: string;
+	previous_page: string;
+	next_page: string;
+	page_of: string;
 }
 
 export interface NavigationRecords {
@@ -1198,6 +1201,9 @@ export interface AdminRecords {
 	role_update_success: string;
 	role_update_error: string;
 	search_placeholder: string;
+	no_users: string;
+	no_search_results: string;
+	loading_users: string;
 }
 
 export interface WelcomeTourRecords {

@@ -6,6 +6,7 @@
 		disabled = false,
 		pulse = false,
 		class: customClass = '',
+		label,
 		children
 	}: {
 		onclick?: () => void;
@@ -13,6 +14,7 @@
 		disabled?: boolean;
 		pulse?: boolean;
 		class?: string;
+		label?: string;
 		children: Snippet;
 	} = $props();
 </script>
@@ -46,6 +48,8 @@
 	class:px-4={type !== 'plain'}
 	class:py-2={type !== 'plain'}
 	class:animate-pulse={pulse}
+	aria-label={label}
+	title={label}
 	{disabled}
 	{onclick}
 >

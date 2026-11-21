@@ -54,7 +54,10 @@ const layout: LayoutRecords = {
 	network_error: 'Connection problem. Please check your connection and try again.',
 	rate_limited: 'Too many attempts. Please try again in a moment.',
 	rate_limited_minutes_singular: 'Too many attempts. Please try again in 1 minute.',
-	rate_limited_minutes_plural: 'Too many attempts. Please try again in {n} minutes.'
+	rate_limited_minutes_plural: 'Too many attempts. Please try again in {n} minutes.',
+	previous_page: 'Previous page',
+	next_page: 'Next page',
+	page_of: 'Page {n} of {total}'
 };
 
 const nav: NavigationRecords = {
@@ -1206,7 +1209,10 @@ const profile: ProfileRecords = {
 const admin: AdminRecords = {
 	role_update_success: 'User role was successfully updated.',
 	role_update_error: 'Failed to update user role.',
-	search_placeholder: 'Search by name or email...'
+	search_placeholder: 'Search by name or email...',
+	no_users: 'No users found.',
+	no_search_results: 'No users match your search.',
+	loading_users: 'Loading users...'
 };
 
 const welcome_tour: WelcomeTourRecords = {

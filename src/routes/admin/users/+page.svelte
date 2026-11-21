@@ -5,6 +5,7 @@
 	import UserList from '$lib/components/admin/UserList.svelte';
 	import UserGrowthChart from '$lib/components/admin/UserGrowthChart.svelte';
 	import IconUsers from '$lib/icons/lucide/users.svelte';
+	import type { UserGrowthGroupBy } from '$lib/types/managed_user';
 
 	const userManagement = getUserManagement();
 	const loadingIndicator = getLoadingIndicator();
@@ -12,10 +13,16 @@
 	onMount(async () => {
 		if (!userManagement.loaded) {
 			loadingIndicator.start();
-			await userManagement.load();
+			await Promise.all([userManagement.load(), userManagement.loadGrowth()]);
 			loadingIndicator.stop();
 		}
 	});
+
+	async function groupGrowthBy(groupBy: UserGrowthGroupBy): Promise<void> {
+		loadingIndicator.start();
+		await userManagement.groupGrowthBy(groupBy);
+		loadingIndicator.stop();
+	}
 </script>
 
 <div class="flex h-full w-full flex-col gap-6 overflow-auto p-8">
@@ -30,7 +37,7 @@
 	</div>
 
 	{#if userManagement.loaded}
-		<UserGrowthChart users={userManagement.users} />
+		<UserGrowthChart points={userManagement.growth} groupBy={userManagement.growthGroupBy} ongroupby={groupGrowthBy} />
 	{/if}
 
 	<UserList />

@@ -274,6 +274,7 @@ export const apiRoutes = {
 	admin: {
 		users: {
 			list: API_URL + '/users',
+			growth: API_URL + '/users/growth',
 			update: API_URL + '/users/%s'
 		}
 	},

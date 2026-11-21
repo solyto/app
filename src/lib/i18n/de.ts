@@ -54,7 +54,10 @@ const layout: LayoutRecords = {
 	network_error: 'Verbindungsproblem. Bitte prüfe deine Verbindung und versuche es erneut.',
 	rate_limited: 'Zu viele Versuche. Bitte versuche es gleich noch einmal.',
 	rate_limited_minutes_singular: 'Zu viele Versuche. Bitte versuche es in 1 Minute erneut.',
-	rate_limited_minutes_plural: 'Zu viele Versuche. Bitte versuche es in {n} Minuten erneut.'
+	rate_limited_minutes_plural: 'Zu viele Versuche. Bitte versuche es in {n} Minuten erneut.',
+	previous_page: 'Vorherige Seite',
+	next_page: 'Nächste Seite',
+	page_of: 'Seite {n} von {total}'
 };
 
 const nav: NavigationRecords = {
@@ -1360,7 +1363,10 @@ const welcome_tour: WelcomeTourRecords = {
 const admin: AdminRecords = {
 	role_update_success: 'Benutzerrolle wurde erfolgreich aktualisiert.',
 	role_update_error: 'Benutzerrolle konnte nicht aktualisiert werden.',
-	search_placeholder: 'Nach Name oder E-Mail suchen...'
+	search_placeholder: 'Nach Name oder E-Mail suchen...',
+	no_users: 'Keine Benutzer gefunden.',
+	no_search_results: 'Keine Benutzer passen zu deiner Suche.',
+	loading_users: 'Benutzer werden geladen...'
 };
 
 const timeTracking: TimeTrackingRecords = {
