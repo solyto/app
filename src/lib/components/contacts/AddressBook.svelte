@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconPen from '@lucide/svelte/icons/pen';
+	import IconPen from '$lib/icons/lucide/pen.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import type { AddressBook, UpdateAddressBookRequest } from '$lib/types/contact';
 	import { getContacts } from '$lib/state/Contacts.svelte';
@@ -68,6 +68,7 @@
 		}}
 	>
 		<ColorPicker
+			isAlpha={false}
 			bind:hex
 			position="responsive"
 			nullable={false}

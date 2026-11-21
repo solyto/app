@@ -54,6 +54,39 @@ export function formatFloatingDate(date: Date) {
 	return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
+export function floatingToUtc(floating: string, timeZone: string): Date {
+	const [year, month, day, hours, minutes, seconds] = floating.split(/[-T:]/).map(Number);
+	const wallClock = Date.UTC(year, month - 1, day, hours, minutes, seconds);
+	// The offset is read twice: the first guess can land on the other side of a DST change.
+	const guess = wallClock - offsetInTimeZone(wallClock, timeZone);
+
+	return new Date(wallClock - offsetInTimeZone(guess, timeZone));
+}
+
+export function dateInTimeZone(instant: Date, timeZone: string): string {
+	return new Date(wallClockInTimeZone(instant.getTime(), timeZone)).toISOString().slice(0, 10);
+}
+
+function offsetInTimeZone(timestamp: number, timeZone: string): number {
+	return wallClockInTimeZone(timestamp, timeZone) - timestamp;
+}
+
+function wallClockInTimeZone(timestamp: number, timeZone: string): number {
+	const parts = new Intl.DateTimeFormat('en-US', {
+		timeZone,
+		hourCycle: 'h23',
+		year: 'numeric',
+		month: 'numeric',
+		day: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+		second: 'numeric'
+	}).formatToParts(new Date(timestamp));
+	const part = (type: Intl.DateTimeFormatPartTypes) => Number(parts.find((p) => p.type === type)?.value);
+
+	return Date.UTC(part('year'), part('month') - 1, part('day'), part('hour'), part('minute'), part('second'));
+}
+
 export function formatDateWithoutYear(
 	input: string | Date,
 	dateFormat: string | null = null

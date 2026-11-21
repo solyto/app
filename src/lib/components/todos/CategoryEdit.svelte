@@ -2,7 +2,7 @@
 	import type { TodoCategory } from '$lib/types/todo';
 	import { fade } from 'svelte/transition';
 	import { tick, onDestroy } from 'svelte';
-	import IconPen from '@lucide/svelte/icons/pen';
+	import IconPen from '$lib/icons/lucide/pen.svelte';
 	import { getTodos } from '$lib/state/Todos.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';

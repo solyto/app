@@ -5,15 +5,16 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import ColorPicker from 'svelte-awesome-color-picker';
+	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
 	import type { Calendar, UpdateCalendarRequest } from '$lib/types/calendar';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
-	import IconShare2 from '@lucide/svelte/icons/share-2';
-	import IconEye from '@lucide/svelte/icons/eye';
-	import IconEyeOff from '@lucide/svelte/icons/eye-off';
-	import IconKeyRound from '@lucide/svelte/icons/key-round';
+	import IconShare2 from '$lib/icons/lucide/share-2.svelte';
+	import IconEye from '$lib/icons/lucide/eye.svelte';
+	import IconEyeOff from '$lib/icons/lucide/eye-off.svelte';
+	import IconKeyRound from '$lib/icons/lucide/key-round.svelte';
 
 	const calendars = getCalendars();
 	const calendarSharing = getCalendarSharing();
@@ -65,6 +66,8 @@
 <div class="flex w-full min-w-0 items-center gap-4">
 	<div use:clickOutside={onColorChange}>
 		<ColorPicker
+			components={{ input: ColorPickerInput }}
+			isAlpha={false}
 			bind:hex
 			position="responsive"
 			nullable={false}

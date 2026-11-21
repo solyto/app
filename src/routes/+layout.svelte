@@ -35,7 +35,7 @@
 	import { featureConfig } from '$lib/config/features';
 	import { IS_WEB, IS_DESKTOP, CLIENT_VERSION } from '$lib/config/platform';
 	import { browser } from '$app/environment';
-	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import IconLoaderCircle from '$lib/icons/lucide/loader-circle.svelte';
 
 	let { children } = $props();
 

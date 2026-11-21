@@ -3,8 +3,8 @@
 	import { resolve } from '$app/paths';
 	import { daysSince } from '$lib/helpers/DateHelper';
 	import { blur } from 'svelte/transition';
-	import IconFolder from '@lucide/svelte/icons/folder';
-	import IconStar from '@lucide/svelte/icons/star';
+	import IconFolder from '$lib/icons/lucide/folder.svelte';
+	import IconStar from '$lib/icons/lucide/star.svelte';
 	import { getNotes } from '$lib/state/Notes.svelte';
 	import type { Note } from '$lib/types/note';
 	import { getTranslation } from '$lib/state/Translation.svelte';

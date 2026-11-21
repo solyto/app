@@ -5,7 +5,7 @@
 	import CategoryCreate from '$lib/components/libraries/links/CategoryCreate.svelte';
 	import CategoryNavigationMobile from '$lib/components/libraries/links/CategoryNavigationMobile.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import IconTrash from '@lucide/svelte/icons/trash-2';
+	import IconTrash from '$lib/icons/lucide/trash.svelte';
 
 	const library = getLinkLibrary();
 	const ts = getTranslation();

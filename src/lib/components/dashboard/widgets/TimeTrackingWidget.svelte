@@ -4,7 +4,7 @@
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { Translation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import IconTimer from '@lucide/svelte/icons/timer';
+	import IconTimer from '$lib/icons/lucide/timer.svelte';
 	import TimeTrackingGroupingService from '$lib/services/TimeTrackingGroupingService';
 	import { getStartOfWeek } from '$lib/helpers/DateHelper';
 	import type { WeekStart } from '$lib/types/auth';

@@ -9,7 +9,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { goto } from '$app/navigation';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
-	import IconExternalLink from '@lucide/svelte/icons/external-link';
+	import IconExternalLink from '$lib/icons/lucide/external-link.svelte';
 	import { safeHref } from '$lib/helpers/UrlHelper';
 
 	const todos = getTodos();

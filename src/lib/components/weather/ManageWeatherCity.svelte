@@ -5,8 +5,8 @@
 	import { getWeather } from '$lib/state/Weather.svelte';
 	import type { NominatimResult, UpdateWeatherCityRequest } from '$lib/types/weather.js';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
-	import IconMapPin from '@lucide/svelte/icons/map-pin';
-	import IconSearch from '@lucide/svelte/icons/search';
+	import IconMapPin from '$lib/icons/lucide/map-pin.svelte';
+	import IconSearch from '$lib/icons/lucide/search.svelte';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import IconCardSim from '@lucide/svelte/icons/card-sim';
-	import IconHouse from '@lucide/svelte/icons/house';
-	import IconPhone from '@lucide/svelte/icons/phone';
-	import IconBriefcaseBusiness from '@lucide/svelte/icons/briefcase-business';
+	import IconCardSim from '$lib/icons/lucide/card-sim.svelte';
+	import IconHouse from '$lib/icons/lucide/house.svelte';
+	import IconPhone from '$lib/icons/lucide/phone.svelte';
+	import IconBriefcaseBusiness from '$lib/icons/lucide/briefcase-business.svelte';
 
 	let { value = $bindable(), type = $bindable() }: {
 		value: string;

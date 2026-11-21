@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import IconLoaderCircle from '$lib/icons/lucide/loader-circle.svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import ProgressBar from '$lib/components/ui/ProgressBar.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';

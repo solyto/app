@@ -23,8 +23,8 @@
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
 	import LibrarySearchResult from '$lib/components/libraries/shared/LibrarySearchResult.svelte';
-	import IconSearch from '@lucide/svelte/icons/search';
-	import IconLoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import IconSearch from '$lib/icons/lucide/search.svelte';
+	import IconLoaderCircle from '$lib/icons/lucide/loader-circle.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onDestroy, onMount, tick } from 'svelte';

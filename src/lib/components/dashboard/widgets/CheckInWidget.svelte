@@ -1,25 +1,13 @@
 <script lang="ts">
-	import IconActivity from '@lucide/svelte/icons/activity';
+	import IconActivity from '$lib/icons/lucide/activity.svelte';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
-	import { getMeanValue, getTotalMeanValue } from '$lib/helpers/CheckInHelper';
-	import type { CheckInType } from '$lib/types/check_in';
-	import IconSmile from '@lucide/svelte/icons/smile';
-	import IconBedSingle from '@lucide/svelte/icons/bed-single';
-	import IconSparkles from '@lucide/svelte/icons/sparkles';
-	import IconBriefcaseBusiness from '@lucide/svelte/icons/briefcase-business';
-	import IconApple from '@lucide/svelte/icons/apple';
-	import IconPizza from '@lucide/svelte/icons/pizza';
-	import IconDroplets from '@lucide/svelte/icons/droplets';
-	import IconDroplet from '@lucide/svelte/icons/droplet';
-	import IconWine from '@lucide/svelte/icons/wine';
-	import IconCigarette from '@lucide/svelte/icons/cigarette';
-	import IconUsersRound from '@lucide/svelte/icons/users-round';
+	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import { onMount, tick } from 'svelte';
 	import CheckInWidgetRow from '$lib/components/dashboard/widgets/CheckInWidgetRow.svelte';
 
 	const checkInData = getCheckInData();
-	const entries = $derived(checkInData.activeTrackers.filter((t) => t !== 'sports' && checkInData.scoredTrackers.includes(t)));
-	const totalMean = $derived(getTotalMeanValue(checkInData.data, entries));
+	const dates = $derived([...checkInData.index.keys()]);
+	const totalMean = $derived(checkInData.trackerService.totalMean(checkInData.scoredTrackers, checkInData.index, dates));
 
 	let { ts } = $props();
 
@@ -30,38 +18,9 @@
 		await tick();
 		loaded = true;
 	});
-
-	function getIcon(type: CheckInType) {
-		switch (type) {
-			case 'mood':
-				return IconSmile;
-			case 'sleep':
-				return IconBedSingle;
-			case 'dreams':
-				return IconSparkles;
-			case 'work':
-				return IconBriefcaseBusiness;
-			case 'food_quality':
-				return IconApple;
-			case 'food_amount':
-				return IconPizza;
-			case 'water':
-				return IconDroplets;
-			case 'menstruation':
-				return IconDroplet;
-			case 'alcohol':
-				return IconWine;
-			case 'smoking':
-				return IconCigarette;
-			case 'social_life':
-				return IconUsersRound;
-			default:
-				return null;
-		}
-	}
 </script>
 
-{#if loaded && checkInData.data.length > 0}
+{#if loaded && checkInData.values.length > 0}
 	<div>
 		<div class="mb-3 flex items-center gap-2">
 			<IconActivity size={15} class="text-c-heading dark:text-c-primary" />
@@ -70,11 +29,11 @@
 			</span>
 		</div>
 		<div class="flex flex-col gap-2.5">
-			{#each entries as entry (entry)}
+			{#each checkInData.scoredTrackers as tracker (tracker.id)}
 				<CheckInWidgetRow
-					label={ts.get.checkIn[entry]}
-					value={getMeanValue(checkInData.data, entry)}
-					icon={getIcon(entry)}
+					label={trackerLabel(tracker, ts.get.checkIn)}
+					value={checkInData.trackerService.mean(tracker, checkInData.index, dates)}
+					{tracker}
 				/>
 			{/each}
 			<div class="mt-1 border-t border-c-neutral-1 pt-2 dark:border-s-dark-3">

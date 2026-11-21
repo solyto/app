@@ -1,8 +1,8 @@
 <script lang="ts">
-	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
-	import IconChevronRight from '@lucide/svelte/icons/chevron-right';
-	import IconPlus from '@lucide/svelte/icons/plus';
-	import IconChevronDown from '@lucide/svelte/icons/chevron-down';
+	import IconChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
+	import IconChevronRight from '$lib/icons/lucide/chevron-right.svelte';
+	import IconPlus from '$lib/icons/lucide/plus.svelte';
+	import IconChevronDown from '$lib/icons/lucide/chevron-down.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconMonth from '$lib/components/ui/icons/IconMonth.svelte';
 	import IconWeek from '$lib/components/ui/icons/IconWeek.svelte';

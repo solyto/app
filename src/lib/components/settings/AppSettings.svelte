@@ -5,7 +5,7 @@
 	import { getNavigation } from '$lib/state/Navigation.svelte';
 	import SettingsSection from '$lib/components/settings/SettingsSection.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import IconCheckCircle from '@lucide/svelte/icons/check-circle';
+	import IconCheckCircle from '$lib/icons/lucide/circle-check-big.svelte';
 	import { env } from '$env/dynamic/public';
 	import { IS_NATIVE, PLATFORM } from '$lib/config/platform';
 	import UpdateChecker from '$lib/components/settings/UpdateChecker.svelte';

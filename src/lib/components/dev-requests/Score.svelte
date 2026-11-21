@@ -1,6 +1,6 @@
 <script lang="ts">
-	import IconChevronDown from '@lucide/svelte/icons/chevron-down';
-	import IconChevronUp from '@lucide/svelte/icons/chevron-up';
+	import IconChevronDown from '$lib/icons/lucide/chevron-down.svelte';
+	import IconChevronUp from '$lib/icons/lucide/chevron-up.svelte';
 	import type { DevRequest } from '$lib/types/dev_request';
 	import { getDevRequests } from '$lib/state/DevRequests.svelte';
 

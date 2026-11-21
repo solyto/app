@@ -4,7 +4,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import UserList from '$lib/components/admin/UserList.svelte';
 	import UserGrowthChart from '$lib/components/admin/UserGrowthChart.svelte';
-	import IconUsers from '@lucide/svelte/icons/users';
+	import IconUsers from '$lib/icons/lucide/users.svelte';
 
 	const userManagement = getUserManagement();
 	const loadingIndicator = getLoadingIndicator();

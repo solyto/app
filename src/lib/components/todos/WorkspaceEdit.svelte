@@ -12,7 +12,7 @@
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
-	import IconX from '@lucide/svelte/icons/x';
+	import IconX from '$lib/icons/lucide/x.svelte';
 
 	const ts = getTranslation();
 	const todos = getTodos();

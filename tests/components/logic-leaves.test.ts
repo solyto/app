@@ -15,6 +15,7 @@ import Link from '$lib/components/todos/props/Link.svelte';
 import { renderWithContext } from './helpers/context';
 import { tag, todo } from '../unit/helpers/factories';
 import type { BookGenre } from '$lib/types/library_book';
+import type { CheckInTracker } from '$lib/types/check_in';
 
 describe('Rating', () => {
 	it('renders five stars', () => {
@@ -69,7 +70,7 @@ describe('DailyCheckInIcon', () => {
 		const user = userEvent.setup();
 		const onSelect = vi.fn();
 		render(DailyCheckInIcon, {
-			props: { type: 'mood', index: 3, onSelect, isHighlighted: () => false }
+			props: { type: 'mood', icon: null, index: 3, onSelect, isHighlighted: () => false }
 		});
 		await user.click(screen.getByRole('button'));
 		expect(onSelect).toHaveBeenCalledWith(3);
@@ -77,14 +78,14 @@ describe('DailyCheckInIcon', () => {
 
 	it('colors the icon by index', () => {
 		const { container } = render(DailyCheckInIcon, {
-			props: { type: 'mood', index: 5, onSelect: vi.fn(), isHighlighted: () => false }
+			props: { type: 'mood', icon: null, index: 5, onSelect: vi.fn(), isHighlighted: () => false }
 		});
 		expect(container.querySelector('button')?.classList.contains('text-green-500')).toBe(true);
 	});
 
 	it('highlights the selected index', () => {
 		const { container } = render(DailyCheckInIcon, {
-			props: { type: 'mood', index: 2, onSelect: vi.fn(), isHighlighted: (i) => i === 2 }
+			props: { type: 'mood', icon: null, index: 2, onSelect: vi.fn(), isHighlighted: (i) => i === 2 }
 		});
 		const button = container.querySelector('button');
 		expect(button?.classList.contains('bg-c-neutral')).toBe(true);
@@ -95,6 +96,7 @@ describe('DailyCheckInIcon', () => {
 		const { container } = render(DailyCheckInIcon, {
 			props: {
 				type: 'sports',
+				icon: null,
 				index: 1,
 				onSelect: vi.fn(),
 				isHighlighted: () => false,
@@ -105,20 +107,39 @@ describe('DailyCheckInIcon', () => {
 	});
 });
 
+function checkInTracker(overrides: Partial<CheckInTracker> = {}): CheckInTracker {
+	return { id: 1, key: 'mood', name: null, type: 'scale', icon: null, position: 0, enabled: true, scored: true, ...overrides };
+}
+
 describe('CheckInIcon', () => {
 	it('renders nothing when the value is null', () => {
-		const { container } = render(CheckInIcon, { props: { type: 'mood', value: null } });
+		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker(), value: null } });
 		expect(container.querySelector('button')).not.toBeInTheDocument();
 	});
 
 	it('colors the icon by value', () => {
-		const { container } = render(CheckInIcon, { props: { type: 'mood', value: 4 } });
+		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker(), value: 4 } });
 		expect(container.querySelector('button')?.classList.contains('text-green-300')).toBe(true);
 	});
 
 	it('renders a sports icon with the primary color', () => {
-		const { container } = render(CheckInIcon, { props: { type: 'sports', value: 1 } });
+		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker({ key: 'sports', type: 'sport' }), value: 1 } });
 		expect(container.querySelector('button')?.classList.contains('text-c-primary')).toBe(true);
+	});
+
+	it('colors an own 1–5 tracker by value like the built-in ones', () => {
+		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker({ key: null, name: 'Calm', icon: 'leaf' }), value: 1 } });
+		expect(container.querySelector('button')?.classList.contains('text-red-500')).toBe(true);
+	});
+
+	it('shows a count as its number', () => {
+		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker({ key: null, name: 'Glasses', type: 'count' }), value: 7 } });
+		expect(container.textContent?.trim()).toBe('7');
+	});
+
+	it('shows a ticked yes/no tracker in grey', () => {
+		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker({ key: null, name: 'Meditated', type: 'yes_no', icon: 'flower-2' }), value: 1 } });
+		expect(container.querySelector('.text-c-neutral-5')).toBeInTheDocument();
 	});
 });
 

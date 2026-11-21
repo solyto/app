@@ -8,8 +8,8 @@
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import Heading from '$lib/components/ui/Heading.svelte';
-	import IconImage from '@lucide/svelte/icons/image';
-	import IconPaperclip from '@lucide/svelte/icons/paperclip';
+	import IconImage from '$lib/icons/lucide/image.svelte';
+	import IconPaperclip from '$lib/icons/lucide/paperclip.svelte';
 	import { RateLimitedError } from '$lib/services/ApiService';
 	import { clipboardFileLimitMessage } from '$lib/helpers/NetworkErrorHelper';
 	import ClipboardFileInfo from '$lib/components/clipboard/ClipboardFileInfo.svelte';

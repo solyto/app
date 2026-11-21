@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
-	import IconX from '@lucide/svelte/icons/x';
+	import IconX from '$lib/icons/lucide/x.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import CreateEntry from '$lib/components/settings/CreateEntry.svelte';

@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { blur } from 'svelte/transition';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import IconLayoutGrid from '@lucide/svelte/icons/layout-grid';
-	import IconCalendar from '@lucide/svelte/icons/calendar';
-	import IconCheckSquare from '@lucide/svelte/icons/check-square';
-	import IconNotebook from '@lucide/svelte/icons/notebook-pen';
-	import IconLibrary from '@lucide/svelte/icons/library';
-	import IconUsers from '@lucide/svelte/icons/users';
-	import IconActivity from '@lucide/svelte/icons/activity';
-	import IconClock from '@lucide/svelte/icons/clock';
-	import IconWallet from '@lucide/svelte/icons/wallet';
-	import IconRss from '@lucide/svelte/icons/rss';
-	import IconClipboard from '@lucide/svelte/icons/clipboard';
+	import IconLayoutGrid from '$lib/icons/lucide/layout-grid.svelte';
+	import IconCalendar from '$lib/icons/lucide/calendar.svelte';
+	import IconCheckSquare from '$lib/icons/lucide/square-check-big.svelte';
+	import IconNotebook from '$lib/icons/lucide/notebook-pen.svelte';
+	import IconLibrary from '$lib/icons/lucide/library.svelte';
+	import IconUsers from '$lib/icons/lucide/users.svelte';
+	import IconActivity from '$lib/icons/lucide/activity.svelte';
+	import IconClock from '$lib/icons/lucide/clock.svelte';
+	import IconWallet from '$lib/icons/lucide/wallet.svelte';
+	import IconRss from '$lib/icons/lucide/rss.svelte';
+	import IconClipboard from '$lib/icons/lucide/clipboard.svelte';
 	import type { FeatureType } from '$lib/config/navigation';
 	import type { WelcomeTourRecords } from '$lib/types/translation';
 	import { getNavigation } from '$lib/state/Navigation.svelte';

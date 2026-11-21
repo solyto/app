@@ -7,7 +7,7 @@
 	import { setCustomApiUrl, dropCustomApiUrl } from '$lib/config/platform';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { urls } from '$lib/config/urls';
-	import IconChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import IconChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
 
 	const ts = getTranslation();
 

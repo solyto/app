@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconCircleQuestionMark from '@lucide/svelte/icons/circle-question-mark';
+	import IconCircleQuestionMark from '$lib/icons/lucide/circle-question-mark.svelte';
 	import MovableHoverBox from '$lib/components/ui/MovableHoverBox.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 

@@ -2,8 +2,8 @@
 	import { slide } from 'svelte/transition';
 	import type { Budget } from '$lib/types/finance';
 	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
-	import IconTrash from '@lucide/svelte/icons/trash-2';
-	import IconPen from '@lucide/svelte/icons/pen';
+	import IconTrash from '$lib/icons/lucide/trash.svelte';
+	import IconPen from '$lib/icons/lucide/pen.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getFinances } from '$lib/state/Finances.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';

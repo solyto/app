@@ -13,7 +13,7 @@
 	import { onDestroy, tick } from 'svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
-	import IconGripVertical from '@lucide/svelte/icons/grip-vertical';
+	import IconGripVertical from '$lib/icons/lucide/grip-vertical.svelte';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();

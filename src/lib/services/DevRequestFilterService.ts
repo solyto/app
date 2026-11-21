@@ -4,7 +4,8 @@ const STATUSES: Record<Exclude<DevRequestFilter, 'all'>, DevRequestStatus[]> = {
 	'backlog': ['backlog'],
 	'open': ['backlog', 'pending'],
 	'in-progress': ['in-progress'],
-	'waiting-for-deployment': ['waiting-for-deployment']
+	'waiting-for-deployment': ['waiting-for-deployment'],
+	'waiting-for-user': ['waiting-for-user']
 };
 
 export default class DevRequestFilterService {

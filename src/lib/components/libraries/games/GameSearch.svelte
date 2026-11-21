@@ -4,7 +4,7 @@
 	import type { Translation } from '$lib/state/Translation.svelte';
 	import type { GameRelease, GameSearchResult } from '$lib/types/library_game';
 	import SteamIcon from '$lib/assets/services/steam_icon.svg';
-	import Dices from '@lucide/svelte/icons/dices';
+	import Dices from '$lib/icons/lucide/dices.svelte';
 
 	let { library, ts, showBgg, onSelect }: {
 		library: GameLibrary;

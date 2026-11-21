@@ -3,9 +3,9 @@
 	import { fade } from 'svelte/transition';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { urls } from '$lib/config/urls';
-	import IconLayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
-	import IconPiggyBank from '@lucide/svelte/icons/piggy-bank';
-	import IconHandCoins from '@lucide/svelte/icons/hand-coins';
+	import IconLayoutDashboard from '$lib/icons/lucide/layout-dashboard.svelte';
+	import IconPiggyBank from '$lib/icons/lucide/piggy-bank.svelte';
+	import IconHandCoins from '$lib/icons/lucide/hand-coins.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';

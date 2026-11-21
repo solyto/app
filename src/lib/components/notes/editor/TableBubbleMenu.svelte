@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { Editor } from '@tiptap/core';
-	import TableRowInsertBefore from '@lucide/svelte/icons/panel-top-dashed';
-	import TableRowInsertAfter from '@lucide/svelte/icons/panel-bottom-dashed';
-	import TableColInsertBefore from '@lucide/svelte/icons/panel-left-dashed';
-	import TableColInsertAfter from '@lucide/svelte/icons/panel-right-dashed';
-	import TableIcon from '@lucide/svelte/icons/table';
-	import Trash from '@lucide/svelte/icons/trash-2';
+	import TableRowInsertBefore from '$lib/icons/lucide/panel-top-dashed.svelte';
+	import TableRowInsertAfter from '$lib/icons/lucide/panel-bottom-dashed.svelte';
+	import TableColInsertBefore from '$lib/icons/lucide/panel-left-dashed.svelte';
+	import TableColInsertAfter from '$lib/icons/lucide/panel-right-dashed.svelte';
+	import TableIcon from '$lib/icons/lucide/table.svelte';
+	import Trash from '$lib/icons/lucide/trash.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	const ts = getTranslation();

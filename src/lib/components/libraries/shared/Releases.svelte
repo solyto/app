@@ -3,7 +3,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconButton from '$lib/components/ui/buttons/IconButton.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
-	import IconNewspaper from '@lucide/svelte/icons/newspaper';
+	import IconNewspaper from '$lib/icons/lucide/newspaper.svelte';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import type { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';

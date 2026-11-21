@@ -1,7 +1,8 @@
 <script lang="ts">
 	import ColorPicker from 'svelte-awesome-color-picker';
-	import IconEye from '@lucide/svelte/icons/eye';
-	import IconEyeOff from '@lucide/svelte/icons/eye-off';
+	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
+	import IconEye from '$lib/icons/lucide/eye.svelte';
+	import IconEyeOff from '$lib/icons/lucide/eye-off.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
@@ -36,6 +37,8 @@
 <div class="flex items-center gap-4">
 	<div use:clickOutside={onColorChange}>
 		<ColorPicker
+			components={{ input: ColorPickerInput }}
+			isAlpha={false}
 			bind:hex
 			position="responsive"
 			nullable={false}

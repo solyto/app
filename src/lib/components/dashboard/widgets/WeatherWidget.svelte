@@ -6,8 +6,8 @@
 	import { Translation } from '$lib/state/Translation.svelte';
 	import WeatherCodeImage from '$lib/components/weather/WeatherCodeImage.svelte';
 	import ManageWeatherCity from '$lib/components/weather/ManageWeatherCity.svelte';
-	import IconMapPin from '@lucide/svelte/icons/map-pin';
-	import IconPen from '@lucide/svelte/icons/pen';
+	import IconMapPin from '$lib/icons/lucide/map-pin.svelte';
+	import IconPen from '$lib/icons/lucide/pen.svelte';
 
 	const weather = getWeather();
 
