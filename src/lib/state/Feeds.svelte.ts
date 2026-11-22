@@ -13,10 +13,12 @@ import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
+import type { ListResponse } from '$lib/types/api';
+import type { CreateLinkRequest, Link } from '$lib/types/library_link';
 
 export class Feeds {
 	static readonly LS_VIEW_KEY: string = 'feeds_entry_size';
-	static readonly LS_IN_LIBRARY_KEY: string = 'feeds_in_library';
+	static readonly LS_LEGACY_IN_LIBRARY_KEY: string = 'feeds_in_library';
 	static readonly ITEMS_PER_PAGE = 50;
 
 	loaded = $state<boolean>(false);
@@ -31,7 +33,6 @@ export class Feeds {
 	modalOpen = $state<boolean>(false);
 	browseOpen = $state<boolean>(false);
 	view = $state<FeedEntrySize>('compact');
-	inLibrary = $state<string[]>([]);
 	private generation = 0;
 	auth: Auth;
 	apiService: ApiService;
@@ -46,6 +47,8 @@ export class Feeds {
 		this.apiService = apiService;
 		this.localStorage = localStorage;
 		this.loadView();
+		// The saved flags now come from the API; drop the old per-browser copy.
+		this.localStorage.destroy(Feeds.LS_LEGACY_IN_LIBRARY_KEY);
 	}
 
 	loadView(): void {
@@ -62,17 +65,23 @@ export class Feeds {
 	}
 
 	async load(): Promise<void> {
-		const res = await this.apiService.list(apiRoutes.feeds.list);
+		const generation = ++this.generation;
+		this.loadingMore = true;
 
-		if (res) {
-			this.feeds = res.data as FeedSubscription[];
-			this.resetItems();
+		const [feedsRes, itemsRes] = await Promise.all([
+			this.apiService.list(apiRoutes.feeds.list),
+			this.apiService.list(this.itemsUrl(0))
+		]);
 
-			await this.loadMore();
+		if (generation !== this.generation) return;
+		this.loadingMore = false;
+		if (!feedsRes) return;
 
-			this.loaded = true;
-			this.loadInLibrary();
-		}
+		this.feeds = feedsRes.data as FeedSubscription[];
+		this.resetItems();
+		if (itemsRes) this.appendItems(itemsRes);
+		this.filter();
+		this.loaded = true;
 	}
 
 	async loadMore(): Promise<void> {
@@ -80,25 +89,29 @@ export class Feeds {
 		const generation = this.generation;
 		this.loadingMore = true;
 
-		const feedFilter = this.activeFeed
-			? `&feed_id=${encodeURIComponent(this.activeFeed.feed_id)}`
-			: '';
-		const res = await this.apiService.list(
-			`${apiRoutes.feeds.listItems}?offset=${this.offset}&limit=${Feeds.ITEMS_PER_PAGE}${feedFilter}`
-		);
+		const res = await this.apiService.list(this.itemsUrl(this.offset));
 
 		if (generation !== this.generation) return;
 
-		if (res) {
-			const newItems = res.data as FeedItem[];
-			this.items = [...this.items, ...newItems];
-			this.offset += newItems.length;
-			this.hasMore = (res.meta?.has_more as boolean) ?? false;
-			this.feedCounts = (res.meta?.feed_counts as Record<string, number>) ?? this.feedCounts;
-		}
+		if (res) this.appendItems(res);
 
 		this.loadingMore = false;
 		this.filter();
+	}
+
+	private itemsUrl(offset: number): string {
+		const feedFilter = this.activeFeed
+			? `&feed_id=${encodeURIComponent(this.activeFeed.feed_id)}`
+			: '';
+		return `${apiRoutes.feeds.listItems}?offset=${offset}&limit=${Feeds.ITEMS_PER_PAGE}${feedFilter}`;
+	}
+
+	private appendItems(res: ListResponse): void {
+		const newItems = res.data as FeedItem[];
+		this.items = [...this.items, ...newItems];
+		this.offset += newItems.length;
+		this.hasMore = (res.meta?.has_more as boolean) ?? false;
+		this.feedCounts = (res.meta?.feed_counts as Record<string, number>) ?? this.feedCounts;
 	}
 
 	filter(): void {
@@ -124,32 +137,35 @@ export class Feeds {
 		return this.feeds.find((feed) => feed.feed_id === feedId)?.title ?? '';
 	}
 
-	saveToLibrary(feed: FeedItem): void {
-		if (this.inLibrary.includes(feed.id)) {
-			this.inLibrary = this.inLibrary.filter((id) => id !== feed.id);
-		} else {
-			this.inLibrary.push(feed.id);
-		}
+	async saveToLibrary(item: FeedItem): Promise<boolean> {
+		const request: CreateLinkRequest = {
+			title: item.title,
+			url: item.link,
+			category_id: null
+		};
+		const res = await this.apiService.create(apiRoutes.libraries.links.create, request);
+		if (!res) return false;
 
-		this.storeInLibrary();
+		this.setSavedLinkId(item.id, (res.data as Link).id);
+		return true;
 	}
 
-	unsaveToLibrary(feed: FeedItem): void {
-		this.inLibrary = this.inLibrary.filter((id) => id !== feed.id);
-		this.storeInLibrary();
+	// 404 and 403 mean the link is already gone from this user's library.
+	async unsaveFromLibrary(item: FeedItem): Promise<boolean> {
+		if (!item.saved_link_id) return false;
+
+		const res = await this.apiService.deleteWithStatus(
+			apiRoutes.libraries.links.delete.replace('%s', item.saved_link_id)
+		);
+		if (!res.ok && res.status !== 404 && res.status !== 403) return false;
+
+		this.setSavedLinkId(item.id, null);
+		return true;
 	}
 
-	loadInLibrary(): void {
-		const stored = this.localStorage.get(Feeds.LS_IN_LIBRARY_KEY);
-		this.inLibrary = stored ? stored.split(',') : [];
-	}
-
-	isInLibrary(feedId: string): boolean {
-		return this.inLibrary.includes(feedId);
-	}
-
-	storeInLibrary(): void {
-		this.localStorage.set(Feeds.LS_IN_LIBRARY_KEY, this.inLibrary.join(','));
+	private setSavedLinkId(itemId: string, linkId: string | null): void {
+		const target = this.items.find((entry) => entry.id === itemId);
+		if (target) target.saved_link_id = linkId;
 	}
 
 	async create(request: CreateFeedSubscriptionRequest): Promise<boolean> {
@@ -175,7 +191,8 @@ export class Feeds {
 	async delete(feed: FeedSubscription): Promise<boolean> {
 		const res = await this.apiService.delete(apiRoutes.feeds.delete, feed.id);
 		if (res) {
-			this.selectFeed(null);
+			this.activeFeed = null;
+			this.resetItems();
 			await this.load();
 			return Promise.resolve(true);
 		}

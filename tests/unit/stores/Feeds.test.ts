@@ -26,6 +26,7 @@ function item(overrides: Partial<FeedItem> = {}): FeedItem {
 		feed_id: 'feed-1',
 		link: 'https://example.com/item-1',
 		published_at: '2026-08-01T10:00:00Z',
+		saved_link_id: null,
 		...overrides
 	};
 }
@@ -194,12 +195,11 @@ describe('Feeds store', () => {
 	});
 
 	describe('load', () => {
-		it('loads subscriptions, resets pagination and loads the library flags', async () => {
+		it('loads subscriptions and resets pagination', async () => {
 			api.list.mockResolvedValueOnce({ data: [feed()] }).mockResolvedValueOnce({
 				data: [item()],
 				meta: { has_more: false }
 			});
-			storage.get.mockReturnValue('sub-1');
 
 			const s = new Feeds();
 			await s.load();
@@ -207,7 +207,37 @@ describe('Feeds store', () => {
 			expect(s.loaded).toBe(true);
 			expect(s.feeds).toHaveLength(1);
 			expect(s.items).toHaveLength(1);
-			expect(s.inLibrary).toEqual(['sub-1']);
+		});
+
+		it('requests subscriptions and items before either resolves', async () => {
+			let resolveFeeds: (value: unknown) => void = () => {};
+			api.list
+				.mockReturnValueOnce(new Promise((resolve) => (resolveFeeds = resolve)))
+				.mockResolvedValueOnce({ data: [item()], meta: { has_more: false } });
+
+			const s = new Feeds();
+			const loading = s.load();
+
+			expect(api.list).toHaveBeenCalledTimes(2);
+			expect(api.list).toHaveBeenNthCalledWith(2, expect.stringContaining('offset=0'));
+
+			resolveFeeds({ data: [feed()] });
+			await loading;
+			expect(s.items).toHaveLength(1);
+		});
+
+		it('keeps the current items when the subscriptions request fails', async () => {
+			api.list.mockResolvedValueOnce(null).mockResolvedValueOnce({
+				data: [item({ id: 'new' })],
+				meta: { has_more: false }
+			});
+
+			const s = new Feeds();
+			s.items = [item({ id: 'old' })];
+			await s.load();
+
+			expect(s.items.map((i) => i.id)).toEqual(['old']);
+			expect(s.loadingMore).toBe(false);
 		});
 
 		it('leaves the store unloaded when the subscriptions request fails', async () => {
@@ -221,36 +251,85 @@ describe('Feeds store', () => {
 		});
 	});
 
-	describe('library flags', () => {
-		it('getFeedCount falls back to zero', () => {
+	describe('getFeedCount', () => {
+		it('falls back to zero', () => {
 			const s = new Feeds();
 			s.feedCounts = { 'feed-2': 2 };
 			expect(s.getFeedCount(feed())).toBe(0);
 		});
+	});
 
-		it('saveToLibrary toggles membership and persists', () => {
+	describe('saved links', () => {
+		function storeWith(entry: FeedItem): Feeds {
 			const s = new Feeds();
-			s.saveToLibrary(item({ id: 'sub-1' }));
-			expect(s.isInLibrary('sub-1')).toBe(true);
-			expect(storage.set).toHaveBeenCalledWith(Feeds.LS_IN_LIBRARY_KEY, 'sub-1');
+			s.items = [entry];
+			s.filter();
+			return s;
+		}
 
-			s.saveToLibrary(item({ id: 'sub-1' }));
-			expect(s.isInLibrary('sub-1')).toBe(false);
-			expect(storage.set).toHaveBeenCalledWith(Feeds.LS_IN_LIBRARY_KEY, '');
+		it('drops the legacy localStorage flags on construction', () => {
+			new Feeds();
+			expect(storage.destroy).toHaveBeenCalledWith(Feeds.LS_LEGACY_IN_LIBRARY_KEY);
 		});
 
-		it('unsaveToLibrary removes the id', () => {
-			const s = new Feeds();
-			s.inLibrary = ['sub-1', 'sub-2'];
-			s.unsaveToLibrary(item({ id: 'sub-1' }));
-			expect(s.inLibrary).toEqual(['sub-2']);
+		it('saveToLibrary creates the link once, keeps its id and does not reload', async () => {
+			api.create.mockResolvedValue({ data: { id: 'link-1' } });
+			const s = storeWith(item());
+
+			await expect(s.saveToLibrary(s.items[0])).resolves.toBe(true);
+
+			expect(api.create).toHaveBeenCalledTimes(1);
+			expect(api.create).toHaveBeenCalledWith(expect.stringContaining('/libraries/links'), {
+				title: 'An item',
+				url: 'https://example.com/item-1',
+				category_id: null
+			});
+			expect(api.list).not.toHaveBeenCalled();
+			expect(s.items[0].saved_link_id).toBe('link-1');
+			expect(s.filteredItems[0].saved_link_id).toBe('link-1');
 		});
 
-		it('loadInLibrary splits the stored csv', () => {
-			storage.get.mockReturnValue('sub-1,sub-2');
-			const s = new Feeds();
-			s.loadInLibrary();
-			expect(s.inLibrary).toEqual(['sub-1', 'sub-2']);
+		it('saveToLibrary leaves the item unsaved when the create fails', async () => {
+			api.create.mockResolvedValue(null);
+			const s = storeWith(item());
+
+			await expect(s.saveToLibrary(s.items[0])).resolves.toBe(false);
+			expect(s.items[0].saved_link_id).toBeNull();
+		});
+
+		it('unsaveFromLibrary deletes the stored link id and does not reload', async () => {
+			api.deleteWithStatus.mockResolvedValue({ ok: true, status: 204, errors: [] });
+			const s = storeWith(item({ saved_link_id: 'link-1' }));
+
+			await expect(s.unsaveFromLibrary(s.items[0])).resolves.toBe(true);
+
+			expect(api.deleteWithStatus).toHaveBeenCalledWith(expect.stringMatching(/\/libraries\/links\/link-1$/));
+			expect(api.list).not.toHaveBeenCalled();
+			expect(s.items[0].saved_link_id).toBeNull();
+			expect(s.filteredItems[0].saved_link_id).toBeNull();
+		});
+
+		it.each([404, 403])('unsaveFromLibrary treats %d as already gone', async (status) => {
+			api.deleteWithStatus.mockResolvedValue({ ok: false, status, errors: [] });
+			const s = storeWith(item({ saved_link_id: 'link-1' }));
+
+			await expect(s.unsaveFromLibrary(s.items[0])).resolves.toBe(true);
+			expect(s.items[0].saved_link_id).toBeNull();
+		});
+
+		it('unsaveFromLibrary keeps the link id when the delete fails otherwise', async () => {
+			api.deleteWithStatus.mockResolvedValue({ ok: false, status: 500, errors: [] });
+			const s = storeWith(item({ saved_link_id: 'link-1' }));
+
+			await expect(s.unsaveFromLibrary(s.items[0])).resolves.toBe(false);
+			expect(s.items[0].saved_link_id).toBe('link-1');
+		});
+
+		it('unsaveFromLibrary does nothing for an unsaved item', async () => {
+			const s = storeWith(item());
+
+			await expect(s.unsaveFromLibrary(s.items[0])).resolves.toBe(false);
+			expect(api.deleteWithStatus).not.toHaveBeenCalled();
 		});
 	});
 
@@ -305,6 +384,24 @@ describe('Feeds store', () => {
 			api.list.mockResolvedValue(null);
 			const s = new Feeds();
 			await expect(s.loadFriendFeeds()).resolves.toEqual([]);
+		});
+	});
+
+	describe('delete', () => {
+		it('clears the active feed and reloads with a single items request', async () => {
+			api.delete.mockResolvedValue(true);
+			api.list.mockResolvedValueOnce({ data: [] }).mockResolvedValueOnce({
+				data: [item()],
+				meta: { has_more: false }
+			});
+
+			const s = new Feeds();
+			s.activeFeed = feed();
+			await expect(s.delete(feed())).resolves.toBe(true);
+
+			expect(s.activeFeed).toBeNull();
+			expect(api.list).toHaveBeenCalledTimes(2);
+			expect(api.list).toHaveBeenNthCalledWith(2, expect.stringMatching(/offset=0&limit=50$/));
 		});
 	});
 

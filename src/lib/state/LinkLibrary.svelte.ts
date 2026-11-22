@@ -184,12 +184,6 @@ export class LinkLibrary {
 		return res;
 	}
 
-	async deleteByLink(link: string): Promise<boolean> {
-		const entry = this.entries.find((entry) => entry.url === link);
-		if (entry) return await this.delete(entry);
-		return Promise.resolve(false);
-	}
-
 	async createCategory(title: string, color?: string): Promise<boolean> {
 		const res = await this.apiService.create(apiRoutes.libraries.links.createCategory, {
 			title,
