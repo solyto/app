@@ -650,6 +650,7 @@ const notes: NoteRecords = {
 	note_not_found: 'Заметка не найдена.',
 	no_search_results: 'Заметки не найдены.',
 	search_shortcut_hint: 'Поиск по заметкам (Ctrl+K)',
+	search_placeholder: 'Поиск по заметкам',
 	insert_image: 'Вставить изображение',
 	insert_image_url: 'URL',
 	insert_image_clipboard: 'Буфер обмена',

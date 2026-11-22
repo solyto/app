@@ -6,7 +6,7 @@ import type {
 	UpdateNoteCategoryRequest,
 	UpdateNoteRequest
 } from '$lib/types/note';
-import { setContext, getContext, tick } from 'svelte';
+import { setContext, getContext, tick, flushSync } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import { getTranslation, type Translation } from '$lib/state/Translation.svelte';
 import { getUiNotifications, type UiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -187,16 +187,18 @@ export class NotesSvelte {
 	}
 
 	getCategoryTitle(categoryId: number): string {
-		for (const cat of this.categories) {
-			if (cat.id === categoryId) return cat.title;
-			if (cat.children) {
-				for (const child of cat.children) {
-					if (child.id === categoryId) return child.title;
-				}
-			}
+		return this.findCategory(this.categories, categoryId)?.title ?? '-';
+	}
+
+	private findCategory(categories: NoteCategory[], categoryId: number): NoteCategory | null {
+		for (const cat of categories) {
+			if (cat.id === categoryId) return cat;
+
+			const child = this.findCategory(cat.children, categoryId);
+			if (child !== null) return child;
 		}
 
-		return '-';
+		return null;
 	}
 
 	getLastUpdatedNotes(): Note[] {
@@ -219,8 +221,10 @@ export class NotesSvelte {
 		if (this.activeNote !== null && localContent !== null) this.activeNote.content = localContent;
 	}
 
+	// Mounts NoteSearch synchronously so it focuses inside the tap; iOS only opens the keyboard then.
 	openSearch(): void {
 		this.searchVisible = true;
+		flushSync();
 	}
 
 	closeSearch(): void {

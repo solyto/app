@@ -150,6 +150,14 @@ describe('Notes store', () => {
 			expect(n.getCategoryTitle(5)).toBe('Projects');
 		});
 
+		it('getCategoryTitle resolves deeply nested categories', () => {
+			const n = new NotesSvelte();
+			const archive = category(9, 'Archive');
+			const projects = category(5, 'Projects', { children: [archive] });
+			n.categories = [category(1, 'Work', { children: [projects] })];
+			expect(n.getCategoryTitle(9)).toBe('Archive');
+		});
+
 		it('getCategoryTitle returns a dash for unknown categories', () => {
 			const n = new NotesSvelte();
 			n.categories = [category(1, 'Work')];

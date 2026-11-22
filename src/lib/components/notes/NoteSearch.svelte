@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import IconCircleX from '$lib/icons/lucide/circle-x.svelte';
-	import { onDestroy, onMount, tick } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { getNotes } from '$lib/state/Notes.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -21,18 +21,15 @@
 	};
 
 	onMount(() => {
-		setTimeout(async () => {
-			if (searchInput === null) return;
-
-			inputExpanded = true;
-			await tick();
-			searchInput?.focus();
-			registerKeys();
-		}, 50);
+		searchInput?.focus();
+		setTimeout(() => (inputExpanded = true), 50);
 	});
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));
 
+	// Registered on focus, not on mount: if focus never lands, the arrow keys must stay free for the caret.
 	function registerKeys(): void {
+		if (keyHandlers.Escape !== null) return;
+
 		keyHandlers.Escape = keyManager.registerKeyDown('Escape', handleEscape, { priority: 0 });
 		keyHandlers.ArrowUp = keyManager.registerKeyDown('ArrowUp', selectPrevious, { priority: 0 });
 		keyHandlers.ArrowDown = keyManager.registerKeyDown('ArrowDown', selectNext, { priority: 0 });
@@ -93,9 +90,12 @@
 				class:w-72={inputExpanded}
 				class:md:w-96={inputExpanded}
 				class:rounded-b-none={hasTerm()}
+				placeholder={ts.get.notes.search_placeholder}
+				aria-label={ts.get.notes.search_placeholder}
 				in:fade
 				bind:this={searchInput}
 				bind:value={notes.searchTerm}
+				onfocus={registerKeys}
 				{oninput}
 			/>
 			<button

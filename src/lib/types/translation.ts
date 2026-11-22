@@ -529,6 +529,7 @@ export interface NoteRecords {
 	note_not_found: string;
 	no_search_results: string;
 	search_shortcut_hint: string;
+	search_placeholder: string;
 	insert_image: string;
 	insert_image_url: string;
 	insert_image_clipboard: string;

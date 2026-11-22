@@ -651,6 +651,7 @@ const notes: NoteRecords = {
 	note_not_found: 'Questa nota non esiste.',
 	no_search_results: 'Nessuna nota trovata.',
 	search_shortcut_hint: 'Cerca nelle note (Ctrl+K)',
+	search_placeholder: 'Cerca nelle note',
 	insert_image: 'Inserisci immagine',
 	insert_image_url: 'URL',
 	insert_image_clipboard: 'Appunti',

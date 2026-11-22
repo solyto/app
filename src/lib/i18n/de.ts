@@ -652,6 +652,7 @@ const notes: NoteRecords = {
 	note_not_found: 'Diese Notiz existiert nicht.',
 	no_search_results: 'Keine Notizen gefunden.',
 	search_shortcut_hint: 'Notizen durchsuchen (Strg+K)',
+	search_placeholder: 'Notizen durchsuchen',
 	insert_image: 'Bild einfügen',
 	insert_image_url: 'URL',
 	insert_image_clipboard: 'Zwischenablage',
