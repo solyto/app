@@ -29,7 +29,7 @@
 	}
 
 	function remove(): void {
-		externalCalendars.removal = account;
+		externalCalendars.askToRemove(account);
 	}
 </script>
 

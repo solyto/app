@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import RecurrenceRuleService from '$lib/services/RecurrenceRuleService';
-import type { RecurrenceSelection } from '$lib/services/RecurrenceRuleService';
+import type { EndFormat, RecurrenceSelection } from '$lib/services/RecurrenceRuleService';
 
 const service = new RecurrenceRuleService();
 
@@ -21,10 +21,18 @@ function selection(overrides: Partial<RecurrenceSelection> = {}): RecurrenceSele
 	};
 }
 
+function timed(timeZone: string = 'UTC'): EndFormat {
+	return { isAllDay: false, wasAllDay: false, timeZone };
+}
+
+function allDay(timeZone: string = 'UTC'): EndFormat {
+	return { isAllDay: true, wasAllDay: true, timeZone };
+}
+
 function roundTrip(rule: string, startDate: Date = wednesday10th): string {
 	const parsed = service.parse(rule, startDate, 'UTC');
 	expect(parsed).not.toBeNull();
-	return service.build(parsed!, startDate, false, 'UTC');
+	return service.build(parsed!, startDate, timed());
 }
 
 describe('RecurrenceRuleService', () => {
@@ -116,32 +124,32 @@ describe('RecurrenceRuleService', () => {
 
 	describe('build', () => {
 		it('falls back to the start weekday when no weekday is chosen', () => {
-			expect(service.build(selection({ type: 'weekly' }), wednesday10th, false, 'UTC')).toBe(
+			expect(service.build(selection({ type: 'weekly' }), wednesday10th, timed())).toBe(
 				'FREQ=WEEKLY;BYDAY=WE'
 			);
 		});
 
 		it('writes weekdays in MO to SU order regardless of selection order', () => {
 			expect(
-				service.build(selection({ type: 'weekly', weekdays: ['SU', 'MO', 'TH'] }), wednesday10th, false, 'UTC')
+				service.build(selection({ type: 'weekly', weekdays: ['SU', 'MO', 'TH'] }), wednesday10th, timed())
 			).toBe('FREQ=WEEKLY;BYDAY=MO,TH,SU');
 		});
 
 		it('derives the month day from the start date', () => {
-			expect(service.build(selection({ type: 'monthly_date' }), saturday31st, false, 'UTC')).toBe(
+			expect(service.build(selection({ type: 'monthly_date' }), saturday31st, timed())).toBe(
 				'FREQ=MONTHLY;BYMONTHDAY=31'
 			);
 		});
 
 		it('derives month and day from the start date for yearly rules', () => {
-			expect(service.build(selection({ type: 'yearly' }), saturday31st, false, 'UTC')).toBe(
+			expect(service.build(selection({ type: 'yearly' }), saturday31st, timed())).toBe(
 				'FREQ=YEARLY;BYMONTH=10;BYMONTHDAY=31'
 			);
 		});
 
 		it('keeps preserved fields when the type changes', () => {
 			const parsed = service.parse('FREQ=WEEKLY;BYDAY=MO;INTERVAL=2', wednesday10th, 'UTC')!;
-			expect(service.build({ ...parsed, type: 'daily' }, wednesday10th, false, 'UTC')).toBe(
+			expect(service.build({ ...parsed, type: 'daily' }, wednesday10th, timed())).toBe(
 				'FREQ=DAILY;INTERVAL=2'
 			);
 		});
@@ -186,7 +194,7 @@ describe('RecurrenceRuleService', () => {
 		const until = (date: string) => selection({ end: 'until', until: date });
 
 		it('writes a DATE for all-day events', () => {
-			expect(service.build(until('2027-12-31'), wednesday10th, true, 'Europe/Berlin')).toBe(
+			expect(service.build(until('2027-12-31'), wednesday10th, allDay('Europe/Berlin'))).toBe(
 				'FREQ=DAILY;UNTIL=20271231'
 			);
 		});
@@ -200,7 +208,7 @@ describe('RecurrenceRuleService', () => {
 			['Pacific/Kiritimati', '2027-12-31', '20271231T095959Z'],
 			['UTC', '2027-12-31', '20271231T235959Z']
 		])('ends timed events in %s at the end of %s, as UTC %s', (timeZone, date, utc) => {
-			expect(service.build(until(date), wednesday10th, false, timeZone)).toBe(
+			expect(service.build(until(date), wednesday10th, timed(timeZone))).toBe(
 				'FREQ=DAILY;UNTIL=' + utc
 			);
 		});
@@ -208,7 +216,7 @@ describe('RecurrenceRuleService', () => {
 		it('keeps an unchanged UNTIL verbatim and in place', () => {
 			const rule = 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20271231T120000Z;INTERVAL=2';
 			const parsed = service.parse(rule, wednesday10th, 'Europe/Berlin')!;
-			expect(service.build(parsed, wednesday10th, false, 'Europe/Berlin')).toBe(rule);
+			expect(service.build(parsed, wednesday10th, timed('Europe/Berlin'))).toBe(rule);
 		});
 
 		it('replaces a changed UNTIL in place', () => {
@@ -217,28 +225,25 @@ describe('RecurrenceRuleService', () => {
 				wednesday10th,
 				'UTC'
 			)!;
-			expect(service.build({ ...parsed, until: '2028-06-30' }, wednesday10th, false, 'UTC')).toBe(
+			expect(service.build({ ...parsed, until: '2028-06-30' }, wednesday10th, timed())).toBe(
 				'FREQ=WEEKLY;BYDAY=TU;UNTIL=20280630T235959Z;INTERVAL=2'
 			);
 		});
 
 		it('rewrites a DATE UNTIL as UTC when the event stops being all-day', () => {
 			const parsed = service.parse('FREQ=DAILY;UNTIL=20271231', wednesday10th, 'Europe/Berlin')!;
-			expect(service.build(parsed, wednesday10th, false, 'Europe/Berlin', true)).toBe(
+			expect(service.build(parsed, wednesday10th, { isAllDay: false, wasAllDay: true, timeZone: 'Europe/Berlin' })).toBe(
 				'FREQ=DAILY;UNTIL=20271231T225959Z'
 			);
 		});
 
 		it('rewrites a UTC UNTIL as a DATE when the event becomes all-day', () => {
 			const parsed = service.parse('FREQ=DAILY;UNTIL=20271231T225959Z', wednesday10th, 'Europe/Berlin')!;
-			expect(service.build(parsed, wednesday10th, true, 'Europe/Berlin', false)).toBe(
+			expect(service.build(parsed, wednesday10th, { isAllDay: true, wasAllDay: false, timeZone: 'Europe/Berlin' })).toBe(
 				'FREQ=DAILY;UNTIL=20271231'
 			);
 		});
 
-		// Other apps write the end of an all-day series as UTC midnight of the last day, or as the end of the
-		// last local day in UTC. Reading it in the user's timezone can land on a neighbouring day, so an end the
-		// user didn't touch is written back as it was: rewriting it would drop or add an occurrence.
 		it.each([
 			['FREQ=DAILY;UNTIL=20271231T000000Z', 'America/New_York'],
 			['FREQ=DAILY;UNTIL=20280101T045959Z', 'America/New_York'],
@@ -246,32 +251,32 @@ describe('RecurrenceRuleService', () => {
 			['FREQ=DAILY;UNTIL=20271231T225959Z', 'Europe/Berlin']
 		])('keeps the untouched end %s of an all-day series in %s as it was', (rule, timeZone) => {
 			const parsed = service.parse(rule, wednesday10th, timeZone)!;
-			expect(service.build(parsed, wednesday10th, true, timeZone, true)).toBe(rule);
+			expect(service.build(parsed, wednesday10th, allDay(timeZone))).toBe(rule);
 		});
 
 		it('writes a changed end of an all-day series as a DATE', () => {
 			const parsed = service.parse('FREQ=DAILY;UNTIL=20271231T000000Z', wednesday10th, 'America/New_York')!;
-			expect(service.build({ ...parsed, until: '2028-03-31' }, wednesday10th, true, 'America/New_York', true)).toBe(
+			expect(service.build({ ...parsed, until: '2028-03-31' }, wednesday10th, allDay('America/New_York'))).toBe(
 				'FREQ=DAILY;UNTIL=20280331'
 			);
 		});
 
 		it('keeps an untouched DATE end of a timed series as it was', () => {
 			const parsed = service.parse('FREQ=DAILY;UNTIL=20271231', wednesday10th, 'Europe/Berlin')!;
-			expect(service.build(parsed, wednesday10th, false, 'Europe/Berlin', false)).toBe('FREQ=DAILY;UNTIL=20271231');
+			expect(service.build(parsed, wednesday10th, timed('Europe/Berlin'))).toBe('FREQ=DAILY;UNTIL=20271231');
 		});
 
 		it('appends a new UNTIL after the preserved fields', () => {
 			const parsed = service.parse('FREQ=DAILY;INTERVAL=2', wednesday10th, 'UTC')!;
 			expect(
-				service.build({ ...parsed, end: 'until', until: '2027-12-31' }, wednesday10th, true, 'UTC')
+				service.build({ ...parsed, end: 'until', until: '2027-12-31' }, wednesday10th, allDay())
 			).toBe('FREQ=DAILY;INTERVAL=2;UNTIL=20271231');
 		});
 
 		it('replaces COUNT with UNTIL in place', () => {
 			const parsed = service.parse('FREQ=DAILY;COUNT=10;INTERVAL=2', wednesday10th, 'UTC')!;
 			expect(
-				service.build({ ...parsed, end: 'until', until: '2027-12-31' }, wednesday10th, true, 'UTC')
+				service.build({ ...parsed, end: 'until', until: '2027-12-31' }, wednesday10th, allDay())
 			).toBe('FREQ=DAILY;UNTIL=20271231;INTERVAL=2');
 		});
 
@@ -279,7 +284,7 @@ describe('RecurrenceRuleService', () => {
 			'removes the end of %s when set to never',
 			(rule) => {
 				const parsed = service.parse(rule, wednesday10th, 'UTC')!;
-				expect(service.build({ ...parsed, end: 'never' }, wednesday10th, false, 'UTC')).toBe(
+				expect(service.build({ ...parsed, end: 'never' }, wednesday10th, timed())).toBe(
 					'FREQ=DAILY;INTERVAL=2'
 				);
 			}
@@ -287,13 +292,13 @@ describe('RecurrenceRuleService', () => {
 
 		it('keeps the existing UNTIL when the chosen date is not a valid date', () => {
 			const parsed = service.parse('FREQ=DAILY;UNTIL=20271231T000000Z', wednesday10th, 'UTC')!;
-			expect(service.build({ ...parsed, until: '' }, wednesday10th, false, 'UTC')).toBe(
+			expect(service.build({ ...parsed, until: '' }, wednesday10th, timed())).toBe(
 				'FREQ=DAILY;UNTIL=20271231T000000Z'
 			);
 		});
 
 		it('writes no UNTIL when the chosen date is not a valid date and there was none', () => {
-			expect(service.build(until(''), wednesday10th, false, 'UTC')).toBe('FREQ=DAILY');
+			expect(service.build(until(''), wednesday10th, timed())).toBe('FREQ=DAILY');
 		});
 	});
 

@@ -21,6 +21,13 @@ export interface RecurrenceSelection {
 	preserved: string[];
 }
 
+export interface EndFormat {
+	isAllDay: boolean;
+	// All-day when the rule was read; only a switch changes the format of an untouched end.
+	wasAllDay: boolean;
+	timeZone: string;
+}
+
 interface RuleFields {
 	freq: string;
 	byDay: string | null;
@@ -36,6 +43,10 @@ const MODELLED_KEYS = ['FREQ', 'BYDAY', 'BYSETPOS', 'BYMONTHDAY', 'BYMONTH'];
 
 // UNTIL and COUNT stay in `preserved` so an untouched end is written back verbatim and in place.
 const END_KEYS = ['UNTIL', 'COUNT'];
+
+const READ_KEYS = [...MODELLED_KEYS, ...END_KEYS];
+
+const UNTIL_DATE_LENGTH = 'YYYYMMDD'.length;
 
 export default class RecurrenceRuleService {
 	parse(rule: string | null, startDate: Date, timeZone: string): RecurrenceSelection | null {
@@ -74,11 +85,10 @@ export default class RecurrenceRuleService {
 		}
 	}
 
-	// wasAllDay: whether the event was all-day when the rule was read; only a switch changes an untouched end's format.
-	build(selection: RecurrenceSelection, startDate: Date, isAllDay: boolean, timeZone: string, wasAllDay: boolean = isAllDay): string {
+	build(selection: RecurrenceSelection, startDate: Date, endFormat: EndFormat): string {
 		return [
 			...this.modelledParts(selection, startDate),
-			...this.preservedParts(selection, isAllDay, timeZone, wasAllDay)
+			...this.preservedParts(selection, endFormat)
 		].join(';');
 	}
 
@@ -133,13 +143,12 @@ export default class RecurrenceRuleService {
 			}
 
 			const key = part.slice(0, separator);
-			const isModelled = MODELLED_KEYS.includes(key);
 
-			if (!isModelled) {
+			if (!MODELLED_KEYS.includes(key)) {
 				preserved.push(part);
 			}
 
-			if (!isModelled && !END_KEYS.includes(key)) {
+			if (!READ_KEYS.includes(key)) {
 				continue;
 			}
 
@@ -320,9 +329,9 @@ export default class RecurrenceRuleService {
 		}
 	}
 
-	private preservedParts(selection: RecurrenceSelection, isAllDay: boolean, timeZone: string, wasAllDay: boolean): string[] {
+	private preservedParts(selection: RecurrenceSelection, endFormat: EndFormat): string[] {
 		const parts = selection.preserved.filter((part) => !this.isEndPart(part));
-		const endPart = this.endPart(selection, isAllDay, timeZone, wasAllDay);
+		const endPart = this.endPart(selection, endFormat);
 
 		if (endPart === null) {
 			return parts;
@@ -334,7 +343,7 @@ export default class RecurrenceRuleService {
 		return parts;
 	}
 
-	private endPart(selection: RecurrenceSelection, isAllDay: boolean, timeZone: string, wasAllDay: boolean): string | null {
+	private endPart(selection: RecurrenceSelection, endFormat: EndFormat): string | null {
 		const existing = selection.preserved.find((part) => this.isEndPart(part)) ?? null;
 
 		switch (selection.end) {
@@ -343,44 +352,36 @@ export default class RecurrenceRuleService {
 			case 'count':
 				return existing?.startsWith('COUNT=') ? existing : null;
 			case 'until':
-				return this.untilPart(selection.until, existing, isAllDay, timeZone, wasAllDay);
+				return this.untilPart(selection.until, existing, endFormat);
 		}
 	}
 
-	private untilPart(
-		until: string,
-		existing: string | null,
-		isAllDay: boolean,
-		timeZone: string,
-		wasAllDay: boolean
-	): string | null {
+	private untilPart(until: string, existing: string | null, endFormat: EndFormat): string | null {
 		const existingUntil = existing?.startsWith('UNTIL=') ? existing.slice('UNTIL='.length) : null;
 
 		if (!this.isDate(until)) {
 			return existingUntil === null ? null : existing;
 		}
 
-		if (existingUntil !== null && this.isUnchangedUntil(existingUntil, until, isAllDay, timeZone, wasAllDay)) {
+		if (existingUntil !== null && this.isUnchangedUntil(existingUntil, until, endFormat)) {
 			return existing;
 		}
 
-		if (isAllDay) {
+		if (endFormat.isAllDay) {
 			return 'UNTIL=' + until.replaceAll('-', '');
 		}
 
-		const endOfDay = floatingToUtc(`${until}T23:59:59`, timeZone);
+		const endOfDay = floatingToUtc(`${until}T23:59:59`, endFormat.timeZone);
 
 		return 'UNTIL=' + endOfDay.toISOString().replace(/[-:]|\.\d{3}/g, '');
 	}
 
-	// An end the user didn't touch is written back as it was. Other apps write an all-day series' end as UTC
-	// midnight or as the end of the local day in UTC, so reading it in a timezone can land on a neighbouring day,
-	// and rewriting it would drop or add an occurrence. Only switching all-day on or off rewrites it, because
-	// RFC 5545 wants a DATE for all-day events and UTC otherwise.
-	private isUnchangedUntil(existing: string, until: string, isAllDay: boolean, timeZone: string, wasAllDay: boolean): boolean {
-		const sameDate = this.untilDate(existing, timeZone) === until;
-		const allDaySwitched = isAllDay !== wasAllDay;
-		const formatFits = (existing.length === 8) === isAllDay;
+	// Other apps write an all-day end in UTC, which read in a timezone can land on a neighbouring day; rewriting
+	// it would drop or add an occurrence. RFC 5545 wants a DATE when all-day and UTC otherwise, so a switch rewrites.
+	private isUnchangedUntil(existing: string, until: string, endFormat: EndFormat): boolean {
+		const sameDate = this.untilDate(existing, endFormat.timeZone) === until;
+		const allDaySwitched = endFormat.isAllDay !== endFormat.wasAllDay;
+		const formatFits = (existing.length === UNTIL_DATE_LENGTH) === endFormat.isAllDay;
 
 		return sameDate && (formatFits || !allDaySwitched);
 	}

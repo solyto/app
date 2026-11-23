@@ -272,13 +272,6 @@ describe('getHoursOfDay', () => {
 		expect(hours[9]).toBe('09');
 		expect(hours[23]).toBe('23');
 	});
-
-	it('matches the array the calendar views used to build', () => {
-		const legacy = Array.from({ length: 24 }, (_, i) => i + 1).map((i) =>
-			(i - 1).toString().padStart(2, '0')
-		);
-		expect(getHoursOfDay()).toEqual(legacy);
-	});
 });
 
 describe('isOffHour', () => {

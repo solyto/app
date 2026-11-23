@@ -2,7 +2,7 @@
 	import { blur } from 'svelte/transition';
 	import { formatDate, formatTime } from '$lib/helpers/DateHelper';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
-	import { getCalendarEventKey, startsOnDate } from '$lib/helpers/CalendarEventHelper';
+	import { getCalendarEventKey, showsStartTimeOnDate } from '$lib/helpers/CalendarEventHelper';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import type { CalendarEvent } from '$lib/types/calendar';
@@ -16,10 +16,6 @@
 
 	function eventBackground(item: CalendarEvent): string {
 		return item.is_all_day ? getEventBackgroundColor(item.calendar_color) : '';
-	}
-
-	function showsStartTime(item: CalendarEvent): boolean {
-		return !item.is_all_day && startsOnDate(item, day);
 	}
 
 	async function openEvent(item: CalendarEvent): Promise<void> {
@@ -38,7 +34,7 @@
 			onclick={() => openEvent(item)}
 			transition:blur
 		>
-			{#if showsStartTime(item)}
+			{#if showsStartTimeOnDate(item, day)}
 				<span class="mr-2">{formatTime(item.start_date)}</span>
 			{/if}
 			<span class="text-left">{item.title}</span>

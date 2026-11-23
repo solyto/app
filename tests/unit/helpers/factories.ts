@@ -3,6 +3,7 @@ import type { DevRequest } from '$lib/types/dev_request';
 import type { Tag } from '$lib/types/tag';
 import type { CheckInTracker, CheckInValue } from '$lib/types/check_in';
 import type { Goal } from '$lib/types/goal';
+import type { Calendar, CalendarEvent, CalendarEventResponse } from '$lib/types/calendar';
 
 export function todo(overrides: Partial<Todo> = {}): Todo {
 	return {
@@ -92,6 +93,73 @@ export function goal(overrides: Partial<Goal> = {}): Goal {
 		target: 3,
 		notify_when_reached: false,
 		progress: { current: null, met: false, period_start: '', period_end: '', history: [] },
+		...overrides
+	};
+}
+
+export function calendar(overrides: Partial<Calendar> = {}): Calendar {
+	return {
+		id: 1,
+		name: 'Personal',
+		color: '#fff',
+		description: '',
+		timezone: 'UTC',
+		order: 0,
+		is_shared: false,
+		share_owner: null,
+		invite_status: null,
+		share_token: null,
+		is_external: false,
+		is_unavailable: false,
+		is_credentials_rejected: false,
+		...overrides
+	};
+}
+
+export function calendarEvent(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
+	return {
+		id: 1,
+		uri: 'event-1',
+		title: 'Event',
+		description: '',
+		location: '',
+		start_date: new Date(2026, 7, 10, 10, 0),
+		end_date: new Date(2026, 7, 10, 11, 0),
+		is_all_day: false,
+		is_recurring: false,
+		recurrence_rule: null,
+		recurrence_end: null,
+		original_start_date: null,
+		created_at: null,
+		updated_at: null,
+		calendar_id: 1,
+		calendar_name: 'Personal',
+		calendar_color: '#fff',
+		etag: '',
+		...overrides
+	};
+}
+
+export function calendarEventResponse(overrides: Partial<CalendarEventResponse> = {}): CalendarEventResponse {
+	return {
+		id: 1,
+		uri: 'event-1',
+		title: 'Event',
+		description: '',
+		location: '',
+		start_date: '2026-08-10T10:00:00Z',
+		end_date: '2026-08-10T11:00:00Z',
+		is_all_day: false,
+		is_recurring: false,
+		recurrence_rule: null,
+		recurrence_end: null,
+		original_start_date: null,
+		created_at: null,
+		updated_at: null,
+		calendar_id: 1,
+		calendar_name: 'Personal',
+		calendar_color: '#fff',
+		etag: '',
 		...overrides
 	};
 }

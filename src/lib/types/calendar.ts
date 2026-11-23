@@ -16,6 +16,8 @@ export interface Calendar {
 	is_credentials_rejected: boolean;
 }
 
+export type CalendarStatus = 'credentials_rejected' | 'unavailable' | 'external' | 'shared';
+
 export interface ShareCalendarRequest {
 	friend_id: string;
 }

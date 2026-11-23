@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, screen } from '@testing-library/svelte';
 import type { Calendars } from '$lib/state/Calendars.svelte';
-import type { CalendarEvent } from '$lib/types/calendar';
 import { formatTime } from '$lib/helpers/DateHelper';
 import { renderWithContext } from './helpers/context';
 import ListDayHarness from './helpers/ListDayHarness.svelte';
+import { calendarEvent } from '../unit/helpers/factories';
 
 // jsdom can't parse color-mix(), the real tint; a plain colour makes the tint visible to the test.
 vi.mock('$lib/helpers/ColorHelper', async (importOriginal) => ({
@@ -14,32 +14,8 @@ vi.mock('$lib/helpers/ColorHelper', async (importOriginal) => ({
 
 const day = new Date(2026, 10, 20);
 
-function event(overrides: Partial<CalendarEvent>): CalendarEvent {
-	return {
-		id: 1,
-		uri: 'event-1',
-		title: 'Event',
-		description: '',
-		location: '',
-		start_date: new Date(2026, 10, 20, 10, 0),
-		end_date: new Date(2026, 10, 20, 11, 0),
-		is_all_day: false,
-		is_recurring: false,
-		recurrence_rule: null,
-		recurrence_end: null,
-		original_start_date: null,
-		created_at: null,
-		updated_at: null,
-		calendar_id: 1,
-		calendar_name: 'Personal',
-		calendar_color: '#ff0000',
-		etag: '',
-		...overrides
-	};
-}
-
-const holiday = event({ id: 1, uri: 'holiday', title: 'Holiday', is_all_day: true, start_date: new Date(2026, 10, 20), end_date: new Date(2026, 10, 21) });
-const meeting = event({ id: 2, uri: 'meeting', title: 'Meeting' });
+const holiday = calendarEvent({ id: 1, uri: 'holiday', title: 'Holiday', is_all_day: true, start_date: new Date(2026, 10, 20), end_date: new Date(2026, 10, 21) });
+const meeting = calendarEvent({ id: 2, uri: 'meeting', title: 'Meeting', start_date: new Date(2026, 10, 20, 10, 0), end_date: new Date(2026, 10, 20, 11, 0) });
 
 function renderDay(): Calendars {
 	let calendars: Calendars | null = null;

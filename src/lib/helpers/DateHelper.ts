@@ -26,24 +26,23 @@ export function formatDate(input: string | Date, dateFormat: string | null = nul
 	return `${day}.${month}.${year}`;
 }
 
-/** Parses the "dd.mm.YYYY" value of a data-calendar-day attribute back into a Date. */
 export function parseDateSlug(slug: string): Date | null {
 	const parts = slug.split('.');
 	if (parts.length !== 3) return null;
-	const day = parseInt(parts[0], 10);
-	const month = parseInt(parts[1], 10);
-	const year = parseInt(parts[2], 10);
-	if (!day || !month || !year) return null;
-	return new Date(year, month - 1, day);
+	return localDateFromParts(parts[2], parts[1], parts[0]);
 }
 
-/** Parses a "YYYY-mm-dd" value (see getUrlFormat) into a local date. `new Date()` would read it as UTC midnight. */
+// `new Date('YYYY-mm-dd')` would read the value as UTC midnight.
 export function parseUrlFormat(value: string): Date | null {
 	const parts = value.split('-');
 	if (parts.length !== 3) return null;
-	const year = parseInt(parts[0], 10);
-	const month = parseInt(parts[1], 10);
-	const day = parseInt(parts[2], 10);
+	return localDateFromParts(parts[0], parts[1], parts[2]);
+}
+
+function localDateFromParts(yearPart: string, monthPart: string, dayPart: string): Date | null {
+	const year = parseInt(yearPart, 10);
+	const month = parseInt(monthPart, 10);
+	const day = parseInt(dayPart, 10);
 	if (!day || !month || !year) return null;
 	return new Date(year, month - 1, day);
 }
@@ -475,33 +474,25 @@ export function getWeekdayOrder(weekStart: WeekStart): number[] {
 	return weekStart === 'sunday' ? [7, 1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5, 6, 7];
 }
 
-/** The 24 hours of a day as zero-padded strings, '00' to '23'. */
 export function getHoursOfDay(): string[] {
 	return Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
 }
 
-/** Off hours are before 06:00 and from 22:00 on. */
 export function isOffHour(hour: string): boolean {
 	return parseInt(hour) < 6 || parseInt(hour) >= 22;
 }
 
-/** Height of one hour row in the mobile day and week grids, in rem. Off hours are compressed. */
 export function getMobileHourHeightRem(hour: string): number {
 	return isOffHour(hour) ? 1.5 : 3.5;
 }
 
-/** The `grid-template-rows` tracks for the 24 hour rows of the mobile day and week grids. */
 export function getMobileHourRows(): string {
 	return getHoursOfDay()
 		.map((hour) => `${getMobileHourHeightRem(hour)}rem`)
 		.join(' ');
 }
 
-/**
- * Distance in rem from 00:00 to a time of day in the mobile grid, where `hourOfDay` is a
- * fractional hour from 0 to 24 (e.g. 16.5 for 16:30, 24 for the end of the day).
- * Rows have different heights, so this adds up the actual rows instead of multiplying.
- */
+// Rows differ in height, so the rows up to `hourOfDay` (16.5 = 16:30, 24 = end of day) are added up.
 export function getMobileTimeOffsetRem(hourOfDay: number): number {
 	const hours = getHoursOfDay();
 	const fullHours = Math.min(Math.floor(hourOfDay), 24);
@@ -518,7 +509,7 @@ export function getMobileTimeOffsetRem(hourOfDay: number): number {
 	return offset;
 }
 
-/** The days after `start`, one day apart, up to and including the first one that reaches `end`. */
+// The days after `start`, up to and including the first one that reaches `end`.
 export function eachDayBetween(start: Date, end: Date): Date[] {
 	const days: Date[] = [];
 	const current = new Date(start);

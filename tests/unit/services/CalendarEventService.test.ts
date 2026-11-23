@@ -201,6 +201,19 @@ describe('CalendarEventService', () => {
 		});
 	});
 
+	describe('needsReload', () => {
+		it('reloads after a change and after the server reported a different state', () => {
+			expect(service.needsReload('ok')).toBe(true);
+			expect(service.needsReload('changed_on_server')).toBe(true);
+			expect(service.needsReload('server_unavailable')).toBe(true);
+		});
+
+		it('keeps the events after a refused or failed change', () => {
+			expect(service.needsReload('unreadable')).toBe(false);
+			expect(service.needsReload('failed')).toBe(false);
+		});
+	});
+
 	describe('findCurrentVersion', () => {
 		it('finds the same event by calendar and uri', () => {
 			const current = loadedEvent({ title: 'Server version' });
