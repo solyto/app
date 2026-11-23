@@ -1122,7 +1122,10 @@ defaults and needs no context at all.
 
 Every endpoint is a named entry in `src/lib/config/apiRoutes.ts` with
 `%s`/`%d` id slots. No store or component builds a URL string or calls
-`fetch`. Known violation in the backlog: `weather/ManageWeatherCity.svelte`
+`fetch`. One exception: a store may add query parameters to an `apiRoutes`
+entry, in one private method using `URLSearchParams`
+(`CheckInData.valuesUrl`); the endpoint itself always comes from
+`apiRoutes`, and components never build URLs. Known violation in the backlog: `weather/ManageWeatherCity.svelte`
 (backlog 22). The
 pre-auth health check in `routes/setup/+page.svelte` is the one accepted
 direct call.
