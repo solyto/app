@@ -23,6 +23,8 @@ export const navigationItems: { type: LibraryType; url: `/libraries/${LibraryTyp
 ];
 
 export class LibraryNavigation {
+	static readonly TYPES_BY_PATH: LibraryType[] = ['music', 'books', 'links', 'quotes', 'recipes', 'movies', 'games', 'plants'];
+
 	activeLibrary = $state<LibraryType | null>(null);
 
 	constructor() {
@@ -30,15 +32,11 @@ export class LibraryNavigation {
 	}
 
 	getLibraryType(): LibraryType | null {
-		if (page.url.pathname.includes('music')) return 'music';
-		if (page.url.pathname.includes('books')) return 'books';
-		if (page.url.pathname.includes('links')) return 'links';
-		if (page.url.pathname.includes('quotes')) return 'quotes';
-		if (page.url.pathname.includes('recipes')) return 'recipes';
-		if (page.url.pathname.includes('movies')) return 'movies';
-		if (page.url.pathname.includes('games')) return 'games';
-		if (page.url.pathname.includes('plants')) return 'plants';
-		return null;
+		return LibraryNavigation.TYPES_BY_PATH.find((type) => page.url.pathname.includes(type)) ?? null;
+	}
+
+	setActive(type: LibraryType): void {
+		this.activeLibrary = type;
 	}
 }
 

@@ -703,6 +703,12 @@ const libraries: LibraryRecords = {
 		condition_medium: 'Discreta',
 		condition_poor: 'Scarsa',
 		condition_verypoor: 'Pessima',
+		condition_short_mint: 'Perfetta',
+		condition_short_verygood: 'Ottima',
+		condition_short_good: 'Buona',
+		condition_short_medium: 'Discreta',
+		condition_short_poor: 'Scarsa',
+		condition_short_verypoor: 'Pessima',
 		add_album: 'Aggiungi un album',
 		edit_album: 'Aggiorna album',
 		import_error: "Impossibile importare l'album.",
@@ -921,8 +927,24 @@ const libraries: LibraryRecords = {
 	import: 'Importa',
 	no_results: 'Nessun risultato trovato.',
 	no_results_desc: 'Prova una ricerca diversa o rimuovi i filtri.',
+	search_unavailable: 'Il servizio non è raggiungibile al momento. Riprova più tardi.',
 	no_entries: 'Ancora niente qui.',
-	no_entries_desc: 'Aggiungi la tua prima voce con il pulsante più.'
+	no_entries_desc: 'Aggiungi la tua prima voce con il pulsante più.',
+	entries_count: '%s voci',
+	cover: 'Copertina',
+	cover_of: 'Copertina di %s',
+	poster: 'Locandina',
+	remove_cover: 'Rimuovi copertina',
+	previous: 'Precedente',
+	next: 'Successivo',
+	service_icon: 'Icona di %s',
+	favicon: 'Favicon',
+	external_link: 'Link esterno',
+	new_genre: 'Nuovo genere',
+	view_list: 'Elenco',
+	view_cards: 'Schede',
+	view_shelf: 'Scaffale',
+	view_browse: 'Sfoglia'
 };
 
 const dev: DevRecords = {
@@ -1007,7 +1029,10 @@ const finances: FinanceRecords = {
 	tags: 'Tag',
 	tag_error: 'Impossibile creare il tag',
 	all_tags: 'Tutti i tag',
-	tag_filter: 'Filtra per tag'
+	tag_filter: 'Filtra per tag',
+	title_placeholder: 'Titolo',
+	value_placeholder: 'Importo',
+	edit_item: 'Modifica %s'
 };
 
 

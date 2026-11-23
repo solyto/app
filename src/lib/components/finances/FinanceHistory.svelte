@@ -69,8 +69,8 @@
 		keyManager.unregisterAll(addKeyHandlers);
 		addForm = history.emptyForm(new Date());
 		addOpen = true;
-		addKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => add(), { priority: 3 });
-		addKeyHandlers.Escape = keyManager.registerKeyDown('Escape', () => closeAdd(), { priority: 3 });
+		addKeyHandlers.Enter = keyManager.registerKeyDown('Enter', add, { priority: 3 });
+		addKeyHandlers.Escape = keyManager.registerKeyDown('Escape', closeAdd, { priority: 3 });
 	}
 
 	function closeAdd(): void {
@@ -89,7 +89,7 @@
 		editForm = history.toForm(value);
 		editingId = value.id;
 		editKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => saveEdit(value), { priority: 2 });
-		editKeyHandlers.Escape = keyManager.registerKeyDown('Escape', () => cancelEdit(), { priority: 2 });
+		editKeyHandlers.Escape = keyManager.registerKeyDown('Escape', cancelEdit, { priority: 2 });
 	}
 
 	function cancelEdit(): void {
@@ -116,6 +116,18 @@
 		const value = deleteCandidate;
 		deleteCandidate = null;
 		await onDelete(value);
+	}
+
+	function deleteItemLabel(): string {
+		return ts.get.finances.delete_item.replace('%s', itemTitle);
+	}
+
+	function askDeleteItem(): void {
+		deleteItemConfirmOpen = true;
+	}
+
+	function cancelDeleteItem(): void {
+		deleteItemConfirmOpen = false;
 	}
 
 	async function confirmDeleteItem(): Promise<void> {
@@ -206,9 +218,9 @@
 		<button
 			type="button"
 			class="cursor-pointer text-sm text-c-neutral-5 transition-all hover:text-c-danger"
-			onclick={() => (deleteItemConfirmOpen = true)}
+			onclick={askDeleteItem}
 		>
-			{ts.get.finances.delete_item.replace('%s', itemTitle)}
+			{deleteItemLabel()}
 		</button>
 	</div>
 </div>
@@ -223,10 +235,10 @@
 {/if}
 {#if deleteItemConfirmOpen}
 	<ConfirmationModal
-		title={ts.get.finances.delete_item.replace('%s', itemTitle)}
+		title={deleteItemLabel()}
 		description={ts.get.finances.delete_item_message.replace('%s', itemTitle)}
 		type="confirm-delete"
 		onConfirm={confirmDeleteItem}
-		onCancel={() => (deleteItemConfirmOpen = false)}
+		onCancel={cancelDeleteItem}
 	/>
 {/if}

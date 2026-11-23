@@ -21,11 +21,13 @@
 	import BudgetTagPicker from '$lib/components/finances/BudgetTagPicker.svelte';
 	import type { MultiSelectEntry } from '$lib/components/forms/MultiSelect.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
+	import { selectedIds, tagEntries } from '$lib/helpers/MultiSelectHelper';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const finances = getFinances();
 	const auth = getAuth();
+	const COLOR_DELAY_MS = 100;
 
 	let total = $derived(finances.getBudgetTotal());
 	let incomeTotal = $derived(finances.getBudgetIncomeTotal());
@@ -35,12 +37,11 @@
 	let historyBudget = $derived([...finances.income, ...finances.expenses].find((budget) => budget.id === historyBudgetId) ?? null);
 
 	function tagFilterOptions(): { label: string; value: string }[] {
-		const options = finances.availableTags().map((tag) => ({ label: tag.name, value: tag.id.toString() }));
-		return [{ label: ts.get.finances.all_tags, value: '' }, ...options];
+		return [{ label: ts.get.finances.all_tags, value: '' }, ...tagEntries(finances.availableTags())];
 	}
 
 	function selectTag(value: string): void {
-		finances.selectedTagId = value === '' ? null : Number(value);
+		finances.selectTag(value === '' ? null : Number(value));
 	}
 
 	function expenseShare(): number {
@@ -48,11 +49,17 @@
 		return Math.abs(expenseTotal / incomeTotal) * 100;
 	}
 
-	async function openHistory(budget: Budget): Promise<void> {
+	async function withLoadingIndicator<T>(action: () => Promise<T>): Promise<T> {
 		loadingIndicator.start();
-		const ok = await finances.loadBudgetValues(budget);
-		loadingIndicator.stop();
-		if (ok) historyBudgetId = budget.id;
+		try {
+			return await action();
+		} finally {
+			loadingIndicator.stop();
+		}
+	}
+
+	async function openHistory(budget: Budget): Promise<void> {
+		if (await withLoadingIndicator(() => finances.loadBudgetValues(budget))) historyBudgetId = budget.id;
 	}
 
 	function closeHistory(): void {
@@ -61,76 +68,63 @@
 
 	async function deleteHistoryBudget(): Promise<void> {
 		if (historyBudget === null) return;
-		loadingIndicator.start();
-		await finances.deleteBudget(historyBudget);
-		loadingIndicator.stop();
+		const budget = historyBudget;
+		await withLoadingIndicator(() => finances.deleteBudget(budget));
 		closeHistory();
 	}
 
 	async function renameHistoryBudget(title: string): Promise<boolean> {
 		if (historyBudget === null) return false;
-		loadingIndicator.start();
-		const ok = await finances.updateBudget(historyBudget, { title });
-		loadingIndicator.stop();
-		return ok;
+		const budget = historyBudget;
+		return withLoadingIndicator(() => finances.updateBudget(budget, { title }));
 	}
 
 	async function changeHistoryInterval(value: string): Promise<void> {
 		if (historyBudget === null) return;
-		const interval = value as BudgetInterval;
-		loadingIndicator.start();
-		await finances.updateBudget(historyBudget, { interval });
-		loadingIndicator.stop();
-	}
-
-	function tagEntries(budget: Budget): MultiSelectEntry[] {
-		return budget.tags.map((tag) => ({ label: tag.name, value: tag.id.toString() }));
+		const budget = historyBudget;
+		await withLoadingIndicator(() => finances.updateBudget(budget, { interval: value as BudgetInterval }));
 	}
 
 	async function changeHistoryTags(entries: MultiSelectEntry[]): Promise<void> {
 		if (historyBudget === null) return;
-		const tagIds = entries.map((entry) => Number(entry.value));
-		loadingIndicator.start();
-		const ok = await finances.updateBudget(historyBudget, { tags: tagIds });
-		// The picker keeps what was picked; reloading puts it back to the saved tags.
-		if (!ok) await finances.loadIncome();
-		loadingIndicator.stop();
+		const budget = historyBudget;
+		await withLoadingIndicator(async () => {
+			const ok = await finances.updateBudget(budget, { tags: selectedIds(entries) });
+			// The picker keeps what was picked; reloading puts it back to the saved tags.
+			if (!ok) await finances.loadIncome();
+		});
 	}
 
 	async function addHistoryValue(request: StoreFinanceValueRequest): Promise<boolean> {
 		if (historyBudget === null) return false;
-		loadingIndicator.start();
-		const ok = await finances.addBudgetValue(historyBudget, request);
-		loadingIndicator.stop();
-		return ok;
+		const budget = historyBudget;
+		return withLoadingIndicator(() => finances.addBudgetValue(budget, request));
 	}
 
 	async function updateHistoryValue(value: FinanceValue, request: UpdateFinanceValueRequest): Promise<boolean> {
 		if (historyBudget === null) return false;
-		loadingIndicator.start();
-		const ok = await finances.updateBudgetValue(historyBudget, value, request);
-		loadingIndicator.stop();
-		return ok;
+		const budget = historyBudget;
+		return withLoadingIndicator(() => finances.updateBudgetValue(budget, value, request));
 	}
 
 	async function deleteHistoryValue(value: FinanceValue): Promise<boolean> {
 		if (historyBudget === null) return false;
-		loadingIndicator.start();
-		const ok = await finances.deleteBudgetValue(historyBudget, value);
-		loadingIndicator.stop();
-		return ok;
+		const budget = historyBudget;
+		return withLoadingIndicator(() => finances.deleteBudgetValue(budget, value));
+	}
+
+	function dateFormat(): string | null {
+		return auth.user?.settings?.date_format ?? null;
 	}
 
 	onMount(() => {
 		setTimeout(() => {
 			colorLoaded = true;
-		}, 100);
+		}, COLOR_DELAY_MS);
 	});
 
 	// The finances overview shares the store and always shows the whole budget.
-	onDestroy(() => {
-		finances.selectedTagId = null;
-	});
+	onDestroy(() => finances.selectTag(null));
 </script>
 
 {#if finances.budgetLoaded}
@@ -212,7 +206,7 @@
 				ariaLabel={ts.get.finances.interval}
 			/>
 			{#if finances.tagsSupported}
-				<BudgetTagPicker value={tagEntries(historyBudget)} onchange={changeHistoryTags} />
+				<BudgetTagPicker value={tagEntries(historyBudget.tags)} onchange={changeHistoryTags} />
 			{/if}
 		</div>
 		<Divider my={8} />
@@ -223,7 +217,7 @@
 			onUpdate={updateHistoryValue}
 			onDelete={deleteHistoryValue}
 			itemTitle={historyBudget.title}
-			dateFormat={auth.user?.settings?.date_format ?? null}
+			dateFormat={dateFormat()}
 			onDeleteItem={deleteHistoryBudget}
 		/>
 	</ContentModal>

@@ -21,6 +21,18 @@
 	} = $props();
 
 	const ts = getTranslation();
+
+	function openGenreModal(): void {
+		(library as GenreLibrary).openGenreModal();
+	}
+
+	function openCreateModal(): void {
+		library.openCreateModal();
+	}
+
+	function entriesCount(): string {
+		return ts.get.libraries.entries_count.replace('%s', library.entries.length.toString());
+	}
 </script>
 
 <div class="relative mb-4 w-full">
@@ -43,16 +55,16 @@
 				<Recommender library={library as MusicLibrary | BookLibrary} />
 			{/if}
 			{#if library.config.hasGenres}
-				<TextButton title={ts.get.libraries.edit_genres} onclick={() => (library as GenreLibrary).openGenreModal()} type="slight" class="max-md:hidden" />
-				<IconButton type="slight" onclick={() => (library as GenreLibrary).openGenreModal()} class="max-md:px-2 md:hidden">
+				<TextButton title={ts.get.libraries.edit_genres} onclick={openGenreModal} type="slight" class="max-md:hidden" />
+				<IconButton type="slight" onclick={openGenreModal} class="max-md:px-2 md:hidden">
 					<IconTag />
 				</IconButton>
 			{/if}
-			<TextButton title={ts.get.libraries.create} onclick={() => library.openCreateModal()} class="max-md:hidden" />
-			<IconButton onclick={() => library.openCreateModal()} class="max-md:px-2 md:hidden">
+			<TextButton title={ts.get.libraries.create} onclick={openCreateModal} class="max-md:hidden" />
+			<IconButton onclick={openCreateModal} class="max-md:px-2 md:hidden">
 				<IconPlus />
 			</IconButton>
 		</div>
-		<div class="text-surface-300 col-start-2 mx-2 my-4 text-right text-xs">{library.entries.length} entries</div>
+		<div class="text-surface-300 col-start-2 mx-2 my-4 text-right text-xs">{entriesCount()}</div>
 	</div>
 </div>

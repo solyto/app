@@ -702,6 +702,12 @@ const libraries: LibraryRecords = {
 		condition_medium: 'État moyen',
 		condition_poor: 'Mauvais état',
 		condition_verypoor: 'Très mauvais état',
+		condition_short_mint: 'Neuf',
+		condition_short_verygood: 'Très bon',
+		condition_short_good: 'Bon',
+		condition_short_medium: 'Moyen',
+		condition_short_poor: 'Mauvais',
+		condition_short_verypoor: 'Très mauvais',
 		add_album: 'Ajouter un album',
 		edit_album: 'Modifier l\'album',
 		import_error: 'L\'album n\'a pas pu être importé.',
@@ -920,8 +926,24 @@ const libraries: LibraryRecords = {
 	import: 'Importer',
 	no_results: 'Aucun résultat trouvé.',
 	no_results_desc: 'Essaie une autre recherche ou retire les filtres.',
+	search_unavailable: 'Le service est injoignable pour le moment. Réessaie plus tard.',
 	no_entries: 'Rien ici pour le moment.',
-	no_entries_desc: 'Ajoute ta première entrée avec le bouton plus.'
+	no_entries_desc: 'Ajoute ta première entrée avec le bouton plus.',
+	entries_count: '%s entrées',
+	cover: 'Couverture',
+	cover_of: 'Couverture de %s',
+	poster: 'Affiche',
+	remove_cover: 'Retirer la couverture',
+	previous: 'Précédent',
+	next: 'Suivant',
+	service_icon: 'Icône %s',
+	favicon: 'Favicon',
+	external_link: 'Lien externe',
+	new_genre: 'Nouveau genre',
+	view_list: 'Liste',
+	view_cards: 'Cartes',
+	view_shelf: 'Étagère',
+	view_browse: 'Parcourir'
 };
 
 const dev: DevRecords = {
@@ -1006,7 +1028,10 @@ const finances: FinanceRecords = {
 	tags: 'Tags',
 	tag_error: "Le tag n'a pas pu être créé",
 	all_tags: 'Tous les tags',
-	tag_filter: 'Filtrer par tag'
+	tag_filter: 'Filtrer par tag',
+	title_placeholder: 'Titre',
+	value_placeholder: 'Montant',
+	edit_item: 'Modifier %s'
 };
 
 

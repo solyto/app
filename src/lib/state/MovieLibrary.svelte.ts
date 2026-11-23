@@ -104,23 +104,6 @@ export class MovieLibrary {
 		this.reapplyFilter();
 	}
 
-	private reapplyFilter(): void {
-		this.filteredEntries = this.filterEntries();
-	}
-
-	private filterEntries(): Movie[] {
-		switch (this.activeFilter) {
-			case 'search':
-				return this.filterService.search(this.entries, this.searchTerm, ['title']);
-			case 'genreAndRating':
-				return this.filterService.byGenreAndRating(this.entries, this.genreFilter, this.ratingFilter);
-			case 'wishlist':
-				return this.filterService.byWishlist(this.entries);
-			default:
-				return this.entries;
-		}
-	}
-
 	addRatingFilter(rating: number | null): void {
 		this.ratingFilter = rating;
 		this.filterByGenreAndRating();
@@ -178,7 +161,7 @@ export class MovieLibrary {
 	async create(request: CreateMovieRequest): Promise<boolean> {
 		const res = await this.apiService.create(apiRoutes.libraries.movies.create, request);
 		if (res) await this.load();
-		return Promise.resolve(res !== null);
+		return res !== null;
 	}
 
 	async update(entry: Movie, request: UpdateMovieRequest): Promise<boolean> {
@@ -240,8 +223,9 @@ export class MovieLibrary {
 		const res = await this.apiService.list(
 			`${apiRoutes.libraries.movies.search}/${provider}/${encodeURIComponent(query)}`
 		);
-		if (res) return res.data as MovieSearchResult[];
-		return null;
+		// null when the search failed or the provider was unreachable.
+		if (!res || res.meta?.unavailable === true) return null;
+		return res.data as MovieSearchResult[];
 	}
 
 	async importFrom(provider: string, url: string): Promise<MovieRelease | null> {
@@ -251,6 +235,23 @@ export class MovieLibrary {
 		);
 		if (res) return res.data as MovieRelease;
 		return null;
+	}
+
+	private reapplyFilter(): void {
+		this.filteredEntries = this.filterEntries();
+	}
+
+	private filterEntries(): Movie[] {
+		switch (this.activeFilter) {
+			case 'search':
+				return this.filterService.search(this.entries, this.searchTerm, ['title']);
+			case 'genreAndRating':
+				return this.filterService.byGenreAndRating(this.entries, this.genreFilter, this.ratingFilter);
+			case 'wishlist':
+				return this.filterService.byWishlist(this.entries);
+			default:
+				return this.entries;
+		}
 	}
 }
 

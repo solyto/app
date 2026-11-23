@@ -99,7 +99,7 @@ export class BookLibrary {
 		const res = await this.apiService.list(apiRoutes.libraries.books.releases);
 		if (res) this.releases = res.data as BookRelease[];
 		this.releasesLoaded = true;
-		return Promise.resolve(res !== null);
+		return res !== null;
 	}
 
 	search(): void {
@@ -135,31 +135,6 @@ export class BookLibrary {
 		this.lentFilter = false;
 		this.activeFilter = 'none';
 		this.setFilteredEntries(this.entries);
-	}
-
-	private filterEntries(): Book[] {
-		switch (this.activeFilter) {
-			case 'search':
-				return this.filterService.search(this.entries, this.searchTerm, ['title', 'author', 'series']);
-			case 'genreAndRating':
-				return this.filterService.byGenreAndRating(this.entries, this.genreFilter, this.ratingFilter);
-			case 'wishlist':
-				return this.filterService.byWishlist(this.entries);
-			case 'lent':
-				return this.filterService.byLent(this.entries);
-			default:
-				return this.entries;
-		}
-	}
-
-	private reapplyFilter(): void {
-		this.filteredEntries = this.filterEntries();
-		this.shelfIndex = Math.max(0, Math.min(this.shelfIndex, this.filteredEntries.length - 1));
-	}
-
-	private setFilteredEntries(entries: Book[]): void {
-		this.filteredEntries = entries;
-		this.shelfIndex = 0;
 	}
 
 	async recommend(type: LibraryRecommendationType): Promise<LibraryRecommendation | null> {
@@ -227,7 +202,7 @@ export class BookLibrary {
 	async create(request: CreateBookRequest): Promise<boolean> {
 		const res = await this.apiService.create(apiRoutes.libraries.books.create, request);
 		if (res) await this.load();
-		return Promise.resolve(res !== null);
+		return res !== null;
 	}
 
 	async update(entry: Book, request: UpdateBookRequest): Promise<boolean> {
@@ -274,8 +249,9 @@ export class BookLibrary {
 		const res = await this.apiService.list(
 			`${apiRoutes.libraries.books.search}/${provider}/${encodeURIComponent(query)}`
 		);
-		if (res) return res.data as BookSearchResult[];
-		return null;
+		// null when the search failed or the provider was unreachable.
+		if (!res || res.meta?.unavailable === true) return null;
+		return res.data as BookSearchResult[];
 	}
 
 	async importFrom(provider: string, url: string): Promise<BookRelease | null> {
@@ -285,6 +261,31 @@ export class BookLibrary {
 		);
 		if (res) return res.data as BookRelease;
 		return null;
+	}
+
+	private filterEntries(): Book[] {
+		switch (this.activeFilter) {
+			case 'search':
+				return this.filterService.search(this.entries, this.searchTerm, ['title', 'author', 'series']);
+			case 'genreAndRating':
+				return this.filterService.byGenreAndRating(this.entries, this.genreFilter, this.ratingFilter);
+			case 'wishlist':
+				return this.filterService.byWishlist(this.entries);
+			case 'lent':
+				return this.filterService.byLent(this.entries);
+			default:
+				return this.entries;
+		}
+	}
+
+	private reapplyFilter(): void {
+		this.filteredEntries = this.filterEntries();
+		this.shelfIndex = Math.max(0, Math.min(this.shelfIndex, this.filteredEntries.length - 1));
+	}
+
+	private setFilteredEntries(entries: Book[]): void {
+		this.filteredEntries = entries;
+		this.shelfIndex = 0;
 	}
 }
 

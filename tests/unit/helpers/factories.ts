@@ -6,6 +6,15 @@ import type { Goal } from '$lib/types/goal';
 import type { Calendar, CalendarEvent, CalendarEventResponse } from '$lib/types/calendar';
 import type { FeedImportEntry, FeedImportState, FeedItem, FeedSubscription } from '$lib/types/feed';
 import type { ClipboardEntry } from '$lib/types/clipboard';
+import type { Book, BookGenre } from '$lib/types/library_book';
+import type { Music, MusicGenre } from '$lib/types/library_music';
+import type { Movie, MovieGenre } from '$lib/types/library_movie';
+import type { Game, GameGenre } from '$lib/types/library_game';
+import type { Plant } from '$lib/types/library_plant';
+import type { Quote } from '$lib/types/library_quote';
+import type { Recipe } from '$lib/types/library_recipe';
+import type { Link, LinkCategory } from '$lib/types/library_link';
+import type { Budget, WealthField } from '$lib/types/finance';
 
 export function todo(overrides: Partial<Todo> = {}): Todo {
 	return {
@@ -224,4 +233,182 @@ export function clipboardEntry(overrides: Partial<ClipboardEntry> = {}): Clipboa
 		updated_at: '2026-11-20T10:00:00',
 		...overrides
 	};
+}
+
+export function book(overrides: Partial<Book> = {}): Book {
+	return {
+		id: 'b1',
+		title: 'Book',
+		author: 'Author',
+		series: null,
+		volume: null,
+		pages: null,
+		current_page: null,
+		lent_to: null,
+		is_where: null,
+		cover: null,
+		link: null,
+		rating: null,
+		publication_year: null,
+		wishlist: false,
+		summary: null,
+		genres: [],
+		tags: [],
+		started_at: null,
+		finished_at: null,
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function music(overrides: Partial<Music> = {}): Music {
+	return {
+		id: 'm1',
+		title: 'Album',
+		artist: 'Artist',
+		type: null,
+		format: null,
+		condition: null,
+		acquired_where: null,
+		additional_info: null,
+		cover: null,
+		link: null,
+		rating: null,
+		publication_year: null,
+		wishlist: false,
+		genres: [],
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function movie(overrides: Partial<Movie> = {}): Movie {
+	return {
+		id: 'mo1',
+		title: 'Movie',
+		category: '',
+		cover: null,
+		link: null,
+		rating: null,
+		publication_year: null,
+		wishlist: false,
+		genres: [],
+		tags: [],
+		started_at: null,
+		finished_at: null,
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function game(overrides: Partial<Game> = {}): Game {
+	return {
+		id: 'g1',
+		title: 'Game',
+		platform: 'PC',
+		developer: null,
+		publisher: null,
+		cover: null,
+		link: null,
+		rating: null,
+		publication_year: null,
+		playtime_hours: null,
+		completed: false,
+		wishlist: false,
+		genres: [],
+		tags: [],
+		started_at: null,
+		finished_at: null,
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function plant(overrides: Partial<Plant> = {}): Plant {
+	return {
+		id: 'p1',
+		name: 'Monstera',
+		latin_name: 'Monstera deliciosa',
+		location: null,
+		sunlight: null,
+		current_size: null,
+		max_size: null,
+		acquired_at: null,
+		winter_hardy: null,
+		instructions: null,
+		cover: null,
+		link: null,
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function quote(overrides: Partial<Quote> = {}): Quote {
+	return {
+		id: 'q1',
+		summary: null,
+		author: 'Author',
+		quote: 'Words',
+		source: null,
+		tags: [],
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function recipe(overrides: Partial<Recipe> = {}): Recipe {
+	return {
+		id: 'r1',
+		title: 'Recipe',
+		cover: null,
+		link: null,
+		rating: null,
+		calories: null,
+		time_to_make: null,
+		servings: null,
+		ingredients: [],
+		steps: [],
+		description: null,
+		type: null,
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function link(overrides: Partial<Link> = {}): Link {
+	return {
+		id: 'l1',
+		title: 'Link',
+		url: 'https://example.com',
+		cover: null,
+		tags: [],
+		category: null,
+		is_favorite: false,
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function linkCategory(id: number, title: string): LinkCategory {
+	return { id, title, color: null };
+}
+
+export function genre(id: number, title: string): BookGenre & MusicGenre & MovieGenre & GameGenre {
+	return { id, title, created_at: '', updated_at: '' };
+}
+
+export function budget(overrides: Partial<Budget> = {}): Budget {
+	return { id: 1, title: 'Rent', type: 'expense', value: 900, tags: [], created_at: '', updated_at: '', ...overrides };
+}
+
+export function wealthField(overrides: Partial<WealthField> = {}): WealthField {
+	return { id: 2, title: 'Savings', values: [], currentValue: null, created_at: '', updated_at: '', ...overrides };
 }

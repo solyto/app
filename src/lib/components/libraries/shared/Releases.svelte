@@ -26,12 +26,8 @@
 
 	let modalOpen = $state<boolean>(false);
 
-	onMount(async () => {
-		const showReleases = page.url.searchParams.get('releases');
-
-		if (showReleases !== null) {
-			toggleModal();
-		}
+	onMount(() => {
+		if (page.url.searchParams.has('releases')) toggleModal();
 	});
 
 	async function toggleModal(): Promise<void> {
@@ -39,8 +35,11 @@
 
 		if (modalOpen && !library.releasesLoaded) {
 			loadingIndicator.start();
-			await library.loadReleases();
-			loadingIndicator.stop();
+			try {
+				await library.loadReleases();
+			} finally {
+				loadingIndicator.stop();
+			}
 		}
 	}
 </script>

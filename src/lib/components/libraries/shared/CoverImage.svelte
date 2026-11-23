@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { scale, blur } from 'svelte/transition';
+	import { untrack } from 'svelte';
 	import { getLoadedCovers } from '$lib/state/LoadedCovers.svelte';
 
 	const loadedCovers = getLoadedCovers();
@@ -13,16 +14,13 @@
 
 	let previewLoaded = $state(false);
 	// Already loaded once: render right away, so the image shows without waiting and without the intro transition.
-	let fullLoaded = $state(loadedCovers.has(src));
+	let fullLoaded = $derived(loadedCovers.has(src));
 
 	$effect(() => {
-		if (loadedCovers.has(src)) {
-			fullLoaded = true;
-			return;
-		}
+		// Untracked: a SvelteSet lookup would rerun this for every other cover that finishes loading.
+		if (untrack(() => loadedCovers.has(src))) return;
 
 		previewLoaded = false;
-		fullLoaded = false;
 
 		const preview = new Image();
 		if (previewSrc) {
@@ -31,10 +29,7 @@
 		}
 
 		const full = new Image();
-		full.onload = () => {
-			loadedCovers.add(src);
-			fullLoaded = true;
-		};
+		full.onload = () => loadedCovers.add(src);
 		full.src = src;
 
 		return () => {
@@ -48,5 +43,5 @@
 	<img src={previewSrc} {alt} class={customClass} in:scale />
 {/if}
 {#if fullLoaded}
-	<img {src} {alt} class="{previewLoaded ? 'absolute inset-0 ' : ''}{customClass}" in:blur={{ amount: 12, duration: 400 }} />
+	<img {src} {alt} class={[previewLoaded && 'absolute inset-0', customClass]} in:blur={{ amount: 12, duration: 400 }} />
 {/if}

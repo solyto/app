@@ -61,33 +61,12 @@ export class RecipeLibrary {
 	search(): void {
 		this.ratingFilter = null;
 		this.activeFilter = 'search';
-
-		const term = this.searchTerm.trim().toLowerCase();
-		if (term.length === 0) {
-			this.filteredEntries = this.entries;
-			return;
-		}
-
-		this.filteredEntries = this.entries.filter(
-			(entry) =>
-				entry.title.toLowerCase().includes(term) ||
-				entry.ingredients.some((ingredient) => ingredient.name.toLowerCase().includes(term))
-		);
+		this.reapplyFilter();
 	}
 
 	filter(): void {
 		this.activeFilter = 'ratingAndType';
-		let entries = this.entries;
-
-		if (this.ratingFilter !== null) {
-			entries = this.filterService.byRating(entries, this.ratingFilter);
-		}
-
-		if (this.typeFilter !== null) {
-			entries = this.filterService.byType(entries, this.typeFilter);
-		}
-
-		this.filteredEntries = entries;
+		this.reapplyFilter();
 	}
 
 	addRatingFilter(rating: number | null): void {
@@ -104,13 +83,7 @@ export class RecipeLibrary {
 		this.ratingFilter = null;
 		this.typeFilter = null;
 		this.activeFilter = 'none';
-		this.filteredEntries = this.entries;
-	}
-
-	private reapplyFilter(): void {
-		if (this.activeFilter === 'search') this.search();
-		else if (this.activeFilter === 'ratingAndType') this.filter();
-		else this.filteredEntries = this.entries;
+		this.reapplyFilter();
 	}
 
 	openCreateModal(entry?: Recipe): void {
@@ -143,7 +116,7 @@ export class RecipeLibrary {
 	async create(request: CreateRecipeRequest): Promise<boolean> {
 		const res = await this.apiService.create(apiRoutes.libraries.recipes.create, request);
 		if (res) await this.load();
-		return Promise.resolve(res !== null);
+		return res !== null;
 	}
 
 	async update(entry: Recipe, request: UpdateRecipeRequest): Promise<boolean> {
@@ -180,6 +153,32 @@ export class RecipeLibrary {
 		);
 		if (res) return res.data as RecipeRelease;
 		return null;
+	}
+
+	private reapplyFilter(): void {
+		this.filteredEntries = this.filterEntries();
+	}
+
+	private filterEntries(): Recipe[] {
+		switch (this.activeFilter) {
+			case 'search':
+				return this.searchEntries();
+			case 'ratingAndType':
+				return this.filterService.byType(this.filterService.byRating(this.entries, this.ratingFilter), this.typeFilter);
+			default:
+				return this.entries;
+		}
+	}
+
+	private searchEntries(): Recipe[] {
+		const term = this.searchTerm.trim().toLowerCase();
+		if (term.length === 0) return this.entries;
+
+		return this.entries.filter((entry) => entry.title.toLowerCase().includes(term) || this.hasIngredient(entry, term));
+	}
+
+	private hasIngredient(entry: Recipe, term: string): boolean {
+		return entry.ingredients.some((ingredient) => ingredient.name.toLowerCase().includes(term));
 	}
 }
 

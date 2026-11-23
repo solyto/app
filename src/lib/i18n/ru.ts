@@ -702,6 +702,12 @@ const libraries: LibraryRecords = {
 		condition_medium: 'Удовлетворительное',
 		condition_poor: 'Плохое',
 		condition_verypoor: 'Очень плохое',
+		condition_short_mint: 'Идеальное',
+		condition_short_verygood: 'Очень хорошее',
+		condition_short_good: 'Хорошее',
+		condition_short_medium: 'Среднее',
+		condition_short_poor: 'Плохое',
+		condition_short_verypoor: 'Очень плохое',
 		add_album: 'Добавить альбом',
 		edit_album: 'Изменить альбом',
 		import_error: 'Не удалось импортировать альбом.',
@@ -920,8 +926,24 @@ const libraries: LibraryRecords = {
 	import: 'Импорт',
 	no_results: 'Ничего не найдено.',
 	no_results_desc: 'Попробуйте другой запрос или сбросьте фильтры.',
+	search_unavailable: 'Не удалось подключиться к сервису. Попробуйте позже.',
 	no_entries: 'Здесь пока пусто.',
-	no_entries_desc: 'Добавьте первую запись кнопкой «+».'
+	no_entries_desc: 'Добавьте первую запись кнопкой «+».',
+	entries_count: 'Записей: %s',
+	cover: 'Обложка',
+	cover_of: 'Обложка: %s',
+	poster: 'Постер',
+	remove_cover: 'Удалить обложку',
+	previous: 'Назад',
+	next: 'Вперёд',
+	service_icon: 'Значок %s',
+	favicon: 'Значок сайта',
+	external_link: 'Внешняя ссылка',
+	new_genre: 'Новый жанр',
+	view_list: 'Список',
+	view_cards: 'Карточки',
+	view_shelf: 'Полка',
+	view_browse: 'Листать'
 };
 
 const dev: DevRecords = {
@@ -1006,7 +1028,10 @@ const finances: FinanceRecords = {
 	tags: 'Теги',
 	tag_error: 'Не удалось создать тег',
 	all_tags: 'Все теги',
-	tag_filter: 'Фильтр по тегу'
+	tag_filter: 'Фильтр по тегу',
+	title_placeholder: 'Название',
+	value_placeholder: 'Сумма',
+	edit_item: 'Изменить %s'
 };
 
 const feeds: FeedRecords = {

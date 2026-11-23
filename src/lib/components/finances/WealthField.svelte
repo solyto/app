@@ -21,6 +21,10 @@
 
 	let confirmingDelete = $state<boolean>(false);
 
+	function openRowHistory(): void {
+		onOpenHistory(wealth);
+	}
+
 	function openHistory(event: MouseEvent): void {
 		event.stopPropagation();
 		onOpenHistory(wealth);
@@ -31,11 +35,22 @@
 		confirmingDelete = true;
 	}
 
+	function cancelDelete(): void {
+		confirmingDelete = false;
+	}
+
 	async function confirmDelete(): Promise<void> {
 		confirmingDelete = false;
 		loadingIndicator.start();
-		await finances.deleteWealthField(wealth);
-		loadingIndicator.stop();
+		try {
+			await finances.deleteWealthField(wealth);
+		} finally {
+			loadingIndicator.stop();
+		}
+	}
+
+	function editLabel(): string {
+		return ts.get.finances.edit_item.replace('%s', wealth.title);
 	}
 
 	function deleteLabel(): string {
@@ -51,13 +66,13 @@
 
 <div
 	class="group -mx-2 flex cursor-pointer flex-col rounded-md px-2 py-1 transition-all hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
-	onclick={() => onOpenHistory(wealth)}
+	onclick={openRowHistory}
 >
 	<div class="flex w-full flex-row items-center justify-between">
 		<div class="text-lg">{wealth.title}</div>
 		<div class="flex items-center gap-4">
 			<div class="hidden items-center gap-2 transition-all md:flex md:opacity-0 md:group-hover:opacity-100">
-				<button class="cursor-pointer" onclick={openHistory}>
+				<button class="cursor-pointer" aria-label={editLabel()} onclick={openHistory}>
 					<IconPen class="size-5 text-c-neutral-3 transition-all hover:text-c-action" />
 				</button>
 				<button class="cursor-pointer" aria-label={deleteLabel()} onclick={askDelete}>
@@ -81,6 +96,6 @@
 		description={ts.get.finances.delete_item_message.replace('%s', wealth.title)}
 		type="confirm-delete"
 		onConfirm={confirmDelete}
-		onCancel={() => (confirmingDelete = false)}
+		onCancel={cancelDelete}
 	/>
 {/if}

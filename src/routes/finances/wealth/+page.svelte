@@ -29,10 +29,8 @@
 	const statisticsService = new WealthStatisticsService();
 
 	let range = $state<WealthRangeKey>('1y');
-	let statistics = $derived.by(() => {
-		statisticsService.setData(finances.wealth);
-		return statisticsService.getGraphValues(wealthRanges[range]);
-	});
+	let statistics = $derived(statisticsService.getGraphValues(finances.wealth, wealthRanges[range]));
+	let totals = $derived(statisticsService.getTotals(statistics));
 	let historyFieldId = $state<number | null>(null);
 	let historyField = $derived(finances.wealth.find((field) => field.id === historyFieldId) ?? null);
 
@@ -44,79 +42,55 @@
 		historyFieldId = null;
 	}
 
+	async function withLoadingIndicator<T>(action: () => Promise<T>): Promise<T> {
+		loadingIndicator.start();
+		try {
+			return await action();
+		} finally {
+			loadingIndicator.stop();
+		}
+	}
+
 	async function deleteHistoryField(): Promise<void> {
 		if (historyField === null) return;
-		loadingIndicator.start();
-		await finances.deleteWealthField(historyField);
-		loadingIndicator.stop();
+		const field = historyField;
+		await withLoadingIndicator(() => finances.deleteWealthField(field));
 		closeHistory();
 	}
 
 	async function renameHistoryField(title: string): Promise<boolean> {
 		if (historyField === null) return false;
-		loadingIndicator.start();
-		const ok = await finances.updateWealthField(historyField, { title });
-		loadingIndicator.stop();
-		return ok;
+		const field = historyField;
+		return withLoadingIndicator(() => finances.updateWealthField(field, { title }));
 	}
 
 	async function addHistoryValue(request: StoreFinanceValueRequest): Promise<boolean> {
 		if (historyField === null) return false;
-		loadingIndicator.start();
-		const ok = await finances.addWealthValue(historyField, request);
-		loadingIndicator.stop();
-		return ok;
+		const field = historyField;
+		return withLoadingIndicator(() => finances.addWealthValue(field, request));
 	}
 
 	async function updateHistoryValue(value: FinanceValue, request: UpdateFinanceValueRequest): Promise<boolean> {
 		if (historyField === null) return false;
-		loadingIndicator.start();
-		const ok = await finances.updateWealthValue(historyField, value, request);
-		loadingIndicator.stop();
-		return ok;
+		const field = historyField;
+		return withLoadingIndicator(() => finances.updateWealthValue(field, value, request));
 	}
 
 	async function deleteHistoryValue(value: FinanceValue): Promise<boolean> {
 		if (historyField === null) return false;
-		loadingIndicator.start();
-		const ok = await finances.deleteWealthValue(historyField, value);
-		loadingIndicator.stop();
-		return ok;
+		const field = historyField;
+		return withLoadingIndicator(() => finances.deleteWealthValue(field, value));
 	}
 
-	function getSeriesData(stats: typeof statistics) {
-		if (stats.length === 0) return [];
-
-		return finances.wealth.map((field) => {
-			return {
-				title: field.title,
-				values: stats.map((stat) => {
-					const found = stat.values.find((v) => v.field === field.title);
-					return found ? found.value : 0;
-				})
-			};
-		});
-	}
-
-	function getTotalSeriesData(stats: typeof statistics) {
-		if (stats.length === 0) return [];
-
-		return stats.map((stat) => {
-			return stat.values.reduce((sum, v) => sum + v.value, 0);
-		});
+	function dateFormat(): string | null {
+		return auth.user?.settings?.date_format ?? null;
 	}
 </script>
 
 {#if finances.wealthLoaded}
 	<div class="flex flex-col gap-4" in:fade>
 		<div class="mb-8 w-full">
-			<DoughnutChart
-				title=""
-				values={finances.wealth.map((wealth) => ({
-					value: wealth.currentValue?.value ?? 0,
-					name: wealth.title
-				}))}
-			/>
+			<DoughnutChart title="" values={statisticsService.getDistribution(finances.wealth)} />
 		</div>
 		<div
 			class="relative w-full rounded-md p-4 shadow-sm dark:shadow-s-dark-shadow md:dark:bg-s-dark-2"
@@ -147,9 +121,9 @@
 			<div class="relative w-full rounded-md p-4 shadow-sm dark:shadow-s-dark-shadow md:dark:bg-s-dark-2">
 				<SubHeading title={ts.get.finances.history_development} my={0} mb={8} />
 				<SmoothLineChart
-					categories={statisticsService.getMonthLabels(statistics, auth.user?.settings?.date_format ?? null)}
-					values={getTotalSeriesData(statistics)}
-					min={statisticsService.getTrendMin(getTotalSeriesData(statistics))}
+					categories={statisticsService.getMonthLabels(statistics, dateFormat())}
+					values={totals}
+					min={statisticsService.getTrendMin(totals)}
 					valueFormatter={europeanFormat}
 					filled={true}
 				/>
@@ -157,8 +131,8 @@
 			<div class="relative w-full rounded-md p-4 shadow-sm dark:shadow-s-dark-shadow md:dark:bg-s-dark-2">
 				<SubHeading title={ts.get.finances.history_composition} my={0} mb={8} />
 				<StackedAreaChart
-					xCategories={statisticsService.getMonthLabels(statistics, auth.user?.settings?.date_format ?? null)}
-					dataPoints={getSeriesData(statistics)}
+					xCategories={statisticsService.getMonthLabels(statistics, dateFormat())}
+					dataPoints={statisticsService.getSeriesByField(finances.wealth, statistics)}
 					valueFormatter={europeanFormat}
 				/>
 			</div>
@@ -173,7 +147,7 @@
 			onUpdate={updateHistoryValue}
 			onDelete={deleteHistoryValue}
 			itemTitle={historyField.title}
-			dateFormat={auth.user?.settings?.date_format ?? null}
+			dateFormat={dateFormat()}
 			onDeleteItem={deleteHistoryField}
 		/>
 	</ContentModal>

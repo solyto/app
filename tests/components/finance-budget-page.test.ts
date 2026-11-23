@@ -2,14 +2,14 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import ApiService from '$lib/services/ApiService';
-import type { Budget } from '$lib/types/finance';
 import type { Finances } from '$lib/state/Finances.svelte';
 import type { Tags } from '$lib/state/Tags.svelte';
 import BudgetPage from '../../src/routes/finances/budget/+page.svelte';
 import { renderWithContext } from './helpers/context';
 import FinancesHarness from './helpers/FinancesHarness.svelte';
+import { budget, tag } from '../unit/helpers/factories';
 
-const rent: Budget = { id: 1, title: 'Rent', type: 'expense', value: 900, tags: [], created_at: '', updated_at: '' };
+const rent = budget();
 
 async function openRentHistory(): Promise<Finances> {
 	vi.spyOn(ApiService.prototype, 'list').mockResolvedValue({ data: [] });
@@ -18,7 +18,7 @@ async function openRentHistory(): Promise<Finances> {
 		component: BudgetPage,
 		onReady: (f: Finances, tags: Tags) => {
 			finances = f;
-			tags.tags = [{ id: 3, name: 'Home', color: '#000', created_at: '', updated_at: '' }];
+			tags.tags = [tag(3, 'Home')];
 		}
 	});
 	finances!.expenses = [rent];

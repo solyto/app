@@ -581,6 +581,12 @@ export interface LibraryRecords {
 		condition_medium: string;
 		condition_poor: string;
 		condition_verypoor: string;
+		condition_short_mint: string;
+		condition_short_verygood: string;
+		condition_short_good: string;
+		condition_short_medium: string;
+		condition_short_poor: string;
+		condition_short_verypoor: string;
 		add_album: string;
 		edit_album: string;
 		import_error: string;
@@ -800,8 +806,24 @@ export interface LibraryRecords {
 	import: string;
 	no_results: string;
 	no_results_desc: string;
+	search_unavailable: string;
 	no_entries: string;
 	no_entries_desc: string;
+	entries_count: string;
+	cover: string;
+	cover_of: string;
+	poster: string;
+	remove_cover: string;
+	previous: string;
+	next: string;
+	service_icon: string;
+	favicon: string;
+	external_link: string;
+	new_genre: string;
+	view_list: string;
+	view_cards: string;
+	view_shelf: string;
+	view_browse: string;
 }
 
 export interface DevRecords {
@@ -887,8 +909,10 @@ export interface FinanceRecords {
 	tag_error: string;
 	all_tags: string;
 	tag_filter: string;
+	title_placeholder: string;
+	value_placeholder: string;
+	edit_item: string;
 }
-
 
 export interface FeedRecords {
 	feeds: string;

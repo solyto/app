@@ -16,11 +16,12 @@
 	const loadingIndicator = getLoadingIndicator();
 	const library = getLinkLibrary();
 	const ts = getTranslation();
+	const DEFAULT_COLOR = '#1dbda5';
 
 	let addCategory = $state<boolean>(false);
 	let input = $state<HTMLInputElement | null>(null);
 	let title = $state<string>('');
-	let hex = $state<string>('#1dbda5');
+	let hex = $state<string>(DEFAULT_COLOR);
 
 	let keyHandlers: { [key: string]: string | null } = { Enter: null, Escape: null };
 
@@ -53,18 +54,17 @@
 	}
 
 	async function onsubmit(): Promise<void> {
-		loadingIndicator.start();
 		keyManager.unregisterKeyDown(keyHandlers.Enter);
-		let categoryTitle = title.trim();
+		if (title.trim() === '') return;
 
-		if (categoryTitle === '') {
-			return;
+		loadingIndicator.start();
+		try {
+			await library.createCategory(title, hex);
+		} finally {
+			loadingIndicator.stop();
 		}
-
-		await library.createCategory(title, hex);
-		loadingIndicator.stop();
 		title = '';
-		hex = '#1dbda5';
+		hex = DEFAULT_COLOR;
 		addCategory = false;
 	}
 </script>

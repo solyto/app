@@ -44,14 +44,14 @@
 	class="flex w-full flex-col gap-4 md:flex-row"
 >
 	<div class="flex justify-center">
-		{#if release.cover === null || release.cover === undefined || release.cover === ''}
+		{#if !release.cover}
 			<div
 				class="relative flex size-48 items-center justify-center rounded-lg bg-c-neutral text-xs text-c-neutral-5"
 			>
 				<MissingCover {library} />
 			</div>
 		{:else}
-			<img src={release.cover} loading="lazy" alt="Cover" class="rounded-lg md:size-48" />
+			<img src={release.cover} loading="lazy" alt={ts.get.libraries.cover} class="rounded-lg md:size-48" />
 		{/if}
 	</div>
 	<div class="flex flex-col items-start justify-between gap-2 md:max-w-96 md:min-w-60">

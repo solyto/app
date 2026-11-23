@@ -21,6 +21,10 @@
 	let adding = $state<boolean>(false);
 	let added = $state<boolean>(false);
 
+	function toggleSneakPreview(): void {
+		sneakPreview = !sneakPreview;
+	}
+
 	async function addToWishlist() {
 		adding = true;
 		const year = release.release_date ? new Date(release.release_date).getFullYear() : null;
@@ -46,14 +50,14 @@
 >
 	<div class="flex flex-col gap-4 md:flex-row">
 		<div class="flex justify-center">
-			{#if release.cover === null || release.cover === undefined || release.cover === ''}
+			{#if !release.cover}
 				<div
 					class="relative flex size-48 items-center justify-center rounded-lg bg-c-neutral text-xs text-c-neutral-5"
 				>
 					<MissingCover {library} />
 				</div>
 			{:else}
-				<img src={release.cover} loading="lazy" alt="Cover" class="rounded-lg md:size-48" />
+				<img src={release.cover} loading="lazy" alt={ts.get.libraries.cover} class="rounded-lg md:size-48" />
 			{/if}
 		</div>
 		<div class="flex flex-col items-start justify-between gap-2 md:min-w-60">
@@ -69,13 +73,9 @@
 				<DeezerButton link={release.url} />
 				<button
 					class="group mt-2 mb-1 flex cursor-pointer items-center gap-3 rounded-lg border-1 border-c-neutral p-2 text-sm font-bold shadow-sm transition-all hover:text-[#a238ff] dark:border-s-dark-2"
-					onclick={() => (sneakPreview = !sneakPreview)}
+					onclick={toggleSneakPreview}
 				>
-					<img
-						src={DeezerIcon}
-						alt="Deezer icon"
-						class="size-6 group-hover:animate-pulse"
-					/>
+					<img src={DeezerIcon} alt={ts.get.libraries.service_icon.replace('%s', 'Deezer')} class="size-6 group-hover:animate-pulse" />
 					{ts.get.libraries.music.deezer_preview}
 				</button>
 				<button

@@ -45,7 +45,7 @@ export class QuoteLibrary {
 		const res = await this.apiService.list(apiRoutes.libraries.quotes.list);
 		if (res) {
 			this.entries = res.data as Quote[];
-			this.search();
+			this.reapplyFilter();
 			this.loaded = true;
 		}
 	}
@@ -56,10 +56,7 @@ export class QuoteLibrary {
 	}
 
 	search(): void {
-		this.filteredEntries = this.filterService.search(this.entries, this.searchTerm, [
-			'author',
-			'quote'
-		]);
+		this.reapplyFilter();
 	}
 
 	openCreateModal(entry?: Quote): void {
@@ -88,7 +85,7 @@ export class QuoteLibrary {
 	async create(request: CreateQuoteRequest): Promise<boolean> {
 		const res = await this.apiService.create(apiRoutes.libraries.quotes.create, request);
 		if (res) await this.load();
-		return Promise.resolve(res !== null);
+		return res !== null;
 	}
 
 	async update(quote: Quote, request: UpdateQuoteRequest): Promise<boolean> {
@@ -105,6 +102,10 @@ export class QuoteLibrary {
 		const res = await this.apiService.delete(apiRoutes.libraries.quotes.delete, quote.id);
 		if (res) await this.load();
 		return res;
+	}
+
+	private reapplyFilter(): void {
+		this.filteredEntries = this.filterService.search(this.entries, this.searchTerm, ['author', 'quote']);
 	}
 }
 

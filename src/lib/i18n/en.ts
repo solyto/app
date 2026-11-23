@@ -703,6 +703,12 @@ const libraries: LibraryRecords = {
 		condition_medium: 'Medium Condition',
 		condition_poor: 'Poor Condition',
 		condition_verypoor: 'Very Poor Condition',
+		condition_short_mint: 'Mint',
+		condition_short_verygood: 'Very good',
+		condition_short_good: 'Good',
+		condition_short_medium: 'Medium',
+		condition_short_poor: 'Poor',
+		condition_short_verypoor: 'Very poor',
 		add_album: 'Add an Album',
 		edit_album: 'Update Album',
 		import_error: 'Album could not be imported.',
@@ -921,8 +927,24 @@ const libraries: LibraryRecords = {
 	import: 'Import',
 	no_results: 'No results found.',
 	no_results_desc: 'Try a different search or clear the filters.',
+	search_unavailable: 'The service could not be reached. Please try again later.',
 	no_entries: 'Nothing here yet.',
-	no_entries_desc: 'Add your first entry with the plus button.'
+	no_entries_desc: 'Add your first entry with the plus button.',
+	entries_count: '%s entries',
+	cover: 'Cover',
+	cover_of: '%s cover',
+	poster: 'Poster',
+	remove_cover: 'Remove cover',
+	previous: 'Previous',
+	next: 'Next',
+	service_icon: '%s icon',
+	favicon: 'Favicon',
+	external_link: 'External link',
+	new_genre: 'New genre',
+	view_list: 'List',
+	view_cards: 'Cards',
+	view_shelf: 'Shelf',
+	view_browse: 'Browse'
 };
 
 const dev: DevRecords = {
@@ -1007,9 +1029,11 @@ const finances: FinanceRecords = {
 	tags: 'Tags',
 	tag_error: 'Tag could not be created',
 	all_tags: 'All tags',
-	tag_filter: 'Filter by tag'
+	tag_filter: 'Filter by tag',
+	title_placeholder: 'Title',
+	value_placeholder: 'Value',
+	edit_item: 'Edit %s'
 };
-
 
 const feeds: FeedRecords = {
 	feeds: 'Feeds',

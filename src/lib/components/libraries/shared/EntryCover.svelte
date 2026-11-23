@@ -3,10 +3,10 @@
 	import CoverImage from '$lib/components/libraries/shared/CoverImage.svelte';
 	import type { Library, LibraryEntry } from '$lib/types/library';
 	import type { Link } from '$lib/types/library_link';
-	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
-	import { getAuth } from '$lib/state/Auth.svelte';
+	import { libraryCoverUrl, previewFilename } from '$lib/helpers/LibraryCoverHelper';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
-	const auth = getAuth();
+	const ts = getTranslation();
 
 	let { entry, library, fill = false }: {
 		entry: LibraryEntry | Link;
@@ -14,23 +14,26 @@
 		fill?: boolean;
 	} = $props();
 
-	function previewFilename(cover: string): string {
-		const dot = cover.lastIndexOf('.');
-		return dot === -1 ? cover + '_preview' : cover.slice(0, dot) + '_preview' + cover.slice(dot);
+	function coverUrl(cover: string): string {
+		return libraryCoverUrl(library, cover);
+	}
+
+	function previewUrl(cover: string): string {
+		return libraryCoverUrl(library, previewFilename(cover));
 	}
 </script>
 
 <MissingCover {library} />
 {#if 'cover' in entry && entry.cover}
 	<CoverImage
-		src={`${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${previewFilename(entry.cover)}`}
+		src={previewUrl(entry.cover)}
 		alt=""
 		class="pointer-events-none absolute inset-0 top-0 left-0 h-full w-full object-cover opacity-10 blur-xs"
 	/>
 	<CoverImage
-		src={`${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${entry.cover}`}
-		previewSrc={`${API_USER_STORAGE_URL}/${auth.user?.id}/${library.config.type}/${previewFilename(entry.cover)}`}
-		alt="Cover"
+		src={coverUrl(entry.cover)}
+		previewSrc={previewUrl(entry.cover)}
+		alt={ts.get.libraries.cover}
 		class="z-30 h-full w-full rounded-sm {fill ? 'object-cover' : 'object-contain'}"
 	/>
 {/if}

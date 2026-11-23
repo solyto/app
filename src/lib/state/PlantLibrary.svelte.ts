@@ -54,37 +54,27 @@ export class PlantLibrary {
 
 	search(): void {
 		this.activeFilter = 'search';
-		this.filteredEntries = this.filterService.search(this.entries, this.searchTerm, [
-			'name',
-			'latin_name'
-		]);
+		this.reapplyFilter();
 	}
 
 	addLocationFilter(location: PlantLocation | null): void {
 		this.locationFilter = location;
 		this.activeFilter = 'location';
-		this.filteredEntries = this.filterService.byLocation(this.entries, location);
+		this.reapplyFilter();
 	}
 
 	filterByUnidentified(): void {
 		this.unidentifiedFilter = true;
 		this.locationFilter = null;
 		this.activeFilter = 'unidentified';
-		this.filteredEntries = this.filterService.byUnidentified(this.entries);
+		this.reapplyFilter();
 	}
 
 	clearFilters(): void {
 		this.locationFilter = null;
 		this.unidentifiedFilter = false;
 		this.activeFilter = 'none';
-		this.filteredEntries = this.entries;
-	}
-
-	private reapplyFilter(): void {
-		if (this.activeFilter === 'search') this.search();
-		else if (this.activeFilter === 'location') this.addLocationFilter(this.locationFilter);
-		else if (this.activeFilter === 'unidentified') this.filterByUnidentified();
-		else this.filteredEntries = this.entries;
+		this.reapplyFilter();
 	}
 
 	openCreateModal(entry?: Plant): void {
@@ -146,6 +136,23 @@ export class PlantLibrary {
 		const res = await this.apiService.delete(apiRoutes.libraries.plants.delete, entry.id);
 		if (res) await this.load();
 		return res;
+	}
+
+	private reapplyFilter(): void {
+		this.filteredEntries = this.filterEntries();
+	}
+
+	private filterEntries(): Plant[] {
+		switch (this.activeFilter) {
+			case 'search':
+				return this.filterService.search(this.entries, this.searchTerm, ['name', 'latin_name']);
+			case 'location':
+				return this.filterService.byLocation(this.entries, this.locationFilter);
+			case 'unidentified':
+				return this.filterService.byUnidentified(this.entries);
+			default:
+				return this.entries;
+		}
 	}
 }
 

@@ -16,6 +16,7 @@
 	import OptionCard from '$lib/components/ui/OptionCard.svelte';
 
 	const ts = getTranslation();
+	const MIN_LOADING_MS = 500;
 
 	let { library }: { library: MusicLibrary | BookLibrary } = $props();
 
@@ -23,7 +24,7 @@
 	let selection = $state<LibraryRecommendationType | null>(null);
 	let recommendation = $state<LibraryRecommendation | null>(null);
 	let recommendationLoaded = $state<boolean>(false);
-	let loadingText = $state<string>('Loading...');
+	let loadingText = $state<string>(ts.get.libraries.recommendations.loading_text_local);
 
 	function toggleChat() {
 		if (modalVisible) {
@@ -35,11 +36,8 @@
 	}
 
 	async function select(type: LibraryRecommendationType): Promise<void> {
-		if (type === 'new') {
-			loadingText = ts.get.libraries.recommendations.loading_text_remote;
-		} else {
-			loadingText = ts.get.libraries.recommendations.loading_text_local;
-		}
+		const texts = ts.get.libraries.recommendations;
+		loadingText = type === 'new' ? texts.loading_text_remote : texts.loading_text_local;
 
 		recommendationLoaded = false;
 		selection = type;
@@ -56,7 +54,7 @@
 		recommendation = await library.recommend(selection!);
 		setTimeout(() => {
 			recommendationLoaded = true;
-		}, 500);
+		}, MIN_LOADING_MS);
 
 		if (recommendation === null) return;
 
@@ -104,7 +102,7 @@
 						<button
 							class="flex cursor-pointer items-center justify-center gap-3 rounded-lg bg-c-action px-4 py-2 text-c-action-icon drop-shadow-md transition-all hover:bg-c-warning hover:text-c-action-icon-hover hover:shadow-xs hover:drop-shadow-xl"
 							in:fade
-							onclick={async () => loadRecommendation()}
+							onclick={loadRecommendation}
 						>
 							<IconRotateCcw />
 							{ts.get.libraries.recommendations.not_satisfied}
