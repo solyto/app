@@ -222,18 +222,43 @@ describe('RecurrenceRuleService', () => {
 			);
 		});
 
-		it('rewrites a DATE UNTIL on a timed event as UTC', () => {
+		it('rewrites a DATE UNTIL as UTC when the event stops being all-day', () => {
 			const parsed = service.parse('FREQ=DAILY;UNTIL=20271231', wednesday10th, 'Europe/Berlin')!;
-			expect(service.build(parsed, wednesday10th, false, 'Europe/Berlin')).toBe(
+			expect(service.build(parsed, wednesday10th, false, 'Europe/Berlin', true)).toBe(
 				'FREQ=DAILY;UNTIL=20271231T225959Z'
 			);
 		});
 
-		it('rewrites a UTC UNTIL on an all-day event as a DATE', () => {
+		it('rewrites a UTC UNTIL as a DATE when the event becomes all-day', () => {
 			const parsed = service.parse('FREQ=DAILY;UNTIL=20271231T225959Z', wednesday10th, 'Europe/Berlin')!;
-			expect(service.build(parsed, wednesday10th, true, 'Europe/Berlin')).toBe(
+			expect(service.build(parsed, wednesday10th, true, 'Europe/Berlin', false)).toBe(
 				'FREQ=DAILY;UNTIL=20271231'
 			);
+		});
+
+		// Other apps write the end of an all-day series as UTC midnight of the last day, or as the end of the
+		// last local day in UTC. Reading it in the user's timezone can land on a neighbouring day, so an end the
+		// user didn't touch is written back as it was: rewriting it would drop or add an occurrence.
+		it.each([
+			['FREQ=DAILY;UNTIL=20271231T000000Z', 'America/New_York'],
+			['FREQ=DAILY;UNTIL=20280101T045959Z', 'America/New_York'],
+			['FREQ=DAILY;UNTIL=20271231T235959Z', 'Europe/Berlin'],
+			['FREQ=DAILY;UNTIL=20271231T225959Z', 'Europe/Berlin']
+		])('keeps the untouched end %s of an all-day series in %s as it was', (rule, timeZone) => {
+			const parsed = service.parse(rule, wednesday10th, timeZone)!;
+			expect(service.build(parsed, wednesday10th, true, timeZone, true)).toBe(rule);
+		});
+
+		it('writes a changed end of an all-day series as a DATE', () => {
+			const parsed = service.parse('FREQ=DAILY;UNTIL=20271231T000000Z', wednesday10th, 'America/New_York')!;
+			expect(service.build({ ...parsed, until: '2028-03-31' }, wednesday10th, true, 'America/New_York', true)).toBe(
+				'FREQ=DAILY;UNTIL=20280331'
+			);
+		});
+
+		it('keeps an untouched DATE end of a timed series as it was', () => {
+			const parsed = service.parse('FREQ=DAILY;UNTIL=20271231', wednesday10th, 'Europe/Berlin')!;
+			expect(service.build(parsed, wednesday10th, false, 'Europe/Berlin', false)).toBe('FREQ=DAILY;UNTIL=20271231');
 		});
 
 		it('appends a new UNTIL after the preserved fields', () => {

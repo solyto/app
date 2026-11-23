@@ -149,6 +149,35 @@ describe('UserManagement store', () => {
 			expect(new URL(url).searchParams.get('group_by')).toBe('week');
 			expect(t.growth).toEqual([{ period: '2026-W03', total: 12 }]);
 		});
+
+		it('switches the grouping only together with its data', async () => {
+			let answer: (value: unknown) => void = () => {};
+			api.list.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
+			const t = new UserManagement();
+
+			const loading = t.groupGrowthBy('day');
+			expect(t.growthGroupBy).toBe('month');
+
+			answer({ data: [{ period: '2026-11-20', total: 12 }] });
+			await loading;
+			expect(t.growthGroupBy).toBe('day');
+			expect(t.growth).toEqual([{ period: '2026-11-20', total: 12 }]);
+		});
+
+		it('ignores a grouping whose data arrives after a newer one was chosen', async () => {
+			const answers: ((value: unknown) => void)[] = [];
+			api.list.mockImplementation(() => new Promise((resolve) => answers.push(resolve)));
+			const t = new UserManagement();
+
+			const week = t.groupGrowthBy('week');
+			const day = t.groupGrowthBy('day');
+			answers[1]({ data: [{ period: '2026-11-20', total: 12 }] });
+			answers[0]({ data: [{ period: '2026-W47', total: 12 }] });
+			await Promise.all([week, day]);
+
+			expect(t.growthGroupBy).toBe('day');
+			expect(t.growth).toEqual([{ period: '2026-11-20', total: 12 }]);
+		});
 	});
 
 	describe('updateRole', () => {

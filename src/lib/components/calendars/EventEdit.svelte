@@ -153,7 +153,7 @@
 
 	function recurrenceRule(): string | null {
 		return recurrence
-			? recurrenceRuleService.build(recurrence, form.start_date, form.is_all_day, timeZone)
+			? recurrenceRuleService.build(recurrence, form.start_date, form.is_all_day, timeZone, initialForm.is_all_day)
 			: form.recurrence_rule;
 	}
 

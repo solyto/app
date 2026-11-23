@@ -74,4 +74,30 @@ describe('Daily check-in page', () => {
 		await waitFor(() => expect(put).toHaveBeenCalledTimes(1));
 		expect(put).toHaveBeenCalledWith(expect.stringContaining('/check-in/values'), { tracker_id: 102, date: '2026-11-20', value: 1 });
 	});
+
+	it('keeps a change made while saving, and saves once on a double click', async () => {
+		type Put = Awaited<ReturnType<ApiService['put']>>;
+		const answers: ((value: Put) => void)[] = [];
+		const put = vi.spyOn(ApiService.prototype, 'put').mockImplementation(() => new Promise<Put>((resolve) => answers.push(resolve)));
+		vi.spyOn(ApiService.prototype, 'list').mockResolvedValue({ data: [] });
+		renderPage([water]);
+		const total = () => screen.getByRole('button', { expanded: false }).textContent?.trim();
+		const save = () => screen.getByRole<HTMLButtonElement>('button', { name: 'Save' });
+
+		await fireEvent.click(screen.getByLabelText('One more'));
+		await fireEvent.click(save());
+		await fireEvent.click(save());
+		expect(put).toHaveBeenCalledTimes(1);
+
+		// Another tap while the save is still running.
+		await fireEvent.click(screen.getByLabelText('One more'));
+		answers[0](true);
+
+		await waitFor(() => expect(save().disabled).toBe(false));
+		expect(total()).toBe('2');
+
+		await fireEvent.click(save());
+		await waitFor(() => expect(put).toHaveBeenCalledTimes(2));
+		expect(put).toHaveBeenLastCalledWith(expect.stringContaining('/check-in/values'), { tracker_id: 103, date: '2026-11-20', value: 2 });
+	});
 });

@@ -47,7 +47,7 @@
 </script>
 
 {#snippet badge(Icon: Component<{ class?: string }>, iconClass: string, label: string | null)}
-	<span class="absolute -right-0.5 -bottom-0.5 rounded-full bg-c-bg-surface p-0.5">
+	<span class="absolute -right-0.5 -bottom-0.5 rounded-full bg-c-bg p-0.5">
 		<Icon class="size-2.5 {iconClass}" />
 		{#if label}
 			<span class="sr-only">{label}</span>

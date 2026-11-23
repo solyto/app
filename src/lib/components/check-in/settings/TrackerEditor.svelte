@@ -63,7 +63,11 @@
 	async function create(): Promise<void> {
 		if (!canSave) return;
 
-		if (await run(async () => (await checkInData.createTracker({ name: name.trim(), type, icon })) !== null)) onDone();
+		const created = await run(async () => {
+			const tracker = await checkInData.createTracker({ name: name.trim(), type, icon });
+			return tracker !== null;
+		});
+		if (created) onDone();
 	}
 
 	async function save(): Promise<void> {

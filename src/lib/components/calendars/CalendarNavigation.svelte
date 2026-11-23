@@ -33,7 +33,7 @@
 </script>
 
 <div
-	class="absolute z-40 hidden h-full max-h-screen w-16 flex-col overflow-y-auto bg-c-bg-surface drop-shadow-xl transition-all lg:relative lg:flex"
+	class="absolute z-40 hidden h-full max-h-screen w-16 flex-col overflow-y-auto bg-c-bg drop-shadow-xl transition-all lg:relative lg:flex dark:border-r-1 dark:border-s-dark-2 dark:drop-shadow-sm dark:drop-shadow-s-dark-shadow"
 	class:lg:w-96={editMode}
 	in:fade
 >

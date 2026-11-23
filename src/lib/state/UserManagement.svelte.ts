@@ -28,6 +28,7 @@ export class UserManagement {
 
 	private searchTimer: ReturnType<typeof setTimeout> | undefined;
 	private generation = 0;
+	private growthGeneration = 0;
 
 	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
 		this.auth = auth;
@@ -49,10 +50,15 @@ export class UserManagement {
 		this.loaded = true;
 	}
 
-	async loadGrowth(): Promise<void> {
-		const query = new URLSearchParams({ group_by: this.growthGroupBy });
+	// The grouping switches together with its data, so the chart never labels one grouping's points with another's.
+	async loadGrowth(groupBy: UserGrowthGroupBy = this.growthGroupBy): Promise<void> {
+		const generation = ++this.growthGeneration;
+		const query = new URLSearchParams({ group_by: groupBy });
 		const res = await this.apiService.list(`${apiRoutes.admin.users.growth}?${query}`);
-		if (res) this.growth = res.data as UserGrowthPoint[];
+		if (!res || generation !== this.growthGeneration) return;
+
+		this.growth = res.data as UserGrowthPoint[];
+		this.growthGroupBy = groupBy;
 	}
 
 	async goToPage(page: number): Promise<void> {
@@ -72,8 +78,7 @@ export class UserManagement {
 	}
 
 	async groupGrowthBy(groupBy: UserGrowthGroupBy): Promise<void> {
-		this.growthGroupBy = groupBy;
-		await this.loadGrowth();
+		await this.loadGrowth(groupBy);
 	}
 
 	async updateRole(user: ManagedUser, role: UpdateUserRoleRequest['role']): Promise<boolean> {

@@ -29,7 +29,7 @@
 	const title = alert ? ts.get.alerts.edit_alert : ts.get.alerts.new_alert;
 
 	let trackerId = $state<number | null>(alert?.check_in_tracker_id ?? checkInData.activeTrackers[0]?.id ?? null);
-	let rule = $state<TrackerAlertRule>((alert?.rule as TrackerAlertRule | undefined) ?? 'average_below');
+	let rule = $state<TrackerAlertRule>(startingRule());
 	let threshold = $state<number | null>(alert?.threshold ?? null);
 	let days = $state<number | null>(alert?.days ?? 7);
 	let confirmingDelete = $state<boolean>(false);
@@ -38,6 +38,14 @@
 	const bounds = $derived(tracker ? alertService.thresholdBounds(tracker.type) : null);
 	const canSave = $derived(tracker !== null && alertService.isValid(tracker.type, rule, threshold, days));
 	let busy = $state<boolean>(false);
+
+	// A new alert starts with a rule the preselected tracker offers (yes/no and sports have no averages).
+	function startingRule(): TrackerAlertRule {
+		if (alert) return alert.rule as TrackerAlertRule;
+
+		const firstTracker = checkInData.activeTrackers[0];
+		return firstTracker ? alertService.rules(firstTracker.type)[0] : 'average_below';
+	}
 
 	function trackerOptions(): { label: string; value: string }[] {
 		return checkInData.activeTrackers.map((t) => ({ label: trackerLabel(t, ts.get.checkIn), value: String(t.id) }));

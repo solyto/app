@@ -29,9 +29,15 @@
 	// Unsaved changes by tracker id: the settings reload the trackers as new objects while this page stays open.
 	const pending = new SvelteMap<number, number | null>();
 	// What Save stores: only changes on trackers still shown, so one switched off or deleted meanwhile isn't saved unseen.
-	const changes = $derived(
-		new Map(checkInData.activeTrackers.filter((tracker) => pending.has(tracker.id)).map((tracker) => [tracker, pending.get(tracker.id)!]))
-	);
+	const changes = $derived.by(() => {
+		const shownChanges = new Map<CheckInTracker, number | null>();
+		for (const tracker of checkInData.activeTrackers) {
+			if (pending.has(tracker.id)) shownChanges.set(tracker, pending.get(tracker.id)!);
+		}
+		return shownChanges;
+	});
+
+	let saving = $state<boolean>(false);
 
 	let date = $derived(page.params.date ?? '');
 	let parsedDate = $derived(parseUrlFormat(date));
@@ -59,13 +65,19 @@
 	}
 
 	async function onSave(): Promise<void> {
-		if (changes.size === 0) return;
+		if (changes.size === 0 || saving) return;
+		saving = true;
+		const saved = new Map(changes);
 		loadingIndicator.start();
-		const ok = await checkInData.saveDay(date, changes);
+		const ok = await checkInData.saveDay(date, saved);
 		loadingIndicator.stop();
+		saving = false;
 
 		if (ok) {
-			pending.clear();
+			// Only what was saved: a tap made while saving stays pending.
+			for (const [tracker, value] of saved) {
+				if (pending.get(tracker.id) === value) pending.delete(tracker.id);
+			}
 			notifications.success(ts.get.checkIn.save_success);
 			// Goal progress is worked out on the server, so the Goals tab needs it fresh.
 			void goals.load();
@@ -94,7 +106,7 @@
 			class="z-10 flex w-full justify-center max-sm:sticky max-sm:bottom-4 max-sm:order-last max-sm:px-4 sm:absolute sm:top-0 sm:right-8 sm:w-auto"
 			class:max-sm:hidden={changes.size === 0}
 		>
-			<TextButton title={ts.get.layout.save} onclick={onSave} disabled={changes.size === 0} class="max-sm:h-14 max-sm:w-full max-sm:shadow-md" />
+			<TextButton title={ts.get.layout.save} onclick={onSave} disabled={changes.size === 0 || saving} class="max-sm:h-14 max-sm:w-full max-sm:shadow-md" />
 		</div>
 	{/if}
 
