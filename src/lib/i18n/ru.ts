@@ -124,6 +124,7 @@ const auth: AuthRecords = {
 	forgot_password_sent_title: 'Проверьте почту!',
 	forgot_password_sent_desc: 'Мы отправили ссылку для сброса пароля на адрес %s. Она действительна 60 минут.',
 	forgot_password_resend: 'Отправить ещё раз',
+	resend_cooldown: '(%d с)',
 	resend_verification_link: 'Не получили письмо с подтверждением?',
 	resend_verification_title: 'Новая ссылка для подтверждения',
 	resend_verification_hint: 'Укажите адрес электронной почты, и мы отправим новую ссылку для подтверждения.',
@@ -588,7 +589,8 @@ const widgets: WidgetRecords = {
 	no_cities_found: 'Города не найдены',
 	select_city_prompt: 'Выберите город, чтобы увидеть прогноз погоды.',
 	loading: 'Загрузка',
-	coming_up: 'Предстоящие события'
+	coming_up: 'Предстоящие события',
+	favicon_alt: 'Значок сайта'
 };
 
 const notes: NoteRecords = {
@@ -1393,7 +1395,9 @@ const clipboard: ClipboardRecords = {
 	download: 'Скачать',
 	delete_entry: 'Удалить запись',
 	attach_image: 'Прикрепить изображение',
-	attach_file: 'Прикрепить файл'
+	attach_file: 'Прикрепить файл',
+	image_preview_alt: 'Предпросмотр',
+	image_alt: 'Изображение из буфера обмена'
 };
 
 const profile: ProfileRecords = {
@@ -1404,7 +1408,12 @@ const profile: ProfileRecords = {
 	request_rejected: 'Отклонена',
 	request_accepted: 'Принята',
 	received: 'Полученные',
-	sent: 'Отправленные'
+	sent: 'Отправленные',
+	request_from: 'Заявка от %s',
+	profile_image_alt: 'Фото профиля',
+	user_profile_image_alt: 'Фото профиля: %s',
+	friend_id_placeholder: 'ID друга',
+	friend_request_invalid: 'Похоже, указан неверный ID пользователя.'
 };
 
 const admin: AdminRecords = {
@@ -1413,7 +1422,57 @@ const admin: AdminRecords = {
 	search_placeholder: 'Поиск по имени или адресу почты…',
 	no_users: 'Пользователи не найдены.',
 	no_search_results: 'По вашему запросу пользователи не найдены.',
-	loading_users: 'Загрузка пользователей…'
+	loading_users: 'Загрузка пользователей…',
+	dashboard: 'Панель управления',
+	dashboard_description: 'Обзор статистики платформы',
+	users: 'Пользователи',
+	users_description: 'Управление аккаунтами и ролями пользователей',
+	back_to_app: 'Вернуться в приложение',
+	role_user: 'Пользователь',
+	role_admin: 'Администратор',
+	role_super_admin: 'Суперадминистратор',
+	growth_title: 'Рост числа пользователей',
+	growth_by_year: 'По годам',
+	growth_by_month: 'По месяцам',
+	growth_by_week: 'По неделям',
+	growth_by_day: 'По дням',
+	section_calendars: 'Календари',
+	section_todos: 'Задачи',
+	section_notes: 'Заметки',
+	section_libraries: 'Коллекции',
+	section_contacts: 'Контакты',
+	section_check_in: 'Ежедневный опрос',
+	section_finances: 'Финансы',
+	section_time_tracking: 'Учёт времени',
+	section_feeds: 'Ленты',
+	section_other: 'Другое',
+	stat_users: 'Пользователи',
+	stat_active_users: 'Активные пользователи',
+	stat_confirmed_users: 'Подтверждённые пользователи',
+	stat_friends: 'Друзья',
+	stat_notifications: 'Уведомления',
+	stat_calendars: 'Календари',
+	stat_events: 'События',
+	stat_todos: 'Задачи',
+	stat_categories: 'Категории',
+	stat_workspaces: 'Рабочие области',
+	stat_notes: 'Заметки',
+	stat_folders: 'Папки',
+	stat_books: 'Книги',
+	stat_albums: 'Альбомы',
+	stat_movies: 'Фильмы',
+	stat_recipes: 'Рецепты',
+	stat_links: 'Ссылки',
+	stat_quotes: 'Цитаты',
+	stat_games: 'Игры',
+	stat_address_books: 'Адресные книги',
+	stat_contacts: 'Контакты',
+	stat_entries: 'Записи',
+	stat_income_entries: 'Записи о доходах',
+	stat_wealth_entries: 'Записи о капитале',
+	stat_projects: 'Проекты',
+	stat_subscribed_feeds: 'Подписки на ленты',
+	stat_tags: 'Теги'
 };
 
 const welcome_tour: WelcomeTourRecords = {

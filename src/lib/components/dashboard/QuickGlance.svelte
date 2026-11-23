@@ -3,7 +3,6 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getNavigation } from '$lib/state/Navigation.svelte';
-
 	import TimeTrackingWidget from '$lib/components/dashboard/widgets/TimeTrackingWidget.svelte';
 	import CheckInWidget from '$lib/components/dashboard/widgets/CheckInWidget.svelte';
 	import GoalsWidget from '$lib/components/dashboard/widgets/GoalsWidget.svelte';

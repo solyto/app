@@ -9,7 +9,7 @@ import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import DevRequestSortingService from '$lib/services/DevRequestSortingService';
-import { apiRoutes } from '$lib/config/apiRoutes';
+import { apiRoutes, API_STORAGE_URL } from '$lib/config/apiRoutes';
 
 export class DevRequests {
 	loaded = $state<boolean>(false);
@@ -58,7 +58,7 @@ export class DevRequests {
 			await this.vote(devRequest, 'up');
 			await this.load();
 		}
-		return Promise.resolve(res !== null);
+		return res !== null;
 	}
 
 	async update(entry: DevRequest, request: UpdateDevRequestRequest): Promise<boolean> {
@@ -73,7 +73,11 @@ export class DevRequests {
 			{ vote }
 		);
 		if (res) await this.load();
-		return Promise.resolve(res !== null);
+		return res !== null;
+	}
+
+	screenshotUrl(entry: DevRequest): string {
+		return API_STORAGE_URL + '/' + entry.screenshot;
 	}
 
 	async loadComments(entry: DevRequest): Promise<DevRequestComment[]> {
@@ -90,7 +94,7 @@ export class DevRequests {
 			{ content }
 		);
 		if (res) await this.load();
-		return Promise.resolve(res !== null);
+		return res !== null;
 	}
 }
 

@@ -9,6 +9,8 @@
 	import IconMapPin from '$lib/icons/lucide/map-pin.svelte';
 	import IconPen from '$lib/icons/lucide/pen.svelte';
 
+	const CLOCK_TICK_MS = 1000;
+
 	const weather = getWeather();
 
 	let { ts, auth }: {
@@ -34,17 +36,16 @@
 	onMount(() => {
 		clockInterval = setInterval(() => {
 			time.setTime(Date.now());
-		}, 1000);
-
-		weather.load();
+		}, CLOCK_TICK_MS);
 	});
 
 	onDestroy(() => {
 		clearInterval(clockInterval);
 	});
 
-	async function toggleTemperatureUnit(unit: 'c' | 'f'): Promise<void> {
-		if (!auth.user || unit === temperatureUnit) return;
+	async function switchTemperatureUnit(): Promise<void> {
+		if (!auth.user) return;
+		const unit = temperatureUnit === 'c' ? 'f' : 'c';
 		auth.user.settings.temperature_unit = unit;
 		await weather.updateTemperatureUnit(unit);
 	}
@@ -94,7 +95,7 @@
 					</div>
 					<button
 						class="ml-auto shrink-0 cursor-pointer rounded-md bg-c-neutral-1 px-2 py-1 text-xs font-medium text-c-neutral-5 transition-colors hover:bg-c-neutral-2 hover:text-c-neutral-7 dark:bg-s-dark-3 dark:text-c-neutral-4 dark:hover:bg-s-dark-2 dark:hover:text-c-neutral-2"
-						onclick={() => toggleTemperatureUnit(temperatureUnit === 'c' ? 'f' : 'c')}
+						onclick={switchTemperatureUnit}
 					>
 						{temperatureUnit?.toUpperCase()}°
 					</button>

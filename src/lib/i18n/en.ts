@@ -82,7 +82,7 @@ const nav: NavigationRecords = {
 	calendar: 'Calendar',
 	contacts: 'Contacts',
 	clipboard: 'Clipboard',
-	timeTracking: 'Time Tracking'
+	timeTracking: 'Time tracking'
 };
 
 const auth: AuthRecords = {
@@ -124,6 +124,7 @@ const auth: AuthRecords = {
 	forgot_password_sent_title: 'Check your inbox!',
 	forgot_password_sent_desc: 'We sent a password reset link to %s. It expires in 60 minutes.',
 	forgot_password_resend: 'Send again',
+	resend_cooldown: '(%ds)',
 	resend_verification_link: "Didn't get the confirmation email?",
 	resend_verification_title: 'New confirmation link',
 	resend_verification_hint: "Enter your email and we'll send you a new confirmation link.",
@@ -211,7 +212,7 @@ const settings: SettingsRecords = {
 	nextcloud_no_token: 'No token registered.',
 	telegram_bot_integration_success: 'Integration successfully registered for Telegram Chat ID %s',
 	telegram_bot_token_created: 'Token created.',
-	telegram_bot_register: 'Register it by sending the following command to the %s',
+	telegram_bot_register: 'Register it by sending the following command to %s',
 	telegram_bot_create: 'Create a connection',
 	telegram_bot_not_connected:
 		"You haven't connected the Bot to your account yet. Do so under Integrations.",
@@ -589,7 +590,8 @@ const widgets: WidgetRecords = {
 	no_cities_found: 'No cities found',
 	select_city_prompt: 'Select your city to see the weather forecast.',
 	loading: 'Loading',
-	coming_up: 'Coming Up'
+	coming_up: 'Coming up',
+	favicon_alt: 'Favicon'
 };
 
 const notes: NoteRecords = {
@@ -1343,18 +1345,25 @@ const clipboard: ClipboardRecords = {
 	download: 'Download',
 	delete_entry: 'Delete entry',
 	attach_image: 'Attach image',
-	attach_file: 'Attach file'
+	attach_file: 'Attach file',
+	image_preview_alt: 'Preview',
+	image_alt: 'Clipboard'
 };
 
 const profile: ProfileRecords = {
 	friends: 'Friends',
-	friend_requests: 'Friend Requests',
+	friend_requests: 'Friend requests',
 	request_to: 'Request to %s',
 	request_pending: 'Pending',
 	request_rejected: 'Rejected',
 	request_accepted: 'Accepted',
 	received: 'Received',
-	sent: 'Sent'
+	sent: 'Sent',
+	request_from: 'Request from %s',
+	profile_image_alt: 'Profile',
+	user_profile_image_alt: '%s profile',
+	friend_id_placeholder: 'Friend ID',
+	friend_request_invalid: 'The requested user ID seems invalid.'
 };
 
 const admin: AdminRecords = {
@@ -1363,7 +1372,57 @@ const admin: AdminRecords = {
 	search_placeholder: 'Search by name or email...',
 	no_users: 'No users found.',
 	no_search_results: 'No users match your search.',
-	loading_users: 'Loading users...'
+	loading_users: 'Loading users...',
+	dashboard: 'Dashboard',
+	dashboard_description: 'Overview of platform statistics',
+	users: 'Users',
+	users_description: 'Manage user accounts and roles',
+	back_to_app: 'Back to app',
+	role_user: 'User',
+	role_admin: 'Admin',
+	role_super_admin: 'Super admin',
+	growth_title: 'User growth',
+	growth_by_year: 'By year',
+	growth_by_month: 'By month',
+	growth_by_week: 'By week',
+	growth_by_day: 'By day',
+	section_calendars: 'Calendars',
+	section_todos: 'Todos',
+	section_notes: 'Notes',
+	section_libraries: 'Libraries',
+	section_contacts: 'Contacts',
+	section_check_in: 'Check-in',
+	section_finances: 'Finances',
+	section_time_tracking: 'Time tracking',
+	section_feeds: 'Feeds',
+	section_other: 'Other',
+	stat_users: 'Users',
+	stat_active_users: 'Active users',
+	stat_confirmed_users: 'Confirmed users',
+	stat_friends: 'Friends',
+	stat_notifications: 'Notifications',
+	stat_calendars: 'Calendars',
+	stat_events: 'Events',
+	stat_todos: 'Todos',
+	stat_categories: 'Categories',
+	stat_workspaces: 'Workspaces',
+	stat_notes: 'Notes',
+	stat_folders: 'Folders',
+	stat_books: 'Books',
+	stat_albums: 'Albums',
+	stat_movies: 'Movies',
+	stat_recipes: 'Recipes',
+	stat_links: 'Links',
+	stat_quotes: 'Quotes',
+	stat_games: 'Games',
+	stat_address_books: 'Address books',
+	stat_contacts: 'Contacts',
+	stat_entries: 'Entries',
+	stat_income_entries: 'Income entries',
+	stat_wealth_entries: 'Wealth entries',
+	stat_projects: 'Projects',
+	stat_subscribed_feeds: 'Subscribed feeds',
+	stat_tags: 'Tags'
 };
 
 const welcome_tour: WelcomeTourRecords = {

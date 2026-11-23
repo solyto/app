@@ -5,6 +5,7 @@ import type { CheckInTracker, CheckInValue } from '$lib/types/check_in';
 import type { Goal } from '$lib/types/goal';
 import type { Calendar, CalendarEvent, CalendarEventResponse } from '$lib/types/calendar';
 import type { FeedImportEntry, FeedImportState, FeedItem, FeedSubscription } from '$lib/types/feed';
+import type { ClipboardEntry } from '$lib/types/clipboard';
 
 export function todo(overrides: Partial<Todo> = {}): Todo {
 	return {
@@ -209,6 +210,18 @@ export function feedImportState(overrides: Partial<FeedImportState> = {}): FeedI
 		total: 0,
 		processed: 0,
 		feeds: [],
+		...overrides
+	};
+}
+
+export function clipboardEntry(overrides: Partial<ClipboardEntry> = {}): ClipboardEntry {
+	return {
+		id: 1,
+		content: 'Copied text',
+		type: 'text',
+		file_path: null,
+		created_at: '2026-11-20T10:00:00',
+		updated_at: '2026-11-20T10:00:00',
 		...overrides
 	};
 }

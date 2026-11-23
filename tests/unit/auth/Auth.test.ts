@@ -171,11 +171,8 @@ describe('Auth store', () => {
 			expect(auth.loggedIn).toBe(true);
 			expect(auth.getToken()).toBe('token-1');
 			expect(auth.user?.name).toBe('Refreshed Name');
-			// token was pushed into the ApiService
 			expect(api.updateAuthToken).toHaveBeenCalledWith('token-1');
-			// not within the 5-day refresh threshold
 			expect(api.post).not.toHaveBeenCalled();
-			// session was persisted again after the additional data load
 			expect(storage.setJson).toHaveBeenCalledWith('auth', expect.objectContaining({}));
 		});
 

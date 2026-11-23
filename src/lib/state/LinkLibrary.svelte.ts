@@ -29,6 +29,7 @@ export class LinkLibrary {
 	};
 	loaded = $state<boolean>(false);
 	entries = $state<Link[]>([]);
+	newestEntries = $state<Link[]>([]);
 	filteredEntries = $state<Link[]>([]);
 	categories = $state<LinkCategory[]>([]);
 	categoriesCount = $state<{ id: number; count: number }[]>([]);
@@ -61,6 +62,11 @@ export class LinkLibrary {
 			this.loaded = true;
 		}
 		if (categoriesRes) this.setCategories(categoriesRes.data as LinkCategory[]);
+	}
+
+	async loadNewest(): Promise<void> {
+		const res = await this.apiService.list(apiRoutes.libraries.links.newest);
+		if (res) this.newestEntries = res.data as Link[];
 	}
 
 	async loadCategories(): Promise<void> {

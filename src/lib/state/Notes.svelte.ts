@@ -27,6 +27,8 @@ export class NotesSvelte {
 	loaded = $state<boolean>(false);
 	notes = $state<Note[]>([]);
 	lastUpdatedNotes = $state<Note[]>([]);
+	recentNotes = $state<Note[]>([]);
+	recentNotesLoaded = $state<boolean>(false);
 	favoriteNotes = $state<Note[]>([]);
 	categories = $state<NoteCategory[]>([]);
 	journalCategory = $state<NoteCategory | null>(null);
@@ -85,6 +87,12 @@ export class NotesSvelte {
 			this.favoriteNotes = this.getFavorites();
 			this.checkUrlForActiveNote();
 		}
+	}
+
+	async loadRecent(): Promise<void> {
+		const res = await this.apiService.list(apiRoutes.notes.recent);
+		if (res) this.recentNotes = res.data as Note[];
+		this.recentNotesLoaded = true;
 	}
 
 	loadCollapsedCategories(): void {

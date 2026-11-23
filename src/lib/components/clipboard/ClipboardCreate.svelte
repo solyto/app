@@ -3,6 +3,7 @@
 	import { Clipboard, getClipboard } from '$lib/state/Clipboard.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import { SaveAction } from '$lib/helpers/SaveAction.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { CreateClipboardEntryRequest } from '$lib/types/clipboard';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
@@ -26,6 +27,7 @@
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 	const ts = getTranslation();
+	const saving = new SaveAction(() => ts.get.clipboard.save_error);
 
 	let value = $state<string>('');
 	let imagePreview = $state<string | null>(null);
@@ -43,16 +45,19 @@
 	const DOCUMENT_ACCEPT = [...Clipboard.FILE_EXTENSIONS.map((extension) => '.' + extension), ...IMAGE_TYPES].join(',');
 
 	async function onSave(): Promise<void> {
-		loadingIndicator.start();
 		const request: CreateClipboardEntryRequest = { content: value };
-		const res = await clipboard.create(request);
-		if (res) {
-			notifications.success(ts.get.clipboard.save_success);
-			value = '';
-		} else {
-			notifications.error(ts.get.clipboard.save_error);
-		}
-		loadingIndicator.stop();
+		const saved = await saving.run(() => clipboard.create(request));
+		if (!saved) return;
+		notifications.success(ts.get.clipboard.save_success);
+		value = '';
+	}
+
+	function pickImage(): void {
+		fileInput?.click();
+	}
+
+	function pickDocument(): void {
+		documentInput?.click();
 	}
 
 	function onPasteEvent(e: ClipboardEvent): void {
@@ -192,7 +197,7 @@
 		<div class="relative mb-4">
 			<img
 				src={imagePreview}
-				alt="Preview"
+				alt={ts.get.clipboard.image_preview_alt}
 				class="max-h-64 rounded-md border border-c-neutral-2 dark:border-s-dark"
 			/>
 			<div class="absolute top-[-10px] right-[-10px]">
@@ -222,10 +227,10 @@
 			<TextInput multiLine={true} bind:value height={200} />
 		</div>
 		<div class="mt-4 flex w-full justify-end gap-4">
-			<button class={PICKER_BUTTON} onclick={() => fileInput?.click()} title={ts.get.clipboard.attach_image} aria-label={ts.get.clipboard.attach_image}>
+			<button class={PICKER_BUTTON} onclick={pickImage} title={ts.get.clipboard.attach_image} aria-label={ts.get.clipboard.attach_image}>
 				<IconImage class="size-4" />
 			</button>
-			<button class={PICKER_BUTTON} onclick={() => documentInput?.click()} title={ts.get.clipboard.attach_file} aria-label={ts.get.clipboard.attach_file}>
+			<button class={PICKER_BUTTON} onclick={pickDocument} title={ts.get.clipboard.attach_file} aria-label={ts.get.clipboard.attach_file}>
 				<IconPaperclip class="size-4" />
 			</button>
 			<TextButton title={ts.get.clipboard.save} onclick={onSave} />

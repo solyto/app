@@ -5,8 +5,10 @@
 	import IconTrash from '$lib/icons/lucide/trash.svelte';
 	import IconDownload from '$lib/icons/lucide/download.svelte';
 	import { formatDate } from '$lib/helpers/DateHelper';
-	import { getFileExtension, truncate } from '$lib/helpers/FormatHelper';
+	import { truncate } from '$lib/helpers/FormatHelper';
 	import { downloadBlob } from '$lib/helpers/DownloadHelper';
+	import { clipboardImageFileName } from '$lib/helpers/ClipboardHelper';
+	import { SaveAction } from '$lib/helpers/SaveAction.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -19,6 +21,7 @@
 	const ts = getTranslation();
 	const notifications = getUiNotifications();
 	const loadingIndicator = getLoadingIndicator();
+	const deleting = new SaveAction(() => ts.get.clipboard.delete_error);
 
 	const MAX_TEXT_PREVIEW_LENGTH = 200;
 	const ACTION_BUTTON = 'flex size-8 cursor-pointer items-center justify-center rounded-full bg-c-action text-c-action-icon drop-shadow-md transition-all hover:drop-shadow-xl';
@@ -53,7 +56,7 @@
 				canvas.toBlob((result) => {
 					URL.revokeObjectURL(img.src);
 					if (result) resolve(result);
-				else reject();
+					else reject();
 				}, 'image/png');
 			};
 			img.onerror = () => {
@@ -81,20 +84,15 @@
 			notifications.error(ts.get.clipboard.file_download_error);
 			return;
 		}
-		downloadBlob(blob, entry.type === 'image' ? imageFileName(entry, blob) : (entry.file_name ?? 'file'));
+		downloadBlob(blob, downloadFileName(entry, blob));
 	}
 
-	// Images have no original name; the stored path keeps the original format's extension.
-	function imageFileName(entry: ClipboardEntry, blob: Blob): string {
-		const extension = getFileExtension(entry.file_path ?? '') || blob.type.split('/')[1]?.replace('jpeg', 'jpg') || 'png';
-		return `clipboard-${entry.id}.${extension}`;
+	function downloadFileName(entry: ClipboardEntry, blob: Blob): string {
+		return entry.type === 'image' ? clipboardImageFileName(entry, blob.type) : (entry.file_name ?? 'file');
 	}
 
 	async function onDelete(entry: ClipboardEntry): Promise<void> {
-		loadingIndicator.start();
-		const res = await clipboard.delete(entry);
-		if (!res) notifications.error(ts.get.clipboard.delete_error);
-		loadingIndicator.stop();
+		await deleting.run(() => clipboard.delete(entry));
 	}
 </script>
 

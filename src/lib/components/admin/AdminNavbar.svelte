@@ -8,9 +8,11 @@
 
 	import { page } from '$app/state';
 	import { urls } from '$lib/config/urls';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+
+	const ts = getTranslation();
 
 	let active = $derived(page.url.pathname);
-
 </script>
 
 <div class="nav-desktop-container h-full bg-c-bg p-1" out:slide>
@@ -22,30 +24,18 @@
 		</div>
 
 		<div class="flex flex-1 flex-col items-center justify-center">
-			<NavEntry
-				slug="admin.home"
-				href={urls.admin.home}
-				title="Dashboard"
-				active={active === urls.admin.home}
-				><IconHouse /></NavEntry
-			>
-			<NavEntry
-				slug="admin.users"
-				href={urls.admin.users}
-				title="Users"
-				active={active === urls.admin.users}
-				><IconUsers /></NavEntry
-			>
+			<NavEntry slug="admin.home" href={urls.admin.home} title={ts.get.admin.dashboard} active={active === urls.admin.home}>
+				<IconHouse />
+			</NavEntry>
+			<NavEntry slug="admin.users" href={urls.admin.users} title={ts.get.admin.users} active={active === urls.admin.users}>
+				<IconUsers />
+			</NavEntry>
 		</div>
 
 		<div class="mt-auto flex flex-col items-center">
-			<NavEntry
-				slug="home"
-				href={urls.home}
-				title="Back to App"
-				active={false}
-				><IconArrowBigLeft /></NavEntry
-			>
+			<NavEntry slug="home" href={urls.home} title={ts.get.admin.back_to_app} active={false}>
+				<IconArrowBigLeft />
+			</NavEntry>
 		</div>
 	</div>
 </div>

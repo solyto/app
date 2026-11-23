@@ -40,6 +40,7 @@ export class Calendars {
 
 	calendars = $state<Calendar[]>([]);
 	events = $state<CalendarEvent[]>([]);
+	widgetEvents = $state<CalendarEvent[]>([]);
 	unavailableCalendarIds = $state<number[]>([]);
 	credentialsRejectedCalendarIds = $state<number[]>([]);
 	sortedEvents = $state<Record<string, CalendarEvent[]>>({});
@@ -179,10 +180,9 @@ export class Calendars {
 		this.checkInMarksEnabled = this.auth.user?.settings?.check_in_calendar_mark ?? false;
 	}
 
-	async getWidgetEvents(): Promise<CalendarEvent[]> {
+	async loadWidgetEvents(): Promise<void> {
 		const res = await this.apiService.list(apiRoutes.calendars.listWidgetEvents);
-		if (res) return res.data as CalendarEvent[];
-		return [];
+		if (res) this.widgetEvents = res.data as CalendarEvent[];
 	}
 
 	async loadTodos(): Promise<void> {

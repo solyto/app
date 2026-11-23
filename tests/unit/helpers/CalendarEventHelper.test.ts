@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
 	adjustEventRange,
 	combineDateAndTime,
+	eventsNotStartingOn,
+	eventsStartingOn,
 	eventWriteErrorMessage,
 	getCalendarEventKey,
 	isDraggableOnDate,
@@ -128,5 +130,32 @@ describe('isRecurringOccurrence', () => {
 		expect(isRecurringOccurrence(calendarEvent({ is_recurring: true, original_start_date: new Date(2026, 7, 10) }))).toBe(true);
 		expect(isRecurringOccurrence(calendarEvent({ is_recurring: true, original_start_date: null }))).toBe(false);
 		expect(isRecurringOccurrence(calendarEvent())).toBe(false);
+	});
+});
+
+describe('eventsStartingOn / eventsNotStartingOn', () => {
+	const today = new Date(2026, 10, 20, 15, 0);
+	const late = calendarEvent({ id: 1, start_date: new Date(2026, 10, 20, 18, 0) });
+	const early = calendarEvent({ id: 2, start_date: new Date(2026, 10, 20, 8, 0) });
+	const tomorrow = calendarEvent({ id: 3, start_date: new Date(2026, 10, 21, 9, 0) });
+	const yesterday = calendarEvent({ id: 4, start_date: new Date(2026, 10, 19, 23, 0) });
+	const events = [tomorrow, late, yesterday, early];
+
+	it('picks the events that start on the day, earliest first', () => {
+		expect(eventsStartingOn(events, today).map((event) => event.id)).toEqual([2, 1]);
+	});
+
+	it('picks every other event, earliest first', () => {
+		expect(eventsNotStartingOn(events, today).map((event) => event.id)).toEqual([4, 3]);
+	});
+
+	it('reads the raw date strings the widget endpoint sends', () => {
+		const raw = calendarEvent({ start_date: '2026-11-20T09:00:00' as unknown as Date });
+		expect(eventsStartingOn([raw], today)).toEqual([raw]);
+	});
+
+	it('leaves the given list in its order', () => {
+		eventsStartingOn(events, today);
+		expect(events.map((event) => event.id)).toEqual([3, 1, 4, 2]);
 	});
 });

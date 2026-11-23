@@ -1,24 +1,20 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { blur } from 'svelte/transition';
 	import { getTimeTracking } from '$lib/state/TimeTracking.svelte';
 	import { Translation } from '$lib/state/Translation.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import IconTimer from '$lib/icons/lucide/timer.svelte';
 	import TimeTrackingGroupingService from '$lib/services/TimeTrackingGroupingService';
+	import type { ProjectBreakdown } from '$lib/services/TimeTrackingGroupingService';
 	import { getStartOfWeek } from '$lib/helpers/DateHelper';
 	import type { WeekStart } from '$lib/types/auth';
 
 	const tt = getTimeTracking();
-	const loadingIndicator = getLoadingIndicator();
 	const groupingService = new TimeTrackingGroupingService();
 
 	let { ts, weekStart }: {
 		ts: Translation;
 		weekStart: WeekStart;
 	} = $props();
-
-	let loaded = $state(false);
 
 	let weekBreakdown = $derived.by(() => {
 		const startOfWeek = getStartOfWeek(new Date(), weekStart);
@@ -30,15 +26,12 @@
 
 	let weekTotal = $derived(weekBreakdown.reduce((s, c) => s + c.minutes, 0));
 
-	onMount(async () => {
-		loadingIndicator.start();
-		await tt.load();
-		loadingIndicator.stop();
-		loaded = true;
-	});
+	function shareOfWeek(project: ProjectBreakdown): number {
+		return weekTotal > 0 ? (project.minutes / weekTotal) * 100 : 0;
+	}
 </script>
 
-{#if loaded && weekBreakdown.length > 0}
+{#if tt.loaded && weekBreakdown.length > 0}
 	<div in:blur>
 		<div class="mb-3 flex items-center gap-2">
 			<IconTimer size={15} class="text-c-heading dark:text-c-primary" />
@@ -70,15 +63,14 @@
 						<div class="h-1 w-full rounded-full bg-c-neutral-1 dark:bg-s-dark-3">
 							<div
 								class="h-1 rounded-full"
-								style="width: {weekTotal > 0 ? (category.minutes / weekTotal) * 100 : 0}%; background-color: {category.color}"
+								style="
+									width: {shareOfWeek(category)}%;
+									background-color: {category.color};
+								"
 							></div>
 						</div>
 					</div>
 				</div>
-			{:else}
-				<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">
-					{ts.get.timeTracking.no_entries}
-				</span>
 			{/each}
 		</div>
 	</div>

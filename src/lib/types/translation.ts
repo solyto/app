@@ -235,6 +235,7 @@ export interface AuthRecords {
 	forgot_password_sent_title: string;
 	forgot_password_sent_desc: string;
 	forgot_password_resend: string;
+	resend_cooldown: string;
 	resend_verification_link: string;
 	resend_verification_title: string;
 	resend_verification_hint: string;
@@ -468,6 +469,7 @@ export interface WidgetRecords {
 	select_city_prompt: string;
 	loading: string;
 	coming_up: string;
+	favicon_alt: string;
 }
 
 export interface NoteRecords {
@@ -1234,6 +1236,8 @@ export interface ClipboardRecords {
 	delete_entry: string;
 	attach_image: string;
 	attach_file: string;
+	image_preview_alt: string;
+	image_alt: string;
 }
 
 export interface ProfileRecords {
@@ -1245,6 +1249,11 @@ export interface ProfileRecords {
 	request_accepted: string;
 	received: string;
 	sent: string;
+	request_from: string;
+	profile_image_alt: string;
+	user_profile_image_alt: string;
+	friend_id_placeholder: string;
+	friend_request_invalid: string;
 }
 
 export interface AdminRecords {
@@ -1254,6 +1263,56 @@ export interface AdminRecords {
 	no_users: string;
 	no_search_results: string;
 	loading_users: string;
+	dashboard: string;
+	dashboard_description: string;
+	users: string;
+	users_description: string;
+	back_to_app: string;
+	role_user: string;
+	role_admin: string;
+	role_super_admin: string;
+	growth_title: string;
+	growth_by_year: string;
+	growth_by_month: string;
+	growth_by_week: string;
+	growth_by_day: string;
+	section_calendars: string;
+	section_todos: string;
+	section_notes: string;
+	section_libraries: string;
+	section_contacts: string;
+	section_check_in: string;
+	section_finances: string;
+	section_time_tracking: string;
+	section_feeds: string;
+	section_other: string;
+	stat_users: string;
+	stat_active_users: string;
+	stat_confirmed_users: string;
+	stat_friends: string;
+	stat_notifications: string;
+	stat_calendars: string;
+	stat_events: string;
+	stat_todos: string;
+	stat_categories: string;
+	stat_workspaces: string;
+	stat_notes: string;
+	stat_folders: string;
+	stat_books: string;
+	stat_albums: string;
+	stat_movies: string;
+	stat_recipes: string;
+	stat_links: string;
+	stat_quotes: string;
+	stat_games: string;
+	stat_address_books: string;
+	stat_contacts: string;
+	stat_entries: string;
+	stat_income_entries: string;
+	stat_wealth_entries: string;
+	stat_projects: string;
+	stat_subscribed_feeds: string;
+	stat_tags: string;
 }
 
 export interface WelcomeTourRecords {

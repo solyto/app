@@ -6,8 +6,12 @@
 
 	let { todayEvents, ts }: {
 		todayEvents: CalendarEvent[];
-		ts: Translation
+		ts: Translation;
 	} = $props();
+
+	function startLabel(event: CalendarEvent): string {
+		return event.is_all_day ? ts.get.home.all_day : formatTime(new Date(event.start_date));
+	}
 </script>
 
 <div>
@@ -27,15 +31,9 @@
 				<span class="truncate text-sm text-c-neutral-7 dark:text-c-neutral-3">
 					{event.title}
 				</span>
-				{#if !event.is_all_day}
-					<span class="ml-auto shrink-0 text-xs text-c-neutral-4 dark:text-c-neutral-5">
-						{formatTime(new Date(event.start_date))}
-					</span>
-				{:else}
-					<span class="ml-auto shrink-0 text-xs text-c-neutral-4 dark:text-c-neutral-5">
-						{ts.get.home.all_day}
-					</span>
-				{/if}
+				<span class="ml-auto shrink-0 text-xs text-c-neutral-4 dark:text-c-neutral-5">
+					{startLabel(event)}
+				</span>
 			</div>
 		{/each}
 	</div>

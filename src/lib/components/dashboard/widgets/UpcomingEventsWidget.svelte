@@ -28,9 +28,7 @@
 					style="background-color: {event.calendar_color}"
 				></div>
 				<span class="shrink-0 text-xs text-c-neutral-4 dark:text-c-neutral-5">
-					{auth.getDateWithoutYearInUserPreferredFormat(
-						new Date(event.start_date)
-					)}
+					{auth.getDateWithoutYearInUserPreferredFormat(new Date(event.start_date))}
 				</span>
 				<span class="truncate text-sm text-c-neutral-7 dark:text-c-neutral-3">
 					{event.title}

@@ -4,7 +4,6 @@
 	import IconExternalLink from '$lib/icons/lucide/external-link.svelte';
 	import IconGlobe from '$lib/icons/lucide/globe.svelte';
 	import IconPen from '$lib/icons/lucide/pen.svelte';
-	import { onMount } from 'svelte';
 	import { getShortcuts } from '$lib/state/Shortcuts.svelte';
 	import type { Translation } from '$lib/state/Translation.svelte';
 	import { safeHref } from '$lib/helpers/UrlHelper';
@@ -16,10 +15,6 @@
 	} = $props();
 
 	let manageModalOpen = $state(false);
-
-	onMount(async () => {
-		await shortcuts.load();
-	});
 
 	function toggleModal(): void {
 		manageModalOpen = !manageModalOpen;
@@ -51,7 +46,7 @@
 				>
 					<img
 						src={grabFaviconFromUrl(shortcut.url)}
-						alt="Favicon"
+						alt={ts.get.widgets.favicon_alt}
 						class="h-4 w-4 shrink-0"
 					/>
 					<span class="truncate text-sm text-c-neutral-7 transition-colors group-hover:text-c-primary dark:text-c-neutral-3">

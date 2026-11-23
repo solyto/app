@@ -7,7 +7,6 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
-
 	import { fade } from 'svelte/transition';
 	import { startAuthentication } from '@simplewebauthn/browser';
 	import IconFingerprint from '$lib/icons/lucide/fingerprint-pattern.svelte';
@@ -18,16 +17,6 @@
 	import StaggeredLogo from '$lib/components/ui/StaggeredLogo.svelte';
 	import { PLATFORM, getApiUrl, getPwaApiUrl } from '$lib/config/platform';
 	import { RateLimitedError } from '$lib/services/ApiService';
-
-	function getApiLabel(): string {
-		const url = getApiUrl();
-		if (url === getPwaApiUrl()) return 'solyto.app';
-		try {
-			return new URL(url).hostname;
-		} catch {
-			return url;
-		}
-	}
 
 	const auth = getAuth();
 	const ts = getTranslation();
@@ -100,13 +89,21 @@
 	}
 
 	function validateInput(): boolean {
-		emailError = false;
-		passwordError = false;
 		emailError = email === '';
 		passwordError = password === '';
 		error = passwordError || emailError;
 
-		return !(emailError || passwordError);
+		return !error;
+	}
+
+	function getApiLabel(): string {
+		const url = getApiUrl();
+		if (url === getPwaApiUrl()) return 'solyto.app';
+		try {
+			return new URL(url).hostname;
+		} catch {
+			return url;
+		}
 	}
 </script>
 

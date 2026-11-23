@@ -260,7 +260,7 @@ describe('UpcomingEventsWidget', () => {
 				})
 			}
 		);
-		expect(screen.getByText('Coming Up')).toBeInTheDocument();
+		expect(screen.getByText('Coming up')).toBeInTheDocument();
 		expect(screen.getByText('Conference')).toBeInTheDocument();
 		expect(screen.getByText('14:00')).toBeInTheDocument();
 	});

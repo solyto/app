@@ -2,12 +2,19 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { DevRequests } from '$lib/state/DevRequests.svelte';
 import { api, resetStoreMocks } from '../setup/storeMocks';
 import { devRequest } from '../helpers/factories';
+import { API_STORAGE_URL } from '$lib/config/apiRoutes';
 
 beforeEach(() => {
 	resetStoreMocks();
 });
 
 describe('DevRequests store', () => {
+	describe('screenshotUrl', () => {
+		it('points into the public storage', () => {
+			expect(new DevRequests().screenshotUrl(devRequest({ screenshot: 'dev/shot.png' }))).toBe(API_STORAGE_URL + '/dev/shot.png');
+		});
+	});
+
 	describe('createComment', () => {
 		it('reloads the entries so the comment count is current', async () => {
 			const store = new DevRequests();

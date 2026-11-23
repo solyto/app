@@ -124,6 +124,7 @@ const auth: AuthRecords = {
 	forgot_password_sent_title: '¡Revisa tu bandeja de entrada!',
 	forgot_password_sent_desc: 'Enviamos un enlace de restablecimiento a %s. Expira en 60 minutos.',
 	forgot_password_resend: 'Reenviar',
+	resend_cooldown: '(%ds)',
 	resend_verification_link: '¿No te llegó el correo de confirmación?',
 	resend_verification_title: 'Nuevo enlace de confirmación',
 	resend_verification_hint: 'Ingresa tu correo y te enviaremos un nuevo enlace de confirmación.',
@@ -589,7 +590,8 @@ const widgets: WidgetRecords = {
 	no_cities_found: 'No se encontraron ciudades',
 	select_city_prompt: 'Selecciona tu ciudad para ver el pronóstico del tiempo.',
 	loading: 'Cargando',
-	coming_up: 'Próximos'
+	coming_up: 'Próximos',
+	favicon_alt: 'Favicon'
 };
 
 const notes: NoteRecords = {
@@ -1333,7 +1335,9 @@ const clipboard: ClipboardRecords = {
 	download: 'Descargar',
 	delete_entry: 'Eliminar entrada',
 	attach_image: 'Adjuntar imagen',
-	attach_file: 'Adjuntar archivo'
+	attach_file: 'Adjuntar archivo',
+	image_preview_alt: 'Vista previa',
+	image_alt: 'Imagen del portapapeles'
 };
 
 const dav: DavRecords = {
@@ -1353,7 +1357,12 @@ const profile: ProfileRecords = {
 	request_rejected: 'Rechazada',
 	request_accepted: 'Aceptada',
 	received: 'Recibidas',
-	sent: 'Enviadas'
+	sent: 'Enviadas',
+	request_from: 'Solicitud de %s',
+	profile_image_alt: 'Foto de perfil',
+	user_profile_image_alt: 'Foto de perfil de %s',
+	friend_id_placeholder: 'ID de amigo',
+	friend_request_invalid: 'El ID de usuario indicado no parece válido.'
 };
 
 const welcome_tour: WelcomeTourRecords = {
@@ -1515,7 +1524,57 @@ const admin: AdminRecords = {
 	search_placeholder: 'Buscar por nombre o correo electrónico...',
 	no_users: 'No se encontraron usuarios.',
 	no_search_results: 'Ningún usuario coincide con tu búsqueda.',
-	loading_users: 'Cargando usuarios...'
+	loading_users: 'Cargando usuarios...',
+	dashboard: 'Panel',
+	dashboard_description: 'Resumen de las estadísticas de la plataforma',
+	users: 'Usuarios',
+	users_description: 'Gestionar cuentas de usuario y roles',
+	back_to_app: 'Volver a la app',
+	role_user: 'Usuario',
+	role_admin: 'Admin',
+	role_super_admin: 'Superadmin',
+	growth_title: 'Crecimiento de usuarios',
+	growth_by_year: 'Por año',
+	growth_by_month: 'Por mes',
+	growth_by_week: 'Por semana',
+	growth_by_day: 'Por día',
+	section_calendars: 'Calendarios',
+	section_todos: 'Tareas',
+	section_notes: 'Notas',
+	section_libraries: 'Bibliotecas',
+	section_contacts: 'Contactos',
+	section_check_in: 'Check-in',
+	section_finances: 'Finanzas',
+	section_time_tracking: 'Control de tiempo',
+	section_feeds: 'Feeds',
+	section_other: 'Otros',
+	stat_users: 'Usuarios',
+	stat_active_users: 'Usuarios activos',
+	stat_confirmed_users: 'Usuarios confirmados',
+	stat_friends: 'Amigos',
+	stat_notifications: 'Notificaciones',
+	stat_calendars: 'Calendarios',
+	stat_events: 'Eventos',
+	stat_todos: 'Tareas',
+	stat_categories: 'Categorías',
+	stat_workspaces: 'Espacios de trabajo',
+	stat_notes: 'Notas',
+	stat_folders: 'Carpetas',
+	stat_books: 'Libros',
+	stat_albums: 'Álbumes',
+	stat_movies: 'Películas',
+	stat_recipes: 'Recetas',
+	stat_links: 'Enlaces',
+	stat_quotes: 'Citas',
+	stat_games: 'Juegos',
+	stat_address_books: 'Libretas de direcciones',
+	stat_contacts: 'Contactos',
+	stat_entries: 'Entradas',
+	stat_income_entries: 'Entradas de ingresos',
+	stat_wealth_entries: 'Entradas de patrimonio',
+	stat_projects: 'Proyectos',
+	stat_subscribed_feeds: 'Feeds suscritos',
+	stat_tags: 'Etiquetas'
 };
 
 const timeTracking: TimeTrackingRecords = {

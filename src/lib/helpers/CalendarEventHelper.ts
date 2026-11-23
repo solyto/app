@@ -1,6 +1,6 @@
 import type { CalendarEvent, EventWriteResult } from '$lib/types/calendar';
 import type { CalendarRecords } from '$lib/types/translation';
-import { formatDate } from '$lib/helpers/DateHelper';
+import { formatDate, getUrlFormat } from '$lib/helpers/DateHelper';
 
 export function getCalendarEventKey(item: CalendarEvent): string {
 	return item.uri + '-' + (item.original_start_date ?? item.start_date)?.getTime();
@@ -17,6 +17,23 @@ export function isDraggableOnDate(item: CalendarEvent, date: Date): boolean {
 
 export function showsStartTimeOnDate(item: CalendarEvent, date: Date): boolean {
 	return !item.is_all_day && startsOnDate(item, date);
+}
+
+export function eventsStartingOn(events: CalendarEvent[], day: Date): CalendarEvent[] {
+	return events.filter((event) => startsOnDay(event, day)).sort(byStart);
+}
+
+export function eventsNotStartingOn(events: CalendarEvent[], day: Date): CalendarEvent[] {
+	return events.filter((event) => !startsOnDay(event, day)).sort(byStart);
+}
+
+// Unlike startsOnDate, also takes the raw date strings the widget endpoint sends.
+function startsOnDay(event: CalendarEvent, day: Date): boolean {
+	return getUrlFormat(new Date(event.start_date)) === getUrlFormat(day);
+}
+
+function byStart(a: CalendarEvent, b: CalendarEvent): number {
+	return new Date(a.start_date).getTime() - new Date(b.start_date).getTime();
 }
 
 export function isRecurringOccurrence(item: CalendarEvent): boolean {

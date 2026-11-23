@@ -24,6 +24,7 @@ export class QuoteLibrary {
 	};
 	loaded = $state<boolean>(false);
 	entries = $state<Quote[]>([]);
+	randomQuote = $state<Quote | null>(null);
 	filteredEntries = $state<Quote[]>([]);
 	createModalVisible = $state<boolean>(false);
 	detailModalVisible = $state<boolean>(false);
@@ -47,6 +48,11 @@ export class QuoteLibrary {
 			this.search();
 			this.loaded = true;
 		}
+	}
+
+	async loadRandom(): Promise<void> {
+		const res = await this.apiService.get(apiRoutes.libraries.quotes.getRandom, null);
+		if (res) this.randomQuote = res.data as Quote;
 	}
 
 	search(): void {

@@ -10,11 +10,14 @@
 	const pwa = getPwaInstall();
 	const viewPoint = getViewPoint();
 
-	let readyDescription = $derived(
-		viewPoint.isDesktop
-			? ts.get.welcome_tour.ready_description + ' ' + ts.get.welcome_tour.ready_description_desktop
-			: ts.get.welcome_tour.ready_description
-	);
+	function readyDescription(): string {
+		const description = ts.get.welcome_tour.ready_description;
+		return viewPoint.isDesktop ? description + ' ' + ts.get.welcome_tour.ready_description_desktop : description;
+	}
+
+	function install(): Promise<void> {
+		return pwa.install();
+	}
 </script>
 
 <div class="text-center" in:blur={{ duration: 200 }}>
@@ -28,7 +31,7 @@
 	</h1>
 	<p class="mb-4 text-lg font-medium text-c-success">{ts.get.welcome_tour.ready_subtitle}</p>
 	<p class="mx-auto max-w-md leading-relaxed text-c-neutral-6 dark:text-c-neutral-4">
-		{readyDescription}
+		{readyDescription()}
 	</p>
 </div>
 
@@ -43,7 +46,7 @@
 		{#if pwa.canInstall}
 			<button
 				class="flex w-fit cursor-pointer items-center gap-1.5 rounded-lg bg-c-neutral px-4 py-2 text-sm font-medium text-black transition-all hover:bg-c-neutral-1 dark:bg-s-dark-3 dark:text-white dark:hover:bg-s-dark"
-				onclick={() => pwa.install()}
+				onclick={install}
 			>
 				<IconSmartphone size={14} />
 				{ts.get.welcome_tour.pwa_title}

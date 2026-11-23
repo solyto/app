@@ -5,23 +5,29 @@
 	import UserList from '$lib/components/admin/UserList.svelte';
 	import UserGrowthChart from '$lib/components/admin/UserGrowthChart.svelte';
 	import IconUsers from '$lib/icons/lucide/users.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { UserGrowthGroupBy } from '$lib/types/managed_user';
 
 	const userManagement = getUserManagement();
 	const loadingIndicator = getLoadingIndicator();
+	const ts = getTranslation();
 
 	onMount(async () => {
-		if (!userManagement.loaded) {
-			loadingIndicator.start();
-			await Promise.all([userManagement.load(), userManagement.loadGrowth()]);
-			loadingIndicator.stop();
-		}
+		if (userManagement.loaded) return;
+		await withLoadingIndicator(() => Promise.all([userManagement.load(), userManagement.loadGrowth()]));
 	});
 
-	async function groupGrowthBy(groupBy: UserGrowthGroupBy): Promise<void> {
+	function groupGrowthBy(groupBy: UserGrowthGroupBy): Promise<void> {
+		return withLoadingIndicator(() => userManagement.loadGrowth(groupBy));
+	}
+
+	async function withLoadingIndicator(load: () => Promise<unknown>): Promise<void> {
 		loadingIndicator.start();
-		await userManagement.groupGrowthBy(groupBy);
-		loadingIndicator.stop();
+		try {
+			await load();
+		} finally {
+			loadingIndicator.stop();
+		}
 	}
 </script>
 
@@ -31,8 +37,8 @@
 			<IconUsers class="h-6 w-6 text-c-btn" />
 		</div>
 		<div>
-			<h1 class="text-2xl font-bold text-c-neutral-9 dark:text-white">Users</h1>
-			<p class="text-c-neutral-5 dark:text-c-neutral-4">Manage user accounts and roles</p>
+			<h1 class="text-2xl font-bold text-c-neutral-9 dark:text-white">{ts.get.admin.users}</h1>
+			<p class="text-c-neutral-5 dark:text-c-neutral-4">{ts.get.admin.users_description}</p>
 		</div>
 	</div>
 

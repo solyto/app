@@ -15,8 +15,11 @@
 
 	async function goToPage(page: number): Promise<void> {
 		loadingIndicator.start();
-		await userManagement.goToPage(page);
-		loadingIndicator.stop();
+		try {
+			await userManagement.goToPage(page);
+		} finally {
+			loadingIndicator.stop();
+		}
 	}
 </script>
 

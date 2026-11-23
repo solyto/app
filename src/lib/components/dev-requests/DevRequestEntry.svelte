@@ -5,7 +5,7 @@
 	import IconChevronsUpDown from '$lib/icons/lucide/chevrons-up-down.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { API_STORAGE_URL } from '$lib/config/apiRoutes';
+	import { getDevRequests } from '$lib/state/DevRequests.svelte';
 	import { nl2br } from '$lib/helpers/FormatHelper';
 	import DOMPurify from 'dompurify';
 	import Author from '$lib/components/dev-requests/Author.svelte';
@@ -21,6 +21,7 @@
 
 	const auth = getAuth();
 	const ts = getTranslation();
+	const devRequests = getDevRequests();
 
 	const isAdmin = auth.isAdmin();
 
@@ -31,6 +32,10 @@
 
 	let open = $state<boolean>(active);
 	let editOpen = $state<boolean>(false);
+
+	function openScreenshot(): void {
+		window.open(devRequests.screenshotUrl(entry), '_blank');
+	}
 </script>
 
 <div
@@ -103,12 +108,11 @@
 					{#if entry.screenshot}
 						<button
 							class="transition-opacity hover:opacity-75"
-							onclick={() =>
-								window.open(API_STORAGE_URL + '/' + entry.screenshot, '_blank')}
+							onclick={openScreenshot}
 						>
 							<img
-								src={API_STORAGE_URL + '/' + entry.screenshot}
-								alt="Screenshot"
+								src={devRequests.screenshotUrl(entry)}
+								alt={ts.get.dev.requests.screenshot}
 								class="aspect-auto w-32 rounded-lg object-cover"
 							/>
 						</button>

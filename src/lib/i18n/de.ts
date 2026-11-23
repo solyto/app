@@ -125,6 +125,7 @@ const auth: AuthRecords = {
 	forgot_password_sent_title: 'Schau in dein Postfach!',
 	forgot_password_sent_desc: 'Wir haben einen Passwort-Reset-Link an %s gesendet. Er läuft in 60 Minuten ab.',
 	forgot_password_resend: 'Erneut senden',
+	resend_cooldown: '(%ds)',
 	resend_verification_link: 'Keine Bestätigungs-E-Mail bekommen?',
 	resend_verification_title: 'Neuer Bestätigungslink',
 	resend_verification_hint: 'Gib deine E-Mail ein und wir senden dir einen neuen Bestätigungslink.',
@@ -212,7 +213,7 @@ const settings: SettingsRecords = {
 	nextcloud_no_token: 'Kein Token registriert.',
 	telegram_bot_integration_success: 'Integration erfolgreich registriert für Telegram Chat ID %s',
 	telegram_bot_token_created: 'Token erstellt.',
-	telegram_bot_register: 'Registriere es, indem du den folgenden Befehl an den %s sendest',
+	telegram_bot_register: 'Registriere es, indem du den folgenden Befehl an %s sendest',
 	telegram_bot_create: 'Neue Verbindung erstellen',
 	telegram_bot_not_connected:
 		'Du hast den Bot noch nicht mit deinem Konto verbunden. Geh zu den Verbindungen, um das zu tun.',
@@ -590,7 +591,8 @@ const widgets: WidgetRecords = {
 	no_cities_found: 'Keine Städte gefunden',
 	select_city_prompt: 'Wähle deine Stadt für die Wettervorhersage.',
 	loading: 'Laden',
-	coming_up: 'Demnächst'
+	coming_up: 'Demnächst',
+	favicon_alt: 'Favicon'
 };
 
 const notes: NoteRecords = {
@@ -1345,7 +1347,9 @@ const clipboard: ClipboardRecords = {
 	download: 'Herunterladen',
 	delete_entry: 'Eintrag löschen',
 	attach_image: 'Bild anhängen',
-	attach_file: 'Datei anhängen'
+	attach_file: 'Datei anhängen',
+	image_preview_alt: 'Vorschau',
+	image_alt: 'Bild aus der Zwischenablage'
 };
 
 const profile: ProfileRecords = {
@@ -1356,7 +1360,12 @@ const profile: ProfileRecords = {
 	request_rejected: 'Abgelehnt',
 	request_accepted: 'Akzeptiert',
 	received: 'Erhalten',
-	sent: 'Gesendet'
+	sent: 'Gesendet',
+	request_from: 'Anfrage von %s',
+	profile_image_alt: 'Profilbild',
+	user_profile_image_alt: 'Profilbild von %s',
+	friend_id_placeholder: 'Freundes-ID',
+	friend_request_invalid: 'Die angegebene Benutzer-ID scheint ungültig zu sein.'
 };
 
 const welcome_tour: WelcomeTourRecords = {
@@ -1518,7 +1527,57 @@ const admin: AdminRecords = {
 	search_placeholder: 'Nach Name oder E-Mail suchen...',
 	no_users: 'Keine Benutzer gefunden.',
 	no_search_results: 'Keine Benutzer passen zu deiner Suche.',
-	loading_users: 'Benutzer werden geladen...'
+	loading_users: 'Benutzer werden geladen...',
+	dashboard: 'Dashboard',
+	dashboard_description: 'Überblick über die Plattformstatistiken',
+	users: 'Benutzer',
+	users_description: 'Benutzerkonten und Rollen verwalten',
+	back_to_app: 'Zurück zur App',
+	role_user: 'Benutzer',
+	role_admin: 'Admin',
+	role_super_admin: 'Super-Admin',
+	growth_title: 'Benutzerwachstum',
+	growth_by_year: 'Nach Jahr',
+	growth_by_month: 'Nach Monat',
+	growth_by_week: 'Nach Woche',
+	growth_by_day: 'Nach Tag',
+	section_calendars: 'Kalender',
+	section_todos: 'Todos',
+	section_notes: 'Notizen',
+	section_libraries: 'Bibliotheken',
+	section_contacts: 'Kontakte',
+	section_check_in: 'Check-in',
+	section_finances: 'Finanzen',
+	section_time_tracking: 'Zeiterfassung',
+	section_feeds: 'Feeds',
+	section_other: 'Sonstiges',
+	stat_users: 'Benutzer',
+	stat_active_users: 'Aktive Benutzer',
+	stat_confirmed_users: 'Bestätigte Benutzer',
+	stat_friends: 'Freunde',
+	stat_notifications: 'Benachrichtigungen',
+	stat_calendars: 'Kalender',
+	stat_events: 'Termine',
+	stat_todos: 'Todos',
+	stat_categories: 'Kategorien',
+	stat_workspaces: 'Arbeitsbereiche',
+	stat_notes: 'Notizen',
+	stat_folders: 'Ordner',
+	stat_books: 'Bücher',
+	stat_albums: 'Alben',
+	stat_movies: 'Filme',
+	stat_recipes: 'Rezepte',
+	stat_links: 'Links',
+	stat_quotes: 'Zitate',
+	stat_games: 'Spiele',
+	stat_address_books: 'Adressbücher',
+	stat_contacts: 'Kontakte',
+	stat_entries: 'Einträge',
+	stat_income_entries: 'Einkommenseinträge',
+	stat_wealth_entries: 'Vermögenseinträge',
+	stat_projects: 'Projekte',
+	stat_subscribed_feeds: 'Abonnierte Feeds',
+	stat_tags: 'Tags'
 };
 
 const timeTracking: TimeTrackingRecords = {

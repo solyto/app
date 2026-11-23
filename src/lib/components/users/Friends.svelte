@@ -7,15 +7,13 @@
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import { onDestroy, tick } from 'svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { SaveAction } from '$lib/helpers/SaveAction.svelte';
 
 	const friends = getFriends();
 	const keyManager = getKeyManager();
-	const loadingIndicator = getLoadingIndicator();
-	const notifications = getUiNotifications();
 	const ts = getTranslation();
+	const sending = new SaveAction(() => ts.get.profile.friend_request_invalid);
 
 	let addFriend = $state<boolean>(false);
 	let friendId = $state<string>('');
@@ -51,21 +49,11 @@
 	}
 
 	async function onsubmit(): Promise<void> {
-		loadingIndicator.start();
 		keyManager.unregisterKeyDown(keyHandlers.Enter);
-		let requestedFriendId = friendId.trim();
+		const requestedFriendId = friendId.trim();
+		if (requestedFriendId === '') return;
 
-		if (requestedFriendId === '') {
-			return;
-		}
-
-		const res = await friends.createFriendRequest(requestedFriendId);
-
-		if (!res) {
-			notifications.error('The requested User ID seems invalid.');
-		}
-
-		loadingIndicator.stop();
+		await sending.run(() => friends.createFriendRequest(requestedFriendId));
 		friendId = '';
 	}
 </script>
@@ -75,11 +63,7 @@
 		<Heading title={ts.get.profile.friends} my={4} />
 		{#if addFriend}
 			<div class="w-1/2">
-				<TextInput
-					bind:value={friendId}
-					bind:input={friendIdInput}
-					placeholder="Friend ID"
-				/>
+				<TextInput bind:value={friendId} bind:input={friendIdInput} placeholder={ts.get.profile.friend_id_placeholder} />
 			</div>
 		{:else}
 			<AddButton onClick={toggleAddFriend} />
@@ -90,7 +74,7 @@
 			<div class="size-8">
 				<img
 					src={API_USER_STORAGE_URL + '/' + friend.profile_image_path}
-					alt="Profile"
+					alt={ts.get.profile.profile_image_alt}
 					class="h-full w-full rounded-full object-cover"
 				/>
 			</div>

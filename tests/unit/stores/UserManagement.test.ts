@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { UserManagement } from '$lib/state/UserManagement.svelte';
+import { apiRoutes } from '$lib/config/apiRoutes';
 import { api, resetStoreMocks } from '../setup/storeMocks';
 
 beforeEach(() => {
@@ -45,6 +46,20 @@ describe('UserManagement store', () => {
 			expect(query.get('page')).toBe('2');
 			expect(query.get('per_page')).toBe(String(UserManagement.PER_PAGE));
 			expect(query.get('search')).toBe('ali');
+		});
+
+		it('builds the list URL with page, page size and search, in that order', async () => {
+			api.list.mockResolvedValue(page(2, 3, 60));
+			const t = new UserManagement();
+			t.page = 2;
+			await t.load();
+			t.search = 'ali b';
+			await t.load();
+
+			expect(api.list.mock.calls.map(([url]) => url)).toEqual([
+				apiRoutes.admin.users.list + '?page=2&per_page=25',
+				apiRoutes.admin.users.list + '?page=2&per_page=25&search=ali+b'
+			]);
 		});
 
 		it('assigns users and pagination meta', async () => {
@@ -142,12 +157,18 @@ describe('UserManagement store', () => {
 		it('loads the growth series for the selected grouping', async () => {
 			api.list.mockResolvedValue({ data: [{ period: '2026-W03', total: 12 }] });
 			const t = new UserManagement();
-			await t.groupGrowthBy('week');
+			await t.loadGrowth('week');
 
-			const url = api.list.mock.calls.at(-1)?.[0] as string;
-			expect(url).toContain('/users/growth');
-			expect(new URL(url).searchParams.get('group_by')).toBe('week');
+			expect(api.list).toHaveBeenCalledWith(apiRoutes.admin.users.growth + '?group_by=week');
 			expect(t.growth).toEqual([{ period: '2026-W03', total: 12 }]);
+		});
+
+		it('loads the current grouping by default', async () => {
+			api.list.mockResolvedValue({ data: [] });
+			const t = new UserManagement();
+			await t.loadGrowth();
+
+			expect(api.list).toHaveBeenCalledWith(apiRoutes.admin.users.growth + '?group_by=month');
 		});
 
 		it('switches the grouping only together with its data', async () => {
@@ -155,7 +176,7 @@ describe('UserManagement store', () => {
 			api.list.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
 			const t = new UserManagement();
 
-			const loading = t.groupGrowthBy('day');
+			const loading = t.loadGrowth('day');
 			expect(t.growthGroupBy).toBe('month');
 
 			answer({ data: [{ period: '2026-11-20', total: 12 }] });
@@ -169,8 +190,8 @@ describe('UserManagement store', () => {
 			api.list.mockImplementation(() => new Promise((resolve) => answers.push(resolve)));
 			const t = new UserManagement();
 
-			const week = t.groupGrowthBy('week');
-			const day = t.groupGrowthBy('day');
+			const week = t.loadGrowth('week');
+			const day = t.loadGrowth('day');
 			answers[1]({ data: [{ period: '2026-11-20', total: 12 }] });
 			answers[0]({ data: [{ period: '2026-W47', total: 12 }] });
 			await Promise.all([week, day]);

@@ -37,9 +37,7 @@ export class UserManagement {
 
 	async load(): Promise<void> {
 		const generation = ++this.generation;
-		const query = new URLSearchParams({ page: String(this.page), per_page: String(UserManagement.PER_PAGE) });
-		if (this.search) query.set('search', this.search);
-		const res = await this.apiService.list(`${apiRoutes.admin.users.list}?${query}`);
+		const res = await this.apiService.list(this.usersUrl());
 		if (!res || generation !== this.generation) return;
 
 		const { pagination } = res.meta as ManagedUserListMeta;
@@ -53,8 +51,7 @@ export class UserManagement {
 	// The grouping switches together with its data, so the chart never labels one grouping's points with another's.
 	async loadGrowth(groupBy: UserGrowthGroupBy = this.growthGroupBy): Promise<void> {
 		const generation = ++this.growthGeneration;
-		const query = new URLSearchParams({ group_by: groupBy });
-		const res = await this.apiService.list(`${apiRoutes.admin.users.growth}?${query}`);
+		const res = await this.apiService.list(this.growthUrl(groupBy));
 		if (!res || generation !== this.growthGeneration) return;
 
 		this.growth = res.data as UserGrowthPoint[];
@@ -77,10 +74,6 @@ export class UserManagement {
 		await this.goToPage(1);
 	}
 
-	async groupGrowthBy(groupBy: UserGrowthGroupBy): Promise<void> {
-		await this.loadGrowth(groupBy);
-	}
-
 	async updateRole(user: ManagedUser, role: UpdateUserRoleRequest['role']): Promise<boolean> {
 		const res = await this.apiService.update(apiRoutes.admin.users.update, user.id, { role });
 		if (res) await this.load();
@@ -89,6 +82,16 @@ export class UserManagement {
 
 	destroy(): void {
 		clearTimeout(this.searchTimer);
+	}
+
+	private usersUrl(): string {
+		const query = new URLSearchParams({ page: String(this.page), per_page: String(UserManagement.PER_PAGE) });
+		if (this.search) query.set('search', this.search);
+		return `${apiRoutes.admin.users.list}?${query}`;
+	}
+
+	private growthUrl(groupBy: UserGrowthGroupBy): string {
+		return `${apiRoutes.admin.users.growth}?${new URLSearchParams({ group_by: groupBy })}`;
 	}
 }
 

@@ -33,7 +33,7 @@
 </script>
 
 {#if src}
-	<img {src} alt="Clipboard" class="block max-h-64 rounded-md" />
+	<img {src} alt={ts.get.clipboard.image_alt} class="block max-h-64 rounded-md" />
 {:else if failed}
 	<div
 		class="flex h-32 w-48 items-center justify-center rounded-md bg-c-neutral-2 text-c-neutral-5 dark:bg-s-dark-2"
