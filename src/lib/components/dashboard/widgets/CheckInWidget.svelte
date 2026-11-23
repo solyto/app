@@ -2,7 +2,6 @@
 	import IconActivity from '$lib/icons/lucide/activity.svelte';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { trackerLabel } from '$lib/helpers/CheckInHelper';
-	import { onMount, tick } from 'svelte';
 	import CheckInWidgetRow from '$lib/components/dashboard/widgets/CheckInWidgetRow.svelte';
 
 	const checkInData = getCheckInData();
@@ -10,17 +9,9 @@
 	const totalMean = $derived(checkInData.trackerService.totalMean(checkInData.scoredTrackers, checkInData.index, dates));
 
 	let { ts } = $props();
-
-	let loaded = $state(false);
-
-	onMount(async () => {
-		await checkInData.load();
-		await tick();
-		loaded = true;
-	});
 </script>
 
-{#if loaded && checkInData.values.length > 0}
+{#if checkInData.loaded && checkInData.values.length > 0}
 	<div>
 		<div class="mb-3 flex items-center gap-2">
 			<IconActivity size={15} class="text-c-heading dark:text-c-primary" />

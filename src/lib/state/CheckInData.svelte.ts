@@ -13,12 +13,13 @@ import ApiService from '$lib/services/ApiService';
 import CheckInTrackerService from '$lib/services/CheckInTrackerService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import { page } from '$app/state';
-import { getPrevDay, getUrlFormat, parseUrlFormat } from '$lib/helpers/DateHelper';
+import { getDateMinusDays, getPrevDay, getUrlFormat, parseUrlFormat } from '$lib/helpers/DateHelper';
 
 const trackerService = new CheckInTrackerService();
 
 // Values are loaded for this many months back; views that look further load the rest on demand.
 const LOADED_MONTHS = 12;
+const DASHBOARD_DAYS = 30;
 
 function defaultValuesFrom(): string {
 	const from = new Date();
@@ -82,6 +83,21 @@ export class CheckInData {
 			const data = settingsRes.data as { selected_sports?: SportId[] };
 			this.selectedSports = data.selected_sports ?? [...DEFAULT_SPORTS];
 		}
+	}
+
+	// The dashboard averages only the last days and doesn't need the settings.
+	async loadDashboard(): Promise<void> {
+		const from = getUrlFormat(getDateMinusDays(new Date(), DASHBOARD_DAYS));
+		const [trackersRes, valuesRes] = await Promise.all([
+			this.apiService.list(apiRoutes.checkIn.trackers),
+			this.apiService.list(valuesUrl(from, null))
+		]);
+		if (!trackersRes || !valuesRes) return;
+
+		this.trackers = trackersRes.data as CheckInTracker[];
+		this.values = valuesRes.data as CheckInValue[];
+		this.valuesFrom = from;
+		this.loaded = true;
 	}
 
 	// Loads the values from `from` on (null: all of them), if they aren't loaded yet.

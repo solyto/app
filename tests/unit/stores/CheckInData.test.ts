@@ -124,6 +124,51 @@ describe('CheckInData store', () => {
 		});
 	});
 
+	describe('loadDashboard', () => {
+		it('loads the trackers and the values of the last 30 days, without the settings', async () => {
+			vi.useFakeTimers();
+			vi.setSystemTime(new Date(2026, 10, 20));
+			api.list.mockImplementation(async (url: string) =>
+				url.endsWith('/check-in/trackers') ? { data: [mood] } : { data: [value(1, '2026-11-14', 4)] }
+			);
+
+			const s = new CheckInData();
+			await s.loadDashboard();
+			vi.useRealTimers();
+
+			expect(api.list).toHaveBeenCalledTimes(2);
+			expect(api.list).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/trackers$/));
+			expect(api.list).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/values\?from=2026-10-21$/));
+			expect(api.get).not.toHaveBeenCalled();
+			expect(s.loaded).toBe(true);
+			expect(s.trackers).toEqual([mood]);
+			expect(s.values).toEqual([value(1, '2026-11-14', 4)]);
+			expect(s.valuesFrom).toBe('2026-10-21');
+		});
+
+		it('stays unloaded when the trackers fail', async () => {
+			api.list.mockImplementation(async (url: string) => (url.endsWith('/check-in/trackers') ? null : { data: [value(1, '2026-11-14', 4)] }));
+
+			const s = new CheckInData();
+			await s.loadDashboard();
+
+			expect(s.loaded).toBe(false);
+			expect(s.values).toEqual([]);
+		});
+
+		it('stays unloaded when the values fail', async () => {
+			api.list.mockImplementation(async (url: string) => (url.endsWith('/check-in/trackers') ? { data: [mood] } : null));
+
+			const s = new CheckInData();
+			const valuesFrom = s.valuesFrom;
+			await s.loadDashboard();
+
+			expect(s.loaded).toBe(false);
+			expect(s.trackers).toEqual([]);
+			expect(s.valuesFrom).toBe(valuesFrom);
+		});
+	});
+
 	describe('loadValuesFrom', () => {
 		it('loads only the missing older values and puts them first', async () => {
 			const s = loaded(undefined, [value(1, '2026-01-10', 4)]);

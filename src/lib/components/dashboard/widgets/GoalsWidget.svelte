@@ -6,14 +6,11 @@
 	import { goalProgressText, trackerLabel } from '$lib/helpers/CheckInHelper';
 	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
 	import GoalBar from '$lib/components/goals/GoalBar.svelte';
-	import { onMount } from 'svelte';
 
 	let { ts } = $props();
 
 	const checkInData = getCheckInData();
 	const goals = getGoals();
-
-	let loaded = $state(false);
 
 	const shown = $derived(
 		goals.goals.flatMap((goal) => {
@@ -21,15 +18,9 @@
 			return tracker ? [{ goal, tracker }] : [];
 		})
 	);
-
-	onMount(async () => {
-		// The trackers name the goals; the check-in widget may not be there to load them.
-		await Promise.all([goals.load(), checkInData.trackers.length === 0 ? checkInData.loadTrackers() : Promise.resolve()]);
-		loaded = true;
-	});
 </script>
 
-{#if loaded && shown.length > 0}
+{#if shown.length > 0}
 	<div>
 		<div class="mb-3 flex items-center gap-2">
 			<IconTrophy size={15} class="text-c-heading dark:text-c-primary" />
