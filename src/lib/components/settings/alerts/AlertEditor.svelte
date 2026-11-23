@@ -37,6 +37,7 @@
 	const tracker = $derived<CheckInTracker | null>(checkInData.trackers.find((t) => t.id === trackerId) ?? null);
 	const bounds = $derived(tracker ? alertService.thresholdBounds(tracker.type) : null);
 	const canSave = $derived(tracker !== null && alertService.isValid(tracker.type, rule, threshold, days));
+	let busy = $state<boolean>(false);
 
 	function trackerOptions(): { label: string; value: string }[] {
 		return checkInData.activeTrackers.map((t) => ({ label: trackerLabel(t, ts.get.checkIn), value: String(t.id) }));
@@ -57,13 +58,19 @@
 		if (tracker && !alertService.rules(tracker.type).includes(rule)) rule = alertService.rules(tracker.type)[0];
 	}
 
+	// One write at a time: a double click mustn't create the alert twice.
 	async function run(action: () => Promise<boolean>): Promise<void> {
+		if (busy) return;
+		busy = true;
 		loadingIndicator.start();
-		const ok = await action();
-		loadingIndicator.stop();
-
-		if (ok) onClose();
-		else notifications.error(ts.get.alerts.save_error);
+		try {
+			const ok = await action();
+			if (ok) onClose();
+			else notifications.error(ts.get.alerts.save_error);
+		} finally {
+			loadingIndicator.stop();
+			busy = false;
+		}
 	}
 
 	function save(): void {
@@ -122,7 +129,7 @@
 			{:else}
 				<span></span>
 			{/if}
-			<TextButton title={alert ? ts.get.layout.save : ts.get.alerts.new_alert} disabled={!canSave} onclick={save} />
+			<TextButton title={alert ? ts.get.layout.save : ts.get.alerts.new_alert} disabled={!canSave || busy} onclick={save} />
 		</div>
 	</div>
 </ContentModal>

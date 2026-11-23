@@ -27,6 +27,7 @@
 	let icon = $state<string | null>(tracker?.icon ?? null);
 	let choosingIcon = $state<boolean>(false);
 	let confirmingDelete = $state<boolean>(false);
+	let busy = $state<boolean>(false);
 
 	const canSave = $derived(name.trim() !== '');
 	const valueCount = $derived(current?.values_count ?? 0);
@@ -44,22 +45,25 @@
 		choosingIcon = false;
 	}
 
+	// One write at a time: a double click mustn't create the tracker twice.
 	async function run(action: () => Promise<boolean>): Promise<boolean> {
+		if (busy) return false;
+		busy = true;
 		loadingIndicator.start();
-		const ok = await action();
-		loadingIndicator.stop();
-		if (!ok) notifications.error(ts.get.checkIn.save_error);
-		return ok;
+		try {
+			const ok = await action();
+			if (!ok) notifications.error(ts.get.checkIn.save_error);
+			return ok;
+		} finally {
+			loadingIndicator.stop();
+			busy = false;
+		}
 	}
 
 	async function create(): Promise<void> {
 		if (!canSave) return;
-		loadingIndicator.start();
-		const tracker = await checkInData.createTracker({ name: name.trim(), type, icon });
-		loadingIndicator.stop();
 
-		if (tracker) onDone();
-		else notifications.error(ts.get.checkIn.save_error);
+		if (await run(async () => (await checkInData.createTracker({ name: name.trim(), type, icon })) !== null)) onDone();
 	}
 
 	async function save(): Promise<void> {
@@ -137,9 +141,9 @@
 				<span></span>
 			{/if}
 			{#if current}
-				<TextButton title={ts.get.layout.save} disabled={!canSave} onclick={save} />
+				<TextButton title={ts.get.layout.save} disabled={!canSave || busy} onclick={save} />
 			{:else}
-				<TextButton title={ts.get.checkIn.add_tracker} disabled={!canSave} onclick={create} />
+				<TextButton title={ts.get.checkIn.add_tracker} disabled={!canSave || busy} onclick={create} />
 			{/if}
 		</div>
 	</div>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
+	import { getNavigation } from '$lib/state/Navigation.svelte';
 	import { onMount } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import TagSettings from '$lib/components/settings/TagSettings.svelte';
@@ -18,6 +19,7 @@
 	import Heading from '$lib/components/ui/Heading.svelte';
 
 	const ts = getTranslation();
+	const nav = getNavigation();
 	const tags = getTags();
 	const loadingIndicator = getLoadingIndicator();
 
@@ -32,7 +34,8 @@
 		{ id: 3, title: ts.get.settings.localization, component: LocalizationSettings },
 		{ id: 4, title: ts.get.settings.features, component: FeatureSettings },
 		{ id: 5, title: ts.get.settings.notifications, component: NotificationSettings },
-		{ id: 11, title: ts.get.alerts.title, component: AlertSettings },
+		// Alerts watch check-in trackers, so they only make sense while check-in is on.
+		...(nav.features.checkIn ? [{ id: 11, title: ts.get.alerts.title, component: AlertSettings }] : []),
 		{ id: 2, title: ts.get.settings.tags, component: TagSettings },
 		{ id: 10, title: ts.get.settings.plugins, component: PluginSettings },
 		{ id: 8, title: ts.get.settings.security, component: SecuritySettings },

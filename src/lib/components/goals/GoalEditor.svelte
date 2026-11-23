@@ -39,6 +39,7 @@
 	const tracker = $derived<CheckInTracker | null>(checkInData.trackers.find((t) => t.id === trackerId) ?? null);
 	const bounds = $derived(tracker ? goalService.bounds(tracker.type, period) : null);
 	const canSave = $derived(tracker !== null && goalService.isValidTarget(tracker.type, period, target));
+	let busy = $state<boolean>(false);
 
 	function trackerOptions(): { label: string; value: string }[] {
 		return available.map((t) => ({ label: trackerLabel(t, ts.get.checkIn), value: String(t.id) }));
@@ -54,13 +55,19 @@
 		if (tracker && !goalService.periods(tracker.type).includes(period)) period = 'week';
 	}
 
+	// One write at a time: a double click mustn't create the goal twice.
 	async function run(action: () => Promise<boolean>): Promise<void> {
+		if (busy) return;
+		busy = true;
 		loadingIndicator.start();
-		const ok = await action();
-		loadingIndicator.stop();
-
-		if (ok) onClose();
-		else notifications.error(ts.get.goals.save_error);
+		try {
+			const ok = await action();
+			if (ok) onClose();
+			else notifications.error(ts.get.goals.save_error);
+		} finally {
+			loadingIndicator.stop();
+			busy = false;
+		}
 	}
 
 	function save(): void {
@@ -131,7 +138,7 @@
 				{:else}
 					<span></span>
 				{/if}
-				<TextButton title={goal ? ts.get.layout.save : ts.get.goals.new_goal} disabled={!canSave} onclick={save} />
+				<TextButton title={goal ? ts.get.layout.save : ts.get.goals.new_goal} disabled={!canSave || busy} onclick={save} />
 			</div>
 		{/if}
 	</div>

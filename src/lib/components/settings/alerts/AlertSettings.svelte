@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Alert, AlertSuggestion } from '$lib/types/alert';
+	import type { Alert, AlertSuggestion, AlertSuggestionKey } from '$lib/types/alert';
 	import { onMount } from 'svelte';
 	import { setCheckInData } from '$lib/state/CheckInData.svelte';
 	import { setAlerts } from '$lib/state/Alerts.svelte';
@@ -53,6 +53,19 @@
 		loadingIndicator.stop();
 		if (!ok) notifications.error(ts.get.alerts.save_error);
 	}
+
+	// A double click mustn't add the same suggestion twice.
+	let addingSuggestion = $state<boolean>(false);
+
+	async function addSuggestion(key: AlertSuggestionKey): Promise<void> {
+		if (addingSuggestion) return;
+		addingSuggestion = true;
+		try {
+			await run(() => alerts.enableSuggestion(key));
+		} finally {
+			addingSuggestion = false;
+		}
+	}
 </script>
 
 <div class="absolute top-0 right-0 flex h-8 items-center">
@@ -97,7 +110,7 @@
 						{#each alerts.suggestions as suggestion (suggestion.key)}
 							<div class="flex w-full items-center justify-between gap-3">
 								<span>{suggestionLabel(suggestion)}</span>
-								<TextButton title={ts.get.alerts.suggestion_add} type="slight" onclick={() => run(() => alerts.enableSuggestion(suggestion.key))} />
+								<TextButton title={ts.get.alerts.suggestion_add} type="slight" disabled={addingSuggestion} onclick={() => addSuggestion(suggestion.key)} />
 							</div>
 						{/each}
 					</div>

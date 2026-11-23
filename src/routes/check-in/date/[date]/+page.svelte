@@ -26,7 +26,12 @@
 	const SIDE_COLUMN =
 		'2xl:col-start-3 2xl:mr-0 2xl:ml-16 2xl:w-auto 2xl:max-w-[22rem] 2xl:border-l-2 2xl:border-c-neutral-1 2xl:pl-6 dark:2xl:border-s-dark';
 
-	const pending = new SvelteMap<CheckInTracker, number | null>();
+	// Unsaved changes by tracker id: the settings reload the trackers as new objects while this page stays open.
+	const pending = new SvelteMap<number, number | null>();
+	// What Save stores: only changes on trackers still shown, so one switched off or deleted meanwhile isn't saved unseen.
+	const changes = $derived(
+		new Map(checkInData.activeTrackers.filter((tracker) => pending.has(tracker.id)).map((tracker) => [tracker, pending.get(tracker.id)!]))
+	);
 
 	let date = $derived(page.params.date ?? '');
 	let parsedDate = $derived(parseUrlFormat(date));
@@ -50,13 +55,13 @@
 
 	// Unsaved changes show right away; only Save stores them.
 	function shownValue(tracker: CheckInTracker): number | null {
-		return pending.has(tracker) ? pending.get(tracker)! : checkInData.getValue(tracker, date);
+		return pending.has(tracker.id) ? pending.get(tracker.id)! : checkInData.getValue(tracker, date);
 	}
 
 	async function onSave(): Promise<void> {
-		if (pending.size === 0) return;
+		if (changes.size === 0) return;
 		loadingIndicator.start();
-		const ok = await checkInData.saveDay(date, pending);
+		const ok = await checkInData.saveDay(date, changes);
 		loadingIndicator.stop();
 
 		if (ok) {
@@ -87,9 +92,9 @@
 		<!-- On phones it floats at the bottom, and only once there's something to save; wider, it sits top right. -->
 		<div
 			class="z-10 flex w-full justify-center max-sm:sticky max-sm:bottom-4 max-sm:order-last max-sm:px-4 sm:absolute sm:top-0 sm:right-8 sm:w-auto"
-			class:max-sm:hidden={pending.size === 0}
+			class:max-sm:hidden={changes.size === 0}
 		>
-			<TextButton title={ts.get.layout.save} onclick={onSave} disabled={pending.size === 0} class="max-sm:h-14 max-sm:w-full max-sm:shadow-md" />
+			<TextButton title={ts.get.layout.save} onclick={onSave} disabled={changes.size === 0} class="max-sm:h-14 max-sm:w-full max-sm:shadow-md" />
 		</div>
 	{/if}
 
@@ -102,7 +107,7 @@
 						{tracker}
 						label={trackerLabel(tracker, ts.get.checkIn)}
 						currentValue={shownValue(tracker)}
-						onChange={(changed, value) => pending.set(changed, value)}
+						onChange={(changed, value) => pending.set(changed.id, value)}
 						selectedSports={checkInData.selectedSports}
 						goalLine={goalLine(tracker)}
 					/>
@@ -120,7 +125,7 @@
 						label={trackerLabel(tracker, ts.get.checkIn)}
 						value={shownValue(tracker)}
 						goalLine={goalLine(tracker)}
-						onSet={(value) => pending.set(tracker, value)}
+						onSet={(value) => pending.set(tracker.id, value)}
 					/>
 				{/each}
 			</section>
