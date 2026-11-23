@@ -1289,7 +1289,24 @@ const notifications: NotificationRecords = {
 	export_ready_title: 'Esportazione pronta',
 	export_ready_message: 'La tua esportazione dei dati è pronta per il download.',
 	movie_release_title: 'Nuova uscita sullo schermo',
-	movie_release_message: '%s uscirà presto.'
+	movie_release_message: '%s uscirà presto.',
+	type_book_release: 'Nuove uscite librarie',
+	type_music_release: 'Nuove uscite musicali',
+	type_movie_release: 'Nuove uscite sullo schermo',
+	type_friend_request: 'Nuove richieste di amicizia',
+	type_daily_check_in_reminder: 'Promemoria del check-in giornaliero',
+	type_alert: 'Avvisi',
+	type_daily_day_reminder: 'Promemoria sulla tua giornata',
+	type_calendar_share: 'Calendari condivisi',
+	type_dev_request_comment: 'Commenti alle richieste di sviluppo',
+	type_export_ready: 'Esportazione pronta',
+	channel_ui: 'UI',
+	channel_email: 'Email',
+	channel_push: 'Push',
+	channel_telegram: 'Bot',
+	channel_telegram_unavailable: 'Prima configura il bot Telegram in Integrazioni',
+	channel_push_unavailable: 'Prima attiva le notifiche push qui sopra',
+	channel_email_coming_soon: 'Le notifiche via email arriveranno presto'
 };
 
 const clipboard: ClipboardRecords = {

@@ -1,14 +1,17 @@
 <script lang="ts">
 	import IconActivity from '$lib/icons/lucide/activity.svelte';
+	import type { Translation } from '$lib/state/Translation.svelte';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
-	import { trackerLabel } from '$lib/helpers/CheckInHelper';
+	import { formatScore, scoreWidth, trackerLabel } from '$lib/helpers/CheckInHelper';
 	import CheckInWidgetRow from '$lib/components/dashboard/widgets/CheckInWidgetRow.svelte';
+
+	let { ts }: {
+		ts: Translation;
+	} = $props();
 
 	const checkInData = getCheckInData();
 	const dates = $derived([...checkInData.index.keys()]);
 	const totalMean = $derived(checkInData.trackerService.totalMean(checkInData.scoredTrackers, checkInData.index, dates));
-
-	let { ts } = $props();
 </script>
 
 {#if checkInData.loaded && checkInData.values.length > 0}
@@ -36,17 +39,13 @@
 								{ts.get.checkIn.total}
 							</span>
 							<span class="text-xs font-semibold text-c-primary">
-								{#if isNaN(totalMean)}
-									-
-								{:else}
-									{totalMean.toFixed(2)}
-								{/if}
+								{formatScore(totalMean)}
 							</span>
 						</div>
 						<div class="h-1 overflow-hidden rounded-full bg-c-neutral-1 dark:bg-s-dark-3">
 							<div
 								class="h-full rounded-full bg-c-primary transition-all duration-300"
-								style="width: {isNaN(totalMean) ? 0 : (totalMean / 5) * 100}%"
+								style="width: {scoreWidth(totalMean)}%"
 							></div>
 						</div>
 					</div>

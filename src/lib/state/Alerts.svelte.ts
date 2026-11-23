@@ -30,23 +30,28 @@ export class Alerts {
 	}
 
 	async create(request: CreateAlertRequest): Promise<boolean> {
-		return this.writeAndReload(this.apiService.create(apiRoutes.alerts.list, request).then(Boolean));
+		const created = await this.apiService.create(apiRoutes.alerts.list, request);
+		if (created === null) return false;
+
+		await this.load();
+		return true;
 	}
 
 	async update(alert: Alert, request: UpdateAlertRequest): Promise<boolean> {
-		return this.writeAndReload(this.apiService.put(apiRoutes.alerts.alert.replace('%d', String(alert.id)), request));
+		const ok = await this.apiService.put(apiRoutes.alerts.alert.replace('%d', String(alert.id)), request);
+		if (ok) await this.load();
+		return ok;
 	}
 
 	async delete(alert: Alert): Promise<boolean> {
-		return this.writeAndReload(this.apiService.delete(apiRoutes.alerts.alert, alert.id));
+		const ok = await this.apiService.delete(apiRoutes.alerts.alert, alert.id);
+		if (ok) await this.load();
+		return ok;
 	}
 
 	async enableSuggestion(key: AlertSuggestionKey): Promise<boolean> {
-		return this.writeAndReload(this.apiService.create(apiRoutes.alerts.suggestion.replace('%s', key), {}).then(Boolean));
-	}
-
-	private async writeAndReload(write: Promise<boolean>): Promise<boolean> {
-		if (!(await write)) return false;
+		const created = await this.apiService.create(apiRoutes.alerts.suggestion.replace('%s', key), {});
+		if (created === null) return false;
 
 		await this.load();
 		return true;

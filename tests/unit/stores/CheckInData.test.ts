@@ -1,33 +1,22 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { CheckInData } from '$lib/state/CheckInData.svelte';
 import { api, auth, pageState, resetStoreMocks } from '../setup/storeMocks';
 import { DEFAULT_SPORTS } from '$lib/types/check_in';
 import type { CheckInTracker, CheckInValue } from '$lib/types/check_in';
+import { checkInTracker, checkInValue as value } from '../helpers/factories';
 
-function tracker(overrides: Partial<CheckInTracker> = {}): CheckInTracker {
-	return {
-		id: 1,
-		key: 'mood',
-		name: null,
-		type: 'scale',
-		icon: null,
-		position: 0,
-		enabled: true,
-		scored: true,
-		...overrides
-	};
-}
+const mood = checkInTracker({ key: 'mood', name: null, type: 'scale', scored: true });
+const sports = checkInTracker({ id: 2, key: 'sports', name: null, type: 'sport', position: 1 });
+const meditated = checkInTracker({ id: 3, position: 2 });
+const glasses = checkInTracker({ id: 4, name: 'Glasses', type: 'count', position: 3, enabled: false });
 
-const mood = tracker();
-const sports = tracker({ id: 2, key: 'sports', type: 'sport', position: 1, scored: false });
-const meditated = tracker({ id: 3, key: null, name: 'Meditated', type: 'yes_no', position: 2, scored: false });
-const glasses = tracker({ id: 4, key: null, name: 'Glasses', type: 'count', position: 3, scored: false, enabled: false });
-
-function value(trackerId: number, date: string, v: number): CheckInValue {
-	return { tracker_id: trackerId, date, value: v };
-}
-
-function loaded(trackers: CheckInTracker[] = [mood, sports, meditated, glasses], values: CheckInValue[] = []): CheckInData {
+function loaded({
+	trackers = [mood, sports, meditated, glasses],
+	values = []
+}: {
+	trackers?: CheckInTracker[];
+	values?: CheckInValue[];
+} = {}): CheckInData {
 	const s = new CheckInData();
 	s.trackers = trackers;
 	s.values = values;
@@ -38,6 +27,10 @@ beforeEach(() => {
 	resetStoreMocks();
 	pageState.pathname = '/check-in';
 	pageState.params = {};
+});
+
+afterEach(() => {
+	vi.useRealTimers();
 });
 
 describe('CheckInData store', () => {
@@ -59,14 +52,16 @@ describe('CheckInData store', () => {
 		});
 
 		it('scores only enabled 1–5 trackers that count towards the score', () => {
-			const s = loaded([mood, sports, tracker({ id: 5, key: 'sleep', scored: false }), tracker({ id: 6, key: 'water', enabled: false })]);
+			const sleep = checkInTracker({ id: 5, key: 'sleep', name: null, type: 'scale' });
+			const water = checkInTracker({ id: 6, key: 'water', name: null, type: 'scale', scored: true, enabled: false });
+			const s = loaded({ trackers: [mood, sports, sleep, water] });
 			expect(s.scoredTrackers.map((t) => t.id)).toEqual([1]);
 		});
 	});
 
 	describe('values', () => {
 		it('reads a tracker\'s value on a day', () => {
-			const s = loaded(undefined, [value(1, '2026-08-14', 4)]);
+			const s = loaded({ values: [value(1, '2026-08-14', 4)] });
 			expect(s.getValue(mood, '2026-08-14')).toBe(4);
 			expect(s.getValue(mood, '2026-08-15')).toBeNull();
 			expect(s.getValue(meditated, '2026-08-14')).toBeNull();
@@ -74,7 +69,7 @@ describe('CheckInData store', () => {
 
 		it('gives the built-in values of a day in the old one-row shape, from the page date by default', () => {
 			pageState.params = { date: '2026-08-14' };
-			const s = loaded(undefined, [value(1, '2026-08-14', 4), value(3, '2026-08-14', 1)]);
+			const s = loaded({ values: [value(1, '2026-08-14', 4), value(3, '2026-08-14', 1)] });
 
 			expect(s.getDayData()?.mood).toBe(4);
 			expect(s.getDayData('2026-08-14')?.sports).toBeNull();
@@ -105,7 +100,6 @@ describe('CheckInData store', () => {
 
 			const s = new CheckInData();
 			await s.load();
-			vi.useRealTimers();
 
 			expect(api.list).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/values\?from=2025-11-01$/));
 			expect(s.valuesFrom).toBe('2025-11-01');
@@ -134,7 +128,6 @@ describe('CheckInData store', () => {
 
 			const s = new CheckInData();
 			await s.loadDashboard();
-			vi.useRealTimers();
 
 			expect(api.list).toHaveBeenCalledTimes(2);
 			expect(api.list).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/trackers$/));
@@ -171,7 +164,7 @@ describe('CheckInData store', () => {
 
 	describe('loadValuesFrom', () => {
 		it('loads only the missing older values and puts them first', async () => {
-			const s = loaded(undefined, [value(1, '2026-01-10', 4)]);
+			const s = loaded({ values: [value(1, '2026-01-10', 4)] });
 			s.valuesFrom = '2026-01-01';
 			api.list.mockResolvedValue({ data: [value(1, '2025-12-05', 2)] });
 
@@ -218,7 +211,7 @@ describe('CheckInData store', () => {
 	describe('setValue', () => {
 		it('shows the new value right away, saves it and tells the widgets', async () => {
 			api.put.mockResolvedValue(true);
-			const s = loaded(undefined, [value(3, '2026-08-14', 1)]);
+			const s = loaded({ values: [value(3, '2026-08-14', 1)] });
 
 			const saving = s.setValue(glasses, '2026-08-14', 3);
 			expect(s.getValue(glasses, '2026-08-14')).toBe(3);
@@ -230,7 +223,7 @@ describe('CheckInData store', () => {
 
 		it('clears a value with null', async () => {
 			api.put.mockResolvedValue(true);
-			const s = loaded(undefined, [value(3, '2026-08-14', 1)]);
+			const s = loaded({ values: [value(3, '2026-08-14', 1)] });
 
 			await s.setValue(meditated, '2026-08-14', null);
 
@@ -239,7 +232,7 @@ describe('CheckInData store', () => {
 
 		it('puts the old value back when saving fails', async () => {
 			api.put.mockResolvedValue(false);
-			const s = loaded(undefined, [value(1, '2026-08-14', 2)]);
+			const s = loaded({ values: [value(1, '2026-08-14', 2)] });
 
 			expect(await s.setValue(mood, '2026-08-14', 5)).toBe(false);
 			expect(s.getValue(mood, '2026-08-14')).toBe(2);
@@ -287,7 +280,7 @@ describe('CheckInData store', () => {
 
 		it('creates a tracker and returns it from the reloaded list', async () => {
 			api.create.mockResolvedValue({ data: meditated });
-			const s = loaded([mood]);
+			const s = loaded({ trackers: [mood] });
 
 			const created = await s.createTracker({ name: 'Meditated', type: 'yes_no', icon: 'flower-2' });
 
@@ -316,7 +309,7 @@ describe('CheckInData store', () => {
 
 		it('drops a deleted tracker\'s values', async () => {
 			api.delete.mockResolvedValue(true);
-			const s = loaded(undefined, [value(3, '2026-08-14', 1), value(1, '2026-08-14', 4)]);
+			const s = loaded({ values: [value(3, '2026-08-14', 1), value(1, '2026-08-14', 4)] });
 
 			await s.deleteTracker(meditated);
 
@@ -326,7 +319,7 @@ describe('CheckInData store', () => {
 
 		it('moves a rating by swapping it with the rating next to it', async () => {
 			api.put.mockResolvedValue(true);
-			const s = loaded([mood, sports, meditated, glasses]);
+			const s = loaded();
 
 			await s.moveTracker(sports, -1);
 
@@ -335,7 +328,7 @@ describe('CheckInData store', () => {
 
 		it('moves a log by swapping it with the log next to it', async () => {
 			api.put.mockResolvedValue(true);
-			const s = loaded([mood, sports, meditated, glasses]);
+			const s = loaded();
 
 			await s.moveTracker(glasses, -1);
 
@@ -344,7 +337,7 @@ describe('CheckInData store', () => {
 
 		it('saves ratings first, tidying up a mixed order', async () => {
 			api.put.mockResolvedValue(true);
-			const s = loaded([meditated, mood, glasses, sports]);
+			const s = loaded({ trackers: [meditated, mood, glasses, sports] });
 
 			await s.moveTracker(sports, -1);
 
@@ -352,7 +345,7 @@ describe('CheckInData store', () => {
 		});
 
 		it('does not move past the edges of its group', async () => {
-			const s = loaded([mood, sports, meditated, glasses]);
+			const s = loaded();
 
 			expect(await s.moveTracker(mood, -1)).toBe(false);
 			expect(await s.moveTracker(sports, 1)).toBe(false);

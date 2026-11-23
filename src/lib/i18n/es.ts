@@ -195,8 +195,8 @@ const settings: SettingsRecords = {
 	ai: 'IA',
 	plugins: 'Plugins',
 	telegram_bot: 'Bot de Telegram',
-	telegram_bot_notifications: 'Notificaciones de Telegram',
-	enable_telegram_bot_notifications: 'Habilitar notificaciones de Telegram',
+	telegram_bot_notifications: 'Notificaciones del bot de Telegram',
+	enable_telegram_bot_notifications: 'Habilitar notificaciones del bot de Telegram',
 	features: 'Funciones',
 	navigation_order_desktop: 'Escritorio',
 	navigation_order_mobile: 'Móvil',
@@ -1279,7 +1279,24 @@ const notifications: NotificationRecords = {
 	export_ready_title: 'Exportación lista',
 	export_ready_message: 'Tu exportación de datos está lista para descargar.',
 	movie_release_title: 'Nuevo estreno en pantalla',
-	movie_release_message: '%s se estrena pronto.'
+	movie_release_message: '%s se estrena pronto.',
+	type_book_release: 'Nuevos lanzamientos de libros',
+	type_music_release: 'Nuevos lanzamientos musicales',
+	type_movie_release: 'Nuevos estrenos en pantalla',
+	type_friend_request: 'Nuevas solicitudes de amistad',
+	type_daily_check_in_reminder: 'Recordatorio del check-in diario',
+	type_alert: 'Alertas',
+	type_daily_day_reminder: 'Recordatorio sobre tu día',
+	type_calendar_share: 'Calendarios compartidos',
+	type_dev_request_comment: 'Comentarios en solicitudes de desarrollo',
+	type_export_ready: 'Exportación lista',
+	channel_ui: 'UI',
+	channel_email: 'Correo',
+	channel_push: 'Push',
+	channel_telegram: 'Bot',
+	channel_telegram_unavailable: 'Primero configura el bot de Telegram en Integraciones',
+	channel_push_unavailable: 'Primero habilita arriba las notificaciones push',
+	channel_email_coming_soon: 'Las notificaciones por correo llegarán pronto'
 };
 
 const clipboard: ClipboardRecords = {

@@ -21,8 +21,8 @@
 	setTodos();
 	setCalendars();
 	setWeather();
-	setCheckInData();
-	setGoals();
+	const checkInData = setCheckInData();
+	const goals = setGoals();
 	setShortcuts();
 	setTimeTracking();
 
@@ -47,6 +47,10 @@
 		if (auth.user?.settings?.first_visit) {
 			showOnboardingModal = true;
 		}
+	});
+
+	onMount(async () => {
+		if (nav.features.checkIn) await Promise.all([checkInData.loadDashboard(), goals.load()]);
 	});
 
 	onMount(() => {

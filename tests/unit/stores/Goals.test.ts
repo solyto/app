@@ -1,21 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { Goals } from '$lib/state/Goals.svelte';
 import { api, auth, resetStoreMocks } from '../setup/storeMocks';
-import type { Goal } from '$lib/types/goal';
-
-function goal(overrides: Partial<Goal> = {}): Goal {
-	return {
-		id: 1,
-		source: 'check_in_tracker',
-		check_in_tracker_id: 3,
-		period: 'week',
-		comparison: 'at_least',
-		target: 3,
-		notify_when_reached: false,
-		progress: { current: 1, met: false, period_start: '2026-11-16', period_end: '2026-11-22', history: [] },
-		...overrides
-	};
-}
+import { goal } from '../helpers/factories';
 
 beforeEach(() => {
 	resetStoreMocks();

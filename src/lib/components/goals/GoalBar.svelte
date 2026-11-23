@@ -3,14 +3,12 @@
 	import type { CheckInTracker } from '$lib/types/check_in';
 	import GoalService from '$lib/services/GoalService';
 
-	// md is a little thicker, for the goal cards; sm for compact lists like the dashboard widget.
 	let { goal, tracker, size = 'sm' }: { goal: Goal; tracker: CheckInTracker; size?: 'sm' | 'md' } = $props();
 
 	const goalService = new GoalService();
 </script>
 
 {#if goalService.isAverage(tracker.type)}
-	<!-- The 1–5 scale with the target marked and the current average as a dot: green when met, red when not. -->
 	<div class="relative w-full" class:h-2.5={size === 'sm'} class:h-3={size === 'md'}>
 		<div
 			class="absolute inset-x-0 top-1/2 -translate-y-1/2 rounded-full bg-c-neutral-1 dark:bg-s-dark-3"
@@ -33,7 +31,6 @@
 		{/if}
 	</div>
 {:else}
-	<!-- "At least" fills up towards the target; "at most" shows how much of the limit is used and turns red once over. -->
 	<div class="w-full rounded-full bg-c-neutral-1 dark:bg-s-dark-3" class:h-1={size === 'sm'} class:h-1.5={size === 'md'}>
 		<div
 			class="h-full rounded-full transition-all duration-300"

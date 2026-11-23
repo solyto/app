@@ -1180,6 +1180,23 @@ export interface NotificationRecords {
 	export_ready_message: string;
 	movie_release_title: string;
 	movie_release_message: string;
+	type_book_release: string;
+	type_music_release: string;
+	type_movie_release: string;
+	type_friend_request: string;
+	type_daily_check_in_reminder: string;
+	type_alert: string;
+	type_daily_day_reminder: string;
+	type_calendar_share: string;
+	type_dev_request_comment: string;
+	type_export_ready: string;
+	channel_ui: string;
+	channel_email: string;
+	channel_push: string;
+	channel_telegram: string;
+	channel_telegram_unavailable: string;
+	channel_push_unavailable: string;
+	channel_email_coming_soon: string;
 }
 
 export interface ClipboardRecords {

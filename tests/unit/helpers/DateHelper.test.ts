@@ -9,6 +9,7 @@ import {
 	formatTime,
 	formatTimeWithSeconds,
 	getDateDiffInDays,
+	getStartOfMonthMonthsAgo,
 	getDateDiffInMinutes,
 	getDateMinusDays,
 	getDatePlusDays,
@@ -137,6 +138,17 @@ describe('getDateDiffInDays', () => {
 
 	it('returns negative for earlier second date', () => {
 		expect(getDateDiffInDays(new Date(2025, 7, 20), new Date(2025, 7, 15))).toBe(-5);
+	});
+
+	// Across a daylight saving change, local midnights are 23 or 25 hours apart.
+	it('counts three days when one of them was 23 hours long', () => {
+		const start = new Date(2026, 2, 27);
+		expect(getDateDiffInDays(start, new Date(start.getTime() + 71 * 3_600_000))).toBe(3);
+	});
+
+	it('counts three days when one of them was 25 hours long', () => {
+		const start = new Date(2026, 9, 23);
+		expect(getDateDiffInDays(start, new Date(start.getTime() + 73 * 3_600_000))).toBe(3);
 	});
 });
 
@@ -444,5 +456,16 @@ describe('dateInTimeZone', () => {
 		['2027-12-31T23:30:00Z', 'UTC', '2027-12-31']
 	])('dates %s in %s as %s', (instant, timeZone, date) => {
 		expect(dateInTimeZone(new Date(instant), timeZone)).toBe(date);
+	});
+});
+
+describe('getStartOfMonthMonthsAgo', () => {
+	it.each([
+		[new Date(2026, 10, 23), 12, '2025-11-01'],
+		[new Date(2026, 2, 31), 1, '2026-02-01'],
+		[new Date(2026, 0, 15), 1, '2025-12-01'],
+		[new Date(2026, 10, 23), 0, '2026-11-01']
+	])('goes from %s back %i months to %s', (date, months, start) => {
+		expect(getUrlFormat(getStartOfMonthMonthsAgo(date, months))).toBe(start);
 	});
 });

@@ -12,6 +12,18 @@ export interface GoalPeriodProgress {
 	history: { period_start: string; met: boolean }[];
 }
 
+// Worked out in the app from the loaded values, so it follows edits right away.
+export interface GoalProgress {
+	current: number | null;
+	met: boolean;
+}
+
+// One goal's line on the daily page.
+export interface GoalLine {
+	text: string;
+	met: boolean;
+}
+
 export interface Goal {
 	id: number;
 	source: GoalSource;

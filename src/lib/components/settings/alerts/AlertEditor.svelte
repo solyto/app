@@ -1,12 +1,10 @@
 <script lang="ts">
 	import type { Alert, TrackerAlertRule } from '$lib/types/alert';
 	import type { CheckInTracker } from '$lib/types/check_in';
-	import { MAX_ALERT_DAYS } from '$lib/types/alert';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getAlerts } from '$lib/state/Alerts.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import { SaveAction } from '$lib/helpers/SaveAction.svelte';
 	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import AlertService from '$lib/services/AlertService';
 	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
@@ -22,8 +20,6 @@
 	const checkInData = getCheckInData();
 	const alerts = getAlerts();
 	const ts = getTranslation();
-	const loadingIndicator = getLoadingIndicator();
-	const notifications = getUiNotifications();
 	const alertService = new AlertService();
 	const SECTION_TITLE = 'mb-1 text-sm font-medium text-c-neutral-5 dark:text-c-neutral-4';
 	const title = alert ? ts.get.alerts.edit_alert : ts.get.alerts.new_alert;
@@ -33,13 +29,12 @@
 	let threshold = $state<number | null>(alert?.threshold ?? null);
 	let days = $state<number | null>(alert?.days ?? 7);
 	let confirmingDelete = $state<boolean>(false);
+	const saving = new SaveAction(() => ts.get.alerts.save_error);
 
 	const tracker = $derived<CheckInTracker | null>(checkInData.trackers.find((t) => t.id === trackerId) ?? null);
 	const bounds = $derived(tracker ? alertService.thresholdBounds(tracker.type) : null);
 	const canSave = $derived(tracker !== null && alertService.isValid(tracker.type, rule, threshold, days));
-	let busy = $state<boolean>(false);
 
-	// A new alert starts with a rule the preselected tracker offers (yes/no and sports have no averages).
 	function startingRule(): TrackerAlertRule {
 		if (alert) return alert.rule as TrackerAlertRule;
 
@@ -63,32 +58,24 @@
 
 	function chooseTracker(value: string): void {
 		trackerId = Number(value);
-		if (tracker && !alertService.rules(tracker.type).includes(rule)) rule = alertService.rules(tracker.type)[0];
+		if (!tracker) return;
+
+		const rules = alertService.rules(tracker.type);
+		if (!rules.includes(rule)) rule = rules[0];
 	}
 
-	// One write at a time: a double click mustn't create the alert twice.
 	async function run(action: () => Promise<boolean>): Promise<void> {
-		if (busy) return;
-		busy = true;
-		loadingIndicator.start();
-		try {
-			const ok = await action();
-			if (ok) onClose();
-			else notifications.error(ts.get.alerts.save_error);
-		} finally {
-			loadingIndicator.stop();
-			busy = false;
-		}
+		if (await saving.runIfIdle(action)) onClose();
 	}
 
 	function save(): void {
-		if (!canSave || days === null) return;
+		if (!canSave || tracker === null || days === null) return;
 
 		const request = { rule, threshold: alertService.isAverage(rule) ? threshold : null, days };
 		void run(() =>
 			alert
 				? alerts.update(alert, request)
-				: alerts.create({ ...request, source: 'check_in_tracker', check_in_tracker_id: trackerId! })
+				: alerts.create({ ...request, source: 'check_in_tracker', check_in_tracker_id: tracker.id })
 		);
 	}
 
@@ -125,7 +112,7 @@
 						</div>
 						<span class="text-sm">{ts.get.alerts.over}</span>
 					{/if}
-					<div class="w-20"><NumberInput bind:value={days} min={1} max={MAX_ALERT_DAYS} step={1} class="h-10" /></div>
+					<div class="w-20"><NumberInput bind:value={days} min={1} max={AlertService.MAX_DAYS} step={1} class="h-10" /></div>
 					<span class="text-sm">{ts.get.alerts.days}</span>
 				</div>
 			</div>
@@ -137,7 +124,7 @@
 			{:else}
 				<span></span>
 			{/if}
-			<TextButton title={alert ? ts.get.layout.save : ts.get.alerts.new_alert} disabled={!canSave || busy} onclick={save} />
+			<TextButton title={alert ? ts.get.layout.save : ts.get.alerts.new_alert} disabled={!canSave || saving.busy} onclick={save} />
 		</div>
 	</div>
 </ContentModal>

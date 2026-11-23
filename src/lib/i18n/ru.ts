@@ -1339,7 +1339,24 @@ const notifications: NotificationRecords = {
 	export_ready_title: 'Экспорт готов',
 	export_ready_message: 'Файл экспорта данных готов к скачиванию.',
 	movie_release_title: 'Скоро премьера',
-	movie_release_message: 'Скоро выходит %s.'
+	movie_release_message: 'Скоро выходит %s.',
+	type_book_release: 'Новые книги',
+	type_music_release: 'Новые альбомы',
+	type_movie_release: 'Премьеры',
+	type_friend_request: 'Новые заявки в друзья',
+	type_daily_check_in_reminder: 'Напоминание о ежедневном опросе',
+	type_alert: 'Оповещения',
+	type_daily_day_reminder: 'Напоминание о планах на день',
+	type_calendar_share: 'Доступ к календарям',
+	type_dev_request_comment: 'Комментарии к обращениям',
+	type_export_ready: 'Экспорт готов',
+	channel_ui: 'UI',
+	channel_email: 'Почта',
+	channel_push: 'Push',
+	channel_telegram: 'Бот',
+	channel_telegram_unavailable: 'Сначала настройте Telegram-бота в разделе «Интеграции»',
+	channel_push_unavailable: 'Сначала включите push-уведомления выше',
+	channel_email_coming_soon: 'Уведомления по почте скоро появятся'
 };
 
 const clipboard: ClipboardRecords = {

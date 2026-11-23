@@ -1,6 +1,8 @@
 import type { Todo, TodoCategory } from '$lib/types/todo';
 import type { DevRequest } from '$lib/types/dev_request';
 import type { Tag } from '$lib/types/tag';
+import type { CheckInTracker, CheckInValue } from '$lib/types/check_in';
+import type { Goal } from '$lib/types/goal';
 
 export function todo(overrides: Partial<Todo> = {}): Todo {
 	return {
@@ -58,6 +60,38 @@ export function devRequest(overrides: Partial<DevRequest> = {}): DevRequest {
 		fixed_in_version: null,
 		created_by_user_id: null,
 		created_by_user: { id: '', name: 'Ada' },
+		...overrides
+	};
+}
+
+export function checkInTracker(overrides: Partial<CheckInTracker> = {}): CheckInTracker {
+	return {
+		id: 1,
+		key: null,
+		name: 'Meditated',
+		type: 'yes_no',
+		icon: null,
+		position: 0,
+		enabled: true,
+		scored: false,
+		...overrides
+	};
+}
+
+export function checkInValue(trackerId: number, date: string, value: number): CheckInValue {
+	return { tracker_id: trackerId, date, value };
+}
+
+export function goal(overrides: Partial<Goal> = {}): Goal {
+	return {
+		id: 1,
+		source: 'check_in_tracker',
+		check_in_tracker_id: 1,
+		period: 'week',
+		comparison: 'at_least',
+		target: 3,
+		notify_when_reached: false,
+		progress: { current: null, met: false, period_start: '', period_end: '', history: [] },
 		...overrides
 	};
 }

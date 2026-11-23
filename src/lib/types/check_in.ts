@@ -119,7 +119,6 @@ export interface UpdateCheckInTrackerRequest {
 	scored?: boolean;
 }
 
-export const MAX_CHECK_IN_COUNT = 1000000;
 
 export interface CreateCheckInRequest {
 	date: string;

@@ -1082,7 +1082,10 @@ provider is a bug.
 
 Member order inside a store: `static readonly` constants, `$state` fields,
 collaborators (`auth`, `apiService`, `localStorage`, services), constructor,
-public methods, private methods.
+public methods, private methods. A pure, stateless service that a
+`$derived` field reads is a `readonly` field initialiser declared before
+that field (`CheckInData.trackerService`): it needs no injection, and a
+constructor assignment would come too late for TypeScript.
 
 Collaborators are constructor parameters with defaults, so `new Todos()`
 still works everywhere and a test can pass mocks without module mocking:
@@ -1168,6 +1171,12 @@ loadingIndicator.stop();
 Validate before `start()`, or `stop()` before every early `return`, or use
 `try/finally`. A `start()` followed by a bare `return` leaves the global
 spinner up.
+
+A component save that shows the indicator and an error message on failure
+goes through `helpers/SaveAction.svelte.ts`: `saving.run(action)`, or
+`saving.runIfIdle(action)` with `disabled={saving.busy}` for a button that
+must not save twice (check-in, goals and alerts use it; other areas move
+to it as they are cleaned up).
 
 ### 15.8 Pure logic lives in `services/` and `helpers/`
 

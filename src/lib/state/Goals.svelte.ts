@@ -23,25 +23,31 @@ export class Goals {
 		this.loaded = true;
 	}
 
-	// One goal per tracker for now.
 	forTracker(trackerId: number): Goal | null {
 		return this.goals.find((goal) => goal.check_in_tracker_id === trackerId) ?? null;
 	}
 
 	async create(request: CreateGoalRequest): Promise<boolean> {
-		return this.writeAndReload(this.apiService.create(apiRoutes.goals.list, request).then(Boolean));
+		const created = await this.apiService.create(apiRoutes.goals.list, request);
+		if (created === null) return false;
+
+		await this.load();
+		this.auth.widgetBridge.notifyChanged();
+		return true;
 	}
 
 	async update(goal: Goal, request: UpdateGoalRequest): Promise<boolean> {
-		return this.writeAndReload(this.apiService.put(apiRoutes.goals.goal.replace('%d', String(goal.id)), request));
+		const ok = await this.apiService.put(apiRoutes.goals.goal.replace('%d', String(goal.id)), request);
+		if (!ok) return false;
+
+		await this.load();
+		this.auth.widgetBridge.notifyChanged();
+		return true;
 	}
 
 	async delete(goal: Goal): Promise<boolean> {
-		return this.writeAndReload(this.apiService.delete(apiRoutes.goals.goal, goal.id));
-	}
-
-	private async writeAndReload(write: Promise<boolean>): Promise<boolean> {
-		if (!(await write)) return false;
+		const ok = await this.apiService.delete(apiRoutes.goals.goal, goal.id);
+		if (!ok) return false;
 
 		await this.load();
 		this.auth.widgetBridge.notifyChanged();

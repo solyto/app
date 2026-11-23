@@ -1,12 +1,11 @@
 <script lang="ts">
 	import type { Alert, AlertSuggestion, AlertSuggestionKey } from '$lib/types/alert';
-	import { onMount } from 'svelte';
-	import { setCheckInData } from '$lib/state/CheckInData.svelte';
-	import { setAlerts } from '$lib/state/Alerts.svelte';
+	import type { CheckInTracker } from '$lib/types/check_in';
+	import { getCheckInData } from '$lib/state/CheckInData.svelte';
+	import { getAlerts } from '$lib/state/Alerts.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import { SaveAction } from '$lib/helpers/SaveAction.svelte';
 	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import AlertService from '$lib/services/AlertService';
 	import AlertEditor from '$lib/components/settings/alerts/AlertEditor.svelte';
@@ -16,24 +15,26 @@
 	import EditButton from '$lib/components/ui/buttons/EditButton.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
-	const checkInData = setCheckInData();
-	const alerts = setAlerts();
+	const checkInData = getCheckInData();
+	const alerts = getAlerts();
 	const ts = getTranslation();
 	const auth = getAuth();
-	const loadingIndicator = getLoadingIndicator();
-	const notifications = getUiNotifications();
+	const saving = new SaveAction(() => ts.get.alerts.save_error);
+	const addingSuggestion = new SaveAction(() => ts.get.alerts.save_error);
 	const alertService = new AlertService();
 	let editing = $state<Alert | 'new' | null>(null);
 
-	onMount(async () => {
-		await Promise.all([checkInData.loadTrackers(), alerts.load()]);
-	});
+	const trackerAlerts = $derived(
+		alerts.alerts.flatMap((alert) => {
+			const tracker = findTracker(alert.check_in_tracker_id);
+			return tracker ? [{ alert, tracker }] : [];
+		})
+	);
 
-	function tracker(id: number | null) {
+	function findTracker(id: number | null): CheckInTracker | null {
 		return checkInData.trackers.find((t) => t.id === id) ?? null;
 	}
 
-	// What the rule sees now and when it last sent.
 	function details(alert: Alert): string {
 		return [
 			alert.state.active ? ts.get.alerts.active_now : null,
@@ -47,24 +48,9 @@
 		return ts.get.alerts[`suggestion_${suggestion.key}`];
 	}
 
-	async function run(action: () => Promise<boolean>): Promise<void> {
-		loadingIndicator.start();
-		const ok = await action();
-		loadingIndicator.stop();
-		if (!ok) notifications.error(ts.get.alerts.save_error);
-	}
 
-	// A double click mustn't add the same suggestion twice.
-	let addingSuggestion = $state<boolean>(false);
-
-	async function addSuggestion(key: AlertSuggestionKey): Promise<void> {
-		if (addingSuggestion) return;
-		addingSuggestion = true;
-		try {
-			await run(() => alerts.enableSuggestion(key));
-		} finally {
-			addingSuggestion = false;
-		}
+	function addSuggestion(key: AlertSuggestionKey): void {
+		void addingSuggestion.runIfIdle(() => alerts.enableSuggestion(key));
 	}
 </script>
 
@@ -80,25 +66,22 @@
 			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.alerts.empty}</p>
 		{:else}
 			<div class="flex w-full flex-col gap-2">
-				{#each alerts.alerts as alert (alert.id)}
-					{@const alertTracker = tracker(alert.check_in_tracker_id)}
-					{#if alertTracker}
-						<div class="flex w-full items-center justify-between gap-3">
-							<div class="flex min-w-0 flex-col" class:opacity-50={!alert.enabled}>
-								<span>{trackerLabel(alertTracker, ts.get.checkIn)}: {alertService.describe(alert.rule, alert.threshold, alert.days, ts.get.alerts)}</span>
-								{#if details(alert) !== ''}
-									<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">{details(alert)}</span>
-								{/if}
-							</div>
-							<div class="flex shrink-0 items-center gap-2">
-								<!-- Goal alerts are changed on the Goals page; the hidden button keeps the columns aligned. -->
-								<div class:invisible={alert.source === 'goal'}>
-									<EditButton title={ts.get.alerts.edit_alert} onClick={() => (editing = alert)} inModal={false} buttonStyle="fill-on-hover" />
-								</div>
-								<Toggle checked={alert.enabled} onchange={() => run(() => alerts.update(alert, { enabled: !alert.enabled }))} />
-							</div>
+				{#each trackerAlerts as { alert, tracker } (alert.id)}
+					<div class="flex w-full items-center justify-between gap-3">
+						<div class="flex min-w-0 flex-col" class:opacity-50={!alert.enabled}>
+							<span>{trackerLabel(tracker, ts.get.checkIn)}: {alertService.describe(alert.rule, alert.threshold, alert.days, ts.get.alerts)}</span>
+							{#if details(alert) !== ''}
+								<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">{details(alert)}</span>
+							{/if}
 						</div>
-					{/if}
+						<div class="flex shrink-0 items-center gap-2">
+							<!-- Goal alerts are changed on the Goals page; the hidden button keeps the columns aligned. -->
+							<div class:invisible={alert.source === 'goal'}>
+								<EditButton title={ts.get.alerts.edit_alert} onClick={() => (editing = alert)} inModal={false} buttonStyle="fill-on-hover" />
+							</div>
+							<Toggle checked={alert.enabled} onchange={() => saving.run(() => alerts.update(alert, { enabled: !alert.enabled }))} />
+						</div>
+					</div>
 				{/each}
 			</div>
 		{/if}
@@ -110,7 +93,7 @@
 						{#each alerts.suggestions as suggestion (suggestion.key)}
 							<div class="flex w-full items-center justify-between gap-3">
 								<span>{suggestionLabel(suggestion)}</span>
-								<TextButton title={ts.get.alerts.suggestion_add} type="slight" disabled={addingSuggestion} onclick={() => addSuggestion(suggestion.key)} />
+								<TextButton title={ts.get.alerts.suggestion_add} type="slight" disabled={addingSuggestion.busy} onclick={() => addSuggestion(suggestion.key)} />
 							</div>
 						{/each}
 					</div>

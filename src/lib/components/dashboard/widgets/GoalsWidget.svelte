@@ -1,23 +1,23 @@
 <script lang="ts">
+	import GoalService from '$lib/services/GoalService';
 	import IconTrophy from '$lib/icons/lucide/trophy.svelte';
 	import IconCheck from '$lib/icons/lucide/check.svelte';
+	import type { Translation } from '$lib/state/Translation.svelte';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getGoals } from '$lib/state/Goals.svelte';
 	import { goalProgressText, trackerLabel } from '$lib/helpers/CheckInHelper';
 	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
 	import GoalBar from '$lib/components/goals/GoalBar.svelte';
 
-	let { ts } = $props();
+	let { ts }: {
+		ts: Translation;
+	} = $props();
 
 	const checkInData = getCheckInData();
 	const goals = getGoals();
+	const goalService = new GoalService();
 
-	const shown = $derived(
-		goals.goals.flatMap((goal) => {
-			const tracker = checkInData.activeTrackers.find((t) => t.id === goal.check_in_tracker_id);
-			return tracker ? [{ goal, tracker }] : [];
-		})
-	);
+	const shown = $derived(goalService.withActiveTracker(goals.goals, checkInData.activeTrackers));
 </script>
 
 {#if shown.length > 0}

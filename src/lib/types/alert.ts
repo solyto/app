@@ -6,8 +6,6 @@ export type AlertRule = TrackerAlertRule | 'goal_reached';
 
 export type AlertSuggestionKey = 'no_sport_week' | 'mood_trending_down' | 'sleep_trending_down' | 'drinking_more';
 
-export const MAX_ALERT_DAYS = 90;
-
 export interface AlertState {
 	active: boolean;
 	average: number | null;

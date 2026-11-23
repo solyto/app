@@ -1,6 +1,5 @@
 import type { CheckInTracker } from '$lib/types/check_in';
-import type { Goal } from '$lib/types/goal';
-import type { GoalProgress } from '$lib/services/CheckInTrackerService';
+import type { Goal, GoalPeriod, GoalProgress } from '$lib/types/goal';
 import type { CheckInRecords } from '$lib/types/translation';
 
 export function getScoreColor(value: number): string {
@@ -11,18 +10,32 @@ export function getScoreColor(value: number): string {
 	return 'bg-c-danger';
 }
 
+// No ratings yet shows as "-".
+export function formatScore(value: number): string {
+	return isNaN(value) ? '-' : value.toFixed(2);
+}
+
+// A score of 5 fills the bar.
+export function scoreWidth(value: number): number {
+	return isNaN(value) ? 0 : (value / 5) * 100;
+}
+
 export function trackerLabel(tracker: CheckInTracker, texts: CheckInRecords): string {
 	return tracker.key !== null ? texts[tracker.key] : (tracker.name ?? '');
 }
 
-// The progress ("3 / 5") and the period it's in ("this week"), for showing them apart.
-export function goalProgressParts(goal: Goal, tracker: CheckInTracker, progress: GoalProgress, texts: CheckInRecords): { value: string; period: string } {
+export function goalProgressParts(
+	goal: Goal,
+	tracker: CheckInTracker,
+	progress: GoalProgress,
+	texts: CheckInRecords
+): { value: string; period: string } {
 	const format = (n: number) => (tracker.type === 'scale' ? n.toFixed(1) : String(n));
 	const current = progress.current === null ? '–' : format(progress.current);
 	const target = `${goal.comparison === 'at_most' ? '≤ ' : ''}${format(goal.target)}`;
-	const period = { day: texts.goal_today, week: texts.goal_this_week, month: texts.goal_this_month }[goal.period];
+	const periods: Record<GoalPeriod, string> = { day: texts.goal_today, week: texts.goal_this_week, month: texts.goal_this_month };
 
-	return { value: `${current} / ${target}`, period };
+	return { value: `${current} / ${target}`, period: periods[goal.period] };
 }
 
 export function goalProgressText(goal: Goal, tracker: CheckInTracker, progress: GoalProgress, texts: CheckInRecords): string {
@@ -30,7 +43,3 @@ export function goalProgressText(goal: Goal, tracker: CheckInTracker, progress: 
 	return `${value} ${period}`;
 }
 
-export interface GoalLine {
-	text: string;
-	met: boolean;
-}

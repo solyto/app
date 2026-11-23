@@ -1290,8 +1290,25 @@ const notifications: NotificationRecords = {
 	daily_check_in_reminder: 'Tägliche Erinnerung an dein Check-in erhalten?',
 	export_ready_title: 'Export fertig',
 	export_ready_message: 'Dein Datenexport ist zum Download bereit.',
-	movie_release_title: 'Neuer Release',
-	movie_release_message: '%s erscheint bald.'
+	movie_release_title: 'Film oder Serie erscheint bald',
+	movie_release_message: '%s erscheint bald.',
+	type_book_release: 'Neue Bücher',
+	type_music_release: 'Neue Musik',
+	type_movie_release: 'Neue Filme & Serien',
+	type_friend_request: 'Neue Freundschaftsanfragen',
+	type_daily_check_in_reminder: 'Erinnerung ans tägliche Check-in',
+	type_alert: 'Hinweise',
+	type_daily_day_reminder: 'Erinnerung an deinen bevorstehenden Tag',
+	type_calendar_share: 'Geteilte Kalender',
+	type_dev_request_comment: 'Kommentare zu Dev Requests',
+	type_export_ready: 'Export fertig',
+	channel_ui: 'UI',
+	channel_email: 'E-Mail',
+	channel_push: 'Push',
+	channel_telegram: 'Bot',
+	channel_telegram_unavailable: 'Richte zuerst den Telegram Bot unter Verbindungen ein',
+	channel_push_unavailable: 'Aktiviere zuerst oben die Push-Benachrichtigungen',
+	channel_email_coming_soon: 'E-Mail-Benachrichtigungen folgen bald'
 };
 
 const clipboard: ClipboardRecords = {

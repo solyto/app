@@ -39,8 +39,7 @@
 		</h1>
 	</a>
 	<div class="ml-auto flex items-center gap-2">
-		<!-- Both are about trackers; Goals has its own "New goal" and edits goals on their cards.
-			 There a spacer of the buttons' height keeps the header from changing size between tabs. -->
+		<!-- A spacer of the buttons' height keeps the header the same size on the Goals tab. -->
 		{#if page.url.pathname === '/check-in/goals'}
 			<div class="h-[34px]" aria-hidden="true"></div>
 		{:else}

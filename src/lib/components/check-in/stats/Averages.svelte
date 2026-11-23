@@ -2,7 +2,7 @@
 	import type { CheckInTracker } from '$lib/types/check_in';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { trackerLabel } from '$lib/helpers/CheckInHelper';
+	import { formatScore, scoreWidth, trackerLabel } from '$lib/helpers/CheckInHelper';
 	import AverageRow from '$lib/components/check-in/stats/AverageRow.svelte';
 
 	let { dates }: { dates: string[] } = $props();
@@ -35,17 +35,13 @@
 							{ts.get.checkIn.total}
 						</p>
 						<p class="text-base font-bold text-c-primary">
-							{#if isNaN(totalMean)}
-								-
-							{:else}
-								{totalMean.toFixed(2)}
-							{/if}
+							{formatScore(totalMean)}
 						</p>
 					</div>
 					<div class="h-2 overflow-hidden rounded-full bg-c-neutral-1 dark:bg-s-dark-3">
 						<div
 							class="h-full rounded-full bg-c-primary transition-all duration-300"
-							style="width: {isNaN(totalMean) ? 0 : (totalMean / 5) * 100}%"
+							style="width: {scoreWidth(totalMean)}%"
 						></div>
 					</div>
 				</div>

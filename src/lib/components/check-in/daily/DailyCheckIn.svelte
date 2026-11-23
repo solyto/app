@@ -3,7 +3,7 @@
 	import { DEFAULT_SPORTS, SPORT_ID, SPORT_BY_ID } from '$lib/types/check_in';
 	import DailyCheckInIcon from './DailyCheckInIcon.svelte';
 	import GoalProgressLine from '$lib/components/check-in/daily/GoalProgressLine.svelte';
-	import type { GoalLine } from '$lib/helpers/CheckInHelper';
+	import type { GoalLine } from '$lib/types/goal';
 
 	let { tracker, label, currentValue, onChange, selectedSports = DEFAULT_SPORTS, goalLine = null }: {
 		tracker: CheckInTracker;

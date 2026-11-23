@@ -31,11 +31,12 @@
 		smoking: IconCigarette,
 		social_life: IconUsersRound
 	};
+
+	const BuiltInIcon = $derived(tracker.key !== null ? BUILT_IN_ICONS[tracker.key] : null);
 </script>
 
-{#if tracker.key !== null}
-	{@const Icon = BUILT_IN_ICONS[tracker.key]}
-	<Icon class={customClass} />
+{#if BuiltInIcon}
+	<BuiltInIcon class={customClass} />
 {:else}
 	<TrackerIcon name={tracker.icon} class={customClass} />
 {/if}

@@ -4,8 +4,7 @@
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
 	import { getGoals } from '$lib/state/Goals.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import { SaveAction } from '$lib/helpers/SaveAction.svelte';
 	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import GoalService from '$lib/services/GoalService';
 	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
@@ -21,11 +20,8 @@
 	const checkInData = getCheckInData();
 	const goals = getGoals();
 	const ts = getTranslation();
-	const loadingIndicator = getLoadingIndicator();
-	const notifications = getUiNotifications();
 	const goalService = new GoalService();
 
-	// One goal per tracker: a new goal can only go on an enabled tracker without one.
 	const available = checkInData.activeTrackers.filter((t) => goals.forTracker(t.id) === null);
 	const title = goal ? ts.get.goals.edit_goal : ts.get.goals.new_goal;
 
@@ -35,14 +31,21 @@
 	let period = $state<GoalPeriod>(goal?.period ?? 'week');
 	let notify = $state<boolean>(goal?.notify_when_reached ?? false);
 	let confirmingDelete = $state<boolean>(false);
+	const saving = new SaveAction(() => ts.get.goals.save_error);
 
 	const tracker = $derived<CheckInTracker | null>(checkInData.trackers.find((t) => t.id === trackerId) ?? null);
 	const bounds = $derived(tracker ? goalService.bounds(tracker.type, period) : null);
 	const canSave = $derived(tracker !== null && goalService.isValidTarget(tracker.type, period, target));
-	let busy = $state<boolean>(false);
 
 	function trackerOptions(): { label: string; value: string }[] {
 		return available.map((t) => ({ label: trackerLabel(t, ts.get.checkIn), value: String(t.id) }));
+	}
+
+	function comparisonOptions(): { label: string; value: string }[] {
+		return [
+			{ label: ts.get.goals.at_least, value: 'at_least' },
+			{ label: ts.get.goals.at_most, value: 'at_most' }
+		];
 	}
 
 	function periodOptions(): { label: string; value: string }[] {
@@ -55,29 +58,18 @@
 		if (tracker && !goalService.periods(tracker.type).includes(period)) period = 'week';
 	}
 
-	// One write at a time: a double click mustn't create the goal twice.
 	async function run(action: () => Promise<boolean>): Promise<void> {
-		if (busy) return;
-		busy = true;
-		loadingIndicator.start();
-		try {
-			const ok = await action();
-			if (ok) onClose();
-			else notifications.error(ts.get.goals.save_error);
-		} finally {
-			loadingIndicator.stop();
-			busy = false;
-		}
+		if (await saving.runIfIdle(action)) onClose();
 	}
 
 	function save(): void {
-		if (!canSave || target === null) return;
+		if (!canSave || tracker === null || target === null) return;
 
 		const request = { period, comparison, target, notify_when_reached: notify };
 		void run(() =>
 			goal
 				? goals.update(goal, request)
-				: goals.create({ ...request, source: 'check_in_tracker', check_in_tracker_id: trackerId! })
+				: goals.create({ ...request, source: 'check_in_tracker', check_in_tracker_id: tracker.id })
 		);
 	}
 
@@ -109,10 +101,7 @@
 						<div class="w-32">
 							<Select
 								value={comparison}
-								options={[
-									{ label: ts.get.goals.at_least, value: 'at_least' },
-									{ label: ts.get.goals.at_most, value: 'at_most' }
-								]}
+								options={comparisonOptions()}
 								onchange={(value) => (comparison = value as GoalComparison)}
 								ariaLabel={ts.get.goals.target}
 							/>
@@ -138,7 +127,7 @@
 				{:else}
 					<span></span>
 				{/if}
-				<TextButton title={goal ? ts.get.layout.save : ts.get.goals.new_goal} disabled={!canSave || busy} onclick={save} />
+				<TextButton title={goal ? ts.get.layout.save : ts.get.goals.new_goal} disabled={!canSave || saving.busy} onclick={save} />
 			</div>
 		{/if}
 	</div>

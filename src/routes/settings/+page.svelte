@@ -4,6 +4,9 @@
 	import { getNavigation } from '$lib/state/Navigation.svelte';
 	import { onMount } from 'svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
+	import { setCheckInData } from '$lib/state/CheckInData.svelte';
+	import { setAlerts } from '$lib/state/Alerts.svelte';
+	import type { Component } from 'svelte';
 	import TagSettings from '$lib/components/settings/TagSettings.svelte';
 	import NotificationSettings from '$lib/components/settings/notifications/NotificationSettings.svelte';
 	import AlertSettings from '$lib/components/settings/alerts/AlertSettings.svelte';
@@ -22,26 +25,38 @@
 	const nav = getNavigation();
 	const tags = getTags();
 	const loadingIndicator = getLoadingIndicator();
+	const checkInData = setCheckInData();
+	const alerts = setAlerts();
 
+	// Alerts load even while check-in is off: switching it on in Features shows their section right away.
 	onMount(async () => {
 		loadingIndicator.start();
-		await tags.load();
+		await Promise.all([tags.load(), checkInData.loadTrackers(), alerts.load()]);
 		loadingIndicator.stop();
 	});
 
-	const sections = $derived([
-		{ id: 6, title: ts.get.settings.appearance, component: AppearanceSettings },
-		{ id: 3, title: ts.get.settings.localization, component: LocalizationSettings },
-		{ id: 4, title: ts.get.settings.features, component: FeatureSettings },
-		{ id: 5, title: ts.get.settings.notifications, component: NotificationSettings },
+	type Section = { id: number; title: string; component: Component };
+
+	const sections = $derived(visibleSections());
+
+	function visibleSections(): Section[] {
+		const visible: Section[] = [
+			{ id: 6, title: ts.get.settings.appearance, component: AppearanceSettings },
+			{ id: 3, title: ts.get.settings.localization, component: LocalizationSettings },
+			{ id: 4, title: ts.get.settings.features, component: FeatureSettings },
+			{ id: 5, title: ts.get.settings.notifications, component: NotificationSettings }
+		];
 		// Alerts watch check-in trackers, so they only make sense while check-in is on.
-		...(nav.features.checkIn ? [{ id: 11, title: ts.get.alerts.title, component: AlertSettings }] : []),
-		{ id: 2, title: ts.get.settings.tags, component: TagSettings },
-		{ id: 10, title: ts.get.settings.plugins, component: PluginSettings },
-		{ id: 8, title: ts.get.settings.security, component: SecuritySettings },
-		{ id: 9, title: ts.get.settings.export_data, component: ExportSettings },
-		{ id: 7, title: ts.get.settings.app, component: AppSettings }
-	]);
+		if (nav.features.checkIn) visible.push({ id: 11, title: ts.get.alerts.title, component: AlertSettings });
+		visible.push(
+			{ id: 2, title: ts.get.settings.tags, component: TagSettings },
+			{ id: 10, title: ts.get.settings.plugins, component: PluginSettings },
+			{ id: 8, title: ts.get.settings.security, component: SecuritySettings },
+			{ id: 9, title: ts.get.settings.export_data, component: ExportSettings },
+			{ id: 7, title: ts.get.settings.app, component: AppSettings }
+		);
+		return visible;
+	}
 
 	let active = $state<number>(6);
 	let scrollContainer = $state<HTMLElement | null>(null);

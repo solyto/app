@@ -1,7 +1,7 @@
-import type { CheckInTrackerType } from '$lib/types/check_in';
-import { MAX_CHECK_IN_COUNT } from '$lib/types/check_in';
+import type { CheckInTracker, CheckInTrackerType } from '$lib/types/check_in';
+import CheckInTrackerService from '$lib/services/CheckInTrackerService';
 import type { Goal, GoalPeriod } from '$lib/types/goal';
-import { parseUrlFormat } from '$lib/helpers/DateHelper';
+import { getDateDiffInDays, parseUrlFormat } from '$lib/helpers/DateHelper';
 
 export interface TargetBounds {
 	min: number;
@@ -11,7 +11,6 @@ export interface TargetBounds {
 
 // Mirrors the API's checks so the form can say what fits before saving.
 export default class GoalService {
-	// Yes/no and sports count days, which only make sense over a week or a month.
 	countsDays(type: CheckInTrackerType): boolean {
 		return type === 'yes_no' || type === 'sport';
 	}
@@ -23,7 +22,7 @@ export default class GoalService {
 	bounds(type: CheckInTrackerType, period: GoalPeriod): TargetBounds {
 		if (type === 'scale') return { min: 1, max: 5, step: 0.1 };
 		if (this.countsDays(type)) return { min: 0, max: period === 'week' ? 7 : 31, step: 1 };
-		return { min: 0, max: MAX_CHECK_IN_COUNT, step: 1 };
+		return { min: 0, max: CheckInTrackerService.MAX_COUNT, step: 1 };
 	}
 
 	isValidTarget(type: CheckInTrackerType, period: GoalPeriod, target: number | null): boolean {
@@ -33,24 +32,20 @@ export default class GoalService {
 		return target >= min && target <= max && (type === 'scale' || Number.isInteger(target));
 	}
 
-	// A 1–5 average isn't built up over the period, so it's shown on the scale rather than as a filling bar.
 	isAverage(type: CheckInTrackerType): boolean {
 		return type === 'scale';
 	}
 
-	// Where a 1–5 value sits on the scale, from 0 (1) to 1 (5).
 	scalePosition(value: number): number {
 		return Math.min(1, Math.max(0, (value - 1) / 4));
 	}
 
-	// How far the bar is filled: the share of the target reached so far.
 	ratio(goal: Goal): number {
 		const current = goal.progress.current ?? 0;
 		if (goal.target <= 0) return current > 0 ? 1 : 0;
 		return Math.min(1, Math.max(0, current / goal.target));
 	}
 
-	// Days left in the running period, today included; null for daily goals.
 	daysLeft(goal: Goal, today: Date): number | null {
 		if (goal.period === 'day') return null;
 
@@ -58,6 +53,14 @@ export default class GoalService {
 		if (end === null) return null;
 
 		const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-		return Math.max(1, Math.round((end.getTime() - start.getTime()) / 86_400_000) + 1);
+		return Math.max(1, getDateDiffInDays(start, end) + 1);
+	}
+
+	// A goal on a tracker that is switched off or gone isn't shown.
+	withActiveTracker(goals: Goal[], activeTrackers: CheckInTracker[]): { goal: Goal; tracker: CheckInTracker }[] {
+		return goals.flatMap((goal) => {
+			const tracker = activeTrackers.find((t) => t.id === goal.check_in_tracker_id);
+			return tracker ? [{ goal, tracker }] : [];
+		});
 	}
 }

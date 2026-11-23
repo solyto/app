@@ -10,6 +10,9 @@
 	import { getAuth } from '$lib/state/Auth.svelte';
 
 	type Range = '30d' | '3m' | '6m' | 'all';
+	type ChartPoint = { date: string; value: number };
+
+	const RANGE_DAYS: Record<Exclude<Range, 'all'>, number> = { '30d': 30, '3m': 90, '6m': 180 };
 
 	const checkInData = getCheckInData();
 	const loadingIndicator = getLoadingIndicator();
@@ -35,25 +38,27 @@
 	];
 
 	const trackers = $derived(checkInData.activeTrackers.filter((t) => t.type === 'scale' || t.type === 'count'));
-	// Yes/no and sports have no value worth a line; they show days done per week.
-	const dayTrackers = $derived(checkInData.activeTrackers.filter((t) => t.type === 'yes_no' || t.type === 'sport'));
+	const weeklyTrackers = $derived(checkInData.activeTrackers.filter((t) => t.type === 'yes_no' || t.type === 'sport'));
 
 	const dates = $derived.by((): string[] => {
 		const all = [...checkInData.index.keys()].sort();
 		if (selectedRange === 'all') return all;
 
-		const days = selectedRange === '30d' ? 30 : selectedRange === '3m' ? 90 : 180;
 		const cutoff = new Date();
-		cutoff.setDate(cutoff.getDate() - days);
+		cutoff.setDate(cutoff.getDate() - RANGE_DAYS[selectedRange]);
 		const cutoffStr = getUrlFormat(cutoff);
 
 		return all.filter((date) => date >= cutoffStr);
 	});
 
+	function isCharted(tracker: CheckInTracker, value: number | null): boolean {
+		return value !== null && (tracker.type === 'count' || value !== 0);
+	}
+
 	function getChartData(tracker: CheckInTracker): { categories: string[]; values: number[] } {
 		const points = dates
 			.map((date) => ({ date, value: checkInData.getValue(tracker, date) }))
-			.filter((point): point is { date: string; value: number } => point.value !== null && (tracker.type === 'count' || point.value !== 0));
+			.filter((point): point is ChartPoint => isCharted(tracker, point.value));
 
 		return {
 			categories: points.map((point) => auth.getDateWithoutYearInUserPreferredFormat(point.date)),
@@ -61,11 +66,10 @@
 		};
 	}
 
-	// Weeks cover the whole selected range (for "all": from the first entry, but at least two weeks).
 	function weeklyFrom(): Date {
 		const from = new Date();
 		if (selectedRange !== 'all') {
-			from.setDate(from.getDate() - (selectedRange === '30d' ? 30 : selectedRange === '3m' ? 90 : 180));
+			from.setDate(from.getDate() - RANGE_DAYS[selectedRange]);
 			return from;
 		}
 
@@ -109,20 +113,16 @@
 
 	<div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
 		{#each trackers as tracker (tracker.id)}
-			{#key selectedRange}
-				<TrendChart
-					label={trackerLabel(tracker, ts.get.checkIn)}
-					{tracker}
-					min={tracker.type === 'scale' ? 1 : 0}
-					max={tracker.type === 'scale' ? 5 : undefined}
-					{...getChartData(tracker)}
-				/>
-			{/key}
+			<TrendChart
+				label={trackerLabel(tracker, ts.get.checkIn)}
+				{tracker}
+				min={tracker.type === 'scale' ? 1 : 0}
+				max={tracker.type === 'scale' ? 5 : undefined}
+				{...getChartData(tracker)}
+			/>
 		{/each}
-		{#each dayTrackers as tracker (tracker.id)}
-			{#key selectedRange}
-				<TrendChart label={trackerLabel(tracker, ts.get.checkIn)} {tracker} min={0} max={7} {...getWeeklyData(tracker)} />
-			{/key}
+		{#each weeklyTrackers as tracker (tracker.id)}
+			<TrendChart label={trackerLabel(tracker, ts.get.checkIn)} {tracker} min={0} max={7} {...getWeeklyData(tracker)} />
 		{/each}
 	</div>
 </div>

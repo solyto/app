@@ -24,25 +24,20 @@
 	let loaded = $state<boolean>(false);
 	let updating = $state<boolean>(false);
 
-	const notificationTypes: { key: NotificationType; label: string }[] = [
-		{ key: 'book_release', label: 'New Book Releases' },
-		{ key: 'music_release', label: 'New Music Releases' },
-		{ key: 'movie_release', label: 'New Screen Release' },
-		{ key: 'friend_request', label: 'New Friend Request' },
-		{ key: 'daily_check_in_reminder', label: 'Reminder for daily check-in' },
-		{ key: 'alert', label: 'Alerts' },
-		{ key: 'daily_day_reminder', label: 'Reminder for the upcoming day' },
-		{ key: 'calendar_share', label: 'Calendar Shares' },
-		{ key: 'dev_request_comment', label: 'Dev Request Comments' },
-		{ key: 'export_ready', label: 'Export Ready' }
+	const notificationTypes: NotificationType[] = [
+		'book_release',
+		'music_release',
+		'movie_release',
+		'friend_request',
+		'daily_check_in_reminder',
+		'alert',
+		'daily_day_reminder',
+		'calendar_share',
+		'dev_request_comment',
+		'export_ready'
 	];
 
-	const channels: { key: NotificationChannel; label: string }[] = [
-		{ key: 'ui', label: 'UI' },
-		{ key: 'email', label: 'Email' },
-		{ key: 'push', label: 'Push' },
-		{ key: 'telegram', label: 'Bot' }
-	];
+	const channels: NotificationChannel[] = ['ui', 'email', 'push', 'telegram'];
 
 	onMount(async () => {
 		await Promise.all([loadSettings(), loadTelegramConnection(), checkPushStatus()]);
@@ -85,8 +80,8 @@
 		}
 	}
 
-	function visibleChannels(): { key: NotificationChannel; label: string }[] {
-		return showTelegram ? channels : channels.filter((channel) => channel.key !== 'telegram');
+	function visibleChannels(): NotificationChannel[] {
+		return showTelegram ? channels : channels.filter((channel) => channel !== 'telegram');
 	}
 
 	function getSettingKey(
@@ -129,15 +124,23 @@
 		updating = false;
 	}
 
+	function typeLabel(type: NotificationType): string {
+		return ts.get.notifications[`type_${type}`];
+	}
+
+	function channelLabel(channel: NotificationChannel): string {
+		return ts.get.notifications[`channel_${channel}`];
+	}
+
 	function getChannelTooltip(channel: NotificationChannel): string {
 		if (channel === 'telegram' && !isChannelAvailable('telegram')) {
-			return 'Set up Telegram Bot in Integrations first';
+			return ts.get.notifications.channel_telegram_unavailable;
 		}
 		if (channel === 'push' && !isChannelAvailable('push')) {
-			return 'Enable Push Notifications above first';
+			return ts.get.notifications.channel_push_unavailable;
 		}
 		if (channel === 'email') {
-			return 'Email notifications coming soon';
+			return ts.get.notifications.channel_email_coming_soon;
 		}
 		return '';
 	}
@@ -149,33 +152,33 @@
 			<thead>
 				<tr class="border-b border-c-neutral-2 dark:border-s-dark-2">
 					<th class="px-1 py-2 text-left font-semibold"></th>
-					{#each visibleChannels() as channel (channel.key)}
+					{#each visibleChannels() as channel (channel)}
 						<th class="min-w-[60px] px-2 py-2 text-center font-semibold">
 							<span
-								class:opacity-40={!isChannelAvailable(channel.key)}
-								title={getChannelTooltip(channel.key)}
+								class:opacity-40={!isChannelAvailable(channel)}
+								title={getChannelTooltip(channel)}
 							>
-								{channel.label}
+								{channelLabel(channel)}
 							</span>
 						</th>
 					{/each}
 				</tr>
 			</thead>
 			<tbody>
-				{#each notificationTypes as type (type.key)}
+				{#each notificationTypes as type (type)}
 					<tr class="border-b border-c-neutral-1 last:border-0 dark:border-s-dark-3">
-						<td class="px-1 py-3 text-left">{type.label}</td>
-						{#each visibleChannels() as channel (channel.key)}
+						<td class="px-1 py-3 text-left">{typeLabel(type)}</td>
+						{#each visibleChannels() as channel (channel)}
 							<td class="px-2 py-3 text-center">
-								{#if isChannelAvailable(channel.key)}
+								{#if isChannelAvailable(channel)}
 									<Checkbox
-										isChecked={isChecked(type.key, channel.key)}
-										onchange={() => toggleSetting(type.key, channel.key)}
+										isChecked={isChecked(type, channel)}
+										onchange={() => toggleSetting(type, channel)}
 									/>
 								{:else}
 									<div
 										class="inline-flex cursor-not-allowed items-center opacity-30"
-										title={getChannelTooltip(channel.key)}
+										title={getChannelTooltip(channel)}
 									>
 										<div
 											class="dark:bg-s-dark-4 h-5 w-5 rounded border border-c-neutral-3 bg-c-neutral-1 dark:border-s-dark-2"

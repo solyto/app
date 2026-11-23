@@ -7,6 +7,7 @@
 	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import type { CheckInTracker } from '$lib/types/check_in';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getAuth } from '$lib/state/Auth.svelte';
 	import CheckInSummaries from '$lib/components/check-in/overview/CheckInSummaries.svelte';
 	import Averages from '$lib/components/check-in/stats/Averages.svelte';
 	import IconChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
@@ -14,19 +15,21 @@
 
 	const checkInData = getCheckInData();
 	const ts = getTranslation();
+	const auth = getAuth();
 
-	// The calendar shows everything ('all'), the day's score ('total'), or one tracker.
 	let selected = $state<string>('all');
-	const shown = $derived<CheckInTracker | 'total' | 'all'>(
-		selected === 'all' || selected === 'total' ? selected : (checkInData.activeTrackers.find((t) => String(t.id) === selected) ?? 'all')
-	);
+	const shown = $derived(calendarTracker(selected));
+
+	function calendarTracker(value: string): CheckInTracker | 'total' | 'all' {
+		if (value === 'all' || value === 'total') return value;
+		return checkInData.activeTrackers.find((t) => String(t.id) === value) ?? 'all';
+	}
 
 	function trackerOptions(): { label: string; value: string }[] {
-		return [
-			{ label: ts.get.checkIn.all_entries, value: 'all' },
-			...(checkInData.scoredTrackers.length > 0 ? [{ label: ts.get.checkIn.total, value: 'total' }] : []),
-			...checkInData.activeTrackers.map((t) => ({ label: trackerLabel(t, ts.get.checkIn), value: String(t.id) }))
-		];
+		const options = [{ label: ts.get.checkIn.all_entries, value: 'all' }];
+		if (checkInData.scoredTrackers.length > 0) options.push({ label: ts.get.checkIn.total, value: 'total' });
+		options.push(...checkInData.activeTrackers.map((t) => ({ label: trackerLabel(t, ts.get.checkIn), value: String(t.id) })));
+		return options;
 	}
 
 	const dates = $derived(getDaysInMonth(checkInData.historyMonth.year, checkInData.historyMonth.month).reverse());
@@ -36,7 +39,7 @@
 
 	const monthLabel = $derived(
 		new Date(checkInData.historyMonth.year, checkInData.historyMonth.month, 1)
-			.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
+			.toLocaleDateString(ts.locale, { month: 'long', year: 'numeric' })
 	);
 </script>
 
@@ -62,11 +65,10 @@
 
 	<div class="flex flex-col gap-6 2xl:flex-row 2xl:items-start 2xl:gap-0">
 		<div class="flex flex-col gap-2 2xl:w-[70%] 2xl:pr-6">
-			<!-- The calendar's own filter, at its top right; it doesn't affect the column on the right. -->
 			<div class="sm:w-64 sm:self-end">
 				<Select value={selected} options={trackerOptions()} onchange={(value) => (selected = value)} ariaLabel={ts.get.checkIn.history} />
 			</div>
-			<CheckInCalendar tracker={shown} />
+			<CheckInCalendar tracker={shown} weekStart={auth.getWeekStart()} />
 		</div>
 		<div class="flex flex-col border-c-neutral-1 2xl:w-[30%] 2xl:border-l-2 2xl:pl-6 dark:border-s-dark">
 			{#if checkInData.loaded}

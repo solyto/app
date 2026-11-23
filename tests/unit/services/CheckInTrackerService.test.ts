@@ -1,41 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import CheckInTrackerService from '$lib/services/CheckInTrackerService';
-import type { CheckInTracker, CheckInValue } from '$lib/types/check_in';
-import type { Goal } from '$lib/types/goal';
+import { checkInTracker as tracker, checkInValue as value, goal } from '../helpers/factories';
 
 const service = new CheckInTrackerService();
-
-function tracker(overrides: Partial<CheckInTracker> = {}): CheckInTracker {
-	return {
-		id: 1,
-		key: null,
-		name: 'Meditated',
-		type: 'yes_no',
-		icon: null,
-		position: 0,
-		enabled: true,
-		scored: false,
-		...overrides
-	};
-}
-
-function value(trackerId: number, date: string, v: number): CheckInValue {
-	return { tracker_id: trackerId, date, value: v };
-}
-
-function goal(overrides: Partial<Goal> = {}): Goal {
-	return {
-		id: 1,
-		source: 'check_in_tracker',
-		check_in_tracker_id: 1,
-		period: 'week',
-		comparison: 'at_least',
-		target: 3,
-		notify_when_reached: false,
-		progress: { current: null, met: false, period_start: '', period_end: '', history: [] },
-		...overrides
-	};
-}
 
 // Thursday; with weeks starting on Monday the week runs from 2026-10-12.
 const today = new Date(2026, 9, 15);
@@ -146,11 +113,10 @@ describe('goalProgress', () => {
 
 	it('adds up a count for the day and for the month', () => {
 		const index = service.index([value(1, '2026-09-30', 9), value(1, '2026-10-01', 3), value(1, '2026-10-15', 2)]);
+		const count = tracker({ type: 'count' });
 
-		expect(service.goalProgress(goal({ period: 'day', target: 5 }), tracker({ type: 'count' }), index, today, 'monday'))
-			.toEqual({ current: 2, met: false });
-		expect(service.goalProgress(goal({ period: 'month', target: 5 }), tracker({ type: 'count' }), index, today, 'monday'))
-			.toEqual({ current: 5, met: true });
+		expect(service.goalProgress(goal({ period: 'day', target: 5 }), count, index, today, 'monday')).toEqual({ current: 2, met: false });
+		expect(service.goalProgress(goal({ period: 'month', target: 5 }), count, index, today, 'monday')).toEqual({ current: 5, met: true });
 	});
 
 	it('averages a 1–5 tracker over the ratings given and has no current value without them', () => {
@@ -191,5 +157,57 @@ describe('weeklyDays', () => {
 		const index = service.index([value(1, '2026-10-11', 1)]);
 
 		expect(service.weeklyDays(tracker(), index, new Date(2026, 9, 11), today, 'sunday')).toEqual([{ start: '2026-10-11', days: 1 }]);
+	});
+});
+
+describe('pendingChanges', () => {
+	const mood = tracker({ id: 1, key: 'mood', name: null, type: 'scale' });
+	const meditated = tracker({ id: 2 });
+
+	it('pairs each shown tracker with its pending value, a cleared one included', () => {
+		const changes = service.pendingChanges([mood, meditated], new Map([[1, 4], [2, null]]));
+
+		expect([...changes]).toEqual([[mood, 4], [meditated, null]]);
+	});
+
+	it('leaves out changes on trackers no longer shown', () => {
+		const changes = service.pendingChanges([meditated], new Map([[1, 4], [2, 1]]));
+
+		expect([...changes]).toEqual([[meditated, 1]]);
+	});
+
+	it('is empty without pending changes', () => {
+		expect(service.pendingChanges([mood, meditated], new Map()).size).toBe(0);
+	});
+});
+
+describe('orderAfterMove', () => {
+	const mood = tracker({ id: 1, key: 'mood', type: 'scale' });
+	const sports = tracker({ id: 2, key: 'sports', type: 'sport' });
+	const meditated = tracker({ id: 3, type: 'yes_no' });
+	const glasses = tracker({ id: 4, type: 'count' });
+	const trackers = [mood, sports, meditated, glasses];
+
+	it('swaps a rating with the rating next to it, keeping the logs after', () => {
+		expect(service.orderAfterMove(trackers, sports, -1)).toEqual([2, 1, 3, 4]);
+	});
+
+	it('swaps a log with the log next to it, keeping the ratings before', () => {
+		expect(service.orderAfterMove(trackers, glasses, -1)).toEqual([1, 2, 4, 3]);
+	});
+
+	it('moves within the group even when the groups are mixed in the list', () => {
+		expect(service.orderAfterMove([mood, meditated, sports, glasses], sports, -1)).toEqual([2, 1, 3, 4]);
+	});
+
+	it('does not move past the edge of its group', () => {
+		expect(service.orderAfterMove(trackers, mood, -1)).toBeNull();
+		expect(service.orderAfterMove(trackers, sports, 1)).toBeNull();
+		expect(service.orderAfterMove(trackers, meditated, -1)).toBeNull();
+		expect(service.orderAfterMove(trackers, glasses, 1)).toBeNull();
+	});
+
+	it('does not move a tracker that is not in the list', () => {
+		expect(service.orderAfterMove([mood, sports], tracker({ id: 9, type: 'scale' }), 1)).toBeNull();
 	});
 });

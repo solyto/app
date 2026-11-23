@@ -207,6 +207,13 @@ export function getDateMinusDays(date: Date, days: number): Date {
 	return dateMinusDays;
 }
 
+export function getStartOfMonthMonthsAgo(date: Date, months: number): Date {
+	const start = new Date(date);
+	start.setMonth(start.getMonth() - months, 1);
+
+	return start;
+}
+
 export function getDatePlusDays(date: Date, days: number): Date {
 	const datePlusDays = new Date(date);
 	datePlusDays.setDate(datePlusDays.getDate() + days);
@@ -339,9 +346,10 @@ export function getDateDiffInMinutes(date1: Date, date2: Date): number {
 	return Math.floor(diffInMs / (1000 * 60));
 }
 
+// Rounded, so a 23- or 25-hour day across a daylight saving change still counts as one.
 export function getDateDiffInDays(date1: Date, date2: Date): number {
 	const diffInMs = date2.getTime() - date1.getTime();
-	return Math.trunc(diffInMs / (1000 * 60 * 60 * 24));
+	return Math.round(diffInMs / (1000 * 60 * 60 * 24));
 }
 
 export function getCurrentTimestamp(): number {
@@ -426,6 +434,17 @@ export function getCalendarMonth(year?: number, month?: number, weekStart: WeekS
 	}
 
 	return days;
+}
+
+// Only the weeks that hold a day of the month, so a month spans four to six rows.
+export function getCalendarWeeks(year: number, month: number, weekStart: WeekStart): CalendarDay[][] {
+	const days = getCalendarMonth(year, month, weekStart);
+	const weeks: CalendarDay[][] = [];
+	for (let i = 0; i < days.length; i += 7) {
+		const week = days.slice(i, i + 7);
+		if (week.some((day) => !day.is_grayed_out)) weeks.push(week);
+	}
+	return weeks;
 }
 
 export function getCalendarWeek(startOfWeek: Date): CalendarDay[] {

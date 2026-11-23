@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { GoalLine } from '$lib/helpers/CheckInHelper';
+	import type { GoalLine } from '$lib/types/goal';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import IconCheck from '$lib/icons/lucide/check.svelte';
 

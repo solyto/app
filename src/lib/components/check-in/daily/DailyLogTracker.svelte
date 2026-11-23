@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CheckInTracker } from '$lib/types/check_in';
-	import { MAX_CHECK_IN_COUNT } from '$lib/types/check_in';
-	import type { GoalLine } from '$lib/helpers/CheckInHelper';
+	import CheckInTrackerService from '$lib/services/CheckInTrackerService';
+	import type { GoalLine } from '$lib/types/goal';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
 	import GoalProgressLine from '$lib/components/check-in/daily/GoalProgressLine.svelte';
@@ -30,18 +30,17 @@
 	let amount = $state<number | null>(null);
 
 	const total = $derived(value ?? 0);
-	const amountValid = $derived(amount !== null && Number.isInteger(amount) && amount >= 0 && amount <= MAX_CHECK_IN_COUNT);
+	const amountValid = $derived(amount !== null && Number.isInteger(amount) && amount >= 0 && amount <= CheckInTrackerService.MAX_COUNT);
 
 	function toggleDone(): void {
 		onSet(value === null ? 1 : null);
 	}
 
 	function step(offset: 1 | -1): void {
-		const next = Math.min(Math.max(total + offset, 0), MAX_CHECK_IN_COUNT);
+		const next = Math.min(Math.max(total + offset, 0), CheckInTrackerService.MAX_COUNT);
 		onSet(next === 0 ? null : next);
 	}
 
-	// Sets the day's total, starting from the current one.
 	function openPanel(): void {
 		amount = total;
 		panelOpen = true;
@@ -72,7 +71,6 @@
 			<Checkbox isChecked={value !== null} onchange={toggleDone} ariaLabel={label} size="lg" />
 		{:else}
 			<div class="relative flex shrink-0 items-center gap-1">
-				<!-- Where the amount popup opens: under the counter, right edges aligned. -->
 				<div class="absolute top-full right-0" bind:this={panelAnchor}></div>
 				<button type="button" class={STEP_BUTTON} disabled={total === 0} aria-label={ts.get.checkIn.count_decrease} onclick={() => step(-1)}>
 					<IconMinus class="size-4" />
@@ -85,22 +83,21 @@
 				>
 					{total}
 				</button>
-				<button type="button" class={STEP_BUTTON} disabled={total >= MAX_CHECK_IN_COUNT} aria-label={ts.get.checkIn.count_increase} onclick={() => step(1)}>
+				<button type="button" class={STEP_BUTTON} disabled={total >= CheckInTrackerService.MAX_COUNT} aria-label={ts.get.checkIn.count_increase} onclick={() => step(1)}>
 					<IconPlus class="size-4" />
 				</button>
 			</div>
 		{/if}
 	</div>
-
 </div>
 
 {#if panelOpen && panelAnchor}
 	<QuickSelectOverlay portal target={panelAnchor} onClose={() => (panelOpen = false)} class="mt-1 w-64 -translate-x-full">
-	<form class="flex items-center gap-2" onsubmit={apply}>
-		<div class="min-w-0 flex-1">
-			<NumberInput bind:value={amount} min={0} max={MAX_CHECK_IN_COUNT} step={1} />
-		</div>
-		<TextButton title={ts.get.layout.save} disabled={!amountValid} />
-	</form>
+		<form class="flex items-center gap-2" onsubmit={apply}>
+			<div class="min-w-0 flex-1">
+				<NumberInput bind:value={amount} min={0} max={CheckInTrackerService.MAX_COUNT} step={1} />
+			</div>
+			<TextButton title={ts.get.layout.save} disabled={!amountValid} />
+		</form>
 	</QuickSelectOverlay>
 {/if}

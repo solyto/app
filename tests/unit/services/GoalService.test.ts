@@ -1,21 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import GoalService from '$lib/services/GoalService';
-import type { Goal } from '$lib/types/goal';
+import type { GoalPeriodProgress } from '$lib/types/goal';
+import { checkInTracker, goal } from '../helpers/factories';
 
 const service = new GoalService();
 
-function goal(overrides: Partial<Goal> = {}, progress: Partial<Goal['progress']> = {}): Goal {
-	return {
-		id: 1,
-		source: 'check_in_tracker',
-		check_in_tracker_id: 1,
-		period: 'week',
-		comparison: 'at_least',
-		target: 4,
-		notify_when_reached: false,
-		...overrides,
-		progress: { current: null, met: false, period_start: '2026-11-16', period_end: '2026-11-22', history: [], ...progress }
-	};
+function progress(overrides: Partial<GoalPeriodProgress>): GoalPeriodProgress {
+	return { ...goal().progress, ...overrides };
 }
 
 describe('periods', () => {
@@ -50,17 +41,19 @@ describe('isValidTarget', () => {
 
 describe('ratio', () => {
 	it('fills the bar by the share of the target, capped at full', () => {
-		expect(service.ratio(goal({}, { current: 2 }))).toBe(0.5);
-		expect(service.ratio(goal({}, { current: 9 }))).toBe(1);
-		expect(service.ratio(goal({}, { current: null }))).toBe(0);
-		expect(service.ratio(goal({ target: 0 }, { current: 0 }))).toBe(0);
+		expect(service.ratio(goal({ target: 4, progress: progress({ current: 2 }) }))).toBe(0.5);
+		expect(service.ratio(goal({ target: 4, progress: progress({ current: 9 }) }))).toBe(1);
+		expect(service.ratio(goal({ target: 4, progress: progress({ current: null }) }))).toBe(0);
+		expect(service.ratio(goal({ target: 0, progress: progress({ current: 0 }) }))).toBe(0);
 	});
 });
 
 describe('daysLeft', () => {
 	it('counts the days left in the period, today included', () => {
-		expect(service.daysLeft(goal(), new Date(2026, 10, 20, 15, 30))).toBe(3);
-		expect(service.daysLeft(goal(), new Date(2026, 10, 22))).toBe(1);
+		const weekly = goal({ progress: progress({ period_start: '2026-11-16', period_end: '2026-11-22' }) });
+
+		expect(service.daysLeft(weekly, new Date(2026, 10, 20, 15, 30))).toBe(3);
+		expect(service.daysLeft(weekly, new Date(2026, 10, 22))).toBe(1);
 	});
 
 	it('has none for daily goals', () => {
@@ -80,5 +73,15 @@ describe('isAverage and scalePosition', () => {
 		expect(service.scalePosition(3)).toBe(0.5);
 		expect(service.scalePosition(5)).toBe(1);
 		expect(service.scalePosition(1.5)).toBe(0.125);
+	});
+});
+
+describe('withActiveTracker', () => {
+	it('pairs each goal with its active tracker and leaves out goals whose tracker is off or gone', () => {
+		const meditated = checkInTracker({ id: 3 });
+		const onMeditated = goal({ id: 1, check_in_tracker_id: 3 });
+		const onSwitchedOff = goal({ id: 2, check_in_tracker_id: 4 });
+
+		expect(service.withActiveTracker([onMeditated, onSwitchedOff], [meditated])).toEqual([{ goal: onMeditated, tracker: meditated }]);
 	});
 });

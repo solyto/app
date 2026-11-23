@@ -13,6 +13,7 @@
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import OptionCard from '$lib/components/ui/OptionCard.svelte';
 
 	const ts = getTranslation();
 
@@ -122,17 +123,9 @@
 {/if}
 
 {#snippet recommenderOption(type: LibraryRecommendationType, color: string)}
-	<button
-		type="button"
-		class="relative w-full cursor-pointer rounded-lg border-1 border-c-neutral-1 bg-c-bg-surface text-left shadow-sm transition-all hover:bg-c-neutral dark:border-s-dark-2 dark:hover:bg-s-dark-3"
+	<OptionCard
+		label={ts.get.libraries.recommendations[type as keyof typeof ts.get.libraries.recommendations]}
+		stripeColor="var(--color-s-{color})"
 		onclick={() => select(type)}
-	>
-		<div
-			class="w-1 absolute rounded-lg"
-			style="background-color: var(--color-s-{color}); height: calc(100% - 16px); top: 8px; left: 12px;"
-		></div>
-		<div class="ml-4 w-full px-4 py-2">
-			{ts.get.libraries.recommendations[type as keyof typeof ts.get.libraries.recommendations]}
-		</div>
-	</button>
+	/>
 {/snippet}

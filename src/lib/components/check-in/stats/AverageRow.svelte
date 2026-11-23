@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { CheckInTracker } from '$lib/types/check_in';
-	import { getScoreColor } from '$lib/helpers/CheckInHelper';
+	import { formatScore, getScoreColor, scoreWidth } from '$lib/helpers/CheckInHelper';
 	import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
 
 	let {
@@ -24,17 +24,13 @@
 				{label}
 			</p>
 			<p class="text-sm font-semibold text-c-neutral-9 dark:text-white">
-				{#if isNaN(value)}
-					-
-				{:else}
-					{value.toFixed(2)}
-				{/if}
+				{formatScore(value)}
 			</p>
 		</div>
 		<div class="h-2 overflow-hidden rounded-full bg-c-neutral-1 dark:bg-s-dark-3">
 			<div
 				class="h-full rounded-full transition-all duration-300 {getScoreColor(value)}"
-				style="width: {isNaN(value) ? 0 : (value / 5) * 100}%"
+				style="width: {scoreWidth(value)}%"
 			></div>
 		</div>
 	</div>

@@ -5,6 +5,7 @@ import Rating from '$lib/components/libraries/shared/Rating.svelte';
 import StatisticWidget from '$lib/components/admin/StatisticWidget.svelte';
 import DailyCheckInIcon from '$lib/components/check-in/daily/DailyCheckInIcon.svelte';
 import CheckInIcon from '$lib/components/check-in/overview/CheckInIcon.svelte';
+import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
 import GenreFlexList from '$lib/components/libraries/shared/GenreFlexList.svelte';
 import TagFlexList from '$lib/components/tags/TagFlexList.svelte';
 import CoverImage from '$lib/components/libraries/shared/CoverImage.svelte';
@@ -13,9 +14,8 @@ import DeezerButton from '$lib/components/ui/buttons/DeezerButton.svelte';
 import HardcoverButton from '$lib/components/ui/buttons/HardcoverButton.svelte';
 import Link from '$lib/components/todos/props/Link.svelte';
 import { renderWithContext } from './helpers/context';
-import { tag, todo } from '../unit/helpers/factories';
+import { checkInTracker, tag, todo } from '../unit/helpers/factories';
 import type { BookGenre } from '$lib/types/library_book';
-import type { CheckInTracker } from '$lib/types/check_in';
 
 describe('Rating', () => {
 	it('renders five stars', () => {
@@ -107,28 +107,39 @@ describe('DailyCheckInIcon', () => {
 	});
 });
 
-function checkInTracker(overrides: Partial<CheckInTracker> = {}): CheckInTracker {
-	return { id: 1, key: 'mood', name: null, type: 'scale', icon: null, position: 0, enabled: true, scored: true, ...overrides };
-}
+const mood = checkInTracker({ key: 'mood', name: null, type: 'scale', scored: true });
+
+describe('TrackerGlyph', () => {
+	it('draws a built-in tracker with its own icon, not from the sprite', () => {
+		const { container } = render(TrackerGlyph, { props: { tracker: mood, class: 'size-4' } });
+		expect(container.querySelector('svg')?.getAttribute('class')).toContain('size-4');
+		expect(container.querySelector('use')).not.toBeInTheDocument();
+	});
+
+	it('draws an own tracker from the icon sprite', () => {
+		const { container } = render(TrackerGlyph, { props: { tracker: checkInTracker({ key: null, name: 'Calm', icon: 'leaf' }), class: 'size-4' } });
+		expect(container.querySelector('use')?.getAttribute('href')).toBe('/icons/lucide-sprite.svg#leaf');
+	});
+});
 
 describe('CheckInIcon', () => {
 	it('renders nothing when the value is null', () => {
-		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker(), value: null } });
+		const { container } = render(CheckInIcon, { props: { tracker: mood, value: null } });
 		expect(container.querySelector('button')).not.toBeInTheDocument();
 	});
 
 	it('colors the icon by value', () => {
-		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker(), value: 4 } });
+		const { container } = render(CheckInIcon, { props: { tracker: mood, value: 4 } });
 		expect(container.querySelector('button')?.classList.contains('text-green-300')).toBe(true);
 	});
 
 	it('renders a sports icon with the primary color', () => {
-		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker({ key: 'sports', type: 'sport' }), value: 1 } });
+		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker({ key: 'sports', name: null, type: 'sport' }), value: 1 } });
 		expect(container.querySelector('button')?.classList.contains('text-c-primary')).toBe(true);
 	});
 
 	it('colors an own 1–5 tracker by value like the built-in ones', () => {
-		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker({ key: null, name: 'Calm', icon: 'leaf' }), value: 1 } });
+		const { container } = render(CheckInIcon, { props: { tracker: checkInTracker({ name: 'Calm', type: 'scale', icon: 'leaf' }), value: 1 } });
 		expect(container.querySelector('button')?.classList.contains('text-red-500')).toBe(true);
 	});
 

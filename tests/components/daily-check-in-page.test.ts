@@ -5,21 +5,12 @@ import type { CheckInData } from '$lib/state/CheckInData.svelte';
 import type { CheckInTracker } from '$lib/types/check_in';
 import { renderWithContext } from './helpers/context';
 import DailyCheckInPageHarness from './helpers/DailyCheckInPageHarness.svelte';
+import { checkInTracker } from '../unit/helpers/factories';
 
 vi.mock('$app/state', () => ({ page: { params: { date: '2026-11-20' } } }));
 vi.mock('$app/navigation', () => ({ afterNavigate: () => {} }));
 
-const meditated: CheckInTracker = {
-	id: 101,
-	key: null,
-	name: 'Meditated',
-	type: 'yes_no',
-	icon: null,
-	position: 0,
-	enabled: true,
-	scored: false,
-	values_count: 0
-} as CheckInTracker;
+const meditated = checkInTracker({ id: 101, values_count: 0 });
 
 const walked: CheckInTracker = { ...meditated, id: 102, name: 'Walked', position: 1 };
 const water: CheckInTracker = { ...meditated, id: 103, name: 'Glasses of water', type: 'count', position: 2 };
@@ -30,7 +21,6 @@ function renderPage(trackers: CheckInTracker[] = [meditated, walked]): CheckInDa
 	return checkInData!;
 }
 
-// What the settings do after every change: the trackers come back from the server as new objects.
 function reloadTrackers(checkInData: CheckInData, change: (tracker: CheckInTracker) => Partial<CheckInTracker> = () => ({})): void {
 	checkInData.trackers = checkInData.trackers.map((tracker) => ({ ...tracker, ...change(tracker) }));
 }
@@ -89,7 +79,6 @@ describe('Daily check-in page', () => {
 		await fireEvent.click(save());
 		expect(put).toHaveBeenCalledTimes(1);
 
-		// Another tap while the save is still running.
 		await fireEvent.click(screen.getByLabelText('One more'));
 		answers[0](true);
 

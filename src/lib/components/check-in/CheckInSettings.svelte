@@ -3,8 +3,7 @@
 	import type { Component } from 'svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getCheckInData } from '$lib/state/CheckInData.svelte';
-	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
+	import { SaveAction } from '$lib/helpers/SaveAction.svelte';
 	import { AVAILABLE_SPORTS, type CheckInTracker, type SportId } from '$lib/types/check_in';
 	import { trackerLabel } from '$lib/helpers/CheckInHelper';
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
@@ -19,7 +18,8 @@
 	import IconFootprints from '$lib/icons/lucide/footprints.svelte';
 	import IconChevronUp from '$lib/icons/lucide/chevron-up.svelte';
 	import IconChevronDown from '$lib/icons/lucide/chevron-down.svelte';
-	import IconChevronLeft from '$lib/icons/lucide/chevron-left.svelte';
+	import BackButton from '$lib/components/ui/buttons/BackButton.svelte';
+	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
 	import IconPencil from '$lib/icons/lucide/pencil.svelte';
 	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import IconYoga from '$lib/components/ui/icons/IconYoga.svelte';
@@ -31,29 +31,17 @@
 
 	const ts = getTranslation();
 	const checkInData = getCheckInData();
-	const loadingIndicator = getLoadingIndicator();
-	const notifications = getUiNotifications();
+	const saving = new SaveAction(() => ts.get.checkIn.save_error);
 	const trackerGroups = $derived([
 		checkInData.trackers.filter((t) => checkInData.trackerService.isRating(t)),
 		checkInData.trackers.filter((t) => !checkInData.trackerService.isRating(t))
 	]);
-	const ICON_BUTTON =
-		'flex size-7 cursor-pointer items-center justify-center rounded-md text-c-neutral-5 transition-all hover:bg-c-neutral disabled:cursor-default disabled:opacity-30 dark:hover:bg-s-dark-3';
 
-	// 'sports' is the choice of the five sports shown for the Sports tracker.
 	let editing = $state<CheckInTracker | 'new' | 'sports' | null>(startWithNewTracker ? 'new' : null);
 	let sportToReplace = $state<SportId | null>(null);
-	// Bumped when a save fails, so the switches re-render from the store instead of keeping their flipped state.
-	let failedSaves = $state<number>(0);
 
-	async function run(action: () => Promise<boolean>): Promise<void> {
-		loadingIndicator.start();
-		const ok = await action();
-		loadingIndicator.stop();
-		if (!ok) {
-			failedSaves++;
-			notifications.error(ts.get.checkIn.save_error);
-		}
+	function move(tracker: CheckInTracker, offset: -1 | 1): void {
+		void saving.run(() => checkInData.moveTracker(tracker, offset));
 	}
 
 	// At least one tracker stays on, so the daily page never ends up empty.
@@ -79,12 +67,30 @@
 			return;
 		}
 
-		await run(() => checkInData.saveSelectedSports(next));
+		await saving.run(() => checkInData.saveSelectedSports(next));
 	}
 
 	function sportLabel(sportId: SportId): string {
 		const sport = AVAILABLE_SPORTS.find((s) => s.id === sportId)!;
 		return ts.get.checkIn[sport.labelKey];
+	}
+
+	function modalTitle(): string {
+		if (editing === null) return ts.get.checkIn.settings;
+		if (editing === 'new') return ts.get.checkIn.add_tracker;
+		return ts.get.checkIn.edit_tracker;
+	}
+
+	function separatesGroups(groupIndex: number, group: CheckInTracker[]): boolean {
+		return groupIndex === 1 && trackerGroups[0].length > 0 && group.length > 0;
+	}
+
+	function isEditable(tracker: CheckInTracker): boolean {
+		return tracker.key === null || tracker.type === 'sport';
+	}
+
+	function edit(tracker: CheckInTracker): void {
+		editing = tracker.type === 'sport' ? 'sports' : tracker;
 	}
 
 	function close(): void {
@@ -107,14 +113,11 @@
 	};
 </script>
 
-<ContentModal onClose={close} title={editing === null ? ts.get.checkIn.settings : editing === 'new' ? ts.get.checkIn.add_tracker : ts.get.checkIn.edit_tracker} rounded="2xl" p="4">
+<ContentModal onClose={close} title={modalTitle()} rounded="2xl" p="4">
 	<div class="flex w-full flex-col gap-2">
 		{#if editing === 'sports'}
 			<div class="flex w-full flex-col gap-3">
-				<button type="button" class="flex cursor-pointer items-center gap-1 self-start text-sm" onclick={() => (editing = null)}>
-					<IconChevronLeft class="size-4" />
-					{ts.get.checkIn.sports}
-				</button>
+				<BackButton title={ts.get.checkIn.sports} onclick={() => (editing = null)} />
 				<div class="flex gap-2">
 					{#each checkInData.selectedSports as sportId, i (sportId)}
 						<SelectedSportButton
@@ -137,44 +140,40 @@
 				</span>
 				<span class="w-11" aria-hidden="true"></span>
 			</div>
-			{#key failedSaves}
-				{#each trackerGroups as group, g (g)}
-					<!-- Ratings and logs sit in separate areas of the daily page, so each group is ordered on its own. -->
-					{#if g === 1 && trackerGroups[0].length > 0 && group.length > 0}
-						<div class="my-1 border-t border-dashed border-c-neutral-3" aria-hidden="true"></div>
-					{/if}
-					{#each group as tracker, i (tracker.id)}
+			{#each trackerGroups as group, g (g)}
+				{#if separatesGroups(g, group)}
+					<div class="my-1 border-t border-dashed border-c-neutral-3" aria-hidden="true"></div>
+				{/if}
+				{#each group as tracker, i (tracker.id)}
 					<div class="flex w-full items-center justify-between gap-3">
 						<div class="flex min-w-0 items-center gap-2" class:opacity-50={!tracker.enabled}>
 							<TrackerGlyph {tracker} class="size-4 shrink-0 text-c-heading dark:text-c-primary" />
 							<span class="truncate">{trackerLabel(tracker, ts.get.checkIn)}</span>
 						</div>
 						<div class="flex shrink-0 items-center gap-1">
-							<!-- Your own trackers and Sports (which sports to show) can be edited; the controls are right-aligned, so the others stay in line without it. -->
-							{#if tracker.key === null || tracker.type === 'sport'}
-								<button type="button" class={ICON_BUTTON} aria-label={ts.get.checkIn.edit_tracker} title={ts.get.checkIn.edit_tracker} onclick={() => (editing = tracker.type === 'sport' ? 'sports' : tracker)}>
+							{#if isEditable(tracker)}
+								<GhostIconButton label={ts.get.checkIn.edit_tracker} onclick={() => edit(tracker)}>
 									<IconPencil class="size-4" />
-								</button>
+								</GhostIconButton>
 							{/if}
-							<button type="button" class={ICON_BUTTON} disabled={i === 0} aria-label={ts.get.checkIn.move_up} title={ts.get.checkIn.move_up} onclick={() => run(() => checkInData.moveTracker(tracker, -1))}>
+							<GhostIconButton label={ts.get.checkIn.move_up} disabled={i === 0} onclick={() => move(tracker, -1)}>
 								<IconChevronUp class="size-4" />
-							</button>
-							<button type="button" class={ICON_BUTTON} disabled={i === group.length - 1} aria-label={ts.get.checkIn.move_down} title={ts.get.checkIn.move_down} onclick={() => run(() => checkInData.moveTracker(tracker, 1))}>
+							</GhostIconButton>
+							<GhostIconButton label={ts.get.checkIn.move_down} disabled={i === group.length - 1} onclick={() => move(tracker, 1)}>
 								<IconChevronDown class="size-4" />
-							</button>
+							</GhostIconButton>
 							<div class="flex w-9 items-center justify-center" class:opacity-30={!tracker.enabled} class:pointer-events-none={!tracker.enabled}>
 								{#if tracker.type === 'scale'}
-									<Checkbox isChecked={tracker.scored} onchange={() => run(() => checkInData.updateTracker(tracker, { scored: !tracker.scored }))} />
+									<Checkbox isChecked={tracker.scored} onchange={() => saving.run(() => checkInData.updateTracker(tracker, { scored: !tracker.scored }))} />
 								{/if}
 							</div>
 							<div class:pointer-events-none={isLastEnabled(tracker)} class:opacity-50={isLastEnabled(tracker)}>
-								<Toggle checked={tracker.enabled} onchange={() => run(() => checkInData.updateTracker(tracker, { enabled: !tracker.enabled }))} />
+								<Toggle checked={tracker.enabled} onchange={() => saving.run(() => checkInData.updateTracker(tracker, { enabled: !tracker.enabled }))} />
 							</div>
 						</div>
 					</div>
-					{/each}
 				{/each}
-			{/key}
+			{/each}
 
 			<button type="button" class="mt-2 flex cursor-pointer items-center gap-1 self-start text-sm font-semibold text-c-heading dark:text-c-primary" onclick={() => (editing = 'new')}>
 				<IconPlus class="size-4" />
