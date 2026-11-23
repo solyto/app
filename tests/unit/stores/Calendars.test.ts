@@ -769,6 +769,28 @@ describe('Calendars store', () => {
 		});
 	});
 
+	describe('showSidebar', () => {
+		it('keeps no selected date when an event is opened without one', async () => {
+			api.list.mockResolvedValue({ data: [] });
+			const c = new Calendars();
+
+			await c.showSidebar(null, event());
+
+			expect(c.selectedDate).toBeNull();
+			expect(c.editSidebar).toBe(true);
+		});
+
+		it('keeps its own copy of the selected date', async () => {
+			const c = new Calendars();
+			const date = new Date(2026, 10, 20);
+
+			await c.showSidebar(date);
+
+			expect(c.selectedDate).toEqual(date);
+			expect(c.selectedDate).not.toBe(date);
+		});
+	});
+
 	describe('hidden calendars', () => {
 		it('toggles a calendar id in and out of the hidden list', () => {
 			const c = new Calendars();

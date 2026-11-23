@@ -347,7 +347,7 @@ export class Calendars {
 	): Promise<void> {
 		this.hideSidebar();
 		await tick();
-		this.selectedDate = new Date(selectedDate as Date);
+		this.selectedDate = selectedDate ? new Date(selectedDate) : null;
 		this.newEventPreset = newEventPreset;
 		this.activeEvent = selectedEntry;
 		this.editSidebar = true;

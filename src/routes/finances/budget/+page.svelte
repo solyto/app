@@ -20,20 +20,19 @@
 	import Divider from '$lib/components/ui/Divider.svelte';
 	import BudgetTagPicker from '$lib/components/finances/BudgetTagPicker.svelte';
 	import type { MultiSelectEntry } from '$lib/components/forms/MultiSelect.svelte';
-	import { getTags } from '$lib/state/Tags.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
 
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const finances = getFinances();
 	const auth = getAuth();
-	const tags = getTags();
 
 	let total = $derived(finances.getBudgetTotal());
 	let incomeTotal = $derived(finances.getBudgetIncomeTotal());
 	let expenseTotal = $derived(finances.getBudgetExpenseTotal());
 	let colorLoaded = $state<boolean>(false);
-	let historyBudget = $state<Budget | null>(null);
+	let historyBudgetId = $state<number | null>(null);
+	let historyBudget = $derived([...finances.income, ...finances.expenses].find((budget) => budget.id === historyBudgetId) ?? null);
 
 	function tagFilterOptions(): { label: string; value: string }[] {
 		const options = finances.availableTags().map((tag) => ({ label: tag.name, value: tag.id.toString() }));
@@ -53,11 +52,11 @@
 		loadingIndicator.start();
 		const ok = await finances.loadBudgetValues(budget);
 		loadingIndicator.stop();
-		if (ok) historyBudget = budget;
+		if (ok) historyBudgetId = budget.id;
 	}
 
 	function closeHistory(): void {
-		historyBudget = null;
+		historyBudgetId = null;
 	}
 
 	async function deleteHistoryBudget(): Promise<void> {
@@ -73,7 +72,6 @@
 		loadingIndicator.start();
 		const ok = await finances.updateBudget(historyBudget, { title });
 		loadingIndicator.stop();
-		if (ok) historyBudget = { ...historyBudget, title };
 		return ok;
 	}
 
@@ -81,9 +79,8 @@
 		if (historyBudget === null) return;
 		const interval = value as BudgetInterval;
 		loadingIndicator.start();
-		const ok = await finances.updateBudget(historyBudget, { interval });
+		await finances.updateBudget(historyBudget, { interval });
 		loadingIndicator.stop();
-		if (ok) historyBudget = { ...historyBudget, interval };
 	}
 
 	function tagEntries(budget: Budget): MultiSelectEntry[] {
@@ -95,10 +92,9 @@
 		const tagIds = entries.map((entry) => Number(entry.value));
 		loadingIndicator.start();
 		const ok = await finances.updateBudget(historyBudget, { tags: tagIds });
+		// The picker keeps what was picked; reloading puts it back to the saved tags.
+		if (!ok) await finances.loadIncome();
 		loadingIndicator.stop();
-		const savedTags = ok ? tags.tags.filter((tag) => tagIds.includes(tag.id)) : historyBudget.tags;
-		// A new object also resets the picker to the saved tags when the update failed.
-		historyBudget = { ...historyBudget, tags: savedTags };
 	}
 
 	async function addHistoryValue(request: StoreFinanceValueRequest): Promise<boolean> {

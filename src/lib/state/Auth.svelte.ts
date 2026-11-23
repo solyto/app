@@ -117,14 +117,7 @@ export class Auth {
 
 	async login(email: string, password: string): Promise<LoginActionResponse> {
 		const request: LoginRequest = { email, password, platform: PLATFORM };
-		let res: LoginActionResponse;
-		try {
-			res = await this.apiService.postRaw<LoginActionResponse>(apiRoutes.auth.login, request);
-		} catch (error) {
-			// A non-JSON error body (e.g. a proxy's HTML 502) is a plain failed login.
-			if (error instanceof SyntaxError) return { success: false };
-			throw error;
-		}
+		const res = await this.apiService.postRaw<LoginActionResponse>(apiRoutes.auth.login, request);
 
 		// A 422 carries field errors as an object, not error codes: treat it as a plain failed login.
 		if (!res?.data) return { success: false, errors: Array.isArray(res?.errors) ? res.errors : undefined };

@@ -7,17 +7,14 @@
 	import ContentModal from '$lib/components/ui/ContentModal.svelte';
 	import LoadingLogo from '$lib/components/ui/LoadingLogo.svelte';
 	import type { LibraryRecommendation, LibraryRecommendationType } from '$lib/types/library';
-	import { getAuth } from '$lib/state/Auth.svelte';
 	import type { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
 	import type { BookLibrary } from '$lib/state/BookLibrary.svelte';
 	import Recommendation from '$lib/components/libraries/shared/Recommendation.svelte';
-	import { apiRoutes } from '$lib/config/apiRoutes';
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 
 	const ts = getTranslation();
-	const auth = getAuth();
 
 	let { library }: { library: MusicLibrary | BookLibrary } = $props();
 
@@ -63,15 +60,17 @@
 		if (recommendation === null) return;
 
 		if (recommendation.id === null) {
-			const apiService = auth.apiService;
-			const query = encodeURIComponent(`${recommendation.creator} ${recommendation.title}`);
-			const res = await apiService.list(`${apiRoutes.libraries.music.search}/deezer/${query}`);
-			if (res !== null && res.data.length > 0) {
-				const item = (res.data as Array<{ url: string; cover: string | null }>)[0];
-				recommendation.link = item.url;
-				recommendation.cover = item.cover;
+			const results = await library.searchAt(searchProvider(), `${recommendation.creator} ${recommendation.title}`);
+			const match = results?.[0];
+			if (match) {
+				recommendation.link = match.url;
+				recommendation.cover = match.cover;
 			}
 		}
+	}
+
+	function searchProvider(): string {
+		return library.config.type === 'books' ? 'hardcover' : 'deezer';
 	}
 </script>
 

@@ -6,7 +6,10 @@
 	import IconPen from '$lib/icons/lucide/pen.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getFinances } from '$lib/state/Finances.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
+	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 
+	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const finances = getFinances();
 
@@ -16,10 +19,27 @@
 		onOpenHistory: (wealth: WealthField) => void;
 	} = $props();
 
-	async function onDelete(wealth: WealthField): Promise<void> {
+	let confirmingDelete = $state<boolean>(false);
+
+	function openHistory(event: MouseEvent): void {
+		event.stopPropagation();
+		onOpenHistory(wealth);
+	}
+
+	function askDelete(event: MouseEvent): void {
+		event.stopPropagation();
+		confirmingDelete = true;
+	}
+
+	async function confirmDelete(): Promise<void> {
+		confirmingDelete = false;
 		loadingIndicator.start();
 		await finances.deleteWealthField(wealth);
 		loadingIndicator.stop();
+	}
+
+	function deleteLabel(): string {
+		return ts.get.finances.delete_item.replace('%s', wealth.title);
 	}
 
 	function getShare(): number {
@@ -37,22 +57,10 @@
 		<div class="text-lg">{wealth.title}</div>
 		<div class="flex items-center gap-4">
 			<div class="hidden items-center gap-2 transition-all md:flex md:opacity-0 md:group-hover:opacity-100">
-				<button
-					class="cursor-pointer"
-					onclick={(e) => {
-						e.stopPropagation();
-						onOpenHistory(wealth);
-					}}
-				>
+				<button class="cursor-pointer" onclick={openHistory}>
 					<IconPen class="size-5 text-c-neutral-3 transition-all hover:text-c-action" />
 				</button>
-				<button
-					class="cursor-pointer"
-					onclick={(e) => {
-						e.stopPropagation();
-						onDelete(wealth);
-					}}
-				>
+				<button class="cursor-pointer" aria-label={deleteLabel()} onclick={askDelete}>
 					<IconTrash class="size-5 text-c-neutral-3 transition-all hover:text-c-danger" />
 				</button>
 			</div>
@@ -67,3 +75,12 @@
 		in:slide|global={{ axis: 'x' }}
 	></div>
 </div>
+{#if confirmingDelete}
+	<ConfirmationModal
+		title={deleteLabel()}
+		description={ts.get.finances.delete_item_message.replace('%s', wealth.title)}
+		type="confirm-delete"
+		onConfirm={confirmDelete}
+		onCancel={() => (confirmingDelete = false)}
+	/>
+{/if}
