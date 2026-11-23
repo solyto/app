@@ -19,7 +19,7 @@
 	}
 </script>
 
-<button class="cursor-pointer" onclick={(e) => toggleSaved(e)}>
+<button class="cursor-pointer" onclick={toggleSaved}>
 	{#if item.saved_link_id}
 		<div in:scale><IconBookmarkCheck class="block p-1 text-c-primary" /></div>
 	{:else}

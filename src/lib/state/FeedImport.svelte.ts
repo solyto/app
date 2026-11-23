@@ -12,6 +12,7 @@ export class FeedImport {
 	static readonly POLL_INTERVAL_MS = 1000;
 	static readonly MAX_POLL_INTERVAL_MS = 30000;
 	static readonly POLL_TIMEOUT_MS = 300000;
+	static readonly MS_PER_SECOND = 1000;
 
 	modalOpen = $state<boolean>(false);
 	state = $state<FeedImportState | null>(null);
@@ -120,14 +121,14 @@ export class FeedImport {
 				delay = this.backOff('network');
 			}
 		} catch (error) {
-			if (!(error instanceof NetworkError) && !(error instanceof RateLimitedError)) {
+			if (error instanceof RateLimitedError) {
+				delay = this.backOff('rate_limited', (error.retryAfter ?? 0) * FeedImport.MS_PER_SECOND);
+			} else if (error instanceof NetworkError) {
+				delay = this.backOff('network');
+			} else {
 				this.stall();
 				return;
 			}
-			delay =
-				error instanceof RateLimitedError
-					? this.backOff('rate_limited', (error.retryAfter ?? 0) * 1000)
-					: this.backOff('network');
 		}
 
 		this.continuePolling(delay);

@@ -1029,6 +1029,7 @@ const feeds: FeedRecords = {
 	feed_update_error: 'Не удалось обновить ленту.',
 	test_feed: 'Проверить ленту',
 	test_feed_error: 'Лента не вернула ни одной записи.',
+	test_feed_looks_right: 'Всё верно?',
 	feed_preview: 'Предпросмотр ленты',
 	view_compact: 'Компактно',
 	view_comfortable: 'Удобный вид',

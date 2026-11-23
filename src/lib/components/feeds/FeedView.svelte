@@ -10,6 +10,7 @@
 	const ts = getTranslation();
 
 	const DIVIDED_LIST = 'flex w-full flex-col divide-y';
+	const LOAD_MORE_MARGIN = '1000px';
 
 	let sentinel: HTMLDivElement;
 
@@ -18,14 +19,14 @@
 			(entries) => {
 				if (entries[0].isIntersecting) feeds.loadMore();
 			},
-			{ rootMargin: '1000px' }
+			{ rootMargin: LOAD_MORE_MARGIN }
 		);
 		observer.observe(sentinel);
 		return () => observer.disconnect();
 	});
 </script>
 
-{#if feeds.loaded && !feeds.loadingMore && feeds.filteredItems.length === 0}
+{#if feeds.isEmpty}
 	{#if feeds.feeds.length === 0}
 		<EmptyState title={ts.get.feeds.no_feeds} description={ts.get.feeds.no_feeds_desc} py={6} />
 	{:else}

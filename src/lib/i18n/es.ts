@@ -1031,6 +1031,7 @@ const feeds: FeedRecords = {
 	feed_update_error: 'No se pudo actualizar el feed.',
 	test_feed: 'Probar feed',
 	test_feed_error: 'El feed no proporcionó resultados.',
+	test_feed_looks_right: '¿Se ve bien?',
 	feed_preview: 'Vista previa del feed',
 	view_compact: 'Compacto',
 	view_comfortable: 'Cómodo',

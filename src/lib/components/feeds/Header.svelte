@@ -19,11 +19,30 @@
 
 	let confirmingDelete = $state(false);
 
+	function openEdit(): void {
+		feeds.modalOpen = true;
+	}
+
+	function askToDelete(): void {
+		confirmingDelete = true;
+	}
+
+	function cancelDelete(): void {
+		confirmingDelete = false;
+	}
+
 	async function onDelete(): Promise<void> {
 		loadingIndicator.start();
-		await feeds.delete(feed!);
-		loadingIndicator.stop();
-		confirmingDelete = false;
+		try {
+			await feeds.delete(feed!);
+		} finally {
+			loadingIndicator.stop();
+			confirmingDelete = false;
+		}
+	}
+
+	function changeView(type: string): void {
+		feeds.changeView(type as FeedEntrySize);
 	}
 
 	const views = [
@@ -39,20 +58,11 @@
 	</div>
 	{#if feed !== null}
 		<div class="mr-4 flex gap-2">
-			<InlineEditButton
-				label={ts.get.feeds.edit_feed}
-				onClick={() => {
-					feeds.modalOpen = true;
-				}}
-			/>
-			<InlineDeleteButton label={ts.get.feeds.delete_feed} onClick={() => { confirmingDelete = true; }} />
+			<InlineEditButton label={ts.get.feeds.edit_feed} onClick={openEdit} />
+			<InlineDeleteButton label={ts.get.feeds.delete_feed} onClick={askToDelete} />
 		</div>
 	{/if}
-	<ViewSwitcher
-		{views}
-		currentlySelected={feeds.view}
-		onChange={(type) => feeds.changeView(type as FeedEntrySize)}
-	/>
+	<ViewSwitcher {views} currentlySelected={feeds.view} onChange={changeView} />
 </div>
 
 {#if confirmingDelete}
@@ -61,6 +71,6 @@
 		description={ts.get.feeds.delete_feed_description}
 		type="confirm-delete"
 		onConfirm={onDelete}
-		onCancel={() => (confirmingDelete = false)}
+		onCancel={cancelDelete}
 	/>
 {/if}

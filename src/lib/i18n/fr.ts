@@ -1030,6 +1030,7 @@ const feeds: FeedRecords = {
 	feed_update_error: 'Impossible de mettre à jour le flux.',
 	test_feed: 'Tester le flux',
 	test_feed_error: 'Aucun élément n\'a été trouvé dans ce flux.',
+	test_feed_looks_right: 'Ça te semble correct ?',
 	feed_preview: 'Aperçu du flux',
 	view_compact: 'Compact',
 	view_comfortable: 'Confortable',

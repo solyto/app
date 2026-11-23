@@ -910,6 +910,7 @@ export interface FeedRecords {
 	feed_update_error: string;
 	test_feed: string;
 	test_feed_error: string;
+	test_feed_looks_right: string;
 	feed_preview: string;
 	view_compact: string;
 	view_comfortable: string;

@@ -4,6 +4,7 @@ import type { Tag } from '$lib/types/tag';
 import type { CheckInTracker, CheckInValue } from '$lib/types/check_in';
 import type { Goal } from '$lib/types/goal';
 import type { Calendar, CalendarEvent, CalendarEventResponse } from '$lib/types/calendar';
+import type { FeedImportEntry, FeedImportState, FeedItem, FeedSubscription } from '$lib/types/feed';
 
 export function todo(overrides: Partial<Todo> = {}): Todo {
 	return {
@@ -160,6 +161,54 @@ export function calendarEventResponse(overrides: Partial<CalendarEventResponse> 
 		calendar_name: 'Personal',
 		calendar_color: '#fff',
 		etag: '',
+		...overrides
+	};
+}
+
+export function feedSubscription(overrides: Partial<FeedSubscription> = {}): FeedSubscription {
+	return {
+		id: 'sub-1',
+		feed_id: 'feed-1',
+		title: 'My Feed',
+		url: 'https://example.com/rss',
+		whitelist: '',
+		blacklist: '',
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function feedItem(overrides: Partial<FeedItem> = {}): FeedItem {
+	return {
+		id: 'item-1',
+		title: 'An item',
+		description: '',
+		image_url: null,
+		feed_id: 'feed-1',
+		link: 'https://example.com/item-1',
+		published_at: '2026-08-01T10:00:00Z',
+		saved_link_id: null,
+		...overrides
+	};
+}
+
+export function feedImportEntry(overrides: Partial<FeedImportEntry> = {}): FeedImportEntry {
+	return {
+		url: 'https://a.test/feed',
+		title: 'A feed',
+		already_subscribed: false,
+		status: null,
+		...overrides
+	};
+}
+
+export function feedImportState(overrides: Partial<FeedImportState> = {}): FeedImportState {
+	return {
+		stage: 'parsed',
+		total: 0,
+		processed: 0,
+		feeds: [],
 		...overrides
 	};
 }

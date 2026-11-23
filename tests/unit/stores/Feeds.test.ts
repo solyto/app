@@ -1,35 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Feeds } from '$lib/state/Feeds.svelte';
 import { api, storage, resetStoreMocks } from '../setup/storeMocks';
-import type { FeedSubscription, FeedItem } from '$lib/types/feed';
-
-function feed(overrides: Partial<FeedSubscription> = {}): FeedSubscription {
-	return {
-		id: 'sub-1',
-		feed_id: 'feed-1',
-		title: 'My Feed',
-		url: 'https://example.com/rss',
-		whitelist: '',
-		blacklist: '',
-		created_at: '',
-		updated_at: '',
-		...overrides
-	};
-}
-
-function item(overrides: Partial<FeedItem> = {}): FeedItem {
-	return {
-		id: 'item-1',
-		title: 'An item',
-		description: '',
-		image_url: null,
-		feed_id: 'feed-1',
-		link: 'https://example.com/item-1',
-		published_at: '2026-08-01T10:00:00Z',
-		saved_link_id: null,
-		...overrides
-	};
-}
+import type { FeedItem } from '$lib/types/feed';
+import { apiRoutes } from '$lib/config/apiRoutes';
+import { feedItem, feedSubscription } from '../helpers/factories';
 
 beforeEach(() => {
 	resetStoreMocks();
@@ -69,7 +43,7 @@ describe('Feeds store', () => {
 	describe('loadMore pagination', () => {
 		it('appends items, advances the offset and tracks hasMore from the meta', async () => {
 			api.list.mockResolvedValue({
-				data: [item({ id: 'a' }), item({ id: 'b' })],
+				data: [feedItem({ id: 'a' }), feedItem({ id: 'b' })],
 				meta: { has_more: true, feed_counts: { 'feed-1': 5 } }
 			});
 
@@ -101,7 +75,7 @@ describe('Feeds store', () => {
 		});
 
 		it('keeps the previous feed counts when the meta omits them', async () => {
-			api.list.mockResolvedValue({ data: [item()], meta: {} });
+			api.list.mockResolvedValue({ data: [feedItem()], meta: {} });
 
 			const s = new Feeds();
 			s.feedCounts = { 'feed-1': 3 };
@@ -112,12 +86,12 @@ describe('Feeds store', () => {
 
 		it('filters by the active feed on the server and loads one page only', async () => {
 			api.list.mockResolvedValue({
-				data: [item({ id: 'a' })],
+				data: [feedItem({ id: 'a' })],
 				meta: { has_more: true }
 			});
 
 			const s = new Feeds();
-			s.activeFeed = feed();
+			s.activeFeed = feedSubscription();
 			await s.loadMore();
 
 			expect(api.list).toHaveBeenCalledTimes(1);
@@ -129,14 +103,14 @@ describe('Feeds store', () => {
 			let resolveStale: (value: unknown) => void = () => {};
 			api.list
 				.mockReturnValueOnce(new Promise((resolve) => (resolveStale = resolve)))
-				.mockResolvedValueOnce({ data: [feed()] })
-				.mockResolvedValueOnce({ data: [item({ id: 'fresh' })], meta: { has_more: false } });
+				.mockResolvedValueOnce({ data: [feedSubscription()] })
+				.mockResolvedValueOnce({ data: [feedItem({ id: 'fresh' })], meta: { has_more: false } });
 
 			const s = new Feeds();
 			s.offset = 100;
 			const stale = s.loadMore();
 			await s.load();
-			resolveStale({ data: [item({ id: 'stale' })], meta: { has_more: true } });
+			resolveStale({ data: [feedItem({ id: 'stale' })], meta: { has_more: true } });
 			await stale;
 
 			expect(s.items.map((i) => i.id)).toEqual(['fresh']);
@@ -146,18 +120,41 @@ describe('Feeds store', () => {
 		});
 	});
 
+	describe('items url', () => {
+		const FEED_ID = '9b2f4c1e-3d5a-4e6f-8a7b-1c2d3e4f5a6b';
+
+		it('asks for the first page of all feeds', async () => {
+			api.list.mockResolvedValue({ data: [], meta: { has_more: false } });
+
+			await new Feeds().loadMore();
+
+			expect(api.list).toHaveBeenCalledWith(`${apiRoutes.feeds.listItems}?offset=0&limit=50`);
+		});
+
+		it('asks for the next page of the active feed', async () => {
+			api.list.mockResolvedValue({ data: [], meta: { has_more: false } });
+			const s = new Feeds();
+			s.activeFeed = feedSubscription({ feed_id: FEED_ID });
+			s.offset = 100;
+
+			await s.loadMore();
+
+			expect(api.list).toHaveBeenCalledWith(`${apiRoutes.feeds.listItems}?offset=100&limit=50&feed_id=${FEED_ID}`);
+		});
+	});
+
 	describe('filter', () => {
 		it('shows every item when no feed is active', () => {
 			const s = new Feeds();
-			s.items = [item({ id: 'a' }), item({ id: 'b', feed_id: 'feed-2' })];
+			s.items = [feedItem({ id: 'a' }), feedItem({ id: 'b', feed_id: 'feed-2' })];
 			s.filter();
 			expect(s.filteredItems.map((i) => i.id)).toEqual(['a', 'b']);
 		});
 
 		it('filters to the active feed only', () => {
 			const s = new Feeds();
-			s.items = [item({ id: 'a' }), item({ id: 'b', feed_id: 'feed-2' })];
-			s.activeFeed = feed();
+			s.items = [feedItem({ id: 'a' }), feedItem({ id: 'b', feed_id: 'feed-2' })];
+			s.activeFeed = feedSubscription();
 			s.filter();
 			expect(s.filteredItems.map((i) => i.id)).toEqual(['a']);
 		});
@@ -165,13 +162,13 @@ describe('Feeds store', () => {
 
 	describe('selectFeed', () => {
 		it('resets the list and loads the first page of the selected feed', async () => {
-			api.list.mockResolvedValue({ data: [item({ id: 'c' })], meta: { has_more: false } });
+			api.list.mockResolvedValue({ data: [feedItem({ id: 'c' })], meta: { has_more: false } });
 			const s = new Feeds();
-			s.items = [item({ id: 'a' }), item({ id: 'b', feed_id: 'feed-2' })];
+			s.items = [feedItem({ id: 'a' }), feedItem({ id: 'b', feed_id: 'feed-2' })];
 			s.offset = 2;
 			s.hasMore = false;
 
-			s.selectFeed(feed());
+			s.selectFeed(feedSubscription());
 			await vi.waitFor(() => expect(s.loadingMore).toBe(false));
 
 			expect(s.activeFeed?.feed_id).toBe('feed-1');
@@ -181,9 +178,9 @@ describe('Feeds store', () => {
 		});
 
 		it('loads all feeds again for a null feed', async () => {
-			api.list.mockResolvedValue({ data: [item()], meta: { has_more: false } });
+			api.list.mockResolvedValue({ data: [feedItem()], meta: { has_more: false } });
 			const s = new Feeds();
-			s.activeFeed = feed();
+			s.activeFeed = feedSubscription();
 
 			s.selectFeed(null);
 			await vi.waitFor(() => expect(s.loadingMore).toBe(false));
@@ -196,8 +193,8 @@ describe('Feeds store', () => {
 
 	describe('load', () => {
 		it('loads subscriptions and resets pagination', async () => {
-			api.list.mockResolvedValueOnce({ data: [feed()] }).mockResolvedValueOnce({
-				data: [item()],
+			api.list.mockResolvedValueOnce({ data: [feedSubscription()] }).mockResolvedValueOnce({
+				data: [feedItem()],
 				meta: { has_more: false }
 			});
 
@@ -213,7 +210,7 @@ describe('Feeds store', () => {
 			let resolveFeeds: (value: unknown) => void = () => {};
 			api.list
 				.mockReturnValueOnce(new Promise((resolve) => (resolveFeeds = resolve)))
-				.mockResolvedValueOnce({ data: [item()], meta: { has_more: false } });
+				.mockResolvedValueOnce({ data: [feedItem()], meta: { has_more: false } });
 
 			const s = new Feeds();
 			const loading = s.load();
@@ -221,19 +218,19 @@ describe('Feeds store', () => {
 			expect(api.list).toHaveBeenCalledTimes(2);
 			expect(api.list).toHaveBeenNthCalledWith(2, expect.stringContaining('offset=0'));
 
-			resolveFeeds({ data: [feed()] });
+			resolveFeeds({ data: [feedSubscription()] });
 			await loading;
 			expect(s.items).toHaveLength(1);
 		});
 
 		it('keeps the current items when the subscriptions request fails', async () => {
 			api.list.mockResolvedValueOnce(null).mockResolvedValueOnce({
-				data: [item({ id: 'new' })],
+				data: [feedItem({ id: 'new' })],
 				meta: { has_more: false }
 			});
 
 			const s = new Feeds();
-			s.items = [item({ id: 'old' })];
+			s.items = [feedItem({ id: 'old' })];
 			await s.load();
 
 			expect(s.items.map((i) => i.id)).toEqual(['old']);
@@ -251,11 +248,35 @@ describe('Feeds store', () => {
 		});
 	});
 
+	describe('isEmpty', () => {
+		it('is true once loaded with no items to show', () => {
+			const s = new Feeds();
+			s.loaded = true;
+			expect(s.isEmpty).toBe(true);
+		});
+
+		it('is false before the first load and while items are loading', () => {
+			const s = new Feeds();
+			expect(s.isEmpty).toBe(false);
+
+			s.loaded = true;
+			s.loadingMore = true;
+			expect(s.isEmpty).toBe(false);
+		});
+
+		it('is false when there are items to show', () => {
+			const s = new Feeds();
+			s.loaded = true;
+			s.filteredItems = [feedItem()];
+			expect(s.isEmpty).toBe(false);
+		});
+	});
+
 	describe('getFeedCount', () => {
 		it('falls back to zero', () => {
 			const s = new Feeds();
 			s.feedCounts = { 'feed-2': 2 };
-			expect(s.getFeedCount(feed())).toBe(0);
+			expect(s.getFeedCount(feedSubscription())).toBe(0);
 		});
 	});
 
@@ -274,7 +295,7 @@ describe('Feeds store', () => {
 
 		it('saveToLibrary creates the link once, keeps its id and does not reload', async () => {
 			api.create.mockResolvedValue({ data: { id: 'link-1' } });
-			const s = storeWith(item());
+			const s = storeWith(feedItem());
 
 			await expect(s.saveToLibrary(s.items[0])).resolves.toBe(true);
 
@@ -291,7 +312,7 @@ describe('Feeds store', () => {
 
 		it('saveToLibrary leaves the item unsaved when the create fails', async () => {
 			api.create.mockResolvedValue(null);
-			const s = storeWith(item());
+			const s = storeWith(feedItem());
 
 			await expect(s.saveToLibrary(s.items[0])).resolves.toBe(false);
 			expect(s.items[0].saved_link_id).toBeNull();
@@ -299,11 +320,11 @@ describe('Feeds store', () => {
 
 		it('unsaveFromLibrary deletes the stored link id and does not reload', async () => {
 			api.deleteWithStatus.mockResolvedValue({ ok: true, status: 204, errors: [] });
-			const s = storeWith(item({ saved_link_id: 'link-1' }));
+			const s = storeWith(feedItem({ saved_link_id: 'link-1' }));
 
 			await expect(s.unsaveFromLibrary(s.items[0])).resolves.toBe(true);
 
-			expect(api.deleteWithStatus).toHaveBeenCalledWith(expect.stringMatching(/\/libraries\/links\/link-1$/));
+			expect(api.deleteWithStatus).toHaveBeenCalledWith(`${apiRoutes.libraries.links.list}/link-1`);
 			expect(api.list).not.toHaveBeenCalled();
 			expect(s.items[0].saved_link_id).toBeNull();
 			expect(s.filteredItems[0].saved_link_id).toBeNull();
@@ -311,7 +332,7 @@ describe('Feeds store', () => {
 
 		it.each([404, 403])('unsaveFromLibrary treats %d as already gone', async (status) => {
 			api.deleteWithStatus.mockResolvedValue({ ok: false, status, errors: [] });
-			const s = storeWith(item({ saved_link_id: 'link-1' }));
+			const s = storeWith(feedItem({ saved_link_id: 'link-1' }));
 
 			await expect(s.unsaveFromLibrary(s.items[0])).resolves.toBe(true);
 			expect(s.items[0].saved_link_id).toBeNull();
@@ -319,14 +340,14 @@ describe('Feeds store', () => {
 
 		it('unsaveFromLibrary keeps the link id when the delete fails otherwise', async () => {
 			api.deleteWithStatus.mockResolvedValue({ ok: false, status: 500, errors: [] });
-			const s = storeWith(item({ saved_link_id: 'link-1' }));
+			const s = storeWith(feedItem({ saved_link_id: 'link-1' }));
 
 			await expect(s.unsaveFromLibrary(s.items[0])).resolves.toBe(false);
 			expect(s.items[0].saved_link_id).toBe('link-1');
 		});
 
 		it('unsaveFromLibrary does nothing for an unsaved item', async () => {
-			const s = storeWith(item());
+			const s = storeWith(feedItem());
 
 			await expect(s.unsaveFromLibrary(s.items[0])).resolves.toBe(false);
 			expect(api.deleteWithStatus).not.toHaveBeenCalled();
@@ -345,7 +366,7 @@ describe('Feeds store', () => {
 
 		it('reloads the feeds on success', async () => {
 			api.createWithStatus.mockResolvedValue({ ok: true, status: 201 });
-			api.list.mockResolvedValue({ data: [feed()], meta: {} });
+			api.list.mockResolvedValue({ data: [feedSubscription()], meta: {} });
 			const s = new Feeds();
 			await s.subscribe({ title: 'X', url: 'https://x.com/rss' });
 			expect(s.feeds).toHaveLength(1);
@@ -374,7 +395,7 @@ describe('Feeds store', () => {
 		});
 
 		it('searchFeeds encodes the query', async () => {
-			api.list.mockResolvedValue({ data: [feed()] });
+			api.list.mockResolvedValue({ data: [feedSubscription()] });
 			const s = new Feeds();
 			await s.searchFeeds('a b');
 			expect(api.list).toHaveBeenCalledWith(expect.stringContaining('search=a%20b'));
@@ -391,13 +412,13 @@ describe('Feeds store', () => {
 		it('clears the active feed and reloads with a single items request', async () => {
 			api.delete.mockResolvedValue(true);
 			api.list.mockResolvedValueOnce({ data: [] }).mockResolvedValueOnce({
-				data: [item()],
+				data: [feedItem()],
 				meta: { has_more: false }
 			});
 
 			const s = new Feeds();
-			s.activeFeed = feed();
-			await expect(s.delete(feed())).resolves.toBe(true);
+			s.activeFeed = feedSubscription();
+			await expect(s.delete(feedSubscription())).resolves.toBe(true);
 
 			expect(s.activeFeed).toBeNull();
 			expect(api.list).toHaveBeenCalledTimes(2);
@@ -411,7 +432,7 @@ describe('Feeds store', () => {
 			const s = new Feeds();
 			const load = vi.spyOn(s, 'load').mockResolvedValue();
 
-			await expect(s.update(feed(), { title: 'New' })).resolves.toBe(false);
+			await expect(s.update(feedSubscription(), { title: 'New' })).resolves.toBe(false);
 			expect(load).not.toHaveBeenCalled();
 		});
 
@@ -420,7 +441,7 @@ describe('Feeds store', () => {
 			const s = new Feeds();
 			const load = vi.spyOn(s, 'load').mockResolvedValue();
 
-			await expect(s.update(feed(), { title: 'New' })).resolves.toBe(true);
+			await expect(s.update(feedSubscription(), { title: 'New' })).resolves.toBe(true);
 			expect(load).toHaveBeenCalled();
 		});
 	});

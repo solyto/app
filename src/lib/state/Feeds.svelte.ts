@@ -20,6 +20,8 @@ export class Feeds {
 	static readonly LS_VIEW_KEY: string = 'feeds_entry_size';
 	static readonly LS_LEGACY_IN_LIBRARY_KEY: string = 'feeds_in_library';
 	static readonly ITEMS_PER_PAGE = 50;
+	// The API answers 404 or 403 when the link is already gone from this user's library.
+	static readonly LINK_GONE_STATUSES = [404, 403];
 
 	loaded = $state<boolean>(false);
 	feeds = $state<FeedSubscription[]>([]);
@@ -47,8 +49,11 @@ export class Feeds {
 		this.apiService = apiService;
 		this.localStorage = localStorage;
 		this.loadView();
-		// The saved flags now come from the API; drop the old per-browser copy.
 		this.localStorage.destroy(Feeds.LS_LEGACY_IN_LIBRARY_KEY);
+	}
+
+	get isEmpty(): boolean {
+		return this.loaded && !this.loadingMore && this.filteredItems.length === 0;
 	}
 
 	loadView(): void {
@@ -73,7 +78,7 @@ export class Feeds {
 			this.apiService.list(this.itemsUrl(0))
 		]);
 
-		if (generation !== this.generation) return;
+		if (this.isStale(generation)) return;
 		this.loadingMore = false;
 		if (!feedsRes) return;
 
@@ -91,27 +96,12 @@ export class Feeds {
 
 		const res = await this.apiService.list(this.itemsUrl(this.offset));
 
-		if (generation !== this.generation) return;
+		if (this.isStale(generation)) return;
 
 		if (res) this.appendItems(res);
 
 		this.loadingMore = false;
 		this.filter();
-	}
-
-	private itemsUrl(offset: number): string {
-		const feedFilter = this.activeFeed
-			? `&feed_id=${encodeURIComponent(this.activeFeed.feed_id)}`
-			: '';
-		return `${apiRoutes.feeds.listItems}?offset=${offset}&limit=${Feeds.ITEMS_PER_PAGE}${feedFilter}`;
-	}
-
-	private appendItems(res: ListResponse): void {
-		const newItems = res.data as FeedItem[];
-		this.items = [...this.items, ...newItems];
-		this.offset += newItems.length;
-		this.hasMore = (res.meta?.has_more as boolean) ?? false;
-		this.feedCounts = (res.meta?.feed_counts as Record<string, number>) ?? this.feedCounts;
 	}
 
 	filter(): void {
@@ -150,28 +140,22 @@ export class Feeds {
 		return true;
 	}
 
-	// 404 and 403 mean the link is already gone from this user's library.
 	async unsaveFromLibrary(item: FeedItem): Promise<boolean> {
 		if (!item.saved_link_id) return false;
 
 		const res = await this.apiService.deleteWithStatus(
 			apiRoutes.libraries.links.delete.replace('%s', item.saved_link_id)
 		);
-		if (!res.ok && res.status !== 404 && res.status !== 403) return false;
+		if (!res.ok && !Feeds.LINK_GONE_STATUSES.includes(res.status)) return false;
 
 		this.setSavedLinkId(item.id, null);
 		return true;
 	}
 
-	private setSavedLinkId(itemId: string, linkId: string | null): void {
-		const target = this.items.find((entry) => entry.id === itemId);
-		if (target) target.saved_link_id = linkId;
-	}
-
 	async create(request: CreateFeedSubscriptionRequest): Promise<boolean> {
 		const res = await this.apiService.create(apiRoutes.feeds.create, request);
 		if (res) await this.load();
-		return Promise.resolve(res !== null);
+		return res !== null;
 	}
 
 	async subscribe(
@@ -194,18 +178,13 @@ export class Feeds {
 			this.activeFeed = null;
 			this.resetItems();
 			await this.load();
-			return Promise.resolve(true);
 		}
-
-		return Promise.resolve(false);
+		return res;
 	}
 
 	async testFeed(url: string): Promise<FeedTestItem[] | null> {
 		const res = await this.apiService.post(apiRoutes.feeds.testFeed, { url });
-		if (res) {
-			return res.data as FeedTestItem[];
-		}
-		return null;
+		return res ? (res.data as FeedTestItem[]) : null;
 	}
 
 	async loadAvailableFeeds(offset: number = 0): Promise<Feed[]> {
@@ -225,7 +204,29 @@ export class Feeds {
 		return res ? (res.data as FriendFeed[]) : [];
 	}
 
-	// Bumping the generation makes loadMore() drop responses to requests started before the reset.
+	private itemsUrl(offset: number): string {
+		const query = new URLSearchParams({ offset: String(offset), limit: String(Feeds.ITEMS_PER_PAGE) });
+		if (this.activeFeed) query.set('feed_id', this.activeFeed.feed_id);
+		return `${apiRoutes.feeds.listItems}?${query}`;
+	}
+
+	private appendItems(res: ListResponse): void {
+		const newItems = res.data as FeedItem[];
+		this.items = [...this.items, ...newItems];
+		this.offset += newItems.length;
+		this.hasMore = (res.meta?.has_more as boolean) ?? false;
+		this.feedCounts = (res.meta?.feed_counts as Record<string, number>) ?? this.feedCounts;
+	}
+
+	private setSavedLinkId(itemId: string, linkId: string | null): void {
+		const target = this.items.find((entry) => entry.id === itemId);
+		if (target) target.saved_link_id = linkId;
+	}
+
+	private isStale(generation: number): boolean {
+		return generation !== this.generation;
+	}
+
 	private resetItems(): void {
 		this.generation++;
 		this.items = [];

@@ -156,6 +156,10 @@
 		return pollError === 'rate_limited' ? ts.get.layout.rate_limited : ts.get.layout.network_error;
 	}
 
+	function nothingToImport(state: FeedImportState): boolean {
+		return service.initialSelection(state).length === 0;
+	}
+
 	function toggle(url: string): void {
 		selected = service.toggle(selected, url);
 	}
@@ -232,7 +236,7 @@
 			<FileUpload accept=".opml,.xml" onfile={upload} />
 		{:else if shown === 'preview' && feedImport.state}
 			{@const importState = feedImport.state}
-			{#if service.initialSelection(importState).length === 0}
+			{#if nothingToImport(importState)}
 				<p class="text-sm">{ts.get.feeds.import_all_subscribed}</p>
 			{:else}
 				<div class="flex items-center justify-between gap-4">
@@ -265,7 +269,7 @@
 					</div>
 				{/each}
 			</div>
-			{#if service.initialSelection(importState).length === 0}
+			{#if nothingToImport(importState)}
 				{@render leaveActions()}
 			{:else}
 				<TextButton type="primary" title={ts.get.feeds.import_button} disabled={busy || selected.length === 0} onclick={startImport} />
