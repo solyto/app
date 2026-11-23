@@ -307,6 +307,7 @@ const todos: TodoRecords = {
 	no_todos_desc: 'Versuche einen anderen Filter oder Arbeitsbereich.',
 	no_todos_yet: 'Noch keine Todos.',
 	no_todos_yet_desc: 'Lege dein erstes über den Button „Neues Todo“ an.',
+	todo_count: 'Todos: {n}',
 	tags: 'Tags',
 	tag: 'Tag',
 	tag_error: 'Tag existiert nicht',
@@ -674,7 +675,21 @@ const notes: NoteRecords = {
 	journal_create_error: 'Der Journaleintrag konnte nicht erstellt werden.',
 	move_note: 'In Ordner verschieben',
 	no_folder: 'Kein Ordner',
-	move_error: 'Notiz konnte nicht verschoben werden.'
+	move_error: 'Notiz konnte nicht verschoben werden.',
+	folder_label: 'Ordner %s',
+	insert_image_clipboard_preview: 'Vorschau aus der Zwischenablage',
+	insert_image_upload_preview: 'Vorschau des hochgeladenen Bilds',
+	import_title: 'Datei-Upload',
+	import_select_file: 'Datei auswählen',
+	import_selected_file: 'Ausgewählte Datei:',
+	import_file_size: '%s KB',
+	import_progress: 'Wird hochgeladen: %d %',
+	import_uploading: 'Wird hochgeladen...',
+	import_upload: 'Datei hochladen',
+	import_uploaded: 'Datei erfolgreich hochgeladen!',
+	import_success: 'Import erfolgreich!',
+	import_no_file: 'Bitte wähle eine Datei aus',
+	import_unknown_error: 'Ein unbekannter Fehler ist aufgetreten'
 };
 
 const libraries: LibraryRecords = {
@@ -1286,7 +1301,27 @@ const contacts: ContactRecords = {
 	save_error: 'Kontakt konnte nicht gespeichert werden.',
 	name_required: 'Vor- und Nachname sind erforderlich.',
 	email_placeholder: 'E-Mail',
-	phone_placeholder: 'Telefonnummer'
+	phone_placeholder: 'Telefonnummer',
+	add_title: 'Kontakt hinzufügen',
+	update_title: 'Kontakt bearbeiten',
+	first_name: 'Vorname',
+	last_name: 'Nachname',
+	prefix: 'Präfix',
+	middle_name: 'Zweiter Vorname',
+	suffix: 'Suffix',
+	groups: 'Gruppen',
+	organization: 'Organisation',
+	street: 'Straße',
+	city: 'Stadt',
+	postal_code: 'Postleitzahl',
+	country: 'Land',
+	notes: 'Notizen',
+	create_address_book: 'Adressbuch erstellen',
+	address_book_name_placeholder: 'Name des Adressbuchs eingeben',
+	import_url: 'URL',
+	import_username: 'Benutzername',
+	import_secret: 'Passwort',
+	import: 'Importieren'
 };
 
 const dav: DavRecords = {

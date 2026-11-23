@@ -1,4 +1,4 @@
-import type { Todo, TodoCategory } from '$lib/types/todo';
+import type { Todo, TodoCategory, TodoWorkspace } from '$lib/types/todo';
 import type { DevRequest } from '$lib/types/dev_request';
 import type { Tag } from '$lib/types/tag';
 import type { CheckInTracker, CheckInValue } from '$lib/types/check_in';
@@ -15,6 +15,9 @@ import type { Quote } from '$lib/types/library_quote';
 import type { Recipe } from '$lib/types/library_recipe';
 import type { Link, LinkCategory } from '$lib/types/library_link';
 import type { Budget, WealthField } from '$lib/types/finance';
+import type { Note, NoteCategory } from '$lib/types/note';
+import type { AddressBook, Contact } from '$lib/types/contact';
+import type { TimeTrackingCategory, TimeTrackingEntry, TimeTrackingProject } from '$lib/types/time_tracking';
 
 export function todo(overrides: Partial<Todo> = {}): Todo {
 	return {
@@ -411,4 +414,92 @@ export function budget(overrides: Partial<Budget> = {}): Budget {
 
 export function wealthField(overrides: Partial<WealthField> = {}): WealthField {
 	return { id: 2, title: 'Savings', values: [], currentValue: null, created_at: '', updated_at: '', ...overrides };
+}
+
+export function timeTrackingCategory(overrides: Partial<TimeTrackingCategory> = {}): TimeTrackingCategory {
+	return { id: 1, title: 'Category', color: null, created_at: '', updated_at: '', ...overrides };
+}
+
+export function timeTrackingProject(overrides: Partial<TimeTrackingProject> = {}): TimeTrackingProject {
+	return { id: 'p1', title: 'Project', description: null, color: null, categories: [], total_duration: 0, created_at: '', updated_at: '', ...overrides };
+}
+
+export function timeTrackingEntry(overrides: Partial<TimeTrackingEntry> = {}): TimeTrackingEntry {
+	return {
+		id: 'e1',
+		description: null,
+		started_at: '2026-10-01T09:00:00.000Z',
+		stopped_at: '2026-10-01T10:00:00.000Z',
+		duration_minutes: 60,
+		has_exact_times: false,
+		project: timeTrackingProject(),
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function note(overrides: Partial<Note> = {}): Note {
+	return {
+		id: 'n1',
+		title: 'Note',
+		content: '',
+		category_id: null,
+		tags: [],
+		is_favorite: false,
+		created_at: '',
+		updated_at: '',
+		...overrides
+	};
+}
+
+export function noteCategory(id: number, overrides: Partial<NoteCategory> = {}): NoteCategory {
+	return {
+		id,
+		title: 'Category',
+		parent_id: null,
+		sort_order: 0,
+		is_system: false,
+		is_hidden: false,
+		created_at: '',
+		updated_at: '',
+		children: [],
+		...overrides
+	};
+}
+
+export function todoWorkspace(id: number, categories: TodoCategory[], hideable = false): TodoWorkspace {
+	return { id, title: 'Workspace', is_hideable: hideable, categories, created_at: '', updated_at: '' };
+}
+
+export function contact(overrides: Partial<Contact> = {}): Contact {
+	return {
+		uid: 'u1',
+		uri: 'contact-1',
+		full_name: 'Alice Example',
+		first_name: 'Alice',
+		last_name: 'Example',
+		middle_name: '',
+		prefix: '',
+		suffix: '',
+		email: null,
+		phone: null,
+		groups: null,
+		organization: '',
+		title: '',
+		note: '',
+		street: '',
+		city: '',
+		state: '',
+		postal_code: '',
+		country: '',
+		etag: '',
+		address_book_id: 1,
+		address_book_color: '#fff',
+		...overrides
+	};
+}
+
+export function addressBook(overrides: Partial<AddressBook> = {}): AddressBook {
+	return { id: 1, name: 'Personal', uri: 'ab-1', color: '#ff0000', description: '', ...overrides };
 }

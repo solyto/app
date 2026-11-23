@@ -55,30 +55,30 @@
 	}
 
 	async function onsubmit(): Promise<void> {
-		if (value.trim() === '') {
-			return;
-		}
+		if (value.trim() === '') return;
 
 		loadingIndicator.start();
-
-		if (type === 'tag') {
-			await tags.create(value);
-		} else if (type === 'category') {
-			await todos.createCategory(value);
+		try {
+			await create(value);
+			value = '';
+			visible = false;
+		} finally {
+			loadingIndicator.stop();
 		}
-
-		value = '';
-		visible = false;
-
-		loadingIndicator.stop();
 		keyManager.unregisterAll(keyHandlers);
 		onFinish();
 	}
+
+	async function create(title: string): Promise<void> {
+		if (type === 'tag') {
+			await tags.create(title);
+		} else {
+			await todos.createCategory(title);
+		}
+	}
 </script>
 
-<div
-	class="mt-2 flex items-center justify-between p-2 text-base font-bold 2xl:text-2xl 2xl:font-normal"
->
+<div class="mt-2 flex items-center justify-between p-2 text-base font-bold 2xl:text-2xl 2xl:font-normal">
 	{title}
 	<IconPlus
 		class="cursor-pointer pt-1 text-c-neutral-5 hover:text-c-neutral-9 dark:text-c-neutral-2 dark:hover:text-white"

@@ -305,6 +305,7 @@ const todos: TodoRecords = {
 	no_todos_desc: 'Essaie un autre filtre ou espace de travail.',
 	no_todos_yet: 'Pas encore de tâches.',
 	no_todos_yet_desc: 'Ajoute la première avec le bouton « Nouvelle tâche ».',
+	todo_count: '{n} tâches',
 	tags: 'Tags',
 	tag: 'Tag',
 	tag_error: 'Le tag n\'existe pas',
@@ -672,7 +673,21 @@ const notes: NoteRecords = {
 	journal_create_error: "Échec de la création de l'entrée du journal.",
 	move_note: 'Déplacer vers un dossier',
 	no_folder: 'Aucun dossier',
-	move_error: 'Échec du déplacement de la note.'
+	move_error: 'Échec du déplacement de la note.',
+	folder_label: 'Dossier %s',
+	insert_image_clipboard_preview: 'Aperçu du presse-papiers',
+	insert_image_upload_preview: 'Aperçu de l\'image téléversée',
+	import_title: 'Téléversement de fichier',
+	import_select_file: 'Sélectionner un fichier',
+	import_selected_file: 'Fichier sélectionné :',
+	import_file_size: '%s Ko',
+	import_progress: 'Téléversement : %d %',
+	import_uploading: 'Téléversement...',
+	import_upload: 'Téléverser le fichier',
+	import_uploaded: 'Fichier téléversé avec succès !',
+	import_success: 'Importation réussie !',
+	import_no_file: 'Sélectionne un fichier',
+	import_unknown_error: 'Une erreur inconnue est survenue'
 };
 
 const libraries: LibraryRecords = {
@@ -1285,7 +1300,27 @@ const contacts: ContactRecords = {
 	save_error: 'Échec de l\'enregistrement du contact.',
 	name_required: 'Le prénom et le nom sont obligatoires.',
 	email_placeholder: 'E-mail',
-	phone_placeholder: 'Numéro de téléphone'
+	phone_placeholder: 'Numéro de téléphone',
+	add_title: 'Ajouter un contact',
+	update_title: 'Modifier le contact',
+	first_name: 'Prénom',
+	last_name: 'Nom',
+	prefix: 'Préfixe',
+	middle_name: 'Deuxième prénom',
+	suffix: 'Suffixe',
+	groups: 'Groupes',
+	organization: 'Organisation',
+	street: 'Rue',
+	city: 'Ville',
+	postal_code: 'Code postal',
+	country: 'Pays',
+	notes: 'Notes',
+	create_address_book: 'Créer un carnet d\'adresses',
+	address_book_name_placeholder: 'Entre le nom du carnet d\'adresses',
+	import_url: 'URL',
+	import_username: 'Nom d\'utilisateur',
+	import_secret: 'Mot de passe',
+	import: 'Importer'
 };
 
 const notifications: NotificationRecords = {

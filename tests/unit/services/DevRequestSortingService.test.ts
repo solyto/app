@@ -1,29 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import DevRequestSortingService from '$lib/services/DevRequestSortingService';
 import type { DevRequest } from '$lib/types/dev_request';
+import { devRequest } from '../helpers/factories';
 
 function request(overrides: Partial<DevRequest> = {}): DevRequest {
-	return {
-		id: 1,
-		type: 'feature',
-		status: 'pending',
-		priority: null,
-		title: 'Test request',
-		description: '',
-		screenshot: '',
-		url: '',
-		created_at: '',
-		updated_at: '',
-		upvotes: 0,
-		downvotes: 0,
-		score: 0,
-		user_vote: 'up',
-		comment_count: 0,
-		fixed_in_version: null,
-		created_by_user_id: null,
-		created_by_user: { id: '', name: '' },
-		...overrides
-	};
+	return devRequest({ priority: null, ...overrides });
 }
 
 const service = new DevRequestSortingService();

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
-	import { tick } from 'svelte';
+	import { tick, type Component } from 'svelte';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import IconLayoutDashboard from '$lib/icons/lucide/layout-dashboard.svelte';
@@ -18,6 +18,7 @@
 	import { onDestroy } from 'svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import { urls } from '$lib/config/urls';
+	import { formatDuration, timeTrackingTab, type TimeTrackingTab } from '$lib/helpers/TimeTrackingHelper';
 	import CloseButton from '$lib/components/ui/buttons/CloseButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
@@ -29,11 +30,7 @@
 	const loadingIndicator = getLoadingIndicator();
 	const keyManager = getKeyManager();
 
-	let activeTab = $derived.by(() => {
-		const tab = page.url.searchParams.get('tab');
-		if (tab === 'entries' || tab === 'statistics') return tab;
-		return 'dashboard';
-	});
+	let activeTab = $derived(timeTrackingTab(page.url));
 
 	let {
 		onCreateProject,
@@ -58,8 +55,8 @@
 	let editingCategoryId = $state<number | null>(null);
 	let editingCategoryTitle = $state<string>('');
 	let editingInput = $state<HTMLInputElement | null>(null);
-	let addKeyHandlers = $state<Record<string, string | null>>({ Enter: null, Escape: null });
-	let editKeyHandlers = $state<Record<string, string | null>>({ Enter: null, Escape: null });
+	let addKeyHandlers: Record<string, string | null> = { Enter: null, Escape: null };
+	let editKeyHandlers: Record<string, string | null> = { Enter: null, Escape: null };
 	let categoryColors = $state<Record<number, string>>({});
 
 	function getCategoryHex(id: number, fallback: string | null): string {
@@ -74,25 +71,68 @@
 		open = false;
 	}
 
+	function isActiveTab(tab: TimeTrackingTab): boolean {
+		return !activeProjectId && activeTab === tab;
+	}
+
+	function createProject(): void {
+		onCreateProject();
+		handleNavigation();
+	}
+
+	function editProject(event: MouseEvent, id: string): void {
+		event.preventDefault();
+		event.stopPropagation();
+		onEditProject(id);
+		handleNavigation();
+	}
+
+	function askDeleteProject(event: MouseEvent, id: string): void {
+		event.preventDefault();
+		event.stopPropagation();
+		confirmDeleteProjectId = id;
+	}
+
+	async function deleteProject(id: string): Promise<void> {
+		await tt.deleteProject(id);
+		confirmDeleteProjectId = null;
+	}
+
+	async function deleteCategory(id: number): Promise<void> {
+		await tt.deleteCategory(id);
+		confirmDeleteCategoryId = null;
+	}
+
 	async function addCategory(): Promise<void> {
 		if (!newCategoryTitle.trim()) return;
 		keyManager.unregisterAll(addKeyHandlers);
 		loadingIndicator.start();
-		await tt.createCategory({ title: newCategoryTitle.trim() });
+		try {
+			await tt.createCategory({ title: newCategoryTitle.trim() });
+		} finally {
+			loadingIndicator.stop();
+		}
 		newCategoryTitle = '';
 		addingCategory = false;
-		loadingIndicator.stop();
+	}
+
+	async function openAddCategory(): Promise<void> {
+		startAddCategory();
+		await tick();
+		addCategoryInput?.focus();
 	}
 
 	function startAddCategory(): void {
 		if (addingCategory) return;
 		addingCategory = true;
 		addKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => addCategory(), { priority: 2 });
-		addKeyHandlers.Escape = keyManager.registerKeyDown('Escape', () => {
-			keyManager.unregisterAll(addKeyHandlers);
-			addingCategory = false;
-			newCategoryTitle = '';
-		});
+		addKeyHandlers.Escape = keyManager.registerKeyDown('Escape', cancelAddCategory);
+	}
+
+	function cancelAddCategory(): void {
+		keyManager.unregisterAll(addKeyHandlers);
+		addingCategory = false;
+		newCategoryTitle = '';
 	}
 
 	async function startEditCategory(id: number, title: string): Promise<void> {
@@ -100,7 +140,7 @@
 		editingCategoryId = id;
 		editingCategoryTitle = title;
 		editKeyHandlers.Enter = keyManager.registerKeyDown('Enter', () => saveEditCategory(), { priority: 2 });
-		editKeyHandlers.Escape = keyManager.registerKeyDown('Escape', () => cancelEditCategory());
+		editKeyHandlers.Escape = keyManager.registerKeyDown('Escape', cancelEditCategory);
 		await tick();
 		editingInput?.focus();
 	}
@@ -109,10 +149,13 @@
 		if (editingCategoryId === null || !editingCategoryTitle.trim()) return;
 		keyManager.unregisterAll(editKeyHandlers);
 		loadingIndicator.start();
-		await tt.updateCategory(editingCategoryId, { title: editingCategoryTitle.trim() });
+		try {
+			await tt.updateCategory(editingCategoryId, { title: editingCategoryTitle.trim() });
+		} finally {
+			loadingIndicator.stop();
+		}
 		editingCategoryId = null;
 		editingCategoryTitle = '';
-		loadingIndicator.stop();
 	}
 
 	function cancelEditCategory(): void {
@@ -134,6 +177,19 @@
 	});
 </script>
 
+{#snippet tabLink(href: string, tab: TimeTrackingTab, Icon: Component<{ class?: string }>, label: string)}
+	<a
+		{href}
+		class="-mx-2 flex w-[calc(100%+1rem)] flex-row items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-all hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
+		class:bg-c-neutral-1={isActiveTab(tab)}
+		class:dark:bg-s-dark-3={isActiveTab(tab)}
+		onclick={handleNavigation}
+	>
+		<Icon class="size-4" />
+		{label}
+	</a>
+{/snippet}
+
 {#snippet sidebar()}
 	<div class="flex items-center justify-between border-b border-c-neutral-2 p-4 mb-4 lg:hidden dark:border-s-dark-3">
 		<span class="text-2xl font-bold 2xl:font-normal">
@@ -144,36 +200,9 @@
 
 	<div class="p-4 lg:p-0">
 		<div class="flex flex-col gap-0.5">
-			<a
-				href={resolve(urls.timeTracking)}
-				class="-mx-2 flex w-[calc(100%+1rem)] flex-row items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-all hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
-				class:bg-c-neutral-1={!activeProjectId && activeTab === 'dashboard'}
-				class:dark:bg-s-dark-3={!activeProjectId && activeTab === 'dashboard'}
-				onclick={handleNavigation}
-			>
-				<IconLayoutDashboard class="size-4" />
-				{ts.get.timeTracking.dashboard}
-			</a>
-			<a
-				href="{resolve(urls.timeTracking)}?tab=entries"
-				class="-mx-2 flex w-[calc(100%+1rem)] flex-row items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-all hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
-				class:bg-c-neutral-1={!activeProjectId && activeTab === 'entries'}
-				class:dark:bg-s-dark-3={!activeProjectId && activeTab === 'entries'}
-				onclick={handleNavigation}
-			>
-				<IconList class="size-4" />
-				{ts.get.timeTracking.entries}
-			</a>
-			<a
-				href="{resolve(urls.timeTracking)}?tab=statistics"
-				class="-mx-2 flex w-[calc(100%+1rem)] flex-row items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium transition-all hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
-				class:bg-c-neutral-1={!activeProjectId && activeTab === 'statistics'}
-				class:dark:bg-s-dark-3={!activeProjectId && activeTab === 'statistics'}
-				onclick={handleNavigation}
-			>
-				<IconChartPie class="size-4" />
-				{ts.get.timeTracking.statistics}
-			</a>
+			{@render tabLink(resolve(urls.timeTracking), 'dashboard', IconLayoutDashboard, ts.get.timeTracking.dashboard)}
+			{@render tabLink(`${resolve(urls.timeTracking)}?tab=entries`, 'entries', IconList, ts.get.timeTracking.entries)}
+			{@render tabLink(`${resolve(urls.timeTracking)}?tab=statistics`, 'statistics', IconChartPie, ts.get.timeTracking.statistics)}
 		</div>
 
 		<div class="flex flex-col gap-1">
@@ -184,10 +213,7 @@
 				<AddButton
 					title={ts.get.timeTracking.add_project}
 					colorOnHover
-					onClick={() => {
-						onCreateProject();
-						handleNavigation();
-					}}
+					onClick={createProject}
 				/>
 			</div>
 			{#each tt.projects as project (project.id)}
@@ -199,33 +225,24 @@
 					<a
 						href={resolve(urls.timeTrackingProject, { id: project.id })}
 						class="flex min-w-0 flex-1 flex-col text-left text-sm"
-						onclick={() => handleNavigation()}
+						onclick={handleNavigation}
 					>
 						<span class="truncate font-medium">{project.title}</span>
 						<span class="text-xs text-c-neutral-4 dark:text-c-neutral-5">
-							{tt.formatDuration(project.total_duration ?? 0)}
+							{formatDuration(project.total_duration ?? 0)}
 						</span>
 					</a>
 					<div class="flex flex-row items-center gap-2">
 						<EditButton
 							title={ts.get.timeTracking.edit_project}
-							onClick={(e) => {
-								e.preventDefault();
-								e.stopPropagation();
-								onEditProject(project.id);
-								handleNavigation();
-							}}
+							onClick={(e) => editProject(e, project.id)}
 							inModal={false}
 							buttonStyle="minimal"
 							iconClass="size-4"
 						/>
 						<DeleteButton
 							title={ts.get.timeTracking.deletion_title}
-							onClick={(e) => {
-								e.preventDefault();
-								e.stopPropagation();
-								confirmDeleteProjectId = project.id;
-							}}
+							onClick={(e) => askDeleteProject(e, project.id)}
 							inModal={false}
 							buttonStyle="minimal"
 							iconClass="size-4"
@@ -243,11 +260,7 @@
 				<AddButton
 					title={ts.get.timeTracking.add_category}
 					colorOnHover
-					onClick={async () => {
-						startAddCategory();
-						await tick();
-						addCategoryInput?.focus();
-					}}
+					onClick={openAddCategory}
 				/>
 			</div>
 			{#if addingCategory}
@@ -255,11 +268,7 @@
 					<TextInput
 						bind:input={addCategoryInput}
 						bind:value={newCategoryTitle}
-						onblur={() => {
-							keyManager.unregisterAll(addKeyHandlers);
-							addingCategory = false;
-							newCategoryTitle = '';
-						}}
+						onblur={cancelAddCategory}
 						placeholder={ts.get.timeTracking.title}
 					/>
 					<SaveButton onClick={addCategory} />
@@ -334,10 +343,7 @@
 		title={ts.get.timeTracking.deletion_title}
 		description={ts.get.timeTracking.deletion_description}
 		type="confirm-delete"
-		onConfirm={async () => {
-			await tt.deleteProject(confirmDeleteProjectId!);
-			confirmDeleteProjectId = null;
-		}}
+		onConfirm={() => deleteProject(confirmDeleteProjectId!)}
 		onCancel={() => (confirmDeleteProjectId = null)}
 	/>
 {/if}
@@ -347,10 +353,7 @@
 		title={ts.get.timeTracking.category_deletion_title}
 		description={ts.get.timeTracking.category_deletion_description}
 		type="confirm-delete"
-		onConfirm={async () => {
-			await tt.deleteCategory(confirmDeleteCategoryId!);
-			confirmDeleteCategoryId = null;
-		}}
+		onConfirm={() => deleteCategory(confirmDeleteCategoryId!)}
 		onCancel={() => (confirmDeleteCategoryId = null)}
 	/>
 {/if}

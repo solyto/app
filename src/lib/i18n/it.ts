@@ -306,6 +306,7 @@ const todos: TodoRecords = {
 	no_todos_desc: 'Prova un altro filtro o spazio di lavoro.',
 	no_todos_yet: 'Ancora nessuna attività.',
 	no_todos_yet_desc: 'Aggiungi la prima con il pulsante Nuova attività.',
+	todo_count: '{n} attività',
 	tags: 'Tag',
 	tag: 'Tag',
 	tag_error: 'Il tag non esiste',
@@ -673,7 +674,21 @@ const notes: NoteRecords = {
 	journal_create_error: 'Impossibile creare la voce del diario.',
 	move_note: 'Sposta in cartella',
 	no_folder: 'Nessuna cartella',
-	move_error: 'Impossibile spostare la nota.'
+	move_error: 'Impossibile spostare la nota.',
+	folder_label: 'Cartella %s',
+	insert_image_clipboard_preview: 'Anteprima degli appunti',
+	insert_image_upload_preview: 'Anteprima dell\'immagine caricata',
+	import_title: 'Caricamento file',
+	import_select_file: 'Seleziona file',
+	import_selected_file: 'File selezionato:',
+	import_file_size: '%s KB',
+	import_progress: 'Caricamento: %d%',
+	import_uploading: 'Caricamento...',
+	import_upload: 'Carica file',
+	import_uploaded: 'File caricato correttamente!',
+	import_success: 'Importazione riuscita!',
+	import_no_file: 'Seleziona un file',
+	import_unknown_error: 'Si è verificato un errore sconosciuto'
 };
 
 const libraries: LibraryRecords = {
@@ -1284,7 +1299,27 @@ const contacts: ContactRecords = {
 	save_error: 'Impossibile salvare il contatto.',
 	name_required: 'Nome e cognome sono obbligatori.',
 	email_placeholder: 'Email',
-	phone_placeholder: 'Numero di telefono'
+	phone_placeholder: 'Numero di telefono',
+	add_title: 'Aggiungi contatto',
+	update_title: 'Modifica contatto',
+	first_name: 'Nome',
+	last_name: 'Cognome',
+	prefix: 'Prefisso',
+	middle_name: 'Secondo nome',
+	suffix: 'Suffisso',
+	groups: 'Gruppi',
+	organization: 'Organizzazione',
+	street: 'Via',
+	city: 'Città',
+	postal_code: 'CAP',
+	country: 'Paese',
+	notes: 'Note',
+	create_address_book: 'Crea rubrica',
+	address_book_name_placeholder: 'Inserisci il nome della rubrica',
+	import_url: 'URL',
+	import_username: 'Nome utente',
+	import_secret: 'Password',
+	import: 'Importa'
 };
 
 const dav: DavRecords = {

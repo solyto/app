@@ -301,11 +301,12 @@ const todos: TodoRecords = {
 	all_todos: 'All Todos',
 	new_todo: 'New Todo',
 	title: 'Title',
-	enter_todo: 'Enter Todo',
+	enter_todo: 'Enter todo',
 	no_todos: 'No Todos found.',
 	no_todos_desc: 'Try another filter or workspace.',
 	no_todos_yet: 'No todos yet.',
 	no_todos_yet_desc: 'Add your first one with the New Todo button.',
+	todo_count: '{n} Todos',
 	tags: 'Tags',
 	tag: 'Tag',
 	tag_error: 'Tag does not exist',
@@ -673,7 +674,21 @@ const notes: NoteRecords = {
 	journal_create_error: 'Failed to create the journal entry.',
 	move_note: 'Move to Folder',
 	no_folder: 'No Folder',
-	move_error: 'Failed to move note.'
+	move_error: 'Failed to move note.',
+	folder_label: 'Folder %s',
+	insert_image_clipboard_preview: 'Clipboard preview',
+	insert_image_upload_preview: 'Upload preview',
+	import_title: 'File upload',
+	import_select_file: 'Select file',
+	import_selected_file: 'Selected file:',
+	import_file_size: '%s KB',
+	import_progress: 'Uploading: %d%',
+	import_uploading: 'Uploading...',
+	import_upload: 'Upload file',
+	import_uploaded: 'File uploaded successfully!',
+	import_success: 'Import was successful!',
+	import_no_file: 'Please select a file',
+	import_unknown_error: 'An unknown error occurred'
 };
 
 const libraries: LibraryRecords = {
@@ -1283,7 +1298,27 @@ const contacts: ContactRecords = {
 	save_error: 'Failed to save contact.',
 	name_required: 'First and last name are required.',
 	email_placeholder: 'Email',
-	phone_placeholder: 'Phone number'
+	phone_placeholder: 'Phone number',
+	add_title: 'Add a contact',
+	update_title: 'Update contact',
+	first_name: 'First name',
+	last_name: 'Last name',
+	prefix: 'Prefix',
+	middle_name: 'Middle name',
+	suffix: 'Suffix',
+	groups: 'Groups',
+	organization: 'Organization',
+	street: 'Street',
+	city: 'City',
+	postal_code: 'Postal code',
+	country: 'Country',
+	notes: 'Notes',
+	create_address_book: 'Create address book',
+	address_book_name_placeholder: 'Enter address book name',
+	import_url: 'URL',
+	import_username: 'Username',
+	import_secret: 'Secret',
+	import: 'Import'
 };
 
 const dav: DavRecords = {

@@ -27,9 +27,26 @@
 
 	async function onDelete(): Promise<void> {
 		loadingIndicator.start();
-		await contacts.delete(contact as Contact);
-		loadingIndicator.stop();
+		try {
+			await contacts.delete(contact);
+		} finally {
+			loadingIndicator.stop();
+		}
 		contacts.closeDetailModal();
+	}
+
+	function close(): void {
+		contacts.closeDetailModal();
+	}
+
+	function edit(): void {
+		const activeContact = contact;
+		contacts.closeDetailModal();
+		contacts.openCreateModal(activeContact);
+	}
+
+	function choosePhoto(): void {
+		fileInput?.click();
 	}
 
 	function handleFileSelect(event: Event) {
@@ -42,39 +59,41 @@
 
 	async function onUpload(file: File): Promise<void> {
 		loadingIndicator.start();
-		await contacts.updateContactPhoto(contact as Contact, file);
-		loadingIndicator.stop();
+		try {
+			await contacts.updateContactPhoto(contact, file);
+		} finally {
+			loadingIndicator.stop();
+		}
 	}
 
 	async function onRemove(): Promise<void> {
 		loadingIndicator.start();
-		await contacts.removeContactPhoto(contact as Contact);
-		selectedFileUrl = '';
-		loadingIndicator.stop();
+		try {
+			await contacts.removeContactPhoto(contact);
+			selectedFileUrl = '';
+		} finally {
+			loadingIndicator.stop();
+		}
 	}
 </script>
 
 <ContentModal
 	rounded="2xl"
 	p="4"
-	onClose={() => contacts.closeDetailModal()}
-	onEdit={() => {
-		let activeContact = contact;
-		contacts.closeDetailModal();
-		contacts.openCreateModal(activeContact);
-	}}
-	onDelete={() => onDelete()}
+	onClose={close}
+	onEdit={edit}
+	onDelete={onDelete}
 >
 	<div class="flex h-full w-full items-center gap-8">
 		<div class="group relative">
 			<div
 				class="absolute top-[-15px] right-[-15px] z-40 opacity-0 transition-all group-hover:opacity-100"
 			>
-				<DeleteButton inModal={false} onClick={() => onRemove()} />
+				<DeleteButton inModal={false} onClick={onRemove} />
 			</div>
 			<div
 				class="absolute z-30 flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-transparent opacity-0 backdrop-blur-xs transition-all group-hover:opacity-100 dark:bg-s-dark-2/20"
-				onclick={() => fileInput?.click()}
+				onclick={choosePhoto}
 				role="button"
 				tabindex="0"
 			>

@@ -14,34 +14,7 @@ import type {
 } from '$lib/types/contact';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
-const letters = [
-	'A',
-	'B',
-	'C',
-	'D',
-	'E',
-	'F',
-	'G',
-	'H',
-	'I',
-	'J',
-	'K',
-	'L',
-	'M',
-	'N',
-	'O',
-	'P',
-	'Q',
-	'R',
-	'S',
-	'T',
-	'U',
-	'V',
-	'W',
-	'X',
-	'Y',
-	'Z'
-];
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 export class Contacts {
 	static readonly LS_HIDDEN_KEY = 'address_books_hidden';
@@ -122,7 +95,9 @@ export class Contacts {
 
 	async loadContactPhotos(): Promise<void> {
 		// A failed run is reported to the caller that started it; waiters start their own.
-		while (this.photoRun) await this.photoRun.catch(() => undefined);
+		while (this.photoRun) {
+			await this.photoRun.catch(() => undefined);
+		}
 
 		this.photoRun = this.fetchContactPhotos(
 			// A missing has_photo (older API) means unknown, so it is still requested.
@@ -273,9 +248,7 @@ export class Contacts {
 	}
 
 	async updateContactPhoto(contact: Contact, file: File): Promise<boolean> {
-		if (!file.type.startsWith('image/')) {
-			return Promise.resolve(false);
-		}
+		if (!file.type.startsWith('image/')) return false;
 
 		const formData = new FormData();
 		formData.append('photo', file);
@@ -296,7 +269,7 @@ export class Contacts {
 			};
 			reader.readAsDataURL(file);
 		}
-		return Promise.resolve(res);
+		return res;
 	}
 
 	async removeContactPhoto(contact: Contact): Promise<boolean> {
@@ -308,7 +281,7 @@ export class Contacts {
 			const { [contact.uri]: _, ...rest } = this.contactPhotos;
 			this.contactPhotos = rest;
 		}
-		return Promise.resolve(res);
+		return res;
 	}
 
 	async delete(contact: Contact): Promise<boolean> {

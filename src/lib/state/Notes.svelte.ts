@@ -23,6 +23,7 @@ import { apiRoutes } from '$lib/config/apiRoutes';
 export class NotesSvelte {
 	static readonly LS_COLLAPSED_CATEGORIES_KEY: string = 'notes.collapsedCategories';
 	static readonly SEARCH_RESULT_LIMIT: number = 10;
+	static readonly LAST_UPDATED_LIMIT: number = 10;
 
 	loaded = $state<boolean>(false);
 	notes = $state<Note[]>([]);
@@ -73,6 +74,10 @@ export class NotesSvelte {
 		this.ts = ts;
 		this.notifications = notifications;
 		this.loadCollapsedCategories();
+	}
+
+	get journalEnabled(): boolean {
+		return this.auth.user?.settings?.journal_enabled ?? false;
 	}
 
 	async load(): Promise<void> {
@@ -211,11 +216,8 @@ export class NotesSvelte {
 
 	getLastUpdatedNotes(): Note[] {
 		return this.getVisibleNotes()
-			.sort(
-				(a, b) =>
-					new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-			)
-			.slice(0, 10);
+			.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+			.slice(0, NotesSvelte.LAST_UPDATED_LIMIT);
 	}
 
 	getFavorites(): Note[] {
@@ -266,8 +268,7 @@ export class NotesSvelte {
 
 	async openModal(type: 'note' | 'category', edit: boolean = false): Promise<void> {
 		if (type === 'category' && edit && this.rightClickId) {
-			this.inputValue =
-				this.categories.filter((c) => c.id === this.rightClickId)[0]?.title ?? '';
+			this.inputValue = this.categories.find((c) => c.id === this.rightClickId)?.title ?? '';
 		} else {
 			this.inputValue = '';
 		}
@@ -400,32 +401,9 @@ export class NotesSvelte {
 	async saveContent(): Promise<boolean> {
 		if (this.activeNote === null) return false;
 
-		// A journal draft is persisted only once it has content. Creating takes
-		// two calls because the create contract does not accept content.
 		if (this.isJournalDraft(this.activeNote)) {
 			if (!this.journalService.hasContent(this.activeNote.content)) return true;
-
-			const createRes = await this.apiService.create(apiRoutes.notes.create, {
-				title: this.activeNote.title,
-				category_id: this.activeNote.category_id
-			});
-			if (!createRes) {
-				this.notifications.error(this.ts.get.notes.journal_create_error);
-				return false;
-			}
-
-			const created = createRes.data as Note;
-			const updateRes = await this.apiService.update(apiRoutes.notes.update, created.id, {
-				content: this.activeNote.content
-			});
-			if (!updateRes) {
-				this.notifications.error(this.ts.get.notes.save_error);
-				return false;
-			}
-
-			await this.load();
-			this.activeNote = this.notes.find((n) => n.id === created.id) ?? created;
-			return true;
+			return this.createJournalEntry(this.activeNote);
 		}
 
 		const request: UpdateNoteRequest = { content: this.activeNote.content };
@@ -510,15 +488,11 @@ export class NotesSvelte {
 		return ok;
 	}
 
-	async deleteCategory(): Promise<boolean> {
-		if (this.rightClickType === 'note' || typeof this.rightClickId !== 'number') {
-			return false;
-		}
-
+	async deleteCategory(categoryId: number): Promise<boolean> {
 		const activeId = this.activeNote?.id;
 		const activeWasSaved = this.notes.some((n) => n.id === activeId);
 
-		const ok = await this.apiService.delete(apiRoutes.notes.deleteCategory, this.rightClickId);
+		const ok = await this.apiService.delete(apiRoutes.notes.deleteCategory, categoryId);
 		if (ok) {
 			// The API also deletes every note in the folder and its subfolders.
 			await Promise.all([this.loadCategories(), this.load()]);
@@ -541,6 +515,31 @@ export class NotesSvelte {
 		}
 
 		return false;
+	}
+
+	// The create contract does not accept content, so the entry is created first and then filled.
+	private async createJournalEntry(draft: Note): Promise<boolean> {
+		const createRes = await this.apiService.create(apiRoutes.notes.create, {
+			title: draft.title,
+			category_id: draft.category_id
+		});
+		if (!createRes) {
+			this.notifications.error(this.ts.get.notes.journal_create_error);
+			return false;
+		}
+
+		const created = createRes.data as Note;
+		const updateRes = await this.apiService.update(apiRoutes.notes.update, created.id, {
+			content: draft.content
+		});
+		if (!updateRes) {
+			this.notifications.error(this.ts.get.notes.save_error);
+			return false;
+		}
+
+		await this.load();
+		this.activeNote = this.notes.find((n) => n.id === created.id) ?? created;
+		return true;
 	}
 }
 

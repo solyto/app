@@ -16,16 +16,23 @@
 
 	let { addressBook }: { addressBook: AddressBook } = $props();
 
-	let hex = $state<string>(addressBook.color !== null ? addressBook.color : 'var(--color-c-neutral-2)');
+	let hex = $state<string>(addressBook.color ?? 'var(--color-c-neutral-2)');
 
 	async function onColorChange(): Promise<void> {
 		if (hex === addressBook.color) return;
 		if (hex === null) return;
 
-		loadingIndicator.start();
 		const request: UpdateAddressBookRequest = { color: hex };
-		await contacts.updateAddressBook(addressBook, request);
-		loadingIndicator.stop();
+		loadingIndicator.start();
+		try {
+			await contacts.updateAddressBook(addressBook, request);
+		} finally {
+			loadingIndicator.stop();
+		}
+	}
+
+	function toggleHidden(): void {
+		contacts.toggleAddressBook(addressBook.id);
 	}
 
 	function onDelete(): void {
@@ -56,7 +63,7 @@
 			class:text-c-neutral-3={contacts.isAddressBookHidden(addressBook.id)}
 			title={ts.get.layout.toggle}
 			aria-label={ts.get.layout.toggle}
-			onclick={() => contacts.toggleAddressBook(addressBook.id)}
+			onclick={toggleHidden}
 		>
 			<span class="absolute inset-0 rounded-full bg-c-primary opacity-0 transition-all group-hover:opacity-100 group-focus-visible:opacity-100"></span>
 			{#if contacts.isAddressBookHidden(addressBook.id)}

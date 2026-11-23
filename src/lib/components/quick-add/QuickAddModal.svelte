@@ -31,6 +31,8 @@
 	const keyManager = getKeyManager();
 	const viewPoint = getViewPoint();
 
+	const FOCUS_AFTER_OPEN_MS = 350;
+
 	let keyHandlers: { [key: string]: string | null } = { Escape: null, Enter: null };
 	let contentInput: HTMLInputElement | null = $state(null);
 	let isMobile = $state<boolean | null>(null);
@@ -71,14 +73,14 @@
 		return quickAdd.isUrl ? ALL_TYPES : TEXT_TYPES;
 	}
 
-	onMount(async () => {
+	onMount(() => {
 		isMobile = viewPoint.isMobile;
-		keyHandlers.Escape = keyManager.registerKeyDown('Escape', () => quickAdd.closeModal(), { priority: 0 });
+		keyHandlers.Escape = keyManager.registerKeyDown('Escape', close, { priority: 0 });
 		keyHandlers.Enter = keyManager.registerKeyDown('Enter', handleEnter, { priority: 0 });
 		setTimeout(async () => {
 			await tick();
 			contentInput?.focus();
-		}, 350);
+		}, FOCUS_AFTER_OPEN_MS);
 	});
 
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));
@@ -91,10 +93,31 @@
 	function handleEnter(): void {
 		if (quickAdd.loading) return;
 		if (quickAdd.needsConfirmation && quickAdd.detectedType) {
-			quickAdd.confirm(quickAdd.detectedType);
+			quickAdd.confirmDetected();
 		} else if (!quickAdd.showTypeSelector && !quickAdd.needsConfirmation) {
 			handleSubmit();
 		}
+	}
+
+	function onFormSubmit(event: SubmitEvent): void {
+		event.preventDefault();
+		handleSubmit();
+	}
+
+	function close(): void {
+		quickAdd.closeModal();
+	}
+
+	function backToConfirmation(): void {
+		quickAdd.backToConfirmation();
+	}
+
+	function rejectDetection(): void {
+		quickAdd.rejectDetection();
+	}
+
+	function confirmDetected(): void {
+		quickAdd.confirmDetected();
 	}
 
 	function confidencePercent(): number {
@@ -115,7 +138,7 @@
 		<div class="flex flex-col gap-5">
 			<button
 				class="flex w-fit cursor-pointer items-center gap-1 rounded-md p-1 text-xs text-c-neutral-5 transition-colors hover:text-c-heading dark:hover:text-c-primary"
-				onclick={() => quickAdd.backToConfirmation()}
+				onclick={backToConfirmation}
 			>
 				<IconArrowLeft class="h-3.5 w-3.5" />
 				{ts.get.quick_add.back}
@@ -154,19 +177,19 @@
 				<TextButton
 					title={ts.get.quick_add.choose_different}
 					type="slight"
-					onclick={() => quickAdd.rejectDetection()}
+					onclick={rejectDetection}
 					disabled={quickAdd.loading}
 				/>
 				<TextButton
 					title={ts.get.quick_add.confirm}
-					onclick={() => quickAdd.confirm(quickAdd.detectedType!)}
+					onclick={confirmDetected}
 					disabled={quickAdd.loading}
 				/>
 			</div>
 		</div>
 	{:else}
 		<form
-			onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}
+			onsubmit={onFormSubmit}
 			class="flex gap-3"
 			class:flex-col={isMobile}
 			class:items-center={!isMobile}
@@ -192,13 +215,13 @@
 {/snippet}
 
 {#if isMobile === true}
-	<BottomSheetModal title={ts.get.quick_add.title} onClose={() => quickAdd.closeModal()}>
+	<BottomSheetModal title={ts.get.quick_add.title} onClose={close}>
 		{@render inner()}
 	</BottomSheetModal>
 {:else if isMobile === false}
 	<ContentModal
 		title={ts.get.quick_add.title}
-		onClose={() => quickAdd.closeModal()}
+		onClose={close}
 		rounded="2xl"
 		width="[24rem]"
 		p="6"

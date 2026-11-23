@@ -11,8 +11,13 @@
 	const notes = getNotes();
 	const ts = getTranslation();
 
+	const EXPAND_DELAY_MS = 50;
+	const CLOSE_DELAY_MS = 200;
+
 	let inputExpanded = $state<boolean>(false);
 	let searchInput = $state<HTMLInputElement | null>(null);
+	let expandTimer: ReturnType<typeof setTimeout> | undefined;
+	let closeTimer: ReturnType<typeof setTimeout> | undefined;
 	let keyHandlers: { [key: string]: string | null } = {
 		Escape: null,
 		ArrowUp: null,
@@ -22,9 +27,14 @@
 
 	onMount(() => {
 		searchInput?.focus();
-		setTimeout(() => (inputExpanded = true), 50);
+		expandTimer = setTimeout(() => (inputExpanded = true), EXPAND_DELAY_MS);
 	});
-	onDestroy(() => keyManager.unregisterAll(keyHandlers));
+
+	onDestroy(() => {
+		clearTimeout(expandTimer);
+		clearTimeout(closeTimer);
+		keyManager.unregisterAll(keyHandlers);
+	});
 
 	// Registered on focus, not on mount: if focus never lands, the arrow keys must stay free for the caret.
 	function registerKeys(): void {
@@ -39,7 +49,7 @@
 	function closeSearch(): void {
 		keyManager.unregisterAll(keyHandlers);
 		inputExpanded = false;
-		setTimeout(() => notes.closeSearch(), 200);
+		closeTimer = setTimeout(() => notes.closeSearch(), CLOSE_DELAY_MS);
 	}
 
 	// The search keys win over the editor and title input, so the search must not stay open once focus leaves it.

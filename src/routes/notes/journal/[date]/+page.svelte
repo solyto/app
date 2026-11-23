@@ -21,8 +21,11 @@
 
 	async function openDay(day: Date): Promise<void> {
 		loadingIndicator.start();
-		await notes.openJournalEntry(day);
-		loadingIndicator.stop();
+		try {
+			await notes.openJournalEntry(day);
+		} finally {
+			loadingIndicator.stop();
+		}
 	}
 
 	$effect(() => {

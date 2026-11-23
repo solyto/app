@@ -12,6 +12,7 @@
 	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import DevRequestFilterService from '$lib/services/DevRequestFilterService';
+	import { devRequestStatusLabels } from '$lib/helpers/DevRequestHelper';
 	import type { DevRequest, DevRequestFilter } from '$lib/types/dev_request';
 
 	const ts = getTranslation();
@@ -34,12 +35,9 @@
 
 	function filterOptions(): { label: string; value: DevRequestFilter }[] {
 		const labels: Record<DevRequestFilter, string> = {
+			...devRequestStatusLabels(ts.get.dev.requests),
 			'all': ts.get.dev.requests.filter_all,
-			'backlog': ts.get.dev.requests.status_backlog,
-			'open': ts.get.dev.requests.filter_open,
-			'in-progress': ts.get.dev.requests.status_in_progress,
-			'waiting-for-deployment': ts.get.dev.requests.status_waiting_for_deployment,
-			'waiting-for-user': ts.get.dev.requests.status_waiting_for_user
+			'open': ts.get.dev.requests.filter_open
 		};
 
 		return FILTERS.map((value) => ({
@@ -50,13 +48,24 @@
 
 	function currentEntries(): DevRequest[] {
 		if (filter !== 'all') return filterService.filter(devRequests.entries, filter);
-		return devRequests.entries.filter((e) => e.status !== 'completed' && e.status !== 'cancelled');
+		return filterService.unresolved(devRequests.entries);
+	}
+
+	function openCreate(): void {
+		createOpen = true;
+	}
+
+	function closeCreate(): void {
+		createOpen = false;
 	}
 
 	onMount(async () => {
 		loadingIndicator.start();
-		await devRequests.load();
-		loadingIndicator.stop();
+		try {
+			await devRequests.load();
+		} finally {
+			loadingIndicator.stop();
+		}
 	});
 </script>
 
@@ -69,7 +78,7 @@
 			class="order-1 mt-4 mr-4 ml-auto mb-1 w-48 md:order-2 md:mt-5 md:ml-0 md:mb-0"
 			title={ts.get.dev.requests.new}
 			type="btn"
-			onclick={() => (createOpen = true)}
+			onclick={openCreate}
 		/>
 	</div>
 	{#if isAdmin}
@@ -79,7 +88,7 @@
 	{/if}
 	<div class="flex flex-col gap-4 px-4 md:gap-3">
 		{#each currentEntries() as entry (entry.id)}
-			<DevRequestEntry {entry} active={openedEntry === entry.id} />
+			<DevRequestEntry {entry} {isAdmin} active={openedEntry === entry.id} />
 		{/each}
 	</div>
 	{#if filter === 'all'}
@@ -88,13 +97,13 @@
 			{ts.get.dev.requests.resolved_requests}
 		</h2>
 		<div class="flex flex-col gap-4 px-4 md:gap-3">
-			{#each devRequests.entries.filter((e) => e.status === 'completed' || e.status === 'cancelled') as entry (entry.id)}
-				<DevRequestEntry {entry} />
+			{#each filterService.resolved(devRequests.entries) as entry (entry.id)}
+				<DevRequestEntry {entry} {isAdmin} />
 			{/each}
 		</div>
 	{/if}
 </div>
 
 {#if createOpen}
-	<DevRequestEdit onClose={() => (createOpen = false)} />
+	<DevRequestEdit onClose={closeCreate} />
 {/if}

@@ -58,13 +58,11 @@
 	async function save(): Promise<void> {
 		isOpen = false;
 		loadingIndicator.start();
-		await todos.changeRecurrence(
-			todo,
-			selectedFrequency,
-			selectedInterval,
-			selectedEndsAt || null
-		);
-		loadingIndicator.stop();
+		try {
+			await todos.changeRecurrence(todo, selectedFrequency, selectedInterval, selectedEndsAt || null);
+		} finally {
+			loadingIndicator.stop();
+		}
 	}
 
 	async function remove(): Promise<void> {
@@ -72,8 +70,11 @@
 		selectedInterval = 1;
 		selectedEndsAt = '';
 		loadingIndicator.start();
-		await todos.changeRecurrence(todo, null);
-		loadingIndicator.stop();
+		try {
+			await todos.changeRecurrence(todo, null);
+		} finally {
+			loadingIndicator.stop();
+		}
 		close();
 	}
 

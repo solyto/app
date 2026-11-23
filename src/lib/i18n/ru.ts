@@ -305,6 +305,7 @@ const todos: TodoRecords = {
 	no_todos_desc: 'Попробуйте другой фильтр или рабочую область.',
 	no_todos_yet: 'Задач пока нет.',
 	no_todos_yet_desc: 'Создайте первую задачу с помощью кнопки «Новая задача».',
+	todo_count: 'Задачи: {n}',
 	tags: 'Теги',
 	tag: 'Тег',
 	tag_error: 'Тег не существует',
@@ -672,7 +673,21 @@ const notes: NoteRecords = {
 	journal_create_error: 'Не удалось создать запись в дневнике.',
 	move_note: 'Переместить в папку',
 	no_folder: 'Без папки',
-	move_error: 'Не удалось переместить заметку.'
+	move_error: 'Не удалось переместить заметку.',
+	folder_label: 'Папка %s',
+	insert_image_clipboard_preview: 'Предпросмотр из буфера обмена',
+	insert_image_upload_preview: 'Предпросмотр загруженного изображения',
+	import_title: 'Загрузка файла',
+	import_select_file: 'Выбрать файл',
+	import_selected_file: 'Выбранный файл:',
+	import_file_size: '%s КБ',
+	import_progress: 'Загрузка: %d %',
+	import_uploading: 'Загрузка...',
+	import_upload: 'Загрузить файл',
+	import_uploaded: 'Файл успешно загружен!',
+	import_success: 'Импорт успешно завершён!',
+	import_no_file: 'Выберите файл',
+	import_unknown_error: 'Произошла неизвестная ошибка'
 };
 
 const libraries: LibraryRecords = {
@@ -1335,7 +1350,27 @@ const contacts: ContactRecords = {
 	save_error: 'Не удалось сохранить контакт.',
 	name_required: 'Укажите имя и фамилию.',
 	email_placeholder: 'Электронная почта',
-	phone_placeholder: 'Номер телефона'
+	phone_placeholder: 'Номер телефона',
+	add_title: 'Добавить контакт',
+	update_title: 'Редактировать контакт',
+	first_name: 'Имя',
+	last_name: 'Фамилия',
+	prefix: 'Префикс',
+	middle_name: 'Отчество',
+	suffix: 'Суффикс',
+	groups: 'Группы',
+	organization: 'Организация',
+	street: 'Улица',
+	city: 'Город',
+	postal_code: 'Почтовый индекс',
+	country: 'Страна',
+	notes: 'Заметки',
+	create_address_book: 'Создать адресную книгу',
+	address_book_name_placeholder: 'Введите название адресной книги',
+	import_url: 'URL',
+	import_username: 'Имя пользователя',
+	import_secret: 'Пароль',
+	import: 'Импортировать'
 };
 
 const dav: DavRecords = {

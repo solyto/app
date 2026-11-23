@@ -40,10 +40,13 @@
 		loadingIndicator.start();
 		loading = true;
 
-		const request = form as ImportRequest;
-		const res = await contacts.startImport(request);
-
-		loadingIndicator.stop();
+		const request: ImportRequest = form;
+		let res: boolean;
+		try {
+			res = await contacts.startImport(request);
+		} finally {
+			loadingIndicator.stop();
+		}
 
 		if (!res) {
 			error = true;
@@ -69,9 +72,12 @@
 		loading = true;
 
 		const request: SelectImportAddressBooksRequest = { address_books: selectedAddressBooks };
-		const res = await contacts.selectImportAddressBooks(request);
-
-		loadingIndicator.stop();
+		let res: boolean;
+		try {
+			res = await contacts.selectImportAddressBooks(request);
+		} finally {
+			loadingIndicator.stop();
+		}
 
 		if (res) await loadState(true);
 	}
@@ -101,6 +107,15 @@
 		}, 1000);
 	}
 
+	function creatingAddressBookText(name: string): string {
+		return ts.get.contacts.import_create_address_book.replace('%s', name);
+	}
+
+	function importingContactsText(state: ImportState): string {
+		const count = state.contacts_done > 0 ? state.contacts_count + ' ' : '';
+		return ts.get.contacts.import_contacts_running.replace('%s', state.address_books_current ?? '').replace('%d', count);
+	}
+
 	function onClose(): void {
 		importState = null;
 		error = false;
@@ -121,16 +136,16 @@
 		{/if}
 		{#if importState === null && !loading && !error}
 			<div class="flex flex-col gap-2">
-				<ModalFormRow label="URL">
+				<ModalFormRow label={ts.get.contacts.import_url}>
 					<TextInput bind:value={form.url} />
 				</ModalFormRow>
-				<ModalFormRow label="Username">
+				<ModalFormRow label={ts.get.contacts.import_username}>
 					<TextInput bind:value={form.username} />
 				</ModalFormRow>
-				<ModalFormRow label="Secret">
+				<ModalFormRow label={ts.get.contacts.import_secret}>
 					<PasswordInput bind:value={form.secret} />
 				</ModalFormRow>
-				<TextButton title="Import" onclick={initImport} class="mt-4" />
+				<TextButton title={ts.get.contacts.import} onclick={initImport} class="mt-4" />
 			</div>
 		{:else if importState === null && loading}
 			<p>{ts.get.contacts.import_start}</p>
@@ -141,37 +156,20 @@
 				{#each importState?.address_books as calendar (calendar)}
 					<div class="flex w-full justify-between" in:fade>
 						<span>{calendar}</span>
-						<Checkbox
-							isChecked={false}
-							onchange={() => {
-								selectCalendar(calendar);
-							}}
-						/>
+						<Checkbox isChecked={false} onchange={() => selectCalendar(calendar)} />
 					</div>
 				{/each}
-				<TextButton title="Import" onclick={startImport} class="mt-4" />
+				<TextButton title={ts.get.contacts.import} onclick={startImport} class="mt-4" />
 			</div>
 		{:else if importState?.stage === 'address-books'}
 			{#if importState?.address_books_current}
-				<p>
-					{ts.get.contacts.import_create_address_book.replace(
-						'%s',
-						importState.address_books_current
-					)}
-				</p>
+				<p>{creatingAddressBookText(importState.address_books_current)}</p>
 			{:else}
 				<p>{ts.get.contacts.import_address_books}</p>
 			{/if}
 		{:else if importState?.stage === 'contacts'}
 			<div class="flex flex-col gap-2">
-				<p>
-					{ts.get.contacts.import_contacts_running
-						.replace('%s', importState.address_books_current ?? '')
-						.replace(
-							'%d',
-							importState.contacts_done > 0 ? importState.contacts_count + ' ' : ''
-						)}
-				</p>
+				<p>{importingContactsText(importState)}</p>
 				{#if importState.contacts_count > 0}
 					<div class="mt-2" in:fade>
 						<ProgressBar value={importState.contacts_done / importState.contacts_count} />

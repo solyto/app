@@ -61,9 +61,14 @@ describe('StatisticWidget', () => {
 });
 
 describe('NoTodos', () => {
-	it('renders the no-todos message from the translation context', () => {
-		renderWithContext(NoTodos);
-		expect(screen.getByText(/no todos/i)).toBeInTheDocument();
+	it('invites to add the first todo when there are none at all', () => {
+		renderWithContext(NoTodos, { noTodosYet: true });
+		expect(screen.getByText('No todos yet.')).toBeInTheDocument();
+	});
+
+	it('suggests another filter when todos exist but none match', () => {
+		renderWithContext(NoTodos, { noTodosYet: false });
+		expect(screen.getByText('No Todos found.')).toBeInTheDocument();
 	});
 });
 

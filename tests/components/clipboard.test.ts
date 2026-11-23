@@ -6,6 +6,7 @@ import type { Clipboard } from '$lib/state/Clipboard.svelte';
 import type { LoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 import type { UiNotifications } from '$lib/state/UiNotifications.svelte';
 import { en } from '$lib/i18n/en';
+import { rejectionsDuring } from './helpers/rejections';
 import { renderWithContext } from './helpers/context';
 import ClipboardHarness from './helpers/ClipboardHarness.svelte';
 import { clipboardEntry } from '../unit/helpers/factories';
@@ -33,20 +34,6 @@ function renderClipboard(component: Component<never>, setup: (clipboard: Clipboa
 		}
 	);
 	return rendered;
-}
-
-// A failed request still reaches the app's global error handler; here it surfaces as an unhandled rejection.
-async function rejectionsDuring(action: () => Promise<void>): Promise<unknown[]> {
-	const rejections: unknown[] = [];
-	const collect = (reason: unknown) => rejections.push(reason);
-	process.on('unhandledRejection', collect);
-	try {
-		await action();
-		await new Promise((resolve) => setTimeout(resolve, 0));
-	} finally {
-		process.off('unhandledRejection', collect);
-	}
-	return rejections;
 }
 
 function messages(notifications: UiNotifications): string[] {

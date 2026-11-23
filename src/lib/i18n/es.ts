@@ -306,6 +306,7 @@ const todos: TodoRecords = {
 	no_todos_desc: 'Prueba otro filtro o espacio de trabajo.',
 	no_todos_yet: 'Aún no hay tareas.',
 	no_todos_yet_desc: 'Añade la primera con el botón «Nueva tarea».',
+	todo_count: '{n} tareas',
 	tags: 'Etiquetas',
 	tag: 'Etiqueta',
 	tag_error: 'La etiqueta no existe',
@@ -673,7 +674,21 @@ const notes: NoteRecords = {
 	journal_create_error: 'No se pudo crear la entrada del diario.',
 	move_note: 'Mover a carpeta',
 	no_folder: 'Sin carpeta',
-	move_error: 'No se pudo mover la nota.'
+	move_error: 'No se pudo mover la nota.',
+	folder_label: 'Carpeta %s',
+	insert_image_clipboard_preview: 'Vista previa del portapapeles',
+	insert_image_upload_preview: 'Vista previa de la imagen subida',
+	import_title: 'Subida de archivo',
+	import_select_file: 'Seleccionar archivo',
+	import_selected_file: 'Archivo seleccionado:',
+	import_file_size: '%s KB',
+	import_progress: 'Subiendo: %d %',
+	import_uploading: 'Subiendo...',
+	import_upload: 'Subir archivo',
+	import_uploaded: '¡Archivo subido correctamente!',
+	import_success: '¡Importación completada!',
+	import_no_file: 'Selecciona un archivo',
+	import_unknown_error: 'Se produjo un error desconocido'
 };
 
 const libraries: LibraryRecords = {
@@ -1284,7 +1299,27 @@ const contacts: ContactRecords = {
 	save_error: 'No se pudo guardar el contacto.',
 	name_required: 'El nombre y el apellido son obligatorios.',
 	email_placeholder: 'Correo electrónico',
-	phone_placeholder: 'Número de teléfono'
+	phone_placeholder: 'Número de teléfono',
+	add_title: 'Añadir contacto',
+	update_title: 'Editar contacto',
+	first_name: 'Nombre',
+	last_name: 'Apellido',
+	prefix: 'Prefijo',
+	middle_name: 'Segundo nombre',
+	suffix: 'Sufijo',
+	groups: 'Grupos',
+	organization: 'Organización',
+	street: 'Calle',
+	city: 'Ciudad',
+	postal_code: 'Código postal',
+	country: 'País',
+	notes: 'Notas',
+	create_address_book: 'Crear libreta de direcciones',
+	address_book_name_placeholder: 'Introduce el nombre de la libreta',
+	import_url: 'URL',
+	import_username: 'Nombre de usuario',
+	import_secret: 'Contraseña',
+	import: 'Importar'
 };
 
 const notifications: NotificationRecords = {

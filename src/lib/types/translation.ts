@@ -274,6 +274,7 @@ export interface TodoRecords {
 	no_todos_desc: string;
 	no_todos_yet: string;
 	no_todos_yet_desc: string;
+	todo_count: string;
 	tags: string;
 	tag: string;
 	tag_error: string;
@@ -552,6 +553,20 @@ export interface NoteRecords {
 	move_note: string;
 	no_folder: string;
 	move_error: string;
+	folder_label: string;
+	insert_image_clipboard_preview: string;
+	insert_image_upload_preview: string;
+	import_title: string;
+	import_select_file: string;
+	import_selected_file: string;
+	import_file_size: string;
+	import_progress: string;
+	import_uploading: string;
+	import_upload: string;
+	import_uploaded: string;
+	import_success: string;
+	import_no_file: string;
+	import_unknown_error: string;
 }
 
 export interface LibraryRecords {
@@ -1175,6 +1190,26 @@ export interface ContactRecords {
 	name_required: string;
 	email_placeholder: string;
 	phone_placeholder: string;
+	add_title: string;
+	update_title: string;
+	first_name: string;
+	last_name: string;
+	prefix: string;
+	middle_name: string;
+	suffix: string;
+	groups: string;
+	organization: string;
+	street: string;
+	city: string;
+	postal_code: string;
+	country: string;
+	notes: string;
+	create_address_book: string;
+	address_book_name_placeholder: string;
+	import_url: string;
+	import_username: string;
+	import_secret: string;
+	import: string;
 }
 
 export interface DavRecords {
