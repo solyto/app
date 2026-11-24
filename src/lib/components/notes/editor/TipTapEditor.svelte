@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Editor } from '@tiptap/core';
+	import { Editor, getMarkRange } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import Placeholder from '@tiptap/extension-placeholder';
 	import Typography from '@tiptap/extension-typography';
@@ -12,20 +12,30 @@
 	import BubbleMenu from '@tiptap/extension-bubble-menu';
 	import { marked } from 'marked';
 	import { onDestroy, onMount } from 'svelte';
-	import { getNotes } from '$lib/state/Notes.svelte';
+	import { getNotes, NotesSvelte } from '$lib/state/Notes.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import EditorToolbar from './EditorToolbar.svelte';
 	import TableBubbleMenu from './TableBubbleMenu.svelte';
+	import LinkBubbleMenu, { type ActiveLink } from './LinkBubbleMenu.svelte';
+	import NoteLinkSuggestionList from './NoteLinkSuggestionList.svelte';
+	import { createNoteLinkSuggestion, type NoteLinkSuggestionProps } from './NoteLinkSuggestion';
+	import { NotePicker } from '$lib/helpers/NotePicker.svelte';
 	import type { ActiveStates } from './EditorToolbar.svelte';
+	import type { Note } from '$lib/types/note';
 
 	const notes = getNotes();
 	const viewPoint = getViewPoint();
+	const linkPicker = new NotePicker((term) => notes.searchLinkableNotes(term, NotesSvelte.LINK_SUGGESTION_LIMIT));
+	const SUGGESTION_KEYS = ['ArrowUp', 'ArrowDown', 'Enter'];
 
 	let { autofocus = false }: { autofocus?: boolean } = $props();
 
 	let editorDiv = $state<HTMLDivElement | null>(null);
 	let tableBubbleRoot = $state<HTMLDivElement | null>(null);
+	let linkBubbleRoot = $state<HTMLDivElement | null>(null);
+	let activeLink = $state<ActiveLink | null>(null);
 	let editor = $state<Editor | null>(null);
+	let linkSuggestion = $state.raw<NoteLinkSuggestionProps | null>(null);
 	let activeStates = $state<ActiveStates>({
 		bold: false,
 		italic: false,
@@ -61,6 +71,45 @@
 			blockquote: editor.isActive('blockquote'),
 			link: editor.isActive('link')
 		};
+		activeLink = readActiveLink(editor);
+	}
+
+	function readActiveLink(e: Editor): ActiveLink | null {
+		if (!e.isActive('link')) return null;
+
+		const range = getMarkRange(e.state.selection.$from, e.schema.marks.link);
+		const text = range ? e.state.doc.textBetween(range.from, range.to) : '';
+		return { href: e.getAttributes('link').href ?? '', text };
+	}
+
+	function linkMenuIconSize(): number {
+		return viewPoint.isMobile ? 18 : 14;
+	}
+
+	function linkMenuButtonClass(): string {
+		return viewPoint.isMobile ? '!h-9 !w-9' : '';
+	}
+
+	function openLinkSuggestion(props: NoteLinkSuggestionProps): void {
+		linkSuggestion = props;
+		linkPicker.search(props.query);
+	}
+
+	function closeLinkSuggestion(): void {
+		linkSuggestion = null;
+	}
+
+	function isLinkSuggestionVisible(): boolean {
+		return linkSuggestion !== null && (linkPicker.term !== '' || linkPicker.results.length > 0);
+	}
+
+	// The list's KeyManager handlers do the work; returning true only stops the editor from also moving the caret or splitting the line.
+	function handleLinkSuggestionKey(event: KeyboardEvent): boolean {
+		return isLinkSuggestionVisible() && linkPicker.results.length > 0 && SUGGESTION_KEYS.includes(event.key);
+	}
+
+	function pickLinkSuggestion(note: Note): void {
+		linkSuggestion?.command(note);
 	}
 
 	function handlePaste(event: ClipboardEvent) {
@@ -84,7 +133,7 @@
 	}
 
 	onMount(async () => {
-		if (!editorDiv || !tableBubbleRoot) return;
+		if (!editorDiv || !tableBubbleRoot || !linkBubbleRoot) return;
 
 		const raw = notes.activeNote?.content ?? '';
 		const content = raw.trimStart().startsWith('<') ? raw : await marked(raw);
@@ -104,6 +153,17 @@
 				BubbleMenu.configure({
 					element: tableBubbleRoot,
 					shouldShow: ({ editor: e }) => e.isActive('table')
+				}),
+				BubbleMenu.extend({ name: 'linkBubbleMenu' }).configure({
+					pluginKey: 'linkBubbleMenu',
+					element: linkBubbleRoot,
+					shouldShow: ({ editor: e }) => e.isActive('link') && !e.isActive('table')
+				}),
+				createNoteLinkSuggestion({
+					hrefForNote: (note) => notes.linkService.hrefForNote(note),
+					onOpen: openLinkSuggestion,
+					onClose: closeLinkSuggestion,
+					onKeyDown: handleLinkSuggestionKey
 				})
 			],
 			content,
@@ -133,6 +193,17 @@
 </script>
 
 <TableBubbleMenu {editor} bind:root={tableBubbleRoot} />
+<LinkBubbleMenu
+	{editor}
+	link={activeLink}
+	iconSize={linkMenuIconSize()}
+	buttonClass={linkMenuButtonClass()}
+	bind:root={linkBubbleRoot}
+/>
+
+{#if linkSuggestion && isLinkSuggestionVisible()}
+	<NoteLinkSuggestionList picker={linkPicker} mount={linkSuggestion.mount} onpick={pickLinkSuggestion} />
+{/if}
 
 <div class="flex flex-1 flex-col overflow-y-auto" style:padding-bottom={keyboardPadding()}>
 	{#if editor}
@@ -345,6 +416,11 @@
 
 	:global(html:is(.dark, .theme-dark) .tiptap-editor hr) {
 		border-top-color: var(--color-s-dark-3, #2f3741);
+	}
+
+	:global(.tiptap-editor a[href^="/notes/"]) {
+		text-decoration-style: dotted;
+		text-underline-offset: 3px;
 	}
 
 	:global(html:is(.dark, .theme-dark) .tiptap-editor a) {

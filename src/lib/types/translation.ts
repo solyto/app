@@ -557,6 +557,11 @@ export interface NoteRecords {
 	insert_link: string;
 	insert_link_url: string;
 	insert_link_name: string;
+	link_to_note: string;
+	linked_from: string;
+	link_open: string;
+	link_edit: string;
+	link_remove: string;
 	delete_confirm_label: string;
 	delete_confirm_message: string;
 	delete_success: string;

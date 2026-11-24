@@ -117,6 +117,7 @@ export const apiRoutes = {
 		create: API_URL + '/notes',
 		update: API_URL + '/notes/%s',
 		delete: API_URL + '/notes/%s',
+		backlinks: API_URL + '/notes/%s/backlinks',
 		newest: API_URL + '/notes/newest',
 		recent: API_URL + '/notes/recent',
 		import: API_URL + '/notes/import',

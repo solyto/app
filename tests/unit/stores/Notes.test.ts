@@ -374,6 +374,106 @@ describe('Notes store', () => {
 		});
 	});
 
+	describe('note links', () => {
+		it('searchLinkableNotes leaves out hidden, journal and the current note and matches titles only', async () => {
+			mockLists({
+				notes: [
+					note({ id: '1', title: 'Milk prices' }),
+					note({ id: '2', title: 'Shopping', content: '<p>milk</p>' }),
+					note({ id: '3', title: 'Milk journal', category_id: 9 }),
+					note({ id: '4', title: 'Milk draft' })
+				],
+				hiddenNotes: [note({ id: '5', title: 'Milk secret', category_id: 7 })]
+			});
+			const n = new NotesSvelte();
+			n.journalCategory = noteCategory(9, { title: 'Journal', is_system: true });
+			await n.load();
+			n.selectNote('4');
+
+			expect(n.searchLinkableNotes('milk', 10).map((x) => x.id)).toEqual(['1']);
+		});
+
+		it('searchLinkableNotes caps the results at the given limit', () => {
+			const n = new NotesSvelte();
+			n.notes = Array.from({ length: 12 }, (_, i) => note({ id: `${i}` }));
+
+			expect(n.searchLinkableNotes('', NotesSvelte.LINK_SUGGESTION_LIMIT)).toHaveLength(8);
+		});
+
+		it('findNote returns the note by id, or null', () => {
+			const n = new NotesSvelte();
+			n.notes = [note({ id: '1' })];
+
+			expect(n.findNote('1')?.id).toBe('1');
+			expect(n.findNote('2')).toBeNull();
+		});
+
+		it('openNote selects the note and navigates to it', async () => {
+			const n = new NotesSvelte();
+			n.notes = [note({ id: '1' }), note({ id: '2' })];
+
+			await n.openNote('2');
+
+			expect(n.activeNote?.id).toBe('2');
+			expect(navigation.goto).toHaveBeenCalledWith('/notes/2');
+		});
+
+		it('openNote on a deleted note leaves no active note, so the page shows "not found"', async () => {
+			const n = new NotesSvelte();
+			n.notes = [note({ id: '1' })];
+
+			await n.openNote('gone');
+
+			expect(n.activeNote).toBeNull();
+			expect(navigation.goto).toHaveBeenCalledWith('/notes/gone');
+		});
+
+		it('loadBacklinks fetches the backlinks of the given note', async () => {
+			const backlinks = [{ id: 'a', title: 'Alpha' }];
+			api.list.mockResolvedValue({ data: backlinks });
+			const n = new NotesSvelte();
+
+			await n.loadBacklinks('1');
+
+			expect(api.list).toHaveBeenCalledWith(expect.stringMatching(/\/notes\/1\/backlinks$/));
+			expect(n.backlinks).toEqual(backlinks);
+		});
+
+		it('loadBacklinks clears the previous list while the request is pending', () => {
+			api.list.mockReturnValue(new Promise(() => {}));
+			const n = new NotesSvelte();
+			n.backlinks = [{ id: 'old', title: 'Old' }];
+
+			void n.loadBacklinks('1');
+
+			expect(n.backlinks).toEqual([]);
+		});
+
+		it('loadBacklinks leaves the list empty when the request fails (403 / 404)', async () => {
+			api.list.mockResolvedValue(null);
+			const n = new NotesSvelte();
+			n.backlinks = [{ id: 'old', title: 'Old' }];
+
+			await n.loadBacklinks('gone');
+
+			expect(n.backlinks).toEqual([]);
+		});
+
+		it('loadBacklinks ignores a response for a note that is no longer requested', async () => {
+			const responses: ((value: unknown) => void)[] = [];
+			api.list.mockImplementation(() => new Promise((r) => responses.push(r)));
+			const n = new NotesSvelte();
+
+			const first = n.loadBacklinks('1');
+			const second = n.loadBacklinks('2');
+			responses[1]({ data: [{ id: 'b', title: 'Beta' }] });
+			responses[0]({ data: [{ id: 'a', title: 'Alpha' }] });
+			await Promise.all([first, second]);
+
+			expect(n.backlinks).toEqual([{ id: 'b', title: 'Beta' }]);
+		});
+	});
+
 	describe('openCreateNoteModal', () => {
 		it('sets the create parent and opens the note modal', async () => {
 			const n = new NotesSvelte();

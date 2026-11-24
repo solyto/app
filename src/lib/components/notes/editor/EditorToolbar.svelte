@@ -2,6 +2,7 @@
 	import type { Editor } from '@tiptap/core';
 	import InsertImageModal from './InsertImageModal.svelte';
 	import InsertLinkModal from './InsertLinkModal.svelte';
+	import NoteLinkModal from './NoteLinkModal.svelte';
 	import ToolbarDivider from '$lib/components/notes/editor/ToolbarDivider.svelte';
 	import { fly } from 'svelte/transition';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
@@ -24,6 +25,9 @@
 	import Undo from '$lib/icons/lucide/undo.svelte';
 	import Redo from '$lib/icons/lucide/redo.svelte';
 	import PenLine from '$lib/icons/lucide/pen-line.svelte';
+	import FileSymlink from '$lib/icons/lucide/file-symlink.svelte';
+	import { getNotes } from '$lib/state/Notes.svelte';
+	import type { Note } from '$lib/types/note';
 
 	export type ActiveStates = {
 		bold: boolean
@@ -43,20 +47,25 @@
 	let { editor, activeStates }: { editor: Editor; activeStates: ActiveStates } = $props();
 
 	const ts = getTranslation();
-
+	const notes = getNotes();
 
 	let imageModalOpen = $state(false);
 	let linkModalOpen = $state(false);
+	let noteLinkModalOpen = $state(false);
 	let linkInitialName = $state('');
 	let open = $state(false);
 
-	function openLinkModal() {
+	function selectedText(): string {
 		const { from, to } = editor.state.selection;
-		linkInitialName = from !== to ? editor.state.doc.textBetween(from, to) : '';
+		return from !== to ? editor.state.doc.textBetween(from, to) : '';
+	}
+
+	function openLinkModal() {
+		linkInitialName = selectedText();
 		linkModalOpen = true;
 	}
 
-	function confirmInsertLink(url: string, name: string) {
+	function insertLink(url: string, name: string) {
 		editor
 			.chain()
 			.focus()
@@ -66,7 +75,16 @@
 				marks: [{ type: 'link', attrs: { href: url } }]
 			})
 			.run();
+	}
+
+	function confirmInsertLink(url: string, name: string) {
+		insertLink(url, name);
 		linkModalOpen = false;
+	}
+
+	function insertNoteLink(note: Note) {
+		insertLink(notes.linkService.hrefForNote(note), selectedText() || note.title);
+		noteLinkModalOpen = false;
 	}
 
 	function insertTable() {
@@ -204,6 +222,9 @@
 	>
 		<Link2 size={15} />
 	</button>
+	<button onclick={() => (noteLinkModalOpen = true)} class="toolbar-btn cursor-pointer" title={ts.get.notes.link_to_note}>
+		<FileSymlink size={15} />
+	</button>
 	<button onclick={insertTable} class="toolbar-btn cursor-pointer" title={ts.get.notes.editor_insert_table}>
 		<TableIcon size={15} />
 	</button>
@@ -238,6 +259,10 @@
 
 {#if imageModalOpen}
 	<InsertImageModal onConfirm={confirmInsertImage} onCancel={() => (imageModalOpen = false)} />
+{/if}
+
+{#if noteLinkModalOpen}
+	<NoteLinkModal onpick={insertNoteLink} onCancel={() => (noteLinkModalOpen = false)} />
 {/if}
 
 {#if linkModalOpen}

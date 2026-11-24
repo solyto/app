@@ -2,6 +2,7 @@ import type {
 	CreateNoteCategoryRequest,
 	CreateNoteRequest,
 	Note,
+	NoteBacklink,
 	NoteCategory,
 	UpdateNoteCategoryRequest,
 	UpdateNoteRequest
@@ -17,6 +18,7 @@ import { resolve } from '$app/paths';
 import ApiService from '$lib/services/ApiService';
 import JournalService from '$lib/services/JournalService';
 import NoteSearchService from '$lib/services/NoteSearchService';
+import NoteLinkService from '$lib/services/NoteLinkService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 
@@ -24,9 +26,13 @@ export class NotesSvelte {
 	static readonly LS_COLLAPSED_CATEGORIES_KEY: string = 'notes.collapsedCategories';
 	static readonly SEARCH_RESULT_LIMIT: number = 10;
 	static readonly LAST_UPDATED_LIMIT: number = 10;
+	static readonly LINK_PICKER_LIMIT: number = 10;
+	static readonly LINK_SUGGESTION_LIMIT: number = 8;
 
 	loaded = $state<boolean>(false);
 	notes = $state<Note[]>([]);
+	hiddenNoteIds = $state<string[]>([]);
+	backlinks = $state<NoteBacklink[]>([]);
 	lastUpdatedNotes = $state<Note[]>([]);
 	recentNotes = $state<Note[]>([]);
 	recentNotesLoaded = $state<boolean>(false);
@@ -60,6 +66,8 @@ export class NotesSvelte {
 	localStorage: LocalStorageService;
 	journalService = new JournalService();
 	searchService = new NoteSearchService();
+	linkService = new NoteLinkService();
+	private backlinksNoteId: string | null = null;
 
 	constructor(
 		auth: Auth = getAuth(),
@@ -88,6 +96,7 @@ export class NotesSvelte {
 		if (res && hiddenRes) {
 			this.loaded = true;
 			this.notes = [...(res.data as Note[]), ...(hiddenRes.data as Note[])];
+			this.hiddenNoteIds = (hiddenRes.data as Note[]).map((n) => n.id);
 			this.lastUpdatedNotes = this.getLastUpdatedNotes();
 			this.favoriteNotes = this.getFavorites();
 			this.checkUrlForActiveNote();
@@ -116,6 +125,17 @@ export class NotesSvelte {
 		if (page.params.id) {
 			this.selectNote(page.params.id);
 		}
+	}
+
+	async loadBacklinks(noteId: string): Promise<void> {
+		this.backlinks = [];
+		this.backlinksNoteId = noteId;
+
+		const res = await this.apiService.list(apiRoutes.notes.backlinks.replace('%s', noteId));
+		// A slower response for a note the user already left must not overwrite the current list.
+		if (!res || this.backlinksNoteId !== noteId) return;
+
+		this.backlinks = res.data as NoteBacklink[];
 	}
 
 	async loadCategories(): Promise<void> {
@@ -199,6 +219,18 @@ export class NotesSvelte {
 		return this.notes.filter((n) => !this.isJournalNote(n));
 	}
 
+	searchLinkableNotes(term: string, limit: number): Note[] {
+		const linkable = this.getVisibleNotes().filter((n) => {
+			return n.id !== this.activeNote?.id && !this.hiddenNoteIds.includes(n.id);
+		});
+
+		return this.linkService.searchByTitle(linkable, term, limit);
+	}
+
+	findNote(noteId: string): Note | null {
+		return this.notes.find((n) => n.id === noteId) ?? null;
+	}
+
 	getCategoryTitle(categoryId: number): string {
 		return this.findCategory(this.categories, categoryId)?.title ?? '-';
 	}
@@ -256,6 +288,11 @@ export class NotesSvelte {
 	moveSearchSelection(delta: number): void {
 		const last = Math.max(this.searchResults.length - 1, 0);
 		this.searchIndex = Math.min(Math.max(this.searchIndex + delta, 0), last);
+	}
+
+	async openNote(noteId: string): Promise<void> {
+		this.selectNote(noteId);
+		await goto(resolve(urls.note, { id: noteId }));
 	}
 
 	async openSearchResult(note: Note | undefined = this.searchResults[this.searchIndex]): Promise<void> {

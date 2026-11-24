@@ -7,6 +7,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { Note } from '$lib/types/note';
 	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
+	import NoteResultRow from '$lib/components/notes/NoteResultRow.svelte';
 
 	const keyManager = getKeyManager();
 	const notes = getNotes();
@@ -61,10 +62,6 @@
 		closeSearch();
 	}
 
-	function keepInputFocus(event: MouseEvent): void {
-		event.preventDefault();
-	}
-
 	function handleEscape(event: KeyboardEvent): void {
 		closeSearch();
 	}
@@ -83,6 +80,10 @@
 
 	function openNote(note: Note): void {
 		notes.openSearchResult(note);
+	}
+
+	function categoryOf(note: Note): string | null {
+		return note.category_id === null ? null : notes.getCategoryTitle(note.category_id);
 	}
 
 	function hasTerm(): boolean {
@@ -121,20 +122,7 @@
 		{#if hasTerm() && inputExpanded}
 			<ul class="pointer-events-auto flex max-h-96 w-0 min-w-full flex-col overflow-y-auto rounded-b-xl border-1 border-t-0 border-c-neutral-2 bg-c-neutral/60 p-1 backdrop-blur-sm dark:bg-s-dark/80">
 				{#each notes.searchResults as note, index (note.id)}
-					<li>
-						<button
-							class="flex w-full cursor-pointer items-baseline justify-between gap-4 rounded-lg px-3 py-2 text-left hover:bg-c-neutral-1 dark:hover:bg-s-dark-3"
-							class:bg-c-neutral-1={index === notes.searchIndex}
-							class:dark:bg-s-dark-3={index === notes.searchIndex}
-							onmousedown={keepInputFocus}
-							onclick={() => openNote(note)}
-						>
-							<span class="truncate">{note.title}</span>
-							{#if note.category_id !== null}
-								<span class="shrink-0 text-sm text-c-neutral-5 dark:text-c-neutral-4">{notes.getCategoryTitle(note.category_id)}</span>
-							{/if}
-						</button>
-					</li>
+					<NoteResultRow {note} category={categoryOf(note)} active={index === notes.searchIndex} onpick={openNote} />
 				{:else}
 					<li class="px-3 py-2 text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.notes.no_search_results}</li>
 				{/each}
