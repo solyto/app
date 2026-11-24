@@ -1068,6 +1068,17 @@ export interface CalendarRecords {
 	recurrence_monthly_weekday: string;
 	recurrence_yearly: string;
 	recurrence_on_the: string;
+	recurrence_every: string;
+	// Optional "every" per unit, for languages where it agrees with the unit (fr). Falls back to `recurrence_every`.
+	recurrence_every_by_unit?: Partial<Record<'day' | 'week' | 'month' | 'year', string>>;
+	recurrence_unit_day_singular: string;
+	recurrence_unit_day_plural: string;
+	recurrence_unit_week_singular: string;
+	recurrence_unit_week_plural: string;
+	recurrence_unit_month_singular: string;
+	recurrence_unit_month_plural: string;
+	recurrence_unit_year_singular: string;
+	recurrence_unit_year_plural: string;
 	recurrence_ends: string;
 	recurrence_ends_never: string;
 	recurrence_ends_on_date: string;

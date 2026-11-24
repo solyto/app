@@ -10,6 +10,7 @@ const saturday31st = new Date(2026, 9, 31);
 function selection(overrides: Partial<RecurrenceSelection> = {}): RecurrenceSelection {
 	return {
 		type: 'daily',
+		interval: 1,
 		weekdays: [],
 		monthlyOrdinal: 2,
 		monthlyWeekday: 'WE',
@@ -94,6 +95,7 @@ describe('RecurrenceRuleService', () => {
 				service.parse('FREQ=DAILY;UNTIL=20271231T000000Z;INTERVAL=2', wednesday10th, 'UTC')
 			).toEqual(
 				selection({
+					interval: 2,
 					end: 'until',
 					until: '2027-12-31',
 					preserved: ['UNTIL=20271231T000000Z', 'INTERVAL=2']
@@ -147,11 +149,105 @@ describe('RecurrenceRuleService', () => {
 			);
 		});
 
-		it('keeps preserved fields when the type changes', () => {
+		it('keeps the interval when the type changes', () => {
 			const parsed = service.parse('FREQ=WEEKLY;BYDAY=MO;INTERVAL=2', wednesday10th, 'UTC')!;
+			const daily = { ...parsed, type: 'daily' as const };
+			expect(daily.interval).toBe(2);
+			expect(service.build(daily, wednesday10th, timed())).toBe('FREQ=DAILY;INTERVAL=2');
+		});
+
+		it('keeps other preserved fields when the type changes', () => {
+			const parsed = service.parse('FREQ=WEEKLY;BYDAY=MO;WKST=SU', wednesday10th, 'UTC')!;
 			expect(service.build({ ...parsed, type: 'daily' }, wednesday10th, timed())).toBe(
-				'FREQ=DAILY;INTERVAL=2'
+				'FREQ=DAILY;WKST=SU'
 			);
+		});
+	});
+
+	describe('interval', () => {
+		it.each([
+			['FREQ=DAILY;INTERVAL=12', selection({ interval: 12 })],
+			['FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,TH', selection({ type: 'weekly', interval: 2, weekdays: ['MO', 'TH'] })],
+			['FREQ=MONTHLY;INTERVAL=3;BYMONTHDAY=10', selection({ type: 'monthly_date', interval: 3 })],
+			['FREQ=MONTHLY;INTERVAL=2;BYDAY=TH;BYSETPOS=3', selection({ type: 'monthly_weekday', interval: 2, monthlyOrdinal: 3, monthlyWeekday: 'TH' })],
+			['FREQ=YEARLY;INTERVAL=2;BYMONTH=6;BYMONTHDAY=10', selection({ type: 'yearly', interval: 2 })]
+		])('reads %s', (rule, expected) => {
+			expect(service.parse(rule, wednesday10th, 'UTC')).toEqual(expected);
+		});
+
+		it.each([
+			[selection({ interval: 12 }), 'FREQ=DAILY;INTERVAL=12'],
+			[selection({ type: 'weekly', interval: 2, weekdays: ['TH', 'MO'] }), 'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,TH'],
+			[selection({ type: 'monthly_date', interval: 3 }), 'FREQ=MONTHLY;INTERVAL=3;BYMONTHDAY=10'],
+			[selection({ type: 'monthly_weekday', interval: 2, monthlyOrdinal: 3, monthlyWeekday: 'TH' }), 'FREQ=MONTHLY;INTERVAL=2;BYDAY=TH;BYSETPOS=3'],
+			[selection({ type: 'yearly', interval: 2 }), 'FREQ=YEARLY;INTERVAL=2;BYMONTH=6;BYMONTHDAY=10']
+		])('writes a new interval right after FREQ: %j', (value, rule) => {
+			expect(service.build(value, wednesday10th, timed())).toBe(rule);
+		});
+
+		it.each([
+			'FREQ=DAILY;INTERVAL=12',
+			'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,TH',
+			'FREQ=MONTHLY;INTERVAL=3;BYMONTHDAY=10',
+			'FREQ=MONTHLY;INTERVAL=2;BYDAY=TH;BYSETPOS=3',
+			'FREQ=YEARLY;INTERVAL=2;BYMONTH=6;BYMONTHDAY=10',
+			'FREQ=WEEKLY;BYDAY=MO;WKST=SU;INTERVAL=2',
+			'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO;WKST=SU;COUNT=4',
+			'FREQ=DAILY;UNTIL=20271231T000000Z;INTERVAL=12'
+		])('keeps %s unchanged', (rule) => {
+			expect(roundTrip(rule)).toBe(rule);
+		});
+
+		it('leaves out an interval of 1', () => {
+			expect(service.build(selection({ type: 'weekly', interval: 1 }), wednesday10th, timed())).toBe(
+				'FREQ=WEEKLY;BYDAY=WE'
+			);
+		});
+
+		it.each([
+			['FREQ=DAILY;INTERVAL=1', 'FREQ=DAILY'],
+			['FREQ=WEEKLY;BYDAY=MO;INTERVAL=1;WKST=SU', 'FREQ=WEEKLY;BYDAY=MO;WKST=SU']
+		])('drops the redundant INTERVAL=1 from %s', (rule, expected) => {
+			expect(roundTrip(rule)).toBe(expected);
+		});
+
+		it('changes an interval right after FREQ in place', () => {
+			const parsed = service.parse('FREQ=WEEKLY;INTERVAL=2;BYDAY=MO;WKST=SU', wednesday10th, 'UTC')!;
+			expect(service.build({ ...parsed, interval: 3 }, wednesday10th, timed())).toBe(
+				'FREQ=WEEKLY;INTERVAL=3;BYDAY=MO;WKST=SU'
+			);
+		});
+
+		it('writes a changed interval in place', () => {
+			const parsed = service.parse('FREQ=DAILY;WKST=SU;INTERVAL=2;COUNT=5', wednesday10th, 'UTC')!;
+			expect(service.build({ ...parsed, interval: 7 }, wednesday10th, timed())).toBe(
+				'FREQ=DAILY;WKST=SU;INTERVAL=7;COUNT=5'
+			);
+		});
+
+		it('removes the interval when it is changed to 1', () => {
+			const parsed = service.parse('FREQ=DAILY;INTERVAL=2;UNTIL=20271231T000000Z', wednesday10th, 'UTC')!;
+			expect(service.build({ ...parsed, interval: 1 }, wednesday10th, timed())).toBe(
+				'FREQ=DAILY;UNTIL=20271231T000000Z'
+			);
+		});
+
+		it('inserts a new interval after FREQ and keeps the end and other fields in order', () => {
+			const parsed = service.parse('FREQ=WEEKLY;BYDAY=MO;UNTIL=20271231T000000Z;WKST=SU', wednesday10th, 'UTC')!;
+			expect(service.build({ ...parsed, interval: 2 }, wednesday10th, timed())).toBe(
+				'FREQ=WEEKLY;INTERVAL=2;BYDAY=MO;UNTIL=20271231T000000Z;WKST=SU'
+			);
+		});
+
+		it.each([
+			'FREQ=DAILY;INTERVAL=0',
+			'FREQ=DAILY;INTERVAL=-1',
+			'FREQ=DAILY;INTERVAL=abc',
+			'FREQ=DAILY;INTERVAL=1.5',
+			'FREQ=DAILY;INTERVAL=',
+			'FREQ=DAILY;INTERVAL=2;INTERVAL=3'
+		])('returns null for %s, which the form cannot show', (rule) => {
+			expect(service.parse(rule, wednesday10th, 'UTC')).toBeNull();
 		});
 	});
 
@@ -309,6 +405,32 @@ describe('RecurrenceRuleService', () => {
 
 		it('is one year after the start for yearly rules', () => {
 			expect(service.defaultUntil(selection({ type: 'yearly' }), wednesday10th)).toBe('2027-06-10');
+		});
+
+		it.each([
+			[selection({ interval: 12 }), '2026-07-10'],
+			[selection({ interval: 45 }), '2026-07-25'],
+			[selection({ type: 'weekly', interval: 2 }), '2026-07-10'],
+			[selection({ type: 'weekly', interval: 6 }), '2026-07-22'],
+			[selection({ type: 'monthly_date', interval: 3 }), '2026-09-10'],
+			[selection({ type: 'monthly_weekday', interval: 2 }), '2026-08-10'],
+			[selection({ type: 'yearly', interval: 2 }), '2028-06-10']
+		])('leaves room for at least one repeat: %j', (value, expected) => {
+			expect(service.defaultUntil(value, wednesday10th)).toBe(expected);
+		});
+	});
+
+	describe('intervalWithinBounds', () => {
+		it.each([
+			[12, 12],
+			[0, 1],
+			[-3, 1],
+			[1000, 999],
+			[2.6, 3],
+			[null, 5],
+			[NaN, 5]
+		])('turns %j into %j with 5 as the last valid value', (interval, expected) => {
+			expect(service.intervalWithinBounds(interval, 5)).toBe(expected);
 		});
 	});
 

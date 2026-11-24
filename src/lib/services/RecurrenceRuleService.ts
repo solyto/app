@@ -10,8 +10,21 @@ export type MonthlyOrdinal = 1 | 2 | 3 | 4;
 
 export type RecurrenceEnd = 'never' | 'until' | 'count';
 
+export type IntervalUnit = 'day' | 'week' | 'month' | 'year';
+
+export const INTERVAL_UNITS: Record<RecurrenceType, IntervalUnit> = {
+	daily: 'day',
+	weekly: 'week',
+	monthly_date: 'month',
+	monthly_weekday: 'month',
+	yearly: 'year'
+};
+
+export const MAX_INTERVAL = 999;
+
 export interface RecurrenceSelection {
 	type: RecurrenceType;
+	interval: number;
 	weekdays: Weekday[];
 	monthlyOrdinal: MonthlyOrdinal;
 	monthlyWeekday: Weekday;
@@ -34,6 +47,7 @@ interface RuleFields {
 	bySetPos: string | null;
 	byMonthDay: string | null;
 	byMonth: string | null;
+	interval: string | null;
 	until: string | null;
 	count: string | null;
 	preserved: string[];
@@ -41,10 +55,13 @@ interface RuleFields {
 
 const MODELLED_KEYS = ['FREQ', 'BYDAY', 'BYSETPOS', 'BYMONTHDAY', 'BYMONTH'];
 
-// UNTIL and COUNT stay in `preserved` so an untouched end is written back verbatim and in place.
+// INTERVAL (unless right after FREQ), UNTIL and COUNT stay in `preserved` so they are written back in place.
+const INTERVAL_KEY = 'INTERVAL';
 const END_KEYS = ['UNTIL', 'COUNT'];
 
-const READ_KEYS = [...MODELLED_KEYS, ...END_KEYS];
+const READ_KEYS = [...MODELLED_KEYS, INTERVAL_KEY, ...END_KEYS];
+
+const POSITIVE_INTEGER = /^[1-9]\d*$/;
 
 const UNTIL_DATE_LENGTH = 'YYYYMMDD'.length;
 
@@ -68,7 +85,12 @@ export default class RecurrenceRuleService {
 			return null;
 		}
 
+		if (fields.interval !== null && !POSITIVE_INTEGER.test(fields.interval)) {
+			return null;
+		}
+
 		Object.assign(selection, end);
+		selection.interval = Number(fields.interval ?? 1);
 		selection.preserved = fields.preserved;
 
 		switch (fields.freq) {
@@ -86,22 +108,42 @@ export default class RecurrenceRuleService {
 	}
 
 	build(selection: RecurrenceSelection, startDate: Date, endFormat: EndFormat): string {
-		return [
-			...this.modelledParts(selection, startDate),
-			...this.preservedParts(selection, endFormat)
-		].join(';');
+		const [freq, ...byParts] = this.modelledParts(selection, startDate);
+		const intervalPart = this.intervalPart(selection);
+		const hadInterval = selection.preserved.some((part) => this.isIntervalPart(part));
+		const insertedInterval = intervalPart !== null && !hadInterval ? [intervalPart] : [];
+
+		return [freq, ...insertedInterval, ...byParts, ...this.preservedParts(selection, intervalPart, endFormat)].join(';');
 	}
 
 	defaultUntil(selection: RecurrenceSelection, startDate: Date): string {
 		const until = new Date(startDate);
 
-		if (selection.type === 'yearly') {
-			until.setFullYear(until.getFullYear() + 1);
-		} else {
-			until.setMonth(until.getMonth() + 1);
+		switch (selection.type) {
+			case 'yearly':
+				until.setFullYear(until.getFullYear() + selection.interval);
+				break;
+			case 'monthly_date':
+			case 'monthly_weekday':
+				until.setMonth(until.getMonth() + selection.interval);
+				break;
+			case 'daily':
+			case 'weekly': {
+				until.setMonth(until.getMonth() + 1);
+				const nextRepeat = new Date(startDate);
+				nextRepeat.setDate(nextRepeat.getDate() + selection.interval * (selection.type === 'weekly' ? 7 : 1));
+
+				return getUrlFormat(nextRepeat > until ? nextRepeat : until);
+			}
 		}
 
 		return getUrlFormat(until);
+	}
+
+	intervalWithinBounds(interval: number | null, fallback: number): number {
+		const value = interval === null || Number.isNaN(interval) ? fallback : Math.round(interval);
+
+		return Math.min(Math.max(value, 1), MAX_INTERVAL);
 	}
 
 	untilNotBeforeStart(until: string, startDate: Date): string {
@@ -121,6 +163,7 @@ export default class RecurrenceRuleService {
 	private defaults(startDate: Date): RecurrenceSelection {
 		return {
 			type: 'daily',
+			interval: 1,
 			weekdays: [],
 			monthlyOrdinal: Math.min(Math.ceil(startDate.getDate() / 7), 4) as MonthlyOrdinal,
 			monthlyWeekday: this.weekdayOf(startDate),
@@ -134,6 +177,7 @@ export default class RecurrenceRuleService {
 	private readFields(rule: string): RuleFields | null {
 		const values = new Map<string, string>();
 		const preserved: string[] = [];
+		let previousKey = '';
 
 		for (const part of rule.split(';')) {
 			const separator = part.indexOf('=');
@@ -143,8 +187,11 @@ export default class RecurrenceRuleService {
 			}
 
 			const key = part.slice(0, separator);
+			// build() writes an INTERVAL right after FREQ anyway; one anywhere else is kept in place.
+			const followsFreq = key === INTERVAL_KEY && previousKey === 'FREQ';
+			previousKey = key;
 
-			if (!MODELLED_KEYS.includes(key)) {
+			if (!MODELLED_KEYS.includes(key) && !followsFreq) {
 				preserved.push(part);
 			}
 
@@ -171,6 +218,7 @@ export default class RecurrenceRuleService {
 			bySetPos: values.get('BYSETPOS') ?? null,
 			byMonthDay: values.get('BYMONTHDAY') ?? null,
 			byMonth: values.get('BYMONTH') ?? null,
+			interval: values.get(INTERVAL_KEY) ?? null,
 			until: values.get('UNTIL') ?? null,
 			count: values.get('COUNT') ?? null,
 			preserved
@@ -186,7 +234,7 @@ export default class RecurrenceRuleService {
 		}
 
 		if (fields.count !== null) {
-			return /^[1-9]\d*$/.test(fields.count)
+			return POSITIVE_INTEGER.test(fields.count)
 				? { end: 'count', until: '', count: Number(fields.count) }
 				: null;
 		}
@@ -329,18 +377,33 @@ export default class RecurrenceRuleService {
 		}
 	}
 
-	private preservedParts(selection: RecurrenceSelection, endFormat: EndFormat): string[] {
-		const parts = selection.preserved.filter((part) => !this.isEndPart(part));
+	private preservedParts(
+		selection: RecurrenceSelection,
+		intervalPart: string | null,
+		endFormat: EndFormat
+	): string[] {
 		const endPart = this.endPart(selection, endFormat);
+		const parts = selection.preserved.flatMap((part) => {
+			if (this.isIntervalPart(part)) {
+				return intervalPart === null ? [] : [intervalPart];
+			}
 
-		if (endPart === null) {
-			return parts;
+			if (this.isEndPart(part)) {
+				return endPart === null ? [] : [endPart];
+			}
+
+			return [part];
+		});
+
+		if (endPart !== null && !selection.preserved.some((part) => this.isEndPart(part))) {
+			parts.push(endPart);
 		}
 
-		const position = selection.preserved.findIndex((part) => this.isEndPart(part));
-		parts.splice(position === -1 ? parts.length : position, 0, endPart);
-
 		return parts;
+	}
+
+	private intervalPart(selection: RecurrenceSelection): string | null {
+		return selection.interval > 1 ? INTERVAL_KEY + '=' + selection.interval : null;
 	}
 
 	private endPart(selection: RecurrenceSelection, endFormat: EndFormat): string | null {
@@ -390,6 +453,10 @@ export default class RecurrenceRuleService {
 		const parsed = parseUrlFormat(value);
 
 		return parsed !== null && getUrlFormat(parsed) === value;
+	}
+
+	private isIntervalPart(part: string): boolean {
+		return part.startsWith(INTERVAL_KEY + '=');
 	}
 
 	private isEndPart(part: string): boolean {
