@@ -270,6 +270,29 @@ describe('Calendar event editor', () => {
 		expect(calendars.createEvent).toHaveBeenCalled();
 	});
 
+	it('opens an event of a read-only calendar without save and delete', () => {
+		renderCalendar(EventEdit as Component<never>, { timeZone: 'UTC' }, (c) => {
+			c.calendars = [calendar({ id: 2, is_shared: true, is_read_only: true })];
+			c.activeEvent = calendarEvent({ calendar_id: 2 });
+		});
+
+		expect(screen.getByText(en.calendar.event_read_only)).toBeInTheDocument();
+		expect(screen.queryByRole('button', { name: en.layout.save })).not.toBeInTheDocument();
+		expect(screen.queryByRole('button', { name: en.calendar.delete_entry })).not.toBeInTheDocument();
+	});
+
+	it('creates new events in a writable calendar by default', async () => {
+		const calendars = renderCalendar(EventEdit as Component<never>, { timeZone: 'UTC' }, (c) => {
+			c.calendars = [calendar({ id: 2, is_read_only: true }), calendar({ id: 3, name: 'Mine' })];
+			c.activeEvent = null;
+		});
+		vi.spyOn(calendars, 'createEvent').mockResolvedValue('ok');
+
+		await fireEvent.click(screen.getByRole('button', { name: en.layout.save }));
+
+		expect(calendars.createEvent).toHaveBeenCalledWith(expect.objectContaining({ calendar_id: 3 }));
+	});
+
 	it('updates a single event without asking', async () => {
 		const single = calendarEvent();
 		const calendars = renderEditor(single);

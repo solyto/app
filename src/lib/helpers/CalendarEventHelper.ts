@@ -69,6 +69,8 @@ export function eventWriteErrorMessage(result: EventWriteResult, calendar: Calen
 			return calendar.event_unreadable;
 		case 'server_unavailable':
 			return calendar.event_server_unavailable;
+		case 'read_only':
+			return calendar.event_read_only;
 		default:
 			return fallback;
 	}

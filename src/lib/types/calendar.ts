@@ -8,6 +8,7 @@ export interface Calendar {
 	timezone: string;
 	order: number;
 	is_shared: boolean;
+	is_read_only: boolean;
 	share_owner: string | null;
 	invite_status: 'pending' | 'accepted' | null;
 	share_token: string | null;
@@ -156,12 +157,6 @@ export interface NewEventPreset {
 	allDay?: boolean;
 }
 
-export interface ImportForm {
-	url: string;
-	username: string;
-	secret: string;
-}
-
 export interface ImportRequest {
 	url: string;
 	username: string;
@@ -172,14 +167,22 @@ export interface SelectImportCalendarsRequest {
 	calendars: string[];
 }
 
+export type ImportSource = 'caldav' | 'file';
+
+export type ImportStage = 'started' | 'select' | 'calendars' | 'events' | 'finished' | 'failed';
+
+export type ImportFileTarget = { type: 'new'; name: string; color: string | null } | { type: 'existing'; calendarId: number };
+
 export interface ImportState {
-	stage: 'started' | 'select' | 'calendars' | 'events' | 'finished';
+	stage: ImportStage;
+	source: ImportSource;
 	calendars: string[];
 	calendars_count: number;
 	calendars_done: number;
 	calendars_current: string | null;
 	events_count: number;
 	events_done: number;
+	events_skipped: number;
 }
 
 export interface ExternalCalendarAccount {
@@ -238,4 +241,4 @@ export type ExternalAccountDialog =
 	| { step: 'calendars'; account: ExternalCalendarAccount }
 	| { step: 'credentials'; account: ExternalCalendarAccount; returnToCalendars?: boolean };
 
-export type EventWriteResult = 'ok' | 'changed_on_server' | 'unreadable' | 'server_unavailable' | 'failed';
+export type EventWriteResult = 'ok' | 'changed_on_server' | 'unreadable' | 'server_unavailable' | 'read_only' | 'failed';

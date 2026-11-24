@@ -54,10 +54,11 @@
 		end_hours: 13,
 		end_minutes: 0
 	};
+	const readOnly = calendars.activeEvent !== null && calendars.isEventReadOnly(calendars.activeEvent);
 	const initialForm: EventForm = {
 		calendar_id: calendars.activeEvent && calendars.activeEvent.calendar_id ?
 			Number(calendars.activeEvent.calendar_id) :
-			(calendars.calendars[0]?.id ?? 0),
+			(calendars.writableCalendars()[0]?.id ?? 0),
 		title: calendars.activeEvent ? calendars.activeEvent.title : '',
 		description: calendars.activeEvent ? calendars.activeEvent.description : '',
 		location: calendars.activeEvent ? calendars.activeEvent.location : '',
@@ -240,7 +241,7 @@
 	title={calendars.activeEvent ? ts.get.calendar.edit_entry : ts.get.calendar.create_entry}
 >
 	<div class="flex w-full flex-col items-center gap-2 lg:min-w-80">
-		<ChooseCalendar bind:calendar={form.calendar_id} availableCalendars={calendars.calendars} />
+		<ChooseCalendar bind:calendar={form.calendar_id} availableCalendars={readOnly ? calendars.calendars : calendars.writableCalendars()} />
 		<TextInput
 			bind:input={titleInput}
 			bind:value={form.title}
@@ -286,16 +287,20 @@
 			<EventAttachments eventId={calendars.activeEvent.id} />
 		{/if}
 
-		<div
-			class="mt-8 flex w-full flex-row items-center"
-			class:justify-between={calendars.activeEvent}
-			class:justify-end={!calendars.activeEvent}
-		>
-			{#if calendars.activeEvent}
-				<TextButton title={ts.get.calendar.delete_entry} onclick={onDelete} type="danger" />
-			{/if}
-			<TextButton title={ts.get.layout.save} onclick={onsubmit} />
-		</div>
+		{#if readOnly}
+			<p class="mt-8 text-sm text-c-neutral-5">{ts.get.calendar.event_read_only}</p>
+		{:else}
+			<div
+				class="mt-8 flex w-full flex-row items-center"
+				class:justify-between={calendars.activeEvent}
+				class:justify-end={!calendars.activeEvent}
+			>
+				{#if calendars.activeEvent}
+					<TextButton title={ts.get.calendar.delete_entry} onclick={onDelete} type="danger" />
+				{/if}
+				<TextButton title={ts.get.layout.save} onclick={onsubmit} />
+			</div>
+		{/if}
 	</div>
 </SlidingSideBar>
 

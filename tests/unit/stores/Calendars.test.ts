@@ -965,6 +965,30 @@ describe('Calendars store', () => {
 		});
 	});
 
+	describe('read-only calendars', () => {
+		it('offers only writable calendars', () => {
+			const c = new Calendars();
+			c.calendars = [calendar({ id: 1 }), calendar({ id: 2, is_shared: true, is_read_only: true }), calendar({ id: 3, is_shared: true })];
+
+			expect(c.writableCalendars().map((x) => x.id)).toEqual([1, 3]);
+		});
+
+		it('marks events of a read-only calendar as read-only', () => {
+			const c = new Calendars();
+			c.calendars = [calendar({ id: 1 }), calendar({ id: 2, is_read_only: true })];
+
+			expect(c.isEventReadOnly(event({ calendar_id: 2 }))).toBe(true);
+			expect(c.isEventReadOnly(event({ calendar_id: 1 }))).toBe(false);
+		});
+
+		it('reports a forbidden write as read-only', async () => {
+			api.deleteWithStatus.mockResolvedValue({ ok: false, status: 403, errors: [] });
+			const c = new Calendars();
+
+			await expect(c.deleteOccurrence(event(), new Date())).resolves.toBe('read_only');
+		});
+	});
+
 	describe('external calendars', () => {
 		function inAugust(): Calendars {
 			const c = new Calendars();

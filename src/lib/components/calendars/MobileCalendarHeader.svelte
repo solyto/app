@@ -143,7 +143,7 @@
 				</div>
 				<div class="flex flex-col items-center gap-2">
 					<ImportButton
-						onClick={() => (calendarImport.importModal = true)}
+						onClick={() => calendarImport.open()}
 						title={ts.get.calendar.import_calendars}
 					/>
 					<span class="text-xs text-c-neutral-4">{ts.get.calendar.import_calendars}</span>

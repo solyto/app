@@ -176,7 +176,7 @@
 	}
 
 	const draggableEvent = createDraggableEvent(drag, {
-		enabled: (item) => dragEnabled && isDraggableOnDate(item, date),
+		enabled: (item) => dragEnabled && isDraggableOnDate(item, date) && !calendars.isEventReadOnly(item),
 		sourceDateSlug: () => dateSlug,
 		computeTarget,
 		onDrop: commitMove

@@ -366,6 +366,7 @@ export const apiRoutes = {
 		deleteOccurrence: API_URL + '/calendars/%d/events/%s/occurrence/%s',
 		startImport: API_URL + '/calendars/import',
 		selectImportCalendars: API_URL + '/calendars/import/select',
+		startFileImport: API_URL + '/calendars/import/file',
 		getImportState: API_URL + '/calendars/import/state',
 		listSharees: API_URL + '/calendars/%d/share',
 		shareCalendar: API_URL + '/calendars/%d/share',

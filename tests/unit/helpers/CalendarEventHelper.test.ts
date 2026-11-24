@@ -87,6 +87,7 @@ describe('eventWriteErrorMessage', () => {
 		expect(eventWriteErrorMessage('changed_on_server', en.calendar, 'fallback')).toBe(en.calendar.event_changed_on_server);
 		expect(eventWriteErrorMessage('unreadable', en.calendar, 'fallback')).toBe(en.calendar.event_unreadable);
 		expect(eventWriteErrorMessage('server_unavailable', en.calendar, 'fallback')).toBe(en.calendar.event_server_unavailable);
+		expect(eventWriteErrorMessage('read_only', en.calendar, 'fallback')).toBe(en.calendar.event_read_only);
 	});
 
 	it('falls back to the given message for any other failure', () => {

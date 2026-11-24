@@ -167,6 +167,14 @@ export class Calendars {
 		return this.calendars.filter((calendar) => this.isCalendarCredentialsRejected(calendar.id));
 	}
 
+	writableCalendars(): Calendar[] {
+		return this.calendars.filter((calendar) => !calendar.is_read_only);
+	}
+
+	isEventReadOnly(event: CalendarEvent): boolean {
+		return this.calendars.some((calendar) => Number(calendar.id) === Number(event.calendar_id) && calendar.is_read_only);
+	}
+
 	calendarStatus(calendar: Calendar): CalendarStatus | null {
 		if (this.isCalendarCredentialsRejected(calendar.id)) return 'credentials_rejected';
 		if (this.isCalendarUnavailable(calendar.id)) return 'unavailable';

@@ -3,7 +3,7 @@ import type { DevRequest } from '$lib/types/dev_request';
 import type { Tag } from '$lib/types/tag';
 import type { CheckInTracker, CheckInValue } from '$lib/types/check_in';
 import type { Goal } from '$lib/types/goal';
-import type { Calendar, CalendarEvent, CalendarEventResponse } from '$lib/types/calendar';
+import type { Calendar, CalendarEvent, CalendarEventResponse, ImportState } from '$lib/types/calendar';
 import type { FeedImportEntry, FeedImportState, FeedItem, FeedSubscription } from '$lib/types/feed';
 import type { ClipboardEntry } from '$lib/types/clipboard';
 import type { Book, BookGenre } from '$lib/types/library_book';
@@ -120,12 +120,28 @@ export function calendar(overrides: Partial<Calendar> = {}): Calendar {
 		timezone: 'UTC',
 		order: 0,
 		is_shared: false,
+		is_read_only: false,
 		share_owner: null,
 		invite_status: null,
 		share_token: null,
 		is_external: false,
 		is_unavailable: false,
 		is_credentials_rejected: false,
+		...overrides
+	};
+}
+
+export function calendarImportState(overrides: Partial<ImportState> = {}): ImportState {
+	return {
+		stage: 'events',
+		source: 'file',
+		calendars: [],
+		calendars_count: 1,
+		calendars_done: 1,
+		calendars_current: 'Holidays',
+		events_count: 10,
+		events_done: 0,
+		events_skipped: 0,
 		...overrides
 	};
 }

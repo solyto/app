@@ -48,7 +48,7 @@
 	}
 
 	function openImport(): void {
-		calendarImport.importModal = true;
+		calendarImport.open();
 	}
 
 	function openSync(): void {

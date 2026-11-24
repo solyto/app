@@ -1119,6 +1119,18 @@ export interface CalendarRecords {
 	import_calendars: string;
 	import_calendars_running: string;
 	import_events: string;
+	import_source_caldav: string;
+	import_source_file: string;
+	import_target_new: string;
+	import_target_existing: string;
+	import_submit: string;
+	import_imported: string;
+	import_skipped: string;
+	import_error_invalid_file: string;
+	import_error_calendar_not_found: string;
+	import_error_calendar_forbidden: string;
+	import_error_running: string;
+	import_error_rate_limited: string;
 	recurring_event: string;
 	recurring_edit_question: string;
 	recurring_delete_question: string;
@@ -1156,6 +1168,7 @@ export interface CalendarRecords {
 	event_changed_on_server: string;
 	event_unreadable: string;
 	event_server_unavailable: string;
+	event_read_only: string;
 	external_calendar: string;
 	external_unavailable: string;
 	external_unavailable_notice: string;
