@@ -130,9 +130,8 @@ export class WidgetBridge {
 		const { type, needsToken, key, id } = message as Record<string, unknown>;
 
 		if (type === 'status' && typeof needsToken === 'boolean') return { type, needsToken };
-		if (type === 'navigate' && typeof key === 'string' && (id === undefined || typeof id === 'string')) {
-			return { type, key, id };
-		}
+		const isNavigation = type === 'navigate' && typeof key === 'string' && (id === undefined || typeof id === 'string');
+		if (isNavigation) return { type, key, id };
 
 		return null;
 	}

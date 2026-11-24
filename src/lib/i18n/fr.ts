@@ -59,7 +59,12 @@ const layout: LayoutRecords = {
 	rate_limited_minutes_plural: 'Trop de tentatives. Réessaie dans {n} minutes.',
 	previous_page: 'Page précédente',
 	next_page: 'Page suivante',
-	page_of: 'Page {n} sur {total}'
+	page_of: 'Page {n} sur {total}',
+	name: 'Nom',
+	loading: 'Chargement...',
+	minimize: 'Réduire',
+	maximize: 'Agrandir',
+	close: 'Fermer'
 };
 
 const nav: NavigationRecords = {
@@ -293,7 +298,18 @@ const settings: SettingsRecords = {
 	ai_plugin_api_key_required: 'Une clé API est nécessaire pour enregistrer les paramètres IA.',
 	ai_plugin_saved: 'Paramètres IA enregistrés.',
 	ai_plugin_save_error: "Les paramètres IA n'ont pas pu être enregistrés.",
-	ai_plugin_load_error: "Les paramètres IA n'ont pas pu être chargés."
+	ai_plugin_load_error: "Les paramètres IA n'ont pas pu être chargés.",
+	notifications_description: 'Choisis les notifications que tu veux recevoir et par quels canaux.',
+	push_notifications_hint: 'Active les notifications push ci-dessus pour les recevoir.',
+	export_select_at_least_one: 'Sélectionne au moins une fonctionnalité.',
+	version: 'Version',
+	update_check: 'Rechercher des mises à jour',
+	update_install: 'Installer et redémarrer',
+	update_up_to_date: 'Tu as la dernière version.',
+	update_available: 'Mise à jour %s disponible — téléchargement…',
+	update_downloading: 'Téléchargement… %s%',
+	update_ready: 'Mise à jour prête à être installée.',
+	update_check_failed: 'Impossible de rechercher des mises à jour. Vérifie ta connexion.'
 };
 
 const todos: TodoRecords = {
@@ -1398,7 +1414,8 @@ const clipboard: ClipboardRecords = {
 	attach_image: 'Joindre une image',
 	attach_file: 'Joindre un fichier',
 	image_preview_alt: 'Aperçu',
-	image_alt: 'Image du presse-papiers'
+	image_alt: 'Image du presse-papiers',
+	download_fallback_name: 'fichier'
 };
 
 const dav: DavRecords = {
@@ -1774,7 +1791,7 @@ const update_required: UpdateRequiredRecords = {
 	reload: 'Charger la dernière version',
 	required_version: 'Version requise : %s',
 	your_version: 'Ta version : %s',
-	server_outdated: "Ton serveur utilise la version %server, mais cette application est en %app. Certaines fonctions peuvent ne pas marcher tant que le serveur n'est pas mis à jour."
+	server_outdated: "Ton serveur utilise la version {server}, mais cette application est en {app}. Certaines fonctions peuvent ne pas marcher tant que le serveur n'est pas mis à jour."
 };
 
 export const fr: LanguageFile = {

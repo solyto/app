@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/svelte';
 import ApiService from '$lib/services/ApiService';
 import TrackerEditor from '$lib/components/check-in/settings/TrackerEditor.svelte';
@@ -8,10 +8,6 @@ import type { CheckInTracker } from '$lib/types/check_in';
 import { renderWithContext } from './helpers/context';
 import CheckInContextHarness from './helpers/CheckInContextHarness.svelte';
 import { checkInTracker } from '../unit/helpers/factories';
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 describe('Tracker editor', () => {
 	it('creates the tracker once when "Add tracker" is clicked twice quickly', async () => {

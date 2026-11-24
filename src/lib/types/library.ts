@@ -28,6 +28,7 @@ export type Library =
 export type GenreLibrary = MusicLibrary | BookLibrary | GameLibrary | MovieLibrary;
 export type RatingLibrary = GenreLibrary | RecipeLibrary;
 export type FilterLibrary = RatingLibrary | PlantLibrary;
+export type ViewLibrary = MusicLibrary | BookLibrary | GameLibrary | MovieLibrary | RecipeLibrary | PlantLibrary;
 export type LibraryEntry = Music | Book | Quote | Recipe | Movie | Game | Plant;
 export interface DetailLibrary {
 	openDetailModal(entry: LibraryEntry): void;

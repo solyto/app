@@ -4,6 +4,7 @@
 	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
 	import IconTrash from '$lib/icons/lucide/trash.svelte';
 	import IconPen from '$lib/icons/lucide/pen.svelte';
+	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getFinances } from '$lib/state/Finances.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -25,13 +26,13 @@
 		onOpenHistory(wealth);
 	}
 
-	function openHistory(event: MouseEvent): void {
-		event.stopPropagation();
+	function openHistory(event?: MouseEvent): void {
+		event?.stopPropagation();
 		onOpenHistory(wealth);
 	}
 
-	function askDelete(event: MouseEvent): void {
-		event.stopPropagation();
+	function askDelete(event?: MouseEvent): void {
+		event?.stopPropagation();
 		confirmingDelete = true;
 	}
 
@@ -72,12 +73,12 @@
 		<div class="text-lg">{wealth.title}</div>
 		<div class="flex items-center gap-4">
 			<div class="hidden items-center gap-2 transition-all md:flex md:opacity-0 md:group-hover:opacity-100">
-				<button class="cursor-pointer" aria-label={editLabel()} onclick={openHistory}>
-					<IconPen class="size-5 text-c-neutral-3 transition-all hover:text-c-action" />
-				</button>
-				<button class="cursor-pointer" aria-label={deleteLabel()} onclick={askDelete}>
-					<IconTrash class="size-5 text-c-neutral-3 transition-all hover:text-c-danger" />
-				</button>
+				<GhostIconButton label={editLabel()} onclick={openHistory} color="text-c-neutral-3" class="-my-1">
+					<IconPen class="size-5" />
+				</GhostIconButton>
+				<GhostIconButton label={deleteLabel()} onclick={askDelete} color="text-c-neutral-3" class="-my-1">
+					<IconTrash class="size-5" />
+				</GhostIconButton>
 			</div>
 			<div class="text-lg tabular-nums">
 				{wealth.currentValue ? europeanFormat(wealth.currentValue.value) : 0}

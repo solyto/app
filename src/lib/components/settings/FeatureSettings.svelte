@@ -11,21 +11,24 @@
 	const loadingIndicator = getLoadingIndicator();
 
 	async function onJournalEnabled(value: boolean): Promise<void> {
-		loadingIndicator.start();
-		await auth.updateJournalEnabled(value);
-		loadingIndicator.stop();
+		await withLoadingIndicator(() => auth.updateJournalEnabled(value));
 	}
 
 	async function onJournalCalendarMark(value: boolean): Promise<void> {
-		loadingIndicator.start();
-		await auth.updateJournalCalendarMark(value);
-		loadingIndicator.stop();
+		await withLoadingIndicator(() => auth.updateJournalCalendarMark(value));
 	}
 
 	async function onCheckInCalendarMark(value: boolean): Promise<void> {
+		await withLoadingIndicator(() => auth.updateCheckInCalendarMark(value));
+	}
+
+	async function withLoadingIndicator(action: () => Promise<unknown>): Promise<void> {
 		loadingIndicator.start();
-		await auth.updateCheckInCalendarMark(value);
-		loadingIndicator.stop();
+		try {
+			await action();
+		} finally {
+			loadingIndicator.stop();
+		}
 	}
 </script>
 

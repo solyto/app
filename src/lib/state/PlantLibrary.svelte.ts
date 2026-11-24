@@ -2,11 +2,15 @@ import type { Plant, CreatePlantRequest, UpdatePlantRequest, PlantLocation } fro
 import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
+import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
 import type { LibraryConfig } from '$lib/types/library';
 
 export class PlantLibrary {
+	static readonly LS_VIEW_KEY: string = 'plants_view';
+	static readonly VIEWS = ['list', 'cards'] as const;
+
 	config: LibraryConfig = {
 		type: 'plants',
 		hasCovers: true,
@@ -33,14 +37,20 @@ export class PlantLibrary {
 	unidentifiedFilter = $state<boolean>(false);
 	searchTerm = $state<string>('');
 	activeFilter: 'none' | 'search' | 'location' | 'unidentified' = 'none';
-	view = $state<'list' | 'cards'>('cards');
+	view = $state<(typeof PlantLibrary.VIEWS)[number]>('cards');
 	auth: Auth;
 	filterService = new LibraryFilterService();
 	apiService: ApiService;
+	localStorage: LocalStorageService;
 
-	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
 		this.auth = auth;
 		this.apiService = apiService;
+		this.localStorage = localStorage;
 	}
 
 	async load(): Promise<void> {
@@ -97,6 +107,13 @@ export class PlantLibrary {
 	closeDetailModal(): void {
 		this.detailModalVisible = false;
 		this.activeEntry = null;
+	}
+
+	changeView(view: string): void {
+		const known = PlantLibrary.VIEWS.find((candidate) => candidate === view);
+		if (!known) return;
+		this.view = known;
+		this.localStorage.set(PlantLibrary.LS_VIEW_KEY, known);
 	}
 
 	switchView(): void {

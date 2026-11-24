@@ -10,6 +10,7 @@
 	import { NetworkError } from '$lib/services/ApiService';
 	import { getFeedImport } from '$lib/state/FeedImport.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { pluralize } from '$lib/helpers/FormatHelper';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import type { FeedImportPollError, FeedImportStage, FeedImportState } from '$lib/types/feed';
 
@@ -174,9 +175,7 @@
 	}
 
 	function selectedLabel(): string {
-		return selected.length === 1
-			? ts.get.feeds.import_selected_singular
-			: ts.get.feeds.import_selected_plural.replace('{n}', String(selected.length));
+		return pluralize(selected.length, ts.get.feeds.import_selected_singular, ts.get.feeds.import_selected_plural);
 	}
 
 	function progressLabel(state: FeedImportState): string {

@@ -36,10 +36,20 @@ function mockRunningImport(processedAt: (call: number) => number) {
 
 afterEach(() => {
 	vi.useRealTimers();
-	vi.restoreAllMocks();
 });
 
 describe('FeedImportModal', () => {
+	it('counts the selected feeds in singular and plural', async () => {
+		const user = userEvent.setup();
+		await openPreview(user, feedImportState({ feeds: [feedImportEntry(), feedImportEntry({ url: 'https://b.test/feed', title: 'B feed' })] }));
+
+		expect(await screen.findByText('2 selected')).toBeInTheDocument();
+
+		await user.click(screen.getByRole('checkbox', { name: 'B feed' }));
+
+		expect(await screen.findByText('1 selected')).toBeInTheDocument();
+	});
+
 	it('stops polling once the feed import store is destroyed mid-import', async () => {
 		vi.useFakeTimers();
 		const refresh = vi.spyOn(FeedImport.prototype, 'refresh').mockImplementation(async function (this: FeedImport) {

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/svelte';
 import ApiService from '$lib/services/ApiService';
 import type { CheckInValue } from '$lib/types/check_in';
@@ -14,10 +14,6 @@ const chartOptions = vi.hoisted(() => [] as { xAxis: { data: string[] } }[]);
 vi.mock('$lib/components/charts/echarts', () => ({
 	init: () => ({ setOption: (options: { xAxis: { data: string[] } }) => chartOptions.push(options), dispatchAction: vi.fn(), resize: vi.fn(), dispose: vi.fn(), on: vi.fn() })
 }));
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 const mood = checkInTracker({ id: 1, key: 'mood', name: null, type: 'scale', scored: true });
 const glasses = checkInTracker({ id: 2, name: 'Glasses', type: 'count', position: 1 });

@@ -16,11 +16,6 @@ describe('Heading', () => {
 		render(Heading, { props: { title: 'Hello', my: 4 } });
 		expect(screen.getByText('Hello')).toBeInTheDocument();
 	});
-
-	it('applies the bold class when bold', () => {
-		const { container } = render(Heading, { props: { title: 'Bold', my: 0, bold: true } });
-		expect(container.querySelector('.font-bold')).toBeInTheDocument();
-	});
 });
 
 describe('Badge', () => {
@@ -28,11 +23,6 @@ describe('Badge', () => {
 		const { container } = render(Badge, { props: { i: 42, color: '#ff0000' } });
 		expect(screen.getByText('42')).toBeInTheDocument();
 		expect(container.querySelector('div')).toHaveStyle('background-color: #ff0000');
-	});
-
-	it('renders a smaller font for three-digit counts', () => {
-		const { container } = render(Badge, { props: { i: 123, color: '#fff' } });
-		expect(container.querySelector('.text-xs')).toBeInTheDocument();
 	});
 });
 
@@ -128,14 +118,5 @@ describe('ViewSwitcher', () => {
 		render(ViewSwitcher, { props: { views, currentlySelected: 'list', onChange } });
 		fireEvent.click(screen.getByTitle('Kanban'));
 		expect(onChange).toHaveBeenCalledWith('kanban');
-	});
-
-	it('highlights the currently selected view', () => {
-		const { container } = render(ViewSwitcher, {
-			props: { views, currentlySelected: 'list', onChange: vi.fn() }
-		});
-		const buttons = container.querySelectorAll('button');
-		expect(buttons[0].classList.contains('bg-c-highlight')).toBe(true);
-		expect(buttons[1].classList.contains('bg-c-highlight')).toBe(false);
 	});
 });

@@ -16,6 +16,10 @@
 	const viewPoint = getViewPoint();
 
 	const PADDING = 8;
+	const TOOLTIP_GAP = 16;
+	const TOOLTIP_HEIGHT = 360;
+	const VIEWPORT_MARGIN = 8;
+	const FALLBACK_VIEWPORT_HEIGHT = 800;
 
 	let targetRect = $state<DOMRect | null>(null);
 	let transitioning = $state(false);
@@ -50,9 +54,9 @@
 	}
 
 	interface StepContent {
-		title: string
-		description: string
-		tips: string[]
+		title: string;
+		description: string;
+		tips: string[];
 	}
 
 	function getStepContent(step: TourStep | null): StepContent | null {
@@ -96,16 +100,27 @@
 			return 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%)';
 		}
 		if (viewPoint.isDesktop) {
-			const left = targetRect.right + PADDING + 16;
-			const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
-			const tooltipHeight = 360;
-			const idealTop = targetRect.top + targetRect.height / 2 - tooltipHeight / 2;
-			const top = Math.min(Math.max(idealTop, 8), vh - tooltipHeight - 8);
+			const left = targetRect.right + PADDING + TOOLTIP_GAP;
+			const vh = typeof window !== 'undefined' ? window.innerHeight : FALLBACK_VIEWPORT_HEIGHT;
+			const idealTop = targetRect.top + targetRect.height / 2 - TOOLTIP_HEIGHT / 2;
+			const top = Math.min(Math.max(idealTop, VIEWPORT_MARGIN), vh - TOOLTIP_HEIGHT - VIEWPORT_MARGIN);
 			return `position:fixed;left:${left}px;top:${top}px`;
 		}
-		const top = targetRect.top - 16;
+		const top = targetRect.top - TOOLTIP_GAP;
 		return `position:fixed;left:50%;top:${top}px;transform:translate(-50%,-100%)`;
 	});
+
+	function finish(): void {
+		tour.finish();
+	}
+
+	function previous(): void {
+		tour.prev();
+	}
+
+	function next(): void {
+		tour.next();
+	}
 
 	let stepLabel = $derived(
 		ts.get.welcome_tour.step_of
@@ -115,7 +130,6 @@
 </script>
 
 {#if tour.active}
-	<!-- Click blocker — always present to prevent page interaction -->
 	<div class="fixed inset-0 z-[200]"></div>
 
 	{#if targetRect}
@@ -125,7 +139,6 @@
 			style="{spotlightStyle};box-shadow:0 0 0 9999px rgba(0,0,0,0.65)"
 		></div>
 	{:else}
-		<!-- Full dark backdrop: shown during transitions and for centered steps -->
 		<div class="fixed inset-0 z-[201] bg-black/65"></div>
 	{/if}
 
@@ -142,7 +155,7 @@
 				</div>
 				<button
 					class="ml-2 shrink-0 cursor-pointer rounded-lg p-1 text-c-neutral-4 transition-colors hover:bg-c-neutral-1 hover:text-c-neutral-6 dark:hover:bg-s-dark-3 dark:hover:text-c-neutral-3"
-					onclick={() => tour.finish()}
+					onclick={finish}
 				>
 					<IconX class="size-4" />
 				</button>
@@ -168,7 +181,7 @@
 			>
 				<button
 					class="cursor-pointer text-xs text-c-neutral-4 transition-colors hover:text-c-neutral-6 dark:hover:text-c-neutral-3"
-					onclick={() => tour.finish()}
+					onclick={finish}
 				>
 					{ts.get.welcome_tour.skip}
 				</button>
@@ -176,7 +189,7 @@
 					{#if !tour.isFirst}
 						<button
 							class="flex cursor-pointer items-center gap-1 rounded-lg px-3 py-1.5 text-sm text-c-neutral-6 transition-colors hover:bg-c-neutral-1 dark:text-c-neutral-4 dark:hover:bg-s-dark-3"
-							onclick={() => tour.prev()}
+							onclick={previous}
 						>
 							<IconChevronLeft class="size-3.5" />
 							{ts.get.welcome_tour.back}
@@ -184,7 +197,7 @@
 					{/if}
 					<button
 						class="flex cursor-pointer items-center gap-1 rounded-lg bg-c-btn px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-c-btn/80"
-						onclick={() => tour.next()}
+						onclick={next}
 					>
 						{tour.isLast ? ts.get.welcome_tour.finish : ts.get.welcome_tour.next}
 						{#if !tour.isLast}

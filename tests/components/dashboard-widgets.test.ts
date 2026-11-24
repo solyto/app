@@ -11,7 +11,7 @@ import NewestLinksWidget from '$lib/components/dashboard/widgets/NewestLinksWidg
 import BookReleasesWidget from '$lib/components/dashboard/widgets/BookReleasesWidget.svelte';
 import MusicReleasesWidget from '$lib/components/dashboard/widgets/MusicReleasesWidget.svelte';
 import QuoteWidget from '$lib/components/dashboard/widgets/QuoteWidget.svelte';
-import { todo } from '../unit/helpers/factories';
+import { calendarEvent as eventFixture, link as linkFixture, note as noteFixture, todo } from '../unit/helpers/factories';
 import type { CalendarEvent } from '$lib/types/calendar';
 import type { Note } from '$lib/types/note';
 import type { Link } from '$lib/types/library_link';
@@ -21,56 +21,23 @@ import type { Quote } from '$lib/types/library_quote';
 import type { TodoPriority } from '$lib/types/todo';
 
 function calendarEvent(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
-	return {
-		id: 1,
+	return eventFixture({
 		uri: 'evt-1',
 		title: 'Standup',
-		description: '',
-		location: '',
 		start_date: new Date(2026, 7, 14, 9, 30),
 		end_date: new Date(2026, 7, 14, 10, 0),
-		is_all_day: false,
-		is_recurring: false,
-		recurrence_rule: null,
-		recurrence_end: null,
-		original_start_date: null,
-		created_at: null,
-		updated_at: null,
-		calendar_id: 1,
 		calendar_name: 'Work',
 		calendar_color: '#ff0000',
-		etag: '',
 		...overrides
-	};
+	});
 }
 
 function note(overrides: Partial<Note> = {}): Note {
-	return {
-		id: 'n1',
-		title: 'Shopping list',
-		content: '',
-		category_id: null,
-		tags: [],
-		is_favorite: false,
-		created_at: '2026-08-01T00:00:00',
-		updated_at: '2026-08-10T00:00:00',
-		...overrides
-	};
+	return noteFixture({ title: 'Shopping list', created_at: '2026-08-01T00:00:00', updated_at: '2026-08-10T00:00:00', ...overrides });
 }
 
 function link(overrides: Partial<Link> = {}): Link {
-	return {
-		id: 'l1',
-		title: 'Solyto',
-		url: 'https://solyto.app',
-		cover: null,
-		tags: [],
-		category: null,
-		is_favorite: false,
-		created_at: '',
-		updated_at: '',
-		...overrides
-	};
+	return linkFixture({ title: 'Solyto', url: 'https://solyto.app', ...overrides });
 }
 
 describe('DueTodosWidget', () => {

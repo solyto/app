@@ -57,6 +57,6 @@
 	{/if}
 
 	{#if notesLoaded() && isEmpty()}
-		<EmptyState title={ts.get.home.more_to_come} description={ts.get.home.more_to_come_desc} smallerTitle={true} />
+		<EmptyState title={ts.get.home.more_to_come} description={ts.get.home.more_to_come_desc} titleSize="text-lg" />
 	{/if}
 </div>

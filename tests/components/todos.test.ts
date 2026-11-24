@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, screen } from '@testing-library/svelte';
 import { tick } from 'svelte';
 import type { Todos } from '$lib/state/Todos.svelte';
@@ -6,7 +6,8 @@ import type { LoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 import type { KeyManager } from '$lib/state/KeyManager.svelte';
 import type { Translation } from '$lib/state/Translation.svelte';
 import { renderWithContext } from './helpers/context';
-import TodosHarness from './helpers/TodosHarness.svelte';
+import StoreHarness from './helpers/StoreHarness.svelte';
+import { setTags } from '$lib/state/Tags.svelte';
 import TodoNavigation from '$lib/components/todos/TodoNavigation.svelte';
 import KanbanView from '$lib/components/todos/views/KanbanView.svelte';
 import CompactEntry from '$lib/components/todos/views/CompactEntry.svelte';
@@ -24,8 +25,8 @@ type Stores = { todos: Todos; loadingIndicator: LoadingIndicator; keyManager: Ke
 function renderTodos(component: unknown, props: Record<string, unknown> = {}, todosOverrides: Record<string, unknown> = {}): Stores & { container: HTMLElement } {
 	let stores: Stores | null = null;
 	const { container } = renderWithContext(
-		TodosHarness,
-		{ component, props },
+		StoreHarness,
+		{ component, props, provide: setTags },
 		{ stores: { todos: todosOverrides }, onReady: (s) => (stores = s as unknown as Stores) }
 	);
 	return { ...stores!, container };
@@ -38,10 +39,6 @@ async function openMobileMenu(container: HTMLElement): Promise<void> {
 function pressKey(keyManager: KeyManager, key: string): void {
 	keyManager.handleKeyDown(new KeyboardEvent('keydown', { key }));
 }
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 describe('todo navigation', () => {
 	it('applies a section filter from the mobile menu and closes it', async () => {

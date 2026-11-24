@@ -6,6 +6,7 @@
 	import { getNotes } from '$lib/state/Notes.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { Note } from '$lib/types/note';
+	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
 
 	const keyManager = getKeyManager();
 	const notes = getNotes();
@@ -108,12 +109,14 @@
 				onfocus={registerKeys}
 				{oninput}
 			/>
-			<button
-				class="pointer-events-auto absolute inset-y-0 right-1.5 z-20 flex cursor-pointer items-center text-c-neutral-5 hover:text-c-neutral-7 dark:text-c-neutral-3 dark:hover:text-c-neutral-5"
+			<GhostIconButton
+				label={ts.get.layout.close}
 				onclick={closeSearch}
+				color="text-c-neutral-5 dark:text-c-neutral-3"
+				class="pointer-events-auto absolute inset-y-0 right-1.5 z-20"
 			>
 				<IconCircleX />
-			</button>
+			</GhostIconButton>
 		</div>
 		{#if hasTerm() && inputExpanded}
 			<ul class="pointer-events-auto flex max-h-96 w-0 min-w-full flex-col overflow-y-auto rounded-b-xl border-1 border-t-0 border-c-neutral-2 bg-c-neutral/60 p-1 backdrop-blur-sm dark:bg-s-dark/80">

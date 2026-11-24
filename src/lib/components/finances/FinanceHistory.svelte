@@ -18,6 +18,7 @@
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import IconPen from '$lib/icons/lucide/pen.svelte';
 	import IconTrash from '$lib/icons/lucide/trash.svelte';
+	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import SmoothLineChart from '$lib/components/charts/SmoothLineChart.svelte';
 
@@ -188,25 +189,13 @@
 						<div class="flex items-center gap-4">
 							<span class="flex-1">{formatDate(history.toLocalDate(value), dateFormat)}</span>
 							<span>{europeanFormat(value.value)}</span>
-							<button
-								type="button"
-								class="cursor-pointer"
-								aria-label={ts.get.finances.edit_value}
-								title={ts.get.finances.edit_value}
-								onclick={() => startEdit(value)}
-							>
-								<IconPen class="size-5 text-c-neutral-3 transition-all hover:text-c-action" />
-							</button>
+							<GhostIconButton label={ts.get.finances.edit_value} onclick={() => startEdit(value)} color="text-c-neutral-3">
+								<IconPen class="size-5" />
+							</GhostIconButton>
 							{#if values.length > minValues}
-								<button
-									type="button"
-									class="cursor-pointer"
-									aria-label={ts.get.finances.delete_value_label}
-									title={ts.get.finances.delete_value_label}
-									onclick={() => askDelete(value)}
-								>
-									<IconTrash class="size-5 text-c-neutral-3 transition-all hover:text-c-danger" />
-								</button>
+								<GhostIconButton label={ts.get.finances.delete_value_label} onclick={() => askDelete(value)} color="text-c-neutral-3">
+									<IconTrash class="size-5" />
+								</GhostIconButton>
 							{/if}
 						</div>
 					{/if}

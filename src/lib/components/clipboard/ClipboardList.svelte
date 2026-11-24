@@ -88,7 +88,9 @@
 	}
 
 	function downloadFileName(entry: ClipboardEntry, blob: Blob): string {
-		return entry.type === 'image' ? clipboardImageFileName(entry, blob.type) : (entry.file_name ?? 'file');
+		if (entry.type === 'image') return clipboardImageFileName(entry, blob.type);
+
+		return entry.file_name ?? ts.get.clipboard.download_fallback_name;
 	}
 
 	async function onDelete(entry: ClipboardEntry): Promise<void> {

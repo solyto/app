@@ -8,11 +8,15 @@ import type {
 import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
+import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
 import type { LibraryConfig } from '$lib/types/library';
 
 export class RecipeLibrary {
+	static readonly LS_VIEW_KEY: string = 'recipes_view';
+	static readonly VIEWS = ['list', 'cards'] as const;
+
 	config: LibraryConfig = {
 		type: 'recipes',
 		hasCovers: true,
@@ -39,14 +43,20 @@ export class RecipeLibrary {
 	typeFilter = $state<RecipeType | null>(null);
 	searchTerm = $state<string>('');
 	activeFilter: 'none' | 'search' | 'ratingAndType' = 'none';
-	view = $state<'list' | 'cards'>('cards');
+	view = $state<(typeof RecipeLibrary.VIEWS)[number]>('cards');
 	auth: Auth;
 	filterService = new LibraryFilterService();
 	apiService: ApiService;
+	localStorage: LocalStorageService;
 
-	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
 		this.auth = auth;
 		this.apiService = apiService;
+		this.localStorage = localStorage;
 	}
 
 	async load(): Promise<void> {
@@ -107,6 +117,13 @@ export class RecipeLibrary {
 	closeDetailModal(): void {
 		this.detailModalVisible = false;
 		this.activeEntry = null;
+	}
+
+	changeView(view: string): void {
+		const known = RecipeLibrary.VIEWS.find((candidate) => candidate === view);
+		if (!known) return;
+		this.view = known;
+		this.localStorage.set(RecipeLibrary.LS_VIEW_KEY, known);
 	}
 
 	switchView(): void {

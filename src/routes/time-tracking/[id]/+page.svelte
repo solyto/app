@@ -9,6 +9,7 @@
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { urls } from '$lib/config/urls';
+	import { hamburgerClearance } from '$lib/config/navigation';
 	import type {
 		TimeTrackingProject,
 		TimeTrackingEntry,
@@ -117,7 +118,7 @@
 			class="flex-shrink-0 border-b border-c-neutral-1 bg-c-bg-surface/80 px-4 pt-6 pb-4 backdrop-blur-sm lg:px-8 lg:py-4 dark:border-s-dark-3"
 		>
 			<div class="flex w-full flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-				<div class="flex h-10 flex-row items-center justify-end max-lg:ml-14 lg:order-last">
+				<div class="flex h-10 flex-row items-center justify-end {hamburgerClearance} lg:order-last">
 					<div class="flex flex-row items-center gap-2">
 						<TextButton
 							title={ts.get.timeTracking.add_entry}

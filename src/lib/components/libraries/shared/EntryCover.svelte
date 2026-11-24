@@ -8,10 +8,10 @@
 
 	const ts = getTranslation();
 
-	let { entry, library, fill = false }: {
+	let { entry, library, fit = 'object-contain' }: {
 		entry: LibraryEntry | Link;
 		library: Library;
-		fill?: boolean;
+		fit?: 'object-contain' | 'object-cover';
 	} = $props();
 
 	function coverUrl(cover: string): string {
@@ -34,6 +34,6 @@
 		src={coverUrl(entry.cover)}
 		previewSrc={previewUrl(entry.cover)}
 		alt={ts.get.libraries.cover}
-		class="z-30 h-full w-full rounded-sm {fill ? 'object-cover' : 'object-contain'}"
+		class="z-30 h-full w-full rounded-sm {fit}"
 	/>
 {/if}

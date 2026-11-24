@@ -60,21 +60,32 @@
 	async function handleFinalize(e: CustomEvent<DndEvent<OrderItem>>): Promise<void> {
 		items = e.detail.items;
 		dragDisabled = true;
-		loadingIndicator.start();
-		await nav.saveOrder(layout, [pinnedNavItem, ...items.map((orderItem) => orderItem.id)]);
-		loadingIndicator.stop();
+		await withLoadingIndicator(() => nav.saveOrder(layout, [pinnedNavItem, ...items.map((orderItem) => orderItem.id)]));
 	}
 
 	async function onToggle(): Promise<void> {
-		loadingIndicator.start();
-		await nav.save();
-		loadingIndicator.stop();
+		await withLoadingIndicator(() => nav.save());
 	}
 
 	async function resetOrder(): Promise<void> {
+		await withLoadingIndicator(() => nav.resetOrder(layout));
+	}
+
+	async function withLoadingIndicator(action: () => Promise<void>): Promise<void> {
 		loadingIndicator.start();
-		await nav.resetOrder(layout);
-		loadingIndicator.stop();
+		try {
+			await action();
+		} finally {
+			loadingIndicator.stop();
+		}
+	}
+
+	function enableDrag(): void {
+		dragDisabled = false;
+	}
+
+	function disableDrag(): void {
+		dragDisabled = true;
 	}
 </script>
 
@@ -120,8 +131,8 @@
 					<IconGripVertical
 						size={16}
 						class="shrink-0 cursor-grab touch-none text-c-neutral-3"
-						onpointerdown={() => (dragDisabled = false)}
-						onpointerup={() => (dragDisabled = true)}
+						onpointerdown={enableDrag}
+						onpointerup={disableDrag}
 					/>
 					{@render row(orderItem.item)}
 				</div>

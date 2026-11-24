@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { getCalendars } from '$lib/state/Calendars.svelte';
-	import { getAuth } from '$lib/state/Auth.svelte';
 	import SlidingSideBar from '$lib/components/ui/SlidingSideBar.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
@@ -28,13 +27,13 @@
 	import RecurrenceRuleService from '$lib/services/RecurrenceRuleService';
 	import type { EndFormat, RecurrenceSelection } from '$lib/services/RecurrenceRuleService';
 
+	let { timeZone }: { timeZone: string } = $props();
+
 	const calendars = getCalendars();
-	const auth = getAuth();
 	const ts = getTranslation();
 	const loadingIndicator = getLoadingIndicator();
 	const notifications = getUiNotifications();
 	const recurrenceRuleService = new RecurrenceRuleService();
-	const timeZone = auth.user?.settings.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
 	const newEventStartHour = calendars.newEventPreset.hour ?? 12;
 	const newEventEnd = new Date(
 		combineDateAndTime(calendars.selectedDate ?? new Date(), newEventStartHour, 0).getTime() + 60 * 60 * 1000
@@ -248,16 +247,8 @@
 			placeholder={ts.get.calendar.title}
 		/>
 		<div class="flex gap-6">
-			<Toggle
-				label={ts.get.calendar.is_all_day}
-				bind:checked={form.is_all_day}
-				onchange={() => {}}
-			/>
-			<Toggle
-				label={ts.get.calendar.is_recurring}
-				bind:checked={form.is_recurring}
-				onchange={() => {}}
-			/>
+			<Toggle label={ts.get.calendar.is_all_day} bind:checked={form.is_all_day} />
+			<Toggle label={ts.get.calendar.is_recurring} bind:checked={form.is_recurring} />
 		</div>
 		{#if form.start_date}
 			<div class="flex w-full gap-2">

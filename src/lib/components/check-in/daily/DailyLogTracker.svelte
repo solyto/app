@@ -68,7 +68,8 @@
 		</div>
 
 		{#if tracker.type === 'yes_no'}
-			<Checkbox isChecked={value !== null} onchange={toggleDone} ariaLabel={label} size="lg" />
+			<!-- Lines up with the 32px − / + buttons of count rows; its border and shadow make it read larger, so it's a bit smaller. -->
+			<Checkbox isChecked={value !== null} onchange={toggleDone} ariaLabel={label} boxSize="size-7" markSize="size-4" />
 		{:else}
 			<div class="relative flex shrink-0 items-center gap-1">
 				<div class="absolute top-full right-0" bind:this={panelAnchor}></div>

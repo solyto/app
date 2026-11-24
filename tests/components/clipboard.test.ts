@@ -2,13 +2,13 @@ import { describe, it, expect, vi } from 'vitest';
 import { screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import type { Component } from 'svelte';
-import type { Clipboard } from '$lib/state/Clipboard.svelte';
+import { setClipboard, type Clipboard } from '$lib/state/Clipboard.svelte';
 import type { LoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 import type { UiNotifications } from '$lib/state/UiNotifications.svelte';
 import { en } from '$lib/i18n/en';
 import { rejectionsDuring } from './helpers/rejections';
 import { renderWithContext } from './helpers/context';
-import ClipboardHarness from './helpers/ClipboardHarness.svelte';
+import StoreHarness from './helpers/StoreHarness.svelte';
 import { clipboardEntry } from '../unit/helpers/factories';
 import ClipboardCreate from '$lib/components/clipboard/ClipboardCreate.svelte';
 import ClipboardList from '$lib/components/clipboard/ClipboardList.svelte';
@@ -18,10 +18,11 @@ type Rendered = { clipboard: Clipboard; loadingIndicator: LoadingIndicator; noti
 function renderClipboard(component: Component<never>, setup: (clipboard: Clipboard) => void = () => {}): Rendered {
 	const rendered = {} as Rendered;
 	renderWithContext(
-		ClipboardHarness,
+		StoreHarness,
 		{
 			component,
-			setup: (clipboard: Clipboard) => {
+			provide: setClipboard,
+			onReady: (clipboard: Clipboard) => {
 				setup(clipboard);
 				rendered.clipboard = clipboard;
 			}

@@ -13,6 +13,7 @@
 	import { getReadableTextColor } from '$lib/helpers/ColorHelper';
 	import { getDateMinusDays, getUrlFormat } from '$lib/helpers/DateHelper';
 	import type { TimeTrackingCategory } from '$lib/types/time_tracking';
+	import { hamburgerClearance } from '$lib/config/navigation';
 
 	const DEFAULT_RANGE_DAYS = 30;
 	const CHIP_IDLE = 'border-c-neutral-2 text-c-neutral-5 hover:border-c-primary dark:border-s-dark dark:text-c-neutral-4';
@@ -88,7 +89,7 @@
 
 <div class="flex flex-col gap-6">
 	<div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-start">
-		<div class="max-lg:ml-14">
+		<div class={hamburgerClearance}>
 			<Heading title={ts.get.timeTracking.statistics} my={0} />
 		</div>
 		<div class="flex flex-wrap items-end gap-4">

@@ -49,13 +49,16 @@
 			return;
 		}
 
-		loadingIndicator.start();
 		const request: CreateShortcutRequest = {
 			title: titleValue,
 			url: urlValue
 		};
-		await shortcuts.create(request);
-		loadingIndicator.stop();
+		loadingIndicator.start();
+		try {
+			await shortcuts.create(request);
+		} finally {
+			loadingIndicator.stop();
+		}
 		await toggleCreate();
 	}
 
@@ -107,18 +110,10 @@
 						placeholder={ts.get.widgets.shortcut_title}
 					/>
 					<TextInput bind:value={urlValue} placeholder={ts.get.widgets.shortcut_url} />
-					<SaveButton
-						onClick={() => {
-							onCreate();
-						}}
-					/>
+					<SaveButton onClick={onCreate} />
 				</div>
 			{:else}
-				<AddButton
-					onClick={() => {
-						toggleCreate();
-					}}
-				/>
+				<AddButton onClick={toggleCreate} />
 			{/if}
 		</div>
 	</div>

@@ -2,7 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import type { FeedItem } from '$lib/types/feed';
 	import { grabFaviconFromUrl } from '$lib/helpers/ImageHelper';
-	import { stripHtml, hasMeaningfulDescription } from '$lib/helpers/FormatHelper';
+	import { stripHtml, hasMeaningfulDescription } from '$lib/helpers/HtmlHelper';
 	import EntryMeta from '$lib/components/feeds/EntryMeta.svelte';
 	import { safeHref } from '$lib/helpers/UrlHelper';
 

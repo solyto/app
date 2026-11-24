@@ -7,6 +7,7 @@ import { getTranslation, type Translation } from '$lib/state/Translation.svelte'
 import ApiService, { NetworkError, RateLimitedError } from '$lib/services/ApiService';
 import FeedImportService from '$lib/services/FeedImportService';
 import { apiRoutes } from '$lib/config/apiRoutes';
+import { pluralize } from '$lib/helpers/FormatHelper';
 
 export class FeedImport {
 	static readonly POLL_INTERVAL_MS = 1000;
@@ -177,11 +178,7 @@ export class FeedImport {
 		if (this.modalOpen) return;
 
 		const added = this.service.group(state).added.length;
-		this.notifications.success(
-			added === 1
-				? this.ts.get.feeds.import_finished_singular
-				: this.ts.get.feeds.import_finished_plural.replace('{n}', String(added))
-		);
+		this.notifications.success(pluralize(added, this.ts.get.feeds.import_finished_singular, this.ts.get.feeds.import_finished_plural));
 	}
 
 	private stopPolling(): void {

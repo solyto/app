@@ -11,11 +11,15 @@ import type {
 import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
+import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
 import type { LibraryConfig } from '$lib/types/library';
 
 export class MovieLibrary {
+	static readonly LS_VIEW_KEY: string = 'movies_view';
+	static readonly VIEWS = ['list', 'cards'] as const;
+
 	config: LibraryConfig = {
 		type: 'movies',
 		hasCovers: true,
@@ -48,14 +52,20 @@ export class MovieLibrary {
 	activeFilter: 'none' | 'search' | 'genreAndRating' | 'wishlist' = 'none';
 	releases = $state<MovieRelease[]>([]);
 	releasesLoaded = $state<boolean>(false);
-	view = $state<'list' | 'cards'>('cards');
+	view = $state<(typeof MovieLibrary.VIEWS)[number]>('cards');
 	auth: Auth;
 	filterService = new LibraryFilterService();
 	apiService: ApiService;
+	localStorage: LocalStorageService;
 
-	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
 		this.auth = auth;
 		this.apiService = apiService;
+		this.localStorage = localStorage;
 	}
 
 	async load(): Promise<void> {
@@ -91,6 +101,8 @@ export class MovieLibrary {
 	}
 
 	filterByWishlist(): void {
+		this.genreFilter = null;
+		this.ratingFilter = null;
 		this.wishlistFilter = true;
 		this.activeFilter = 'wishlist';
 		this.reapplyFilter();
@@ -152,6 +164,13 @@ export class MovieLibrary {
 
 	closeExternalSearchModal(): void {
 		this.externalSearchModalVisible = false;
+	}
+
+	changeView(view: string): void {
+		const known = MovieLibrary.VIEWS.find((candidate) => candidate === view);
+		if (!known) return;
+		this.view = known;
+		this.localStorage.set(MovieLibrary.LS_VIEW_KEY, known);
 	}
 
 	switchView(): void {

@@ -22,15 +22,20 @@
 
 		if (hex === tag.color) return;
 
-		loadingIndicator.start();
-		await tags.changeColor(tag, hex);
-		loadingIndicator.stop();
+		await withLoadingIndicator(() => tags.changeColor(tag, hex));
 	}
 
-	async function onDelete(tag: Tag): Promise<void> {
+	async function onDelete(): Promise<void> {
+		await withLoadingIndicator(() => tags.delete(tag.id));
+	}
+
+	async function withLoadingIndicator(action: () => Promise<unknown>): Promise<void> {
 		loadingIndicator.start();
-		await tags.delete(tag.id);
-		loadingIndicator.stop();
+		try {
+			await action();
+		} finally {
+			loadingIndicator.stop();
+		}
 	}
 </script>
 
@@ -53,6 +58,6 @@
 	</div>
 	<span>#{tag.name}</span>
 	<div class="ml-2">
-		<DeleteButton onClick={() => onDelete(tag)} inModal={false} buttonStyle="minimal" />
+		<DeleteButton onClick={onDelete} inModal={false} buttonStyle="minimal" />
 	</div>
 </div>

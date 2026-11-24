@@ -10,6 +10,8 @@
 	import IconStar from '$lib/icons/lucide/star.svelte';
 	import IconFolderInput from '$lib/icons/lucide/folder-input.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
+	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
 	import MovableHoverBox from '$lib/components/ui/MovableHoverBox.svelte';
@@ -24,8 +26,6 @@
 	const keyManager = getKeyManager();
 	const saving = new SaveAction(() => ts.get.notes.save_error);
 	const explanation = new HoverExplanation();
-
-	const ICON_BUTTON = 'flex cursor-pointer items-center justify-center rounded-sm p-1.5 transition-all hover:bg-c-neutral dark:hover:bg-s-dark-3';
 
 	let { isJournal = false }: {
 		isJournal?: boolean;
@@ -52,6 +52,10 @@
 
 	function favoriteLabel(): string {
 		return notes.activeNote!.is_favorite ? ts.get.notes.remove_from_favorites : ts.get.notes.add_to_favorites;
+	}
+
+	function favoriteColor(): string {
+		return notes.activeNote!.is_favorite ? 'text-c-action' : 'text-c-neutral-4';
 	}
 
 	async function saveNote() {
@@ -158,13 +162,7 @@
 				{#if isJournal}
 					<h1 class="text-left text-3xl leading-tight">{journalTitle()}</h1>
 				{:else if changeTitle}
-					<input
-						type="text"
-						class="text-xl font-bold dark:bg-s-dark-3 dark:text-white"
-						{onblur}
-						bind:this={titleInput}
-						bind:value={titleValue}
-					/>
+					<TextInput bind:input={titleInput} bind:value={titleValue} {onblur} class="text-xl font-bold dark:bg-s-dark-3" />
 				{:else}
 					<button
 						type="button"
@@ -191,22 +189,12 @@
 				class="flex shrink-0 items-center gap-3 pt-1 max-md:absolute max-md:top-0 max-md:right-0"
 			>
 				{#if !isJournal}
-					<button
-						class="{ICON_BUTTON} text-c-neutral-4"
-						title={ts.get.notes.move_note}
-						onclick={openMoveNoteModal}
-					>
+					<GhostIconButton label={ts.get.notes.move_note} onclick={openMoveNoteModal}>
 						<IconFolderInput size={16} />
-					</button>
-					<button
-						class={ICON_BUTTON}
-						class:text-c-action={notes.activeNote.is_favorite}
-						class:text-c-neutral-4={!notes.activeNote.is_favorite}
-						title={favoriteLabel()}
-						onclick={toggleFavorite}
-					>
+					</GhostIconButton>
+					<GhostIconButton label={favoriteLabel()} onclick={toggleFavorite} color={favoriteColor()}>
 						<IconStar size={16} fill={notes.activeNote.is_favorite ? 'currentColor' : 'none'} />
-					</button>
+					</GhostIconButton>
 				{/if}
 				{#if !isDraft}
 					<DeleteButton onClick={openDeleteModal} inModal={false} buttonStyle="plain" />

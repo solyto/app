@@ -6,7 +6,6 @@ import TextInput from '$lib/components/forms/TextInput.svelte';
 import Toggle from '$lib/components/forms/Toggle.svelte';
 import Select from '$lib/components/forms/Select.svelte';
 import TextInputHarness from './helpers/TextInputHarness.svelte';
-import ColorPicker from 'svelte-awesome-color-picker';
 import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
 
 describe('Checkbox', () => {
@@ -58,6 +57,13 @@ describe('Toggle', () => {
 		await user.click(screen.getByRole('checkbox'));
 		expect(onchange).toHaveBeenCalledWith(true);
 	});
+
+	it('switches without an onchange handler', async () => {
+		const user = userEvent.setup();
+		render(Toggle, { props: { checked: false, label: 'Enable' } });
+		await user.click(screen.getByRole('checkbox'));
+		expect(screen.getByRole('checkbox')).toBeChecked();
+	});
 });
 
 describe('Select', () => {
@@ -83,34 +89,25 @@ describe('Select', () => {
 });
 
 describe('ColorPickerInput', () => {
-	function renderPicker() {
-		return render(ColorPicker, {
-			props: {
-				hex: '#123456',
-				components: { input: ColorPickerInput },
-				isAlpha: false,
-				nullable: false,
-				label: '',
-				isTextInput: false
-			}
-		});
+	function renderInput() {
+		return render(ColorPickerInput, { props: { hex: '#123456', label: '', dir: 'ltr', labelElement: undefined } });
 	}
 
-	it('draws the colour without the transparency checkerboard behind it', () => {
-		const { container } = renderPicker();
+	it('draws the colour as its swatch', () => {
+		const { container } = renderInput();
 		const swatch = container.querySelector('label span') as HTMLElement;
 
 		expect(swatch.style.background).toBe('rgb(18, 52, 86)');
-		expect(container.querySelector('.alpha')).toBeNull();
 	});
 
-	it('opens the picker when the colour is clicked', async () => {
-		const user = userEvent.setup();
-		const { container } = renderPicker();
-		const dialog = screen.getByRole('dialog', { name: 'color picker' });
+	it("keeps the browser's own colour dialog closed", () => {
+		const { container } = renderInput();
+		const input = container.querySelector('input[type="color"]') as HTMLInputElement;
 
-		expect(dialog).not.toHaveClass('is-open');
-		await user.click(container.querySelector('label span') as HTMLElement);
-		expect(dialog).toHaveClass('is-open');
+		for (const type of ['click', 'mousedown']) {
+			const event = new MouseEvent(type, { bubbles: true, cancelable: true });
+			input.dispatchEvent(event);
+			expect(event.defaultPrevented).toBe(true);
+		}
 	});
 });

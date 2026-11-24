@@ -29,7 +29,6 @@ function renderFinances(component: Parameters<typeof renderWithContext>[0], prop
 }
 
 afterEach(() => {
-	vi.restoreAllMocks();
 	goto.mockReset();
 });
 

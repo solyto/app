@@ -59,7 +59,12 @@ const layout: LayoutRecords = {
 	rate_limited_minutes_plural: 'Слишком много попыток. Попробуйте через {n} мин.',
 	previous_page: 'Предыдущая страница',
 	next_page: 'Следующая страница',
-	page_of: 'Страница {n} из {total}'
+	page_of: 'Страница {n} из {total}',
+	name: 'Название',
+	loading: 'Загрузка…',
+	minimize: 'Свернуть',
+	maximize: 'Развернуть',
+	close: 'Закрыть'
 };
 
 const nav: NavigationRecords = {
@@ -293,7 +298,18 @@ const settings: SettingsRecords = {
 	ai_plugin_api_key_required: 'Для сохранения настроек ИИ нужен API-ключ.',
 	ai_plugin_saved: 'Настройки ИИ сохранены.',
 	ai_plugin_save_error: 'Не удалось сохранить настройки ИИ.',
-	ai_plugin_load_error: 'Не удалось загрузить настройки ИИ.'
+	ai_plugin_load_error: 'Не удалось загрузить настройки ИИ.',
+	notifications_description: 'Выберите, какие уведомления получать и по каким каналам.',
+	push_notifications_hint: 'Включите push-уведомления выше, чтобы получать их.',
+	export_select_at_least_one: 'Выберите хотя бы один раздел.',
+	version: 'Версия',
+	update_check: 'Проверить обновления',
+	update_install: 'Установить и перезапустить',
+	update_up_to_date: 'У вас последняя версия.',
+	update_available: 'Доступно обновление %s — загрузка…',
+	update_downloading: 'Загрузка… %s%',
+	update_ready: 'Обновление готово к установке.',
+	update_check_failed: 'Не удалось проверить обновления. Проверьте подключение.'
 };
 
 const todos: TodoRecords = {
@@ -1457,7 +1473,8 @@ const clipboard: ClipboardRecords = {
 	attach_image: 'Прикрепить изображение',
 	attach_file: 'Прикрепить файл',
 	image_preview_alt: 'Предпросмотр',
-	image_alt: 'Изображение из буфера обмена'
+	image_alt: 'Изображение из буфера обмена',
+	download_fallback_name: 'файл'
 };
 
 const profile: ProfileRecords = {
@@ -1819,7 +1836,7 @@ const update_required: UpdateRequiredRecords = {
 	reload: 'Загрузить последнюю версию',
 	required_version: 'Требуемая версия: %s',
 	your_version: 'Ваша версия: %s',
-	server_outdated: 'На сервере установлена версия %server, а в приложении — %app. Некоторые функции могут не работать до обновления сервера.'
+	server_outdated: 'На сервере установлена версия {server}, а в приложении — {app}. Некоторые функции могут не работать до обновления сервера.'
 };
 
 export const ru: LanguageFile = {

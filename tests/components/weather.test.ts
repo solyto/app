@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { fireEvent, screen } from '@testing-library/svelte';
-import type { Weather } from '$lib/state/Weather.svelte';
+import { setWeather, type Weather } from '$lib/state/Weather.svelte';
 import type { LoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 import ManageWeatherCity from '$lib/components/weather/ManageWeatherCity.svelte';
 import { renderWithContext } from './helpers/context';
 import { rejectionsDuring } from './helpers/rejections';
-import WeatherHarness from './helpers/WeatherHarness.svelte';
+import StoreHarness from './helpers/StoreHarness.svelte';
 
 const BERLIN = { place_id: 1, display_name: 'Berlin, Germany', lat: '52.52', lon: '13.40' };
 
@@ -15,8 +15,9 @@ const fetch = vi.fn();
 function renderModal(seed: (weather: Weather) => void = () => {}): { weather: Weather; onClose: () => void } {
 	let store: Weather | null = null;
 	const onClose = vi.fn();
-	renderWithContext(WeatherHarness, {
+	renderWithContext(StoreHarness, {
 		component: ManageWeatherCity,
+		provide: setWeather,
 		props: { onClose },
 		onReady: (weather: Weather) => {
 			seed(weather);
@@ -40,7 +41,6 @@ beforeEach(() => {
 afterEach(() => {
 	vi.useRealTimers();
 	vi.unstubAllGlobals();
-	vi.restoreAllMocks();
 	fetch.mockReset();
 });
 

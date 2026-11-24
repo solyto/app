@@ -128,6 +128,8 @@ export class MusicLibrary {
 	}
 
 	filterByWishlist(): void {
+		this.genreFilter = null;
+		this.ratingFilter = null;
 		this.wishlistFilter = true;
 		this.activeFilter = 'wishlist';
 		this.setFilteredEntries(this.filterEntries());
@@ -195,6 +197,13 @@ export class MusicLibrary {
 
 	closeGenreModal(): void {
 		this.genreModalVisible = false;
+	}
+
+	changeView(view: string): void {
+		const known = MusicLibrary.VIEWS.find((candidate) => candidate === view);
+		if (!known) return;
+		this.view = known;
+		this.localStorage.set(MusicLibrary.LS_VIEW_KEY, known);
 	}
 
 	switchView(): void {

@@ -9,7 +9,6 @@ import ResendVerificationForm from '$lib/components/auth/ResendVerificationForm.
 
 afterEach(() => {
 	vi.useRealTimers();
-	vi.restoreAllMocks();
 });
 
 const flows: [string, AnyComponent, keyof Auth, string][] = [

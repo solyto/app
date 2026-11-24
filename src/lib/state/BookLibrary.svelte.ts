@@ -115,6 +115,8 @@ export class BookLibrary {
 	}
 
 	filterByWishlist(): void {
+		this.genreFilter = null;
+		this.ratingFilter = null;
 		this.lentFilter = false;
 		this.wishlistFilter = true;
 		this.activeFilter = 'wishlist';
@@ -191,6 +193,13 @@ export class BookLibrary {
 
 	closeExternalSearchModal(): void {
 		this.externalSearchModalVisible = false;
+	}
+
+	changeView(view: string): void {
+		const known = BookLibrary.VIEWS.find((candidate) => candidate === view);
+		if (!known) return;
+		this.view = known;
+		this.localStorage.set(BookLibrary.LS_VIEW_KEY, known);
 	}
 
 	switchView(): void {

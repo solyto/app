@@ -334,6 +334,16 @@ describe('WidgetBridge', () => {
 			expect(navigation.goto).not.toHaveBeenCalled();
 		});
 
+		it('ignores navigate messages whose key or id is not a string', () => {
+			createBridge().start();
+
+			receive({ type: 'navigate', key: 42 });
+			receive({ type: 'navigate', key: 'calendar', id: 42 });
+			receive({ type: 'navigate', key: 'calendar', id: null });
+
+			expect(navigation.goto).not.toHaveBeenCalled();
+		});
+
 		it('does nothing when logged out', () => {
 			loggedIn = false;
 			createBridge().start();

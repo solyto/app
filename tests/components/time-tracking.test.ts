@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { fireEvent, screen } from '@testing-library/svelte';
 import type { Component } from 'svelte';
-import type { TimeTracking } from '$lib/state/TimeTracking.svelte';
+import { setTimeTracking, type TimeTracking } from '$lib/state/TimeTracking.svelte';
 import type { Translation } from '$lib/state/Translation.svelte';
 import type { LoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 import ProjectCreate from '$lib/components/time-tracking/ProjectCreate.svelte';
@@ -14,7 +14,7 @@ import EntryCreate from '$lib/components/time-tracking/EntryCreate.svelte';
 import TimeTrackingWidget from '$lib/components/dashboard/widgets/TimeTrackingWidget.svelte';
 import { renderWithContext } from './helpers/context';
 import { rejectionsDuring } from './helpers/rejections';
-import TimeTrackingHarness from './helpers/TimeTrackingHarness.svelte';
+import StoreHarness from './helpers/StoreHarness.svelte';
 import { timeTrackingCategory, timeTrackingEntry, timeTrackingProject } from '../unit/helpers/factories';
 
 vi.mock('$app/state', () => ({ page: { url: new URL('http://localhost/time-tracking?tab=entries'), params: {} } }));
@@ -34,9 +34,10 @@ const entries = [
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function renderTimeTracking(component: Component<any>, props: Record<string, unknown> = {}, seed: (tt: TimeTracking) => void = () => {}): TimeTracking {
 	let store: TimeTracking | null = null;
-	renderWithContext(TimeTrackingHarness, {
+	renderWithContext(StoreHarness, {
 		component,
 		props,
+		provide: setTimeTracking,
 		onReady: (tt: TimeTracking) => {
 			Object.assign(tt, { loaded: true, projects: [writing, reading], entries });
 			seed(tt);
@@ -63,7 +64,6 @@ beforeEach(() => {
 
 afterEach(() => {
 	vi.useRealTimers();
-	vi.restoreAllMocks();
 });
 
 describe('Time tracking dashboard', () => {
@@ -91,9 +91,10 @@ describe('Time tracking dashboard', () => {
 
 describe('Time tracking dashboard widget', () => {
 	function renderWidget(): void {
-		renderWithContext(TimeTrackingHarness, {}, {
+		renderWithContext(StoreHarness, {}, {
 			prepare: (stores) => ({
 				component: TimeTrackingWidget,
+				provide: setTimeTracking,
 				props: { ts: stores.ts as Translation, weekStart: 'monday' },
 				onReady: (tt: TimeTracking) => Object.assign(tt, { loaded: true, projects: [writing, reading], entries })
 			})
@@ -253,8 +254,9 @@ describe('Time tracking navigation', () => {
 	it('edits and deletes a project from its row', async () => {
 		const onEditProject = vi.fn();
 		let store: TimeTracking | null = null;
-		renderWithContext(TimeTrackingHarness, {
+		renderWithContext(StoreHarness, {
 			component: TimeTrackingNavigation,
+			provide: setTimeTracking,
 			props: { onCreateProject: vi.fn(), onEditProject },
 			onReady: (tt: TimeTracking) => {
 				Object.assign(tt, { loaded: true, projects: [writing], entries: [] });

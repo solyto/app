@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import ApiService from '$lib/services/ApiService';
@@ -28,10 +28,6 @@ async function openRentHistory(): Promise<Finances> {
 	await screen.findByLabelText('Interval');
 	return finances!;
 }
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 describe('Budget page history', () => {
 	it('shows the budget as the store has it after a reload', async () => {

@@ -11,6 +11,7 @@
 	import type { TimeTrackingEntry } from '$lib/types/time_tracking';
 	import type { WeekStart } from '$lib/types/auth';
 	import { getStartOfWeek } from '$lib/helpers/DateHelper';
+	import { hamburgerClearance } from '$lib/config/navigation';
 
 	const RECENT_ENTRIES = 10;
 
@@ -39,7 +40,7 @@
 </script>
 
 <div class="flex flex-col gap-8">
-	<div class="max-lg:mt-1 max-lg:ml-14">
+	<div class="max-lg:mt-1 {hamburgerClearance}">
 		<Heading title={ts.get.timeTracking.dashboard} my={0} />
 	</div>
 

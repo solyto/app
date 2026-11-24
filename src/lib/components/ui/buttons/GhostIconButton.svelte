@@ -8,7 +8,7 @@
 		class: customClass = '',
 		children
 	}: {
-		onclick: () => void;
+		onclick: (event: MouseEvent) => void;
 		label: string;
 		disabled?: boolean;
 		color?: string;

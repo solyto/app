@@ -1,12 +1,8 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { screen, within } from '@testing-library/svelte';
 import ApiService from '$lib/services/ApiService';
 import { renderWithContext } from './helpers/context';
 import AdminPageHarness from './helpers/AdminPageHarness.svelte';
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 const FIELDS = [
 	'users', 'active_users', 'confirmed_users', 'friends', 'ui_notifications', 'calendars', 'calendar_events', 'todos', 'todo_categories',

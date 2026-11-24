@@ -20,7 +20,7 @@
 		class="nav-desktop gradient-down flex h-full w-16 flex-col rounded-md p-1 text-c-neutral-8 drop-shadow-xl dark:text-c-neutral-2"
 	>
 		<div class="mb-auto flex flex-col items-center">
-			<img src={logo} class="logo" alt="logo" />
+			<img src={logo} class="logo" alt="solyto" />
 		</div>
 
 		<div class="flex flex-1 flex-col items-center justify-center">

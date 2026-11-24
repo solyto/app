@@ -21,6 +21,10 @@
 	import SettingsNavigationDesktop from '$lib/components/settings/SettingsNavigationDesktop.svelte';
 	import Heading from '$lib/components/ui/Heading.svelte';
 
+	const SCROLL_SETTLE_MS = 700;
+	const ACTIVE_SECTION_OFFSET = 96;
+	const BOTTOM_TOLERANCE = 2;
+
 	const ts = getTranslation();
 	const nav = getNavigation();
 	const tags = getTags();
@@ -31,8 +35,11 @@
 	// Alerts load even while check-in is off: switching it on in Features shows their section right away.
 	onMount(async () => {
 		loadingIndicator.start();
-		await Promise.all([tags.load(), checkInData.loadTrackers(), alerts.load()]);
-		loadingIndicator.stop();
+		try {
+			await Promise.all([tags.load(), checkInData.loadTrackers(), alerts.load()]);
+		} finally {
+			loadingIndicator.stop();
+		}
 	});
 
 	type Section = { id: number; title: string; component: Component };
@@ -73,25 +80,24 @@
 		programmaticScroll = true;
 		const instant = document.documentElement.classList.contains('no-animations');
 		element.scrollIntoView({ behavior: instant ? 'auto' : 'smooth', block: 'start' });
-		window.setTimeout(() => (programmaticScroll = false), 700);
+		window.setTimeout(() => (programmaticScroll = false), SCROLL_SETTLE_MS);
 	}
 
 	function updateActive(): void {
 		const container = scrollContainer;
 		if (programmaticScroll || !container) return;
 
-		if (container.scrollTop + container.clientHeight >= container.scrollHeight - 2) {
+		if (container.scrollTop + container.clientHeight >= container.scrollHeight - BOTTOM_TOLERANCE) {
 			active = sections[sections.length - 1].id;
 			return;
 		}
 
-		const threshold = 96;
 		const containerTop = container.getBoundingClientRect().top;
 		let current = sections[0].id;
 		for (const section of sections) {
 			const element = document.getElementById(sectionId(section.id));
 			if (!element) continue;
-			if (element.getBoundingClientRect().top - containerTop <= threshold) {
+			if (element.getBoundingClientRect().top - containerTop <= ACTIVE_SECTION_OFFSET) {
 				current = section.id;
 			} else {
 				break;

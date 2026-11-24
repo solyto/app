@@ -1,25 +1,22 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { getAuth } from '$lib/state/Auth.svelte';
 	import { onMount } from 'svelte';
-	import { apiRoutes } from '$lib/config/apiRoutes';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { getTelegramBot } from '$lib/state/TelegramBot.svelte';
+	import { getNotificationPreferences } from '$lib/state/NotificationPreferences.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 	import type {
 		NotificationSettings,
 		NotificationType,
 		NotificationChannel
 	} from '$lib/types/notification_settings';
-	import type { Connection } from '$lib/types/telegram_bot_connection';
 
 	let { showTelegram }: { showTelegram: boolean } = $props();
 
-	const auth = getAuth();
-	const apiService = auth.apiService;
+	const telegramBot = getTelegramBot();
+	const preferences = getNotificationPreferences();
 	const ts = getTranslation();
 
-	let settings = $state<NotificationSettings | null>(null);
-	let telegramConnection = $state<Connection | null>(null);
 	let pushEnabled = $state<boolean>(false);
 	let loaded = $state<boolean>(false);
 	let updating = $state<boolean>(false);
@@ -40,66 +37,45 @@
 	const channels: NotificationChannel[] = ['ui', 'email', 'push', 'telegram'];
 
 	onMount(async () => {
-		await Promise.all([loadSettings(), loadTelegramConnection(), checkPushStatus()]);
+		await Promise.all([preferences.load(), telegramBot.load(), checkPushStatus()]);
 		loaded = true;
 	});
 
-	async function loadSettings() {
-		const res = await apiService.get(apiRoutes.notifications.settings.get, null);
-		if (res?.data) {
-			settings = res.data as NotificationSettings;
-		}
-	}
-
-	async function loadTelegramConnection() {
-		const res = await apiService.get(apiRoutes.telegram.getRequest, null);
-		if (res) {
-			telegramConnection = res.data as Connection;
-		}
-	}
-
 	async function checkPushStatus() {
 		try {
-			if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-				pushEnabled = false;
-				return;
-			}
-			if (Notification.permission !== 'granted') {
-				pushEnabled = false;
-				return;
-			}
-			const reg = await navigator.serviceWorker.getRegistration();
-			if (!reg) {
-				pushEnabled = false;
-				return;
-			}
-			const sub = await reg.pushManager.getSubscription();
-			pushEnabled = sub !== null;
+			pushEnabled = await hasPushSubscription();
 		} catch {
 			pushEnabled = false;
 		}
+	}
+
+	async function hasPushSubscription(): Promise<boolean> {
+		if (!('serviceWorker' in navigator) || !('PushManager' in window)) return false;
+		if (Notification.permission !== 'granted') return false;
+
+		const reg = await navigator.serviceWorker.getRegistration();
+		if (!reg) return false;
+
+		return (await reg.pushManager.getSubscription()) !== null;
 	}
 
 	function visibleChannels(): NotificationChannel[] {
 		return showTelegram ? channels : channels.filter((channel) => channel !== 'telegram');
 	}
 
-	function getSettingKey(
-		type: NotificationType,
-		channel: NotificationChannel
-	): keyof NotificationSettings {
+	function getSettingKey(type: NotificationType, channel: NotificationChannel): keyof NotificationSettings {
 		return `${type}_${channel}` as keyof NotificationSettings;
 	}
 
 	function isChecked(type: NotificationType, channel: NotificationChannel): boolean {
-		if (!settings) return false;
+		if (!preferences.settings) return false;
 		const key = getSettingKey(type, channel);
-		return settings[key] ?? false;
+		return preferences.settings[key] ?? false;
 	}
 
 	function isChannelAvailable(channel: NotificationChannel): boolean {
 		if (channel === 'telegram') {
-			return telegramConnection?.is_confirmed ?? false;
+			return telegramBot.isConnected;
 		}
 		if (channel === 'push') {
 			return pushEnabled;
@@ -108,19 +84,12 @@
 	}
 
 	async function toggleSetting(type: NotificationType, channel: NotificationChannel) {
-		if (!settings || updating) return;
+		if (!preferences.settings || updating) return;
 
 		const key = getSettingKey(type, channel);
-		const newValue = !settings[key];
 
 		updating = true;
-		const res = await apiService.put(apiRoutes.notifications.settings.update, {
-			[key]: newValue
-		});
-
-		if (res) {
-			settings = { ...settings, [key]: newValue };
-		}
+		await preferences.update(key, !preferences.settings[key]);
 		updating = false;
 	}
 
@@ -200,12 +169,12 @@
 
 		{#if !isChannelAvailable('push')}
 			<p class="mt-4 text-xs text-c-neutral-5 dark:text-c-neutral-4">
-				Enable Push Notifications above to receive push notifications.
+				{ts.get.settings.push_notifications_hint}
 			</p>
 		{/if}
 	</div>
 {:else}
 	<div class="flex h-40 items-center justify-center">
-		<div class="animate-pulse text-c-neutral-4">Loading...</div>
+		<div class="animate-pulse text-c-neutral-4">{ts.get.layout.loading}</div>
 	</div>
 {/if}

@@ -12,7 +12,6 @@ vi.mock('$lib/components/dashboard/QuickGlance.svelte', stub);
 
 afterEach(() => {
 	vi.useRealTimers();
-	vi.restoreAllMocks();
 });
 
 describe('Dashboard page', () => {

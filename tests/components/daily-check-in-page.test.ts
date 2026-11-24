@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/svelte';
 import ApiService from '$lib/services/ApiService';
 import type { CheckInData } from '$lib/state/CheckInData.svelte';
@@ -24,10 +24,6 @@ function renderPage(trackers: CheckInTracker[] = [meditated, walked]): CheckInDa
 function reloadTrackers(checkInData: CheckInData, change: (tracker: CheckInTracker) => Partial<CheckInTracker> = () => ({})): void {
 	checkInData.trackers = checkInData.trackers.map((tracker) => ({ ...tracker, ...change(tracker) }));
 }
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 describe('Daily check-in page', () => {
 	it('keeps an unsaved change shown and saves it after the trackers were reloaded', async () => {

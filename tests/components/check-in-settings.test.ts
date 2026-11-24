@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/svelte';
 import ApiService from '$lib/services/ApiService';
 import CheckInSettings from '$lib/components/check-in/CheckInSettings.svelte';
@@ -18,10 +18,6 @@ function renderSettings(trackers: CheckInTracker[], startWithNewTracker = false)
 function dividers(container: HTMLElement): NodeListOf<Element> {
 	return container.querySelectorAll('div[aria-hidden="true"].border-dashed');
 }
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 describe('Check-in settings', () => {
 	it('is titled by what it shows', async () => {

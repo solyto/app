@@ -10,11 +10,15 @@ import type {
 import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
+import LocalStorageService from '$lib/services/LocalStorageService';
 import { apiRoutes } from '$lib/config/apiRoutes';
 import LibraryFilterService from '$lib/services/LibraryFilterService';
 import type { LibraryConfig } from '$lib/types/library';
 
 export class GameLibrary {
+	static readonly LS_VIEW_KEY: string = 'games_view';
+	static readonly VIEWS = ['list', 'cards'] as const;
+
 	config: LibraryConfig = {
 		type: 'games',
 		hasCovers: true,
@@ -45,14 +49,20 @@ export class GameLibrary {
 	wishlistFilter = $state<boolean>(false);
 	searchTerm = $state<string>('');
 	activeFilter: 'none' | 'search' | 'genreAndRating' | 'wishlist' = 'none';
-	view = $state<'list' | 'cards'>('cards');
+	view = $state<(typeof GameLibrary.VIEWS)[number]>('cards');
 	auth: Auth;
 	filterService = new LibraryFilterService();
 	apiService: ApiService;
+	localStorage: LocalStorageService;
 
-	constructor(auth: Auth = getAuth(), apiService: ApiService = auth.apiService) {
+	constructor(
+		auth: Auth = getAuth(),
+		apiService: ApiService = auth.apiService,
+		localStorage: LocalStorageService = new LocalStorageService()
+	) {
 		this.auth = auth;
 		this.apiService = apiService;
+		this.localStorage = localStorage;
 	}
 
 	async load(): Promise<void> {
@@ -88,6 +98,8 @@ export class GameLibrary {
 	}
 
 	filterByWishlist(): void {
+		this.genreFilter = null;
+		this.ratingFilter = null;
 		this.wishlistFilter = true;
 		this.activeFilter = 'wishlist';
 		this.reapplyFilter();
@@ -149,6 +161,13 @@ export class GameLibrary {
 
 	closeExternalSearchModal(): void {
 		this.externalSearchModalVisible = false;
+	}
+
+	changeView(view: string): void {
+		const known = GameLibrary.VIEWS.find((candidate) => candidate === view);
+		if (!known) return;
+		this.view = known;
+		this.localStorage.set(GameLibrary.LS_VIEW_KEY, known);
 	}
 
 	switchView(): void {

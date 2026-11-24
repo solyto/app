@@ -3,7 +3,6 @@
 /// <reference lib="esnext" />
 /// <reference lib="webworker" />
 
-// Type-safe SvelteKit SW environment
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
 import { build, files, version } from '$service-worker';
@@ -21,18 +20,16 @@ const LAZY = [
 ];
 const ASSETS = [...build, ...files].filter((path) => !LAZY.some((re) => re.test(path)));
 
-// 🧱 INSTALL: Precache app shell (static assets)
 sw.addEventListener('install', (event) => {
 	event.waitUntil(
 		(async () => {
 			const cache = await caches.open(CACHE);
 			await cache.addAll(ASSETS);
-			await sw.skipWaiting(); // activate immediately
+			await sw.skipWaiting();
 		})()
 	);
 });
 
-// 🧹 ACTIVATE: Remove old caches
 sw.addEventListener('activate', (event) => {
 	event.waitUntil(
 		(async () => {
@@ -51,7 +48,6 @@ sw.addEventListener('activate', (event) => {
 	);
 });
 
-// ⚡ FETCH: Cache-first for app shell, stale-while-revalidate for everything else
 sw.addEventListener('fetch', (event) => {
 	const url = new URL(event.request.url);
 
@@ -63,7 +59,6 @@ sw.addEventListener('fetch', (event) => {
 	// browser session).
 	if (event.request.method !== 'GET' || url.origin !== sw.location.origin) return;
 
-	// Skip API calls
 	if (url.pathname.startsWith('/api')) return;
 
 	event.respondWith(
@@ -71,15 +66,12 @@ sw.addEventListener('fetch', (event) => {
 			const cache = await caches.open(CACHE);
 			const cachedResponse = await cache.match(event.request);
 
-			// Cache-first for static app assets
 			if (ASSETS.includes(url.pathname)) {
 				return cachedResponse || fetch(event.request);
 			}
 
-			// Cache-first for lazy assets once they are cached
 			if (cachedResponse && LAZY.some((re) => re.test(url.pathname))) return cachedResponse;
 
-			// Stale-while-revalidate for everything else
 			try {
 				const networkResponse = await fetch(event.request);
 				if (networkResponse && networkResponse.status === 200) {
@@ -87,7 +79,6 @@ sw.addEventListener('fetch', (event) => {
 				}
 				return cachedResponse || networkResponse;
 			} catch {
-				// Always return a Response object
 				return (
 					cachedResponse ||
 					new Response('Offline – please check your connection.', {
@@ -123,7 +114,6 @@ sw.addEventListener('push', (event) => {
 		event.waitUntil(sw.registration.showNotification(data.title || 'Notification', options));
 	} catch (error) {
 		console.error('Error parsing push notification:', error);
-		// Fallback notification if parsing fails
 		event.waitUntil(
 			sw.registration.showNotification('New Notification', {
 				body: 'You have a new notification',
@@ -140,25 +130,21 @@ sw.addEventListener('notificationclick', (event) => {
 
 	event.waitUntil(
 		(async () => {
-			// Check if there's already a window open
 			const windowClients = await sw.clients.matchAll({
 				type: 'window',
 				includeUncontrolled: true
 			});
 
-			// If a window is already open, focus it and navigate
 			for (const client of windowClients) {
 				if (client.url === urlToOpen && 'focus' in client) {
 					return client.focus();
 				}
 			}
 
-			// If action button was clicked
 			if (event.action === 'notification_action' || event.action === 'view_task') {
 				return sw.clients.openWindow(urlToOpen);
 			}
 
-			// Default click behavior - open or focus window
 			if (sw.clients.openWindow) {
 				return sw.clients.openWindow(urlToOpen);
 			}
@@ -168,5 +154,4 @@ sw.addEventListener('notificationclick', (event) => {
 
 sw.addEventListener('notificationclose', (event) => {
 	console.log('Notification was closed', event.notification);
-	// You could send analytics here if needed
 });

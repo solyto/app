@@ -9,7 +9,6 @@ vi.mock('$app/navigation', () => ({ afterNavigate: (callback: () => void) => cal
 
 afterEach(() => {
 	vi.useRealTimers();
-	vi.restoreAllMocks();
 });
 
 describe('Daily check-in page with a broken date in the link', () => {

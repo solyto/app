@@ -29,6 +29,11 @@ export interface LayoutRecords {
 	previous_page: string;
 	next_page: string;
 	page_of: string;
+	name: string;
+	loading: string;
+	minimize: string;
+	maximize: string;
+	close: string;
 }
 
 export interface NavigationRecords {
@@ -194,6 +199,17 @@ export interface SettingsRecords {
 	ai_plugin_saved: string;
 	ai_plugin_save_error: string;
 	ai_plugin_load_error: string;
+	notifications_description: string;
+	push_notifications_hint: string;
+	export_select_at_least_one: string;
+	version: string;
+	update_check: string;
+	update_install: string;
+	update_up_to_date: string;
+	update_available: string;
+	update_downloading: string;
+	update_ready: string;
+	update_check_failed: string;
 }
 
 export interface AuthRecords {
@@ -1297,6 +1313,7 @@ export interface ClipboardRecords {
 	attach_file: string;
 	image_preview_alt: string;
 	image_alt: string;
+	download_fallback_name: string;
 }
 
 export interface ProfileRecords {

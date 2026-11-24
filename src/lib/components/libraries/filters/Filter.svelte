@@ -40,10 +40,7 @@
 
 	function filterByWishlist() {
 		toggleMenu();
-		const wishlistLibrary = library as GenreLibrary;
-		wishlistLibrary.genreFilter = null;
-		wishlistLibrary.ratingFilter = null;
-		wishlistLibrary.filterByWishlist();
+		(library as GenreLibrary).filterByWishlist();
 	}
 
 	function hasActiveFilter(): boolean {

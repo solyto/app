@@ -9,6 +9,7 @@
 	import StatisticsView from '$lib/components/time-tracking/StatisticsView.svelte';
 	import EntryCreate from '$lib/components/time-tracking/EntryCreate.svelte';
 	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
+	import { hamburgerClearance } from '$lib/config/navigation';
 
 	const ts = getTranslation();
 	const auth = getAuth();
@@ -26,7 +27,7 @@
 	{:else}
 		<div>
 			<div class="mb-4 flex flex-row items-center justify-between">
-				<div class="max-lg:ml-14">
+				<div class={hamburgerClearance}>
 					<Heading title={ts.get.timeTracking.entries} my={0} />
 				</div>
 				<TextButton title={ts.get.timeTracking.add_entry} onclick={() => (showEntryCreate = true)} />

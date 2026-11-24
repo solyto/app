@@ -45,7 +45,6 @@ function renderDashboard(enabled: FeatureType[]) {
 
 afterEach(() => {
 	vi.useRealTimers();
-	vi.restoreAllMocks();
 });
 
 describe('Dashboard loading', () => {

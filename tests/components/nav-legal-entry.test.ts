@@ -12,7 +12,7 @@ vi.mock('$env/dynamic/public', () => ({
 }));
 
 import { describe, it, expect } from 'vitest';
-import { screen } from '@testing-library/svelte';
+import { fireEvent, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { renderWithContext } from './helpers/context';
 import NavLegalEntry from '$lib/components/ui/NavLegalEntry.svelte';
@@ -59,5 +59,38 @@ describe('NavLegalEntry', () => {
 		const link = screen.getByText('Open-source licenses');
 		expect(link).toHaveAttribute('href', '/licenses');
 		expect(link).not.toHaveAttribute('target');
+	});
+});
+
+describe('NavLegalEntry position', () => {
+	function popup(): HTMLElement {
+		return screen.getByText('Open-source licenses').parentElement as HTMLElement;
+	}
+
+	it('opens to the right of the click on desktop', async () => {
+		renderWithContext(NavLegalEntry, {});
+
+		await fireEvent.click(screen.getByTitle('Legal'), { clientX: 100, clientY: 700 });
+
+		expect(popup().style.bottom).toBe(`${window.innerHeight - 700}px`);
+		expect(popup().style.left).toBe('120px');
+	});
+
+	it('opens to the left of and above the click on mobile', async () => {
+		renderWithContext(NavLegalEntry, { mobile: true });
+
+		await fireEvent.click(screen.getByTitle('Legal'), { clientX: 1000, clientY: 700 });
+
+		expect(popup().style.bottom).toBe(`${window.innerHeight - 700 + 20}px`);
+		expect(popup().style.right).toBe(`${window.innerWidth - 1000}px`);
+	});
+
+	it('closes again on a second click', async () => {
+		renderWithContext(NavLegalEntry, {});
+
+		await fireEvent.click(screen.getByTitle('Legal'));
+		await fireEvent.click(screen.getByTitle('Legal'));
+
+		expect(screen.queryByText('Open-source licenses')).not.toBeInTheDocument();
 	});
 });

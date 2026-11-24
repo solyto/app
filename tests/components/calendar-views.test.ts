@@ -19,6 +19,9 @@ import WeekDay from '$lib/components/calendars/views/week/Day.svelte';
 import EventEdit from '$lib/components/calendars/EventEdit.svelte';
 import ExternalAccountEntry from '$lib/components/calendars/ExternalAccountEntry.svelte';
 import ExternalAccountRemoveModal from '$lib/components/calendars/ExternalAccountRemoveModal.svelte';
+import CalendarView from '$lib/components/calendars/CalendarView.svelte';
+import ShareCalendarModal from '$lib/components/calendars/ShareCalendarModal.svelte';
+import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 
 vi.mock('$app/state', () => ({ page: { url: new URL('http://localhost/calendar') } }));
 
@@ -153,7 +156,7 @@ describe('Calendar navigation', () => {
 
 describe('Calendar mobile month view', () => {
 	function renderMonth(): Calendars {
-		return renderCalendar(MobileMonthView as Component<never>, {}, (calendars) => {
+		return renderCalendar(MobileMonthView as Component<never>, { weekStart: 'monday' }, (calendars) => {
 			calendars.mobileSelectedDate = day;
 			calendars.sortedEvents = { [formatDate(day)]: [holiday, meeting] };
 		});
@@ -249,7 +252,7 @@ describe('Calendar event editor', () => {
 	const occurrence = calendarEvent({ is_recurring: true, original_start_date: new Date(2026, 7, 10, 10, 0) });
 
 	function renderEditor(activeEvent: typeof occurrence | null): Calendars {
-		const calendars = renderCalendar(EventEdit as Component<never>, {}, (c) => {
+		const calendars = renderCalendar(EventEdit as Component<never>, { timeZone: 'UTC' }, (c) => {
 			c.calendars = [calendar()];
 			c.activeEvent = activeEvent;
 		});
@@ -306,6 +309,68 @@ describe('Calendar event editor', () => {
 	});
 });
 
+describe('Calendar view with the user\'s settings', () => {
+	function renderView(setup: (calendars: Calendars) => void = () => {}): Calendars {
+		let store: Calendars | null = null;
+		renderWithContext(CalendarHarness, {
+			component: CalendarView,
+			setup: (calendars: Calendars) => {
+				calendars.view = 'month';
+				setup(calendars);
+				store = calendars;
+			}
+		}, {
+			stores: { auth: { user: { settings: { week_start: 'sunday', timezone: 'Europe/Berlin' } } } }
+		});
+		return store!;
+	}
+
+	it('starts the month view on the user\'s first day of the week', () => {
+		renderView();
+
+		const labels = Object.values(en.calendar.weekdays_short).map((short) => `${short}.`);
+		const headers = screen.getAllByText((text) => labels.includes(text));
+
+		expect(headers[0]).toHaveTextContent(`${en.calendar.weekdays_short[7]}.`);
+		expect(headers[1]).toHaveTextContent(`${en.calendar.weekdays_short[1]}.`);
+	});
+
+	it('reads the end of a series in the user\'s time zone when the event is saved', async () => {
+		const series = calendarEvent({
+			start_date: new Date(2026, 10, 20, 10, 0),
+			end_date: new Date(2026, 10, 20, 11, 0),
+			is_recurring: true,
+			recurrence_rule: 'FREQ=DAILY;UNTIL=20261130T230000Z'
+		});
+		const calendars = renderView((c) => {
+			c.calendars = [calendar()];
+			c.activeEvent = series;
+			c.editSidebar = true;
+		});
+		const updateEvent = vi.spyOn(calendars, 'updateEvent').mockResolvedValue('ok');
+
+		await fireEvent.click(screen.getByLabelText(en.calendar.is_all_day));
+		await fireEvent.click(screen.getByRole('button', { name: en.layout.save }));
+
+		expect(updateEvent).toHaveBeenCalledWith(series, expect.objectContaining({ recurrence_rule: 'FREQ=DAILY;UNTIL=20261201' }));
+	});
+});
+
+describe('Sharing a calendar', () => {
+	it('shows each friend with their profile image', async () => {
+		const friend = { id: 'u2', name: 'Bob', profile_image_path: 'u2/avatar.png' };
+		const list = vi.fn((url: string) => Promise.resolve({ data: url.endsWith('/share') ? [] : [friend] }));
+		renderWithContext(CalendarHarness, {
+			component: ShareCalendarModal,
+			props: { calendar: calendar(), onClose: () => {} }
+		}, {
+			stores: { auth: { apiService: { list } } }
+		});
+
+		expect((await screen.findByAltText('Profile')).getAttribute('src')).toBe(API_USER_STORAGE_URL + '/u2/avatar.png');
+	});
+});
+
 describe('Removing an external account', () => {
 	const account = { id: 7, server_url: 'https://cloud.example.com', username: 'alice', calendars: [] };
 
@@ -318,6 +383,12 @@ describe('Removing an external account', () => {
 		});
 		return store!;
 	}
+
+	it('counts the account\'s calendars', () => {
+		renderExternal(ExternalAccountEntry as Component<never>, { account });
+
+		expect(screen.getByText('alice · 0 calendars')).toBeInTheDocument();
+	});
 
 	it('asks before an account is removed', async () => {
 		const externalCalendars = renderExternal(ExternalAccountEntry as Component<never>, { account });

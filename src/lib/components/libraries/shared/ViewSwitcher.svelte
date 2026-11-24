@@ -1,12 +1,10 @@
 <script lang="ts">
 	import UiViewSwitcher from '$lib/components/ui/ViewSwitcher.svelte';
-	import type { Library } from '$lib/types/library';
-	import LocalStorageService from '$lib/services/LocalStorageService';
+	import type { ViewLibrary } from '$lib/types/library';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 
-	let { library }: { library: Library } = $props();
+	let { library }: { library: ViewLibrary } = $props();
 
-	const ls = new LocalStorageService();
 	const ts = getTranslation();
 
 	function views() {
@@ -22,8 +20,7 @@
 	}
 
 	function onViewChange(type: string) {
-		library.view = type as typeof library.view;
-		ls.set(`${library.config.type}_view`, type);
+		library.changeView(type);
 	}
 </script>
 

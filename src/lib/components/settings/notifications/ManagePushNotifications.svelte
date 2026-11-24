@@ -2,22 +2,18 @@
 	import Toggle from '$lib/components/forms/Toggle.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { onMount } from 'svelte';
-	import { getAuth } from '$lib/state/Auth.svelte';
-	import { apiRoutes } from '$lib/config/apiRoutes';
+	import { getPushNotifications } from '$lib/state/PushNotifications.svelte';
 	import { getUiNotifications } from '$lib/state/UiNotifications.svelte';
 
 	const ts = getTranslation();
-	const auth = getAuth();
+	const pushNotifications = getPushNotifications();
 	const notifications = getUiNotifications();
-	const apiService = auth.apiService;
 
 	let checked = $state<boolean>(false);
 	let isLoading = $state<boolean>(false);
-	let vapidPublicKey = $state<string>('');
 
 	onMount(async () => {
-		const res = await apiService.get(apiRoutes.notifications.push.getVapidKey, null);
-		if (res?.data) vapidPublicKey = (res.data as { public_key: string }).public_key;
+		await pushNotifications.loadVapidKey();
 
 		await checkPushSubscription();
 	});
@@ -69,24 +65,19 @@
 			return;
 		}
 
-		if (!vapidPublicKey) {
+		if (!pushNotifications.vapidPublicKey) {
 			throw new Error('VAPID public key not loaded');
 		}
 
 		const reg = await navigator.serviceWorker.ready;
 		const sub = await reg.pushManager.subscribe({
 			userVisibleOnly: true,
-			applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+			applicationServerKey: urlBase64ToUint8Array(pushNotifications.vapidPublicKey)
 		});
 
-		const subscriptionData = sub.toJSON();
+		const registered = await pushNotifications.subscribe(sub.toJSON());
 
-		const res = await apiService.create(
-			apiRoutes.notifications.push.subscribe,
-			subscriptionData
-		);
-
-		if (!res) {
+		if (!registered) {
 			throw new Error('Failed to register subscription on server');
 		}
 	}
@@ -98,9 +89,7 @@
 		if (sub) {
 			await sub.unsubscribe();
 
-			await apiService.create(apiRoutes.notifications.push.unsubscribe, {
-				endpoint: sub.endpoint
-			});
+			await pushNotifications.unsubscribe(sub.endpoint);
 		}
 	}
 

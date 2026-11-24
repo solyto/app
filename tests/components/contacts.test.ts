@@ -1,14 +1,15 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, screen } from '@testing-library/svelte';
 import type { Component } from 'svelte';
-import type { Contacts } from '$lib/state/Contacts.svelte';
+import { setContacts, type Contacts } from '$lib/state/Contacts.svelte';
 import type { LoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 import ContactEdit from '$lib/components/contacts/ContactEdit.svelte';
 import AddressBookCreateModal from '$lib/components/contacts/AddressBookCreateModal.svelte';
 import ImportModal from '$lib/components/contacts/ImportModal.svelte';
+import AddressBookEdit from '$lib/components/contacts/AddressBookEdit.svelte';
 import { renderWithContext } from './helpers/context';
 import { rejectionsDuring } from './helpers/rejections';
-import ContactsHarness from './helpers/ContactsHarness.svelte';
+import StoreHarness from './helpers/StoreHarness.svelte';
 import { addressBook, contact } from '../unit/helpers/factories';
 
 let loadingIndicator: LoadingIndicator;
@@ -16,8 +17,9 @@ let loadingIndicator: LoadingIndicator;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function renderContacts(component: Component<any>, seed: (contacts: Contacts) => void = () => {}): Contacts {
 	let store: Contacts | null = null;
-	renderWithContext(ContactsHarness, {
+	renderWithContext(StoreHarness, {
 		component,
+		provide: setContacts,
 		onReady: (contacts: Contacts) => {
 			contacts.addressBooks = [addressBook({ id: 4 })];
 			seed(contacts);
@@ -30,10 +32,6 @@ function renderContacts(component: Component<any>, seed: (contacts: Contacts) =>
 async function type(placeholder: string, value: string): Promise<void> {
 	await fireEvent.input(screen.getByPlaceholderText(placeholder), { target: { value } });
 }
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 describe('Contact form', () => {
 	it('sends a new contact with the name parts joined and lists as JSON', async () => {
@@ -155,5 +153,23 @@ describe('Contact import', () => {
 		expect(contacts.startImport).toHaveBeenCalledWith({ url: 'https://dav.example.org', username: 'ada', secret: 'secret' });
 		expect(rejections).toEqual([new Error('offline')]);
 		expect(loadingIndicator.active).toBe(false);
+	});
+});
+
+describe('Address book row', () => {
+	it('hides and shows the address book with the toggle button', async () => {
+		let contacts!: Contacts;
+		renderWithContext(StoreHarness, {
+			component: AddressBookEdit,
+			props: { addressBook: addressBook({ id: 4 }) },
+			provide: setContacts,
+			onReady: (store: Contacts) => (contacts = store)
+		});
+
+		await fireEvent.click(screen.getByRole('button', { name: 'Toggle' }));
+		expect(contacts.isAddressBookHidden(4)).toBe(true);
+
+		await fireEvent.click(screen.getByRole('button', { name: 'Toggle' }));
+		expect(contacts.isAddressBookHidden(4)).toBe(false);
 	});
 });

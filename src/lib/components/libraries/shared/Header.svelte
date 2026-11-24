@@ -9,7 +9,7 @@
 	import Search from '$lib/components/libraries/shared/Search.svelte';
 	import Recommender from '$lib/components/libraries/shared/Recommender.svelte';
 	import Filter from '$lib/components/libraries/filters/Filter.svelte';
-	import type { FilterLibrary, GenreLibrary, Library } from '$lib/types/library';
+	import type { FilterLibrary, GenreLibrary, Library, ViewLibrary } from '$lib/types/library';
 	import type { MusicLibrary } from '$lib/state/MusicLibrary.svelte';
 	import type { BookLibrary } from '$lib/state/BookLibrary.svelte';
 	import type { MovieLibrary } from '$lib/state/MovieLibrary.svelte';
@@ -37,7 +37,7 @@
 
 <div class="relative mb-4 w-full">
 	{#if library.config.hasViewSwitcher}
-		<ViewSwitcher {library} />
+		<ViewSwitcher library={library as ViewLibrary} />
 	{/if}
 	<div class="grid grid-cols-[1fr_auto] items-center gap-x-4">
 		{#if children}

@@ -2,6 +2,7 @@
 	import { init } from './echarts';
 	import type { ECharts } from './echarts';
 	import { onMount, onDestroy } from 'svelte';
+	import { resolveCssColor, withAlpha } from '$lib/helpers/ColorHelper';
 
 	let {
 		title,
@@ -28,26 +29,6 @@
 	let chartContainer = $state<HTMLDivElement | null>(null);
 	let myChart: ECharts | null = null;
 
-	// echarts renders to canvas, so CSS variables like var(--color-c-success) must be
-	// resolved to a concrete color value before being passed to the chart options.
-	function resolveColor(cssColor: string): string {
-		const probe = document.createElement('div');
-		probe.style.color = cssColor;
-		document.body.appendChild(probe);
-		const resolved = getComputedStyle(probe).color;
-		document.body.removeChild(probe);
-		return resolved;
-	}
-
-	function withAlpha(rgb: string, alpha: number): string {
-		// rgb()/rgba() computed value, e.g. "rgb(97, 217, 106)"
-		const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-		if (match) {
-			return `rgba(${match[1]}, ${match[2]}, ${match[3]}, ${alpha})`;
-		}
-		return rgb;
-	}
-
 	function createChart() {
 		if (myChart) {
 			myChart.dispose();
@@ -58,7 +39,7 @@
 
 		myChart = init(chartContainer);
 
-		const lineColor = resolveColor(color);
+		const lineColor = resolveCssColor(color);
 
 		const options = {
 			title: {

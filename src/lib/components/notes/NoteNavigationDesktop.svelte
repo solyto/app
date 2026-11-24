@@ -146,6 +146,6 @@
 		</div>
 	{/if}
 	{#if notes.categories.length === 0 && notes.getVisibleNotes().length === 0}
-		<EmptyState title={ts.get.notes.no_folders} description={ts.get.notes.no_folders_desc} py={2} leftAlign={true} />
+		<EmptyState title={ts.get.notes.no_folders} description={ts.get.notes.no_folders_desc} py={2} align="left" />
 	{/if}
 </div>

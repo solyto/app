@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, screen, waitFor } from '@testing-library/svelte';
 import ApiService from '$lib/services/ApiService';
 import type { BookLibrary } from '$lib/state/BookLibrary.svelte';
@@ -7,10 +7,6 @@ import { renderWithContext } from './helpers/context';
 import RecommenderHarness from './helpers/RecommenderHarness.svelte';
 
 const found = { id: 7, title: 'Found', author: null, artist: null, cover: 'https://img/cover.jpg', release_year: null, provider: 'x', url: 'https://found' };
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 describe('Library recommender', () => {
 	it.each([

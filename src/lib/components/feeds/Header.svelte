@@ -8,6 +8,7 @@
 	import ViewSwitcher from '$lib/components/ui/ViewSwitcher.svelte';
 	import Heading from '$lib/components/ui/Heading.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
+	import { hamburgerClearance } from '$lib/config/navigation';
 
 	const loadingIndicator = getLoadingIndicator();
 	const feeds = getFeeds();
@@ -53,7 +54,7 @@
 </script>
 
 <div class="flex min-h-8 w-full items-center justify-end gap-2">
-	<div class="mr-auto max-lg:ml-14 max-sm:hidden">
+	<div class="mr-auto {hamburgerClearance} max-sm:hidden">
 		<Heading title={feed?.title ?? ts.get.feeds.all_feeds} my={0} />
 	</div>
 	{#if feed !== null}

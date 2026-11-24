@@ -7,6 +7,7 @@
 	import { onDestroy, tick } from 'svelte';
 	import SaveButton from '$lib/components/ui/buttons/SaveButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
+	import { getTranslation } from '$lib/state/Translation.svelte';
 
 	let { title, type, onStart, onFinish }: {
 		title: string;
@@ -19,6 +20,7 @@
 	const loadingIndicator = getLoadingIndicator();
 	const todos = getTodos();
 	const tags = getTags();
+	const ts = getTranslation();
 
 	let visible = $state<boolean>(false);
 	let value = $state<string>('');
@@ -69,6 +71,10 @@
 		onFinish();
 	}
 
+	function addLabel(): string {
+		return type === 'tag' ? ts.get.settings.new_tag : ts.get.todos.new_category;
+	}
+
 	async function create(title: string): Promise<void> {
 		if (type === 'tag') {
 			await tags.create(title);
@@ -80,10 +86,14 @@
 
 <div class="mt-2 flex items-center justify-between p-2 text-base font-bold 2xl:text-2xl 2xl:font-normal">
 	{title}
-	<IconPlus
+	<button
+		type="button"
 		class="cursor-pointer pt-1 text-c-neutral-5 hover:text-c-neutral-9 dark:text-c-neutral-2 dark:hover:text-white"
+		aria-label={addLabel()}
 		onclick={toggle}
-	/>
+	>
+		<IconPlus />
+	</button>
 </div>
 {#if visible}
 	<div class="flex flex-row items-center space-x-2">

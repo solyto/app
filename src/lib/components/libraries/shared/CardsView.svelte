@@ -45,7 +45,7 @@
 				>
 					<div class="relative flex h-full w-full items-center justify-center">
 						<div class="relative flex h-full w-full items-center justify-center rounded-sm transition-all">
-							<EntryCover {entry} {library} fill />
+							<EntryCover {entry} {library} fit="object-cover" />
 						</div>
 					</div>
 				</div>

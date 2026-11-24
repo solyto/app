@@ -207,7 +207,7 @@
 		<div class="flex w-full items-center justify-end gap-4">
 			{#if canReduce}
 				<div class="mr-auto">
-					<Toggle label={ts.get.clipboard.image_reduce} bind:checked={reduce} onchange={() => {}} />
+					<Toggle label={ts.get.clipboard.image_reduce} bind:checked={reduce} />
 				</div>
 			{/if}
 			<TextButton title={ts.get.clipboard.save} onclick={onSaveImage} />

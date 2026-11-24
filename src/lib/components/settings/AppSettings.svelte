@@ -16,14 +16,19 @@
 	const nav = getNavigation();
 
 	const version = env.PUBLIC_VERSION;
+
+	function startTour(): void {
+		tour.start(nav.features);
+	}
+
+	function installPwa(): void {
+		pwa.install();
+	}
 </script>
 
 <div class="flex flex-col gap-6">
 	<SettingsSection label={ts.get.welcome_tour.tour_start}>
-		<TextButton
-			title={ts.get.welcome_tour.tour_start}
-			onclick={() => tour.start(nav.features)}
-		/>
+		<TextButton title={ts.get.welcome_tour.tour_start} onclick={startTour} />
 	</SettingsSection>
 	{#if !IS_NATIVE}
 		<SettingsSection label={ts.get.welcome_tour.pwa_title}>
@@ -37,10 +42,7 @@
 				</div>
 			{:else if pwa.canInstall}
 				<div class="mt-4">
-					<TextButton
-						title={ts.get.welcome_tour.pwa_install_button}
-						onclick={() => pwa.install()}
-					/>
+					<TextButton title={ts.get.welcome_tour.pwa_install_button} onclick={installPwa} />
 				</div>
 			{:else if pwa.isIos}
 				<p class="mt-4 text-sm text-c-neutral-5 dark:text-c-neutral-4">
@@ -54,7 +56,7 @@
 		</SettingsSection>
 	{/if}
 	{#if IS_NATIVE && version}
-		<SettingsSection label="Version">
+		<SettingsSection label={ts.get.settings.version}>
 			<p class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{version}</p>
 			{#if PLATFORM === 'desktop'}
 				<UpdateChecker />

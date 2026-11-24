@@ -2,7 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import { getFriends } from '$lib/state/Friends.svelte';
 	import Heading from '$lib/components/ui/Heading.svelte';
-	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
+	import { profileImageUrl } from '$lib/helpers/ProfileImageHelper';
 	import AddButton from '$lib/components/ui/buttons/AddButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import { onDestroy, tick } from 'svelte';
@@ -29,6 +29,8 @@
 
 			keyHandlers.Enter = keyManager.registerKeyDown('Enter', handleEnter);
 			keyHandlers.Escape = keyManager.registerKeyDown('Escape', handleEscape);
+		} else {
+			keyManager.unregisterAll(keyHandlers);
 		}
 	}
 
@@ -73,7 +75,7 @@
 		<div class="flex items-center gap-4" transition:fade>
 			<div class="size-8">
 				<img
-					src={API_USER_STORAGE_URL + '/' + friend.profile_image_path}
+					src={profileImageUrl(friend.profile_image_path)}
 					alt={ts.get.profile.profile_image_alt}
 					class="h-full w-full rounded-full object-cover"
 				/>

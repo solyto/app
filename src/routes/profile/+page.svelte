@@ -4,7 +4,7 @@
 	import IconPlus from '$lib/icons/lucide/plus.svelte';
 	import IconLogout from '$lib/icons/lucide/log-out.svelte';
 	import IconShieldUser from '$lib/icons/lucide/shield-user.svelte';
-	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
+	import { profileImageUrl } from '$lib/helpers/ProfileImageHelper';
 	import { onMount } from 'svelte';
 	import { getFriends } from '$lib/state/Friends.svelte';
 	import Friends from '$lib/components/users/Friends.svelte';
@@ -58,7 +58,7 @@
 	function profileImageSrc(): string | null {
 		if (selectedFileUrl) return selectedFileUrl;
 		const storedPath = auth.user?.profile?.profile_image_path;
-		return storedPath ? API_USER_STORAGE_URL + '/' + storedPath : null;
+		return storedPath ? profileImageUrl(storedPath) : null;
 	}
 </script>
 

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { screen, waitFor } from '@testing-library/svelte';
 import ApiService from '$lib/services/ApiService';
 import GoalCard from '$lib/components/goals/GoalCard.svelte';
@@ -9,10 +9,6 @@ import { formatDateWithoutYear, getDatePlusDays, getUrlFormat } from '$lib/helpe
 import { renderWithContext } from './helpers/context';
 import CheckInContextHarness from './helpers/CheckInContextHarness.svelte';
 import { checkInTracker, goal } from '../unit/helpers/factories';
-
-afterEach(() => {
-	vi.restoreAllMocks();
-});
 
 function inDays(days: number): string {
 	return getUrlFormat(getDatePlusDays(new Date(), days));

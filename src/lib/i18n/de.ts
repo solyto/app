@@ -59,7 +59,12 @@ const layout: LayoutRecords = {
 	rate_limited_minutes_plural: 'Zu viele Versuche. Bitte versuche es in {n} Minuten erneut.',
 	previous_page: 'Vorherige Seite',
 	next_page: 'Nächste Seite',
-	page_of: 'Seite {n} von {total}'
+	page_of: 'Seite {n} von {total}',
+	name: 'Name',
+	loading: 'Wird geladen...',
+	minimize: 'Minimieren',
+	maximize: 'Maximieren',
+	close: 'Schließen'
 };
 
 const nav: NavigationRecords = {
@@ -295,7 +300,18 @@ const settings: SettingsRecords = {
 	ai_plugin_api_key_required: 'Zum Speichern der KI-Einstellungen wird ein API-Schlüssel benötigt.',
 	ai_plugin_saved: 'KI-Einstellungen gespeichert.',
 	ai_plugin_save_error: 'KI-Einstellungen konnten nicht gespeichert werden.',
-	ai_plugin_load_error: 'KI-Einstellungen konnten nicht geladen werden.'
+	ai_plugin_load_error: 'KI-Einstellungen konnten nicht geladen werden.',
+	notifications_description: 'Wähle, welche Benachrichtigungen du erhalten möchtest und über welche Kanäle.',
+	push_notifications_hint: 'Aktiviere oben Push-Benachrichtigungen, um sie zu erhalten.',
+	export_select_at_least_one: 'Bitte wähle mindestens eine Funktion aus.',
+	version: 'Version',
+	update_check: 'Nach Updates suchen',
+	update_install: 'Installieren & neu starten',
+	update_up_to_date: 'Du hast die neueste Version.',
+	update_available: 'Update %s verfügbar – wird heruntergeladen…',
+	update_downloading: 'Wird heruntergeladen… %s%',
+	update_ready: 'Update ist bereit zur Installation.',
+	update_check_failed: 'Suche nach Updates fehlgeschlagen. Prüfe deine Verbindung.'
 };
 
 const todos: TodoRecords = {
@@ -1409,7 +1425,8 @@ const clipboard: ClipboardRecords = {
 	attach_image: 'Bild anhängen',
 	attach_file: 'Datei anhängen',
 	image_preview_alt: 'Vorschau',
-	image_alt: 'Bild aus der Zwischenablage'
+	image_alt: 'Bild aus der Zwischenablage',
+	download_fallback_name: 'datei'
 };
 
 const profile: ProfileRecords = {
@@ -1776,7 +1793,7 @@ const update_required: UpdateRequiredRecords = {
 	reload: 'Neueste Version laden',
 	required_version: 'Erforderliche Version: %s',
 	your_version: 'Deine Version: %s',
-	server_outdated: 'Dein Server läuft mit Version %server, diese App ist aber %app. Manches funktioniert eventuell erst, wenn der Server aktualisiert ist.'
+	server_outdated: 'Dein Server läuft mit Version {server}, diese App ist aber {app}. Manches funktioniert eventuell erst, wenn der Server aktualisiert ist.'
 };
 
 export const de: LanguageFile = {

@@ -59,7 +59,12 @@ const layout: LayoutRecords = {
 	rate_limited_minutes_plural: 'Too many attempts. Please try again in {n} minutes.',
 	previous_page: 'Previous page',
 	next_page: 'Next page',
-	page_of: 'Page {n} of {total}'
+	page_of: 'Page {n} of {total}',
+	name: 'Name',
+	loading: 'Loading...',
+	minimize: 'Minimize',
+	maximize: 'Maximize',
+	close: 'Close'
 };
 
 const nav: NavigationRecords = {
@@ -294,7 +299,18 @@ const settings: SettingsRecords = {
 	ai_plugin_api_key_required: 'An API key is required to save the AI settings.',
 	ai_plugin_saved: 'AI settings saved.',
 	ai_plugin_save_error: 'AI settings could not be saved.',
-	ai_plugin_load_error: 'AI settings could not be loaded.'
+	ai_plugin_load_error: 'AI settings could not be loaded.',
+	notifications_description: 'Choose which notifications you want to receive and through which channels.',
+	push_notifications_hint: 'Enable push notifications above to receive push notifications.',
+	export_select_at_least_one: 'Please select at least one feature.',
+	version: 'Version',
+	update_check: 'Check for updates',
+	update_install: 'Install & restart',
+	update_up_to_date: "You're on the latest version.",
+	update_available: 'Update %s available — downloading…',
+	update_downloading: 'Downloading… %s%',
+	update_ready: 'Update ready to install.',
+	update_check_failed: 'Update check failed. Check your connection.'
 };
 
 const todos: TodoRecords = {
@@ -1406,7 +1422,8 @@ const clipboard: ClipboardRecords = {
 	attach_image: 'Attach image',
 	attach_file: 'Attach file',
 	image_preview_alt: 'Preview',
-	image_alt: 'Clipboard'
+	image_alt: 'Clipboard',
+	download_fallback_name: 'file'
 };
 
 const profile: ProfileRecords = {
@@ -1772,7 +1789,7 @@ const update_required: UpdateRequiredRecords = {
 	reload: 'Load latest version',
 	required_version: 'Required version: %s',
 	your_version: 'Your version: %s',
-	server_outdated: 'Your server runs version %server, but this app is %app. Some things may not work until the server is updated.'
+	server_outdated: 'Your server runs version {server}, but this app is {app}. Some things may not work until the server is updated.'
 };
 
 export const en: LanguageFile = {

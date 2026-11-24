@@ -59,7 +59,12 @@ const layout: LayoutRecords = {
 	rate_limited_minutes_plural: 'Demasiados intentos. Inténtalo de nuevo en {n} minutos.',
 	previous_page: 'Página anterior',
 	next_page: 'Página siguiente',
-	page_of: 'Página {n} de {total}'
+	page_of: 'Página {n} de {total}',
+	name: 'Nombre',
+	loading: 'Cargando...',
+	minimize: 'Minimizar',
+	maximize: 'Maximizar',
+	close: 'Cerrar'
 };
 
 const nav: NavigationRecords = {
@@ -294,7 +299,18 @@ const settings: SettingsRecords = {
 	ai_plugin_api_key_required: 'Se necesita una clave de API para guardar los ajustes de IA.',
 	ai_plugin_saved: 'Ajustes de IA guardados.',
 	ai_plugin_save_error: 'No se pudieron guardar los ajustes de IA.',
-	ai_plugin_load_error: 'No se pudieron cargar los ajustes de IA.'
+	ai_plugin_load_error: 'No se pudieron cargar los ajustes de IA.',
+	notifications_description: 'Elige qué notificaciones quieres recibir y por qué canales.',
+	push_notifications_hint: 'Habilita arriba las notificaciones push para recibirlas.',
+	export_select_at_least_one: 'Selecciona al menos una función.',
+	version: 'Versión',
+	update_check: 'Buscar actualizaciones',
+	update_install: 'Instalar y reiniciar',
+	update_up_to_date: 'Tienes la última versión.',
+	update_available: 'Actualización %s disponible: descargando…',
+	update_downloading: 'Descargando… %s%',
+	update_ready: 'Actualización lista para instalar.',
+	update_check_failed: 'No se pudieron buscar actualizaciones. Comprueba tu conexión.'
 };
 
 const todos: TodoRecords = {
@@ -1397,7 +1413,8 @@ const clipboard: ClipboardRecords = {
 	attach_image: 'Adjuntar imagen',
 	attach_file: 'Adjuntar archivo',
 	image_preview_alt: 'Vista previa',
-	image_alt: 'Imagen del portapapeles'
+	image_alt: 'Imagen del portapapeles',
+	download_fallback_name: 'archivo'
 };
 
 const dav: DavRecords = {
@@ -1773,7 +1790,7 @@ const update_required: UpdateRequiredRecords = {
 	reload: 'Cargar la versión más reciente',
 	required_version: 'Versión necesaria: %s',
 	your_version: 'Tu versión: %s',
-	server_outdated: 'Tu servidor usa la versión %server, pero esta aplicación es la %app. Puede que algunas cosas no funcionen hasta que actualices el servidor.'
+	server_outdated: 'Tu servidor usa la versión {server}, pero esta aplicación es la {app}. Puede que algunas cosas no funcionen hasta que actualices el servidor.'
 };
 
 export const es: LanguageFile = {

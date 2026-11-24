@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
-import { screen } from '@testing-library/svelte';
+import { screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import type { Component } from 'svelte';
-import type { Friends } from '$lib/state/Friends.svelte';
+import { setFriends, type Friends } from '$lib/state/Friends.svelte';
 import type { KeyManager } from '$lib/state/KeyManager.svelte';
 import type { LoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 import type { UiNotifications } from '$lib/state/UiNotifications.svelte';
@@ -10,19 +10,21 @@ import type { FriendRequest } from '$lib/types/friend';
 import { en } from '$lib/i18n/en';
 import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
 import { renderWithContext } from './helpers/context';
-import FriendsHarness from './helpers/FriendsHarness.svelte';
+import StoreHarness from './helpers/StoreHarness.svelte';
 import FriendList from '$lib/components/users/Friends.svelte';
 import FriendRequests from '$lib/components/users/FriendRequests.svelte';
+import ProfilePage from '../../src/routes/profile/+page.svelte';
 
 type Rendered = { friends: Friends; keyManager: KeyManager; loadingIndicator: LoadingIndicator; notifications: UiNotifications };
 
 function renderFriends(component: Component<never>, setup: (friends: Friends) => void = () => {}): Rendered {
 	const rendered = {} as Rendered;
 	renderWithContext(
-		FriendsHarness,
+		StoreHarness,
 		{
 			component,
-			setup: (friends: Friends) => {
+			provide: setFriends,
+			onReady: (friends: Friends) => {
 				setup(friends);
 				rendered.friends = friends;
 			}
@@ -66,6 +68,17 @@ describe('Friends', () => {
 		expect(rendered.friends.createFriendRequest).toHaveBeenCalledWith('u42');
 		expect(rendered.notifications.queue).toEqual([]);
 		expect(rendered.loadingIndicator.active).toBe(false);
+	});
+
+	it('releases its keys once the request is sent', async () => {
+		const rendered = renderFriends(FriendList as Component<never>, (friends) => {
+			friends.createFriendRequest = vi.fn().mockResolvedValue(true);
+		});
+
+		await requestFriend(rendered, 'u42');
+
+		await waitFor(() => expect(rendered.keyManager.handlers.Escape).toHaveLength(0));
+		expect(rendered.keyManager.handlers.Enter).toHaveLength(0);
 	});
 
 	it('says when the id is invalid', async () => {
@@ -129,5 +142,24 @@ describe('FriendRequests', () => {
 
 		expect(rejections).toEqual([new Error('offline')]);
 		expect(rendered.loadingIndicator.active).toBe(false);
+	});
+});
+
+describe('Profile page', () => {
+	it('shows the stored profile image', () => {
+		renderWithContext(
+			StoreHarness,
+			{
+				component: ProfilePage,
+				provide: setFriends,
+				onReady: (friends: Friends) => {
+					vi.spyOn(friends, 'load').mockResolvedValue();
+					vi.spyOn(friends, 'loadRequests').mockResolvedValue();
+				}
+			},
+			{ stores: { auth: { user: { id: 'u1', name: 'Alice', profile: { profile_image_path: 'u1/me.png' } } } } }
+		);
+
+		expect(screen.getByAltText(en.profile.profile_image_alt).getAttribute('src')).toBe(API_USER_STORAGE_URL + '/u1/me.png');
 	});
 });

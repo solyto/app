@@ -28,7 +28,7 @@
 	<div>
 		<SettingsSection label={ts.get.settings.notifications}>
 			<p class="mb-4 text-sm text-c-neutral-6 dark:text-c-neutral-4">
-				Choose which notifications you want to receive and through which channels.
+				{ts.get.settings.notifications_description}
 			</p>
 			<ManageNotificationTypes showTelegram={integrations.isConfigured('telegram')} />
 		</SettingsSection>

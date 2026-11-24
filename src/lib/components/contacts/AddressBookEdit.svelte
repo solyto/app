@@ -5,6 +5,7 @@
 	import IconEyeOff from '$lib/icons/lucide/eye-off.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
+	import InlineActionButton from '$lib/components/ui/buttons/InlineActionButton.svelte';
 	import InlineDeleteButton from '$lib/components/ui/buttons/InlineDeleteButton.svelte';
 	import type { AddressBook, UpdateAddressBookRequest } from '$lib/types/contact';
 	import { getContacts } from '$lib/state/Contacts.svelte';
@@ -56,22 +57,13 @@
 	</div>
 	<span class="min-w-0 flex-1">{addressBook.name}</span>
 	<div class="flex items-center gap-1">
-		<button
-			type="button"
-			class="group relative flex size-[34px] cursor-pointer items-center justify-center rounded-full drop-shadow-md transition-all hover:drop-shadow-xl"
-			class:text-c-primary={!contacts.isAddressBookHidden(addressBook.id)}
-			class:text-c-neutral-3={contacts.isAddressBookHidden(addressBook.id)}
-			title={ts.get.layout.toggle}
-			aria-label={ts.get.layout.toggle}
-			onclick={toggleHidden}
-		>
-			<span class="absolute inset-0 rounded-full bg-c-primary opacity-0 transition-all group-hover:opacity-100 group-focus-visible:opacity-100"></span>
-			{#if contacts.isAddressBookHidden(addressBook.id)}
-				<IconEyeOff class="relative size-5 group-hover:text-white group-focus-visible:text-white" />
-			{:else}
-				<IconEye class="relative size-5 group-hover:text-white group-focus-visible:text-white" />
-			{/if}
-		</button>
+		<InlineActionButton
+			onClick={toggleHidden}
+			label={ts.get.layout.toggle}
+			icon={contacts.isAddressBookHidden(addressBook.id) ? IconEyeOff : IconEye}
+			color={contacts.isAddressBookHidden(addressBook.id) ? 'text-c-neutral-3' : 'text-c-primary'}
+			fill="bg-c-primary"
+		/>
 		<InlineDeleteButton onClick={onDelete} />
 	</div>
 </div>

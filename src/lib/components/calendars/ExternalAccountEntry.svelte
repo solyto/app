@@ -6,6 +6,7 @@
 	import IconKeyRound from '$lib/icons/lucide/key-round.svelte';
 	import { getExternalCalendars } from '$lib/state/ExternalCalendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
+	import { pluralize } from '$lib/helpers/FormatHelper';
 	import type { ExternalCalendarAccount } from '$lib/types/calendar';
 
 	let { account }: { account: ExternalCalendarAccount } = $props();
@@ -15,9 +16,7 @@
 
 	function calendarCount(): string {
 		const count = externalCalendars.connectedCount(account);
-		return count === 1
-			? ts.get.calendar.account_calendars_singular
-			: ts.get.calendar.account_calendars_plural.replace('{n}', String(count));
+		return pluralize(count, ts.get.calendar.account_calendars_singular, ts.get.calendar.account_calendars_plural);
 	}
 
 	function addCalendars(): void {

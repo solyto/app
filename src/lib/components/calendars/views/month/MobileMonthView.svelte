@@ -5,18 +5,19 @@
 	import { getCalendars } from '$lib/state/Calendars.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { isDateToday, formatDate, formatTime, getWeekdayOrder } from '$lib/helpers/DateHelper';
-	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getEventBackgroundColor, getEventBorderColor } from '$lib/helpers/ColorHelper';
 	import { getCalendarEventKey, showsStartTimeOnDate } from '$lib/helpers/CalendarEventHelper';
 	import { SwipeNavigate } from '$lib/helpers/SwipeNavigate.svelte';
 	import TodoEntry from '$lib/components/calendars/TodoEntry.svelte';
 	import CalendarMarks from '$lib/components/calendars/CalendarMarks.svelte';
 	import type { CalendarEvent } from '$lib/types/calendar';
+	import type { WeekStart } from '$lib/types/auth';
+
+	let { weekStart }: { weekStart: WeekStart } = $props();
 
 	const calendars = getCalendars();
 	const ts = getTranslation();
-	const auth = getAuth();
-	const weekdays = getWeekdayOrder(auth.getWeekStart());
+	const weekdays = getWeekdayOrder(weekStart);
 
 	const swipe = new SwipeNavigate({
 		onLeft: () => calendars.nextMonth(),

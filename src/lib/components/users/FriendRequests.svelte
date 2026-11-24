@@ -2,7 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import { getFriends } from '$lib/state/Friends.svelte';
 	import Heading from '$lib/components/ui/Heading.svelte';
-	import { API_USER_STORAGE_URL } from '$lib/config/apiRoutes';
+	import { profileImageUrl } from '$lib/helpers/ProfileImageHelper';
 	import type { Friend, FriendRequest, FriendRequestStatus } from '$lib/types/friend';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
@@ -43,7 +43,7 @@
 {#snippet avatar(user: Friend)}
 	<div class="size-8">
 		<img
-			src={API_USER_STORAGE_URL + '/' + user.profile_image_path}
+			src={profileImageUrl(user.profile_image_path)}
 			alt={ts.get.profile.user_profile_image_alt.replace('%s', user.name)}
 			class="h-full w-full rounded-full object-cover"
 		/>
