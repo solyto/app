@@ -1,6 +1,5 @@
 <script lang="ts">
-	import ColorPicker from 'svelte-awesome-color-picker';
-	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
+	import ColorPicker from '$lib/components/forms/ColorPicker.svelte';
 	import IconEye from '$lib/icons/lucide/eye.svelte';
 	import IconEyeOff from '$lib/icons/lucide/eye-off.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -44,16 +43,7 @@
 
 <div class="flex items-center gap-4">
 	<div use:clickOutside={onColorChange}>
-		<ColorPicker
-			components={{ input: ColorPickerInput }}
-			isAlpha={false}
-			bind:hex
-			position="responsive"
-			nullable={false}
-			label=""
-			isTextInput={false}
-			--cp-border-color="var(--color-c-neutral-2)"
-		/>
+		<ColorPicker bind:hex />
 	</div>
 	<span class="min-w-0 flex-1">{addressBook.name}</span>
 	<div class="flex items-center gap-1">

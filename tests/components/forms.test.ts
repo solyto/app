@@ -7,6 +7,8 @@ import Toggle from '$lib/components/forms/Toggle.svelte';
 import Select from '$lib/components/forms/Select.svelte';
 import TextInputHarness from './helpers/TextInputHarness.svelte';
 import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
+import ColorPicker from '$lib/components/forms/ColorPicker.svelte';
+import ColorPickerHarness from './helpers/ColorPickerHarness.svelte';
 
 describe('Checkbox', () => {
 	it('renders a checkbox reflecting its checked state', () => {
@@ -109,5 +111,40 @@ describe('ColorPickerInput', () => {
 			input.dispatchEvent(event);
 			expect(event.defaultPrevented).toBe(true);
 		}
+	});
+});
+
+describe('ColorPicker', () => {
+	it('draws the bound colour as its swatch', () => {
+		const { container } = render(ColorPickerHarness);
+		const swatch = container.querySelector('label span') as HTMLElement;
+
+		expect(swatch.style.background).toBe('rgb(0, 255, 0)');
+	});
+
+	it('writes the picked colour back to the bound hex', async () => {
+		const user = userEvent.setup();
+		render(ColorPickerHarness);
+
+		screen.getByRole('slider', { name: 'hue channel' }).focus();
+		await user.keyboard('{Home}');
+
+		expect(screen.getByTestId('hex')).toHaveTextContent('#ff0000');
+	});
+
+	it('writes the open state back to the bound isOpen', async () => {
+		const user = userEvent.setup();
+		const { container } = render(ColorPickerHarness);
+
+		await user.pointer({ keys: '[MouseLeft>]', target: container.querySelector('label') as HTMLElement });
+
+		expect(screen.getByTestId('open')).toHaveTextContent('true');
+	});
+
+	it('shows the picker inline without a swatch when not a dialog', () => {
+		const { container } = render(ColorPicker, { props: { hex: '#123456', isDialog: false } });
+
+		expect(container.querySelector('label')).toBeNull();
+		expect(container.querySelector('.wrapper')).toHaveClass('is-open');
 	});
 });

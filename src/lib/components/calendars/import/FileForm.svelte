@@ -1,6 +1,5 @@
 <script lang="ts">
-	import ColorPicker from 'svelte-awesome-color-picker';
-	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
+	import ColorPicker from '$lib/components/forms/ColorPicker.svelte';
 	import FileUpload from '$lib/components/forms/FileUpload.svelte';
 	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
@@ -70,16 +69,7 @@
 	{#if targetType === 'new'}
 		<ModalFormRow label={ts.get.layout.name} labelFor="{uid}-name">
 			<div class="flex items-center gap-2">
-				<ColorPicker
-					components={{ input: ColorPickerInput }}
-					isAlpha={false}
-					bind:hex
-					position="responsive"
-					nullable={false}
-					label=""
-					isTextInput={false}
-					--cp-border-color="var(--color-c-neutral-2)"
-				/>
+				<ColorPicker bind:hex />
 				<TextInput bind:value={name} id="{uid}-name" maxlength={100} />
 			</div>
 		</ModalFormRow>

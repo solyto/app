@@ -1,8 +1,7 @@
 <script lang="ts">
 	import type { Tag } from '$lib/types/tag';
 	import { fade } from 'svelte/transition';
-	import ColorPicker from 'svelte-awesome-color-picker';
-	import ColorPickerInput from '$lib/components/forms/ColorPickerInput.svelte';
+	import ColorPicker from '$lib/components/forms/ColorPicker.svelte';
 	import { getTags } from '$lib/state/Tags.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
@@ -44,17 +43,7 @@
 	in:fade={{ duration: 100 }}
 >
 	<div use:clickOutside={onColorChange}>
-		<ColorPicker
-			components={{ input: ColorPickerInput }}
-			isAlpha={false}
-			bind:hex
-			bind:isOpen={pickerOpen}
-			position="responsive"
-			nullable={false}
-			label=""
-			isTextInput={false}
-			--cp-border-color="var(--color-c-neutral-2)"
-		/>
+		<ColorPicker bind:hex bind:isOpen={pickerOpen} />
 	</div>
 	<span>#{tag.name}</span>
 	<div class="ml-2">

@@ -3,7 +3,7 @@
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import type { AddressBook, UpdateAddressBookRequest } from '$lib/types/contact';
 	import { getContacts } from '$lib/state/Contacts.svelte';
-	import ColorPicker from 'svelte-awesome-color-picker';
+	import ColorPicker from '$lib/components/forms/ColorPicker.svelte';
 	import { clickOutside } from '$lib/helpers/ClickHelper';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 
@@ -80,15 +80,6 @@
 		class="absolute top-15 left-15 z-80"
 		use:clickOutside={closeColorPicker}
 	>
-		<ColorPicker
-			isAlpha={false}
-			bind:hex
-			position="responsive"
-			nullable={false}
-			label=""
-			isTextInput={false}
-			--cp-border-color="var(--color-c-neutral-2)"
-			isDialog={false}
-		/>
+		<ColorPicker bind:hex isDialog={false} />
 	</div>
 {/if}
