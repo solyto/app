@@ -5,7 +5,6 @@ import { setContacts, type Contacts } from '$lib/state/Contacts.svelte';
 import type { LoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 import ContactEdit from '$lib/components/contacts/ContactEdit.svelte';
 import AddressBookCreateModal from '$lib/components/contacts/AddressBookCreateModal.svelte';
-import ImportModal from '$lib/components/contacts/ImportModal.svelte';
 import AddressBookEdit from '$lib/components/contacts/AddressBookEdit.svelte';
 import { renderWithContext } from './helpers/context';
 import { rejectionsDuring } from './helpers/rejections';
@@ -134,25 +133,6 @@ describe('Address book creation', () => {
 
 		expect(contacts.createAddressBook).toHaveBeenCalledWith({ name: 'Work' });
 		expect(contacts.createModal).toBe(false);
-	});
-});
-
-describe('Contact import', () => {
-	it('stops the loading indicator even when starting the import throws', async () => {
-		const contacts = renderContacts(ImportModal, (store) => {
-			store.importModal = true;
-			store.startImport = vi.fn().mockRejectedValue(new Error('offline'));
-		});
-
-		const [url, username] = screen.getAllByRole('textbox');
-		await fireEvent.input(url, { target: { value: 'https://dav.example.org' } });
-		await fireEvent.input(username, { target: { value: 'ada' } });
-		await fireEvent.input(document.querySelector('input[type=password]')!, { target: { value: 'secret' } });
-		const rejections = await rejectionsDuring(() => fireEvent.click(screen.getByRole('button', { name: 'Import' })).then(() => {}));
-
-		expect(contacts.startImport).toHaveBeenCalledWith({ url: 'https://dav.example.org', username: 'ada', secret: 'secret' });
-		expect(rejections).toEqual([new Error('offline')]);
-		expect(loadingIndicator.active).toBe(false);
 	});
 });
 

@@ -402,6 +402,7 @@ export const apiRoutes = {
 		getContactPhotos: API_URL + '/address-books/contacts/photos',
 		startImport: API_URL + '/address-books/import',
 		selectImportAddressBooks: API_URL + '/address-books/import/select',
+		startFileImport: API_URL + '/address-books/import/file',
 		getImportState: API_URL + '/address-books/import/state'
 	},
 	dashboard: {

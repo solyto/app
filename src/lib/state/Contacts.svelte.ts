@@ -7,10 +7,7 @@ import type {
 	Contact,
 	CreateAddressBookRequest,
 	CreateContactRequest,
-	UpdateAddressBookRequest,
-	ImportRequest,
-	ImportState,
-	SelectImportAddressBooksRequest
+	UpdateAddressBookRequest
 } from '$lib/types/contact';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
@@ -59,7 +56,6 @@ export class Contacts {
 	searchVisible = $state<boolean>(false);
 	deleteModal = $state<boolean>(false);
 	createModal = $state<boolean>(false);
-	importModal = $state<boolean>(false);
 	syncModal = $state<boolean>(false);
 	hiddenAddressBooks = $state<number[]>([]);
 	addressBookColorMap = $derived<Record<number, string>>(
@@ -327,23 +323,6 @@ export class Contacts {
 		this.activeAddressBook = null;
 		this.deleteModal = false;
 		return res;
-	}
-
-	async startImport(request: ImportRequest): Promise<boolean> {
-		return (await this.apiService.post(apiRoutes.contacts.startImport, request)) !== null;
-	}
-
-	async selectImportAddressBooks(request: SelectImportAddressBooksRequest) {
-		return (
-			(await this.apiService.post(apiRoutes.contacts.selectImportAddressBooks, request)) !==
-			null
-		);
-	}
-
-	async getImportState(): Promise<ImportState | null> {
-		const res = await this.apiService.get(apiRoutes.contacts.getImportState, '');
-		if (res) return res.data as ImportState;
-		return null;
 	}
 }
 

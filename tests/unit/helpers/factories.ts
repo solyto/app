@@ -16,7 +16,7 @@ import type { Recipe } from '$lib/types/library_recipe';
 import type { Link, LinkCategory } from '$lib/types/library_link';
 import type { Budget, WealthField } from '$lib/types/finance';
 import type { Note, NoteCategory } from '$lib/types/note';
-import type { AddressBook, Contact } from '$lib/types/contact';
+import type { AddressBook, Contact, ImportState as ContactImportState } from '$lib/types/contact';
 import type { TimeTrackingCategory, TimeTrackingEntry, TimeTrackingProject } from '$lib/types/time_tracking';
 
 export function todo(overrides: Partial<Todo> = {}): Todo {
@@ -518,4 +518,19 @@ export function contact(overrides: Partial<Contact> = {}): Contact {
 
 export function addressBook(overrides: Partial<AddressBook> = {}): AddressBook {
 	return { id: 1, name: 'Personal', uri: 'ab-1', color: '#ff0000', description: '', ...overrides };
+}
+
+export function contactImportState(overrides: Partial<ContactImportState> = {}): ContactImportState {
+	return {
+		stage: 'contacts',
+		source: 'file',
+		address_books: null,
+		address_books_count: 1,
+		address_books_done: 1,
+		address_books_current: 'Friends',
+		contacts_count: 10,
+		contacts_done: 0,
+		contacts_skipped: 0,
+		...overrides
+	};
 }

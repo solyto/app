@@ -1226,6 +1226,17 @@ export interface ContactRecords {
 	import_address_books: string;
 	import_contacts: string;
 	import_contacts_running: string;
+	import_source_carddav: string;
+	import_source_file: string;
+	import_target_new: string;
+	import_target_existing: string;
+	import_address_book: string;
+	import_imported: string;
+	import_skipped: string;
+	import_error_invalid_file: string;
+	import_error_address_book_not_found: string;
+	import_error_running: string;
+	import_error_rate_limited: string;
 	save_error: string;
 	name_required: string;
 	email_placeholder: string;
