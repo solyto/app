@@ -15,7 +15,7 @@ const wealth = wealthField();
 
 function renderRow(component: typeof BudgetField | typeof WealthFieldDisplay, props: Record<string, unknown>): Finances {
 	let finances: Finances | null = null;
-	renderWithContext(FinancesHarness, { component, props: { sectionTotal: 1000, onOpenHistory: vi.fn(), ...props }, onReady: (f: Finances) => (finances = f) });
+	renderWithContext(FinancesHarness, { component, props: { sectionTotal: 1000, onOpenHistory: vi.fn(), valueFormatter: (value: number) => String(value), ...props }, onReady: (f: Finances) => (finances = f) });
 	return finances!;
 }
 
@@ -70,6 +70,7 @@ describe('Finance history', () => {
 			onUpdate,
 			onDelete,
 			onDeleteItem: vi.fn(),
+			valueFormatter: (value: number) => String(value),
 			...props
 		}, { onReady: (stores) => (keyManager = stores.keyManager as KeyManager) });
 		return { onUpdate, onDelete, keyManager: () => keyManager! };

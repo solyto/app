@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
 	average,
 	withDecimals,
-	europeanFormat,
+	formatCurrency,
 	formatTimeElapsed,
 	withLeadingZero,
 	humanReadableNumber
@@ -72,15 +72,26 @@ describe('withLeadingZero', () => {
 	});
 });
 
-describe('europeanFormat', () => {
-	it('formats as EUR currency with de-DE separators', () => {
-		const result = europeanFormat(1234.5);
-		expect(result).toContain('1.234,50');
-		expect(result).toContain('€');
+describe('formatCurrency', () => {
+	it('follows the language separators, not the currency', () => {
+		expect(formatCurrency(1234.5, 'EUR', 'de')).toContain('1.234,50');
+		expect(formatCurrency(1234.5, 'EUR', 'en')).toContain('1,234.50');
 	});
 
-	it('formats zero', () => {
-		expect(europeanFormat(0)).toContain('0,00');
+	it('uses the requested currency symbol', () => {
+		expect(formatCurrency(10, 'USD', 'en')).toContain('$');
+		expect(formatCurrency(10, 'GBP', 'en')).toContain('£');
+		expect(formatCurrency(10, 'CAD', 'en')).toContain('CA$');
+	});
+
+	it('falls back to EUR for a missing or unknown currency', () => {
+		expect(formatCurrency(10, undefined, 'en')).toContain('€');
+		expect(formatCurrency(10, null, 'en')).toContain('€');
+		expect(formatCurrency(10, 'XYZ', 'en')).toContain('€');
+	});
+
+	it('falls back to en for an invalid language instead of throwing', () => {
+		expect(formatCurrency(10, 'EUR', 'not a language')).toContain('€');
 	});
 });
 

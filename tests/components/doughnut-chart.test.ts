@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import DoughnutChart from '$lib/components/charts/DoughnutChart.svelte';
 
@@ -49,5 +49,25 @@ describe('DoughnutChart legend', () => {
 		render(DoughnutChart, { values: [] });
 
 		expect(screen.queryByRole('button')).toBeNull();
+	});
+
+	it('rebuilds the chart when the formatter changes', async () => {
+		const { rerender } = render(DoughnutChart, {
+			values,
+			centerFormatter: () => 'first',
+			valueFormatter: () => 'first'
+		});
+		await waitFor(() => expect(chart.setOption).toHaveBeenCalled());
+		const callsBeforeChange = chart.setOption.mock.calls.length;
+
+		await rerender({
+			values,
+			centerFormatter: () => 'second',
+			valueFormatter: () => 'second'
+		});
+
+		await waitFor(() => expect(chart.setOption.mock.calls.length).toBeGreaterThan(callsBeforeChange));
+		const lastOptions = chart.setOption.mock.calls.at(-1)?.[0] as { title: { text: string }[] };
+		expect(lastOptions.title[1].text).toBe('second');
 	});
 });

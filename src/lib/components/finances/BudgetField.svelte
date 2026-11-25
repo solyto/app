@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import type { Budget } from '$lib/types/finance';
-	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
 	import IconTrash from '$lib/icons/lucide/trash.svelte';
 	import IconPen from '$lib/icons/lucide/pen.svelte';
 	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
@@ -16,10 +15,11 @@
 	const finances = getFinances();
 	const budgetIntervals = finances.budgetIntervals;
 
-	let { budget, sectionTotal, onOpenHistory }: {
+	let { budget, sectionTotal, onOpenHistory, valueFormatter }: {
 		budget: Budget;
 		sectionTotal: number;
 		onOpenHistory: (budget: Budget) => void | Promise<void>;
+		valueFormatter: (value: number) => string;
 	} = $props();
 
 	let confirmingDelete = $state<boolean>(false);
@@ -89,11 +89,11 @@
 			<!-- Left of the amount, so the monthly amounts stay in one right-aligned column. -->
 			{#if budgetIntervals.intervalOf(budget) !== 'monthly'}
 				<span class="hidden text-sm text-c-neutral-5 tabular-nums md:inline">
-					{europeanFormat(budget.value)} {budgetIntervals.suffix(budget, ts.get.finances)}
+					{valueFormatter(budget.value)} {budgetIntervals.suffix(budget, ts.get.finances)}
 				</span>
 			{/if}
 			<div class="text-lg tabular-nums">
-				{budget.type === 'income' ? '+ ' : '- '}{europeanFormat(budgetIntervals.monthlyAmount(budget))}
+				{budget.type === 'income' ? '+ ' : '- '}{valueFormatter(budgetIntervals.monthlyAmount(budget))}
 			</div>
 		</div>
 	</div>

@@ -49,3 +49,19 @@ describe('Budget page history', () => {
 		expect(reload).toHaveBeenCalledTimes(1);
 	});
 });
+
+describe('Budget page money', () => {
+	it('formats amounts in the user currency and language', async () => {
+		vi.spyOn(ApiService.prototype, 'list').mockResolvedValue({ data: [] });
+		let finances: Finances | null = null;
+		renderWithContext(
+			FinancesHarness,
+			{ component: BudgetPage, onReady: (f: Finances) => (finances = f) },
+			{ stores: { auth: { user: { settings: { currency: 'USD', language: 'en', date_format: 'YYYY-mm-dd' } } } } }
+		);
+		finances!.expenses = [budget({ value: 900 })];
+		finances!.budgetLoaded = true;
+
+		expect((await screen.findAllByText(/\$900\.00/)).length).toBeGreaterThan(0);
+	});
+});

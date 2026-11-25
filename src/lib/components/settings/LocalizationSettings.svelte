@@ -6,6 +6,7 @@
 	import { getTimeZones } from '@vvo/tzdb';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import type { WeekStart } from '$lib/types/auth';
+	import { DEFAULT_CURRENCY, SUPPORTED_CURRENCIES, type Currency } from '$lib/config/currency';
 
 	const ts = getTranslation();
 	const auth = getAuth();
@@ -45,6 +46,17 @@
 		{ value: 'sunday', label: ts.get.calendar.weekdays[7] }
 	];
 
+	const currencyOptions = SUPPORTED_CURRENCIES.map((currency) => ({
+		value: currency,
+		label: `${currency} ${currencySymbol(currency)}`
+	}));
+
+	function currencySymbol(currency: Currency): string {
+		return new Intl.NumberFormat('en', { style: 'currency', currency })
+			.formatToParts(0)
+			.find((part) => part.type === 'currency')?.value ?? currency;
+	}
+
 	async function handleLanguageChange(value: string): Promise<void> {
 		ts.changeLanguage(value as Language);
 		await auth.updateLanguage(value);
@@ -65,6 +77,10 @@
 	async function handleWeekStartChange(value: string): Promise<void> {
 		await auth.updateWeekStart(value as WeekStart);
 	}
+
+	async function handleCurrencyChange(value: string): Promise<void> {
+		await auth.updateCurrency(value as Currency);
+	}
 </script>
 
 <div class="flex gap-8 max-lg:flex-col">
@@ -82,5 +98,8 @@
 	</SettingsSection>
 	<SettingsSection label={ts.get.settings.week_start}>
 		<Select value={auth.getWeekStart()} onchange={handleWeekStartChange} options={weekStartOptions} />
+	</SettingsSection>
+	<SettingsSection label={ts.get.settings.currency}>
+		<Select value={auth.user?.settings?.currency ?? DEFAULT_CURRENCY} onchange={handleCurrencyChange} options={currencyOptions} />
 	</SettingsSection>
 </div>

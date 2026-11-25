@@ -213,6 +213,7 @@ const settings: SettingsRecords = {
 	date_format: 'Формат даты',
 	time_format: 'Формат времени',
 	week_start: 'Первый день недели',
+	currency: 'Валюта',
 	nextcloud_token: 'Зарегистрированный токен',
 	nextcloud_no_token: 'Токен не зарегистрирован.',
 	telegram_bot_integration_success: 'Подключение для чата Telegram с ID %s настроено.',

@@ -3,7 +3,7 @@
 	import { getFinances } from '$lib/state/Finances.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
+	import { formatCurrency } from '$lib/helpers/NumberHelper.js';
 	import AddBudget from '$lib/components/finances/AddBudget.svelte';
 	import BudgetField from '$lib/components/finances/BudgetField.svelte';
 	import type {
@@ -117,6 +117,10 @@
 		return auth.user?.settings?.date_format ?? null;
 	}
 
+	function formatMoney(value: number): string {
+		return formatCurrency(value, auth.user?.settings?.currency, auth.user?.settings?.language);
+	}
+
 	onMount(() => {
 		setTimeout(() => {
 			colorLoaded = true;
@@ -147,7 +151,7 @@
 					{/if}
 				</div>
 				<div class="text-xl tabular-nums md:text-3xl">
-					{total > 0 ? '+ ' : '- '}{europeanFormat(Math.abs(total))}
+					{total > 0 ? '+ ' : '- '}{formatMoney(Math.abs(total))}
 				</div>
 			</div>
 			<div class="mt-4 flex h-2 items-end rounded-full bg-c-success opacity-80 transition-all">
@@ -167,13 +171,18 @@
 				<div class="mb-4 flex w-full flex-row items-center justify-between">
 					<div class="flex items-baseline gap-3">
 						<h2 class="text-2xl font-semibold">{ts.get.finances.income}</h2>
-						<span class="text-lg text-c-neutral-5 tabular-nums">+ {europeanFormat(incomeTotal)}</span>
+						<span class="text-lg text-c-neutral-5 tabular-nums">+ {formatMoney(incomeTotal)}</span>
 					</div>
 					<AddBudget type="income" showTags={finances.tagsSupported} />
 				</div>
 				<div class="flex w-full flex-col gap-1">
 					{#each finances.filteredIncome() as i (i.id)}
-						<BudgetField budget={i} sectionTotal={incomeTotal} onOpenHistory={openHistory} />
+						<BudgetField
+							budget={i}
+							sectionTotal={incomeTotal}
+							onOpenHistory={openHistory}
+							valueFormatter={formatMoney}
+						/>
 					{/each}
 				</div>
 			</div>
@@ -183,13 +192,18 @@
 				<div class="mb-4 flex w-full items-center justify-between">
 					<div class="flex items-baseline gap-3">
 						<h2 class="text-2xl font-semibold">{ts.get.finances.expenses}</h2>
-						<span class="text-lg text-c-neutral-5 tabular-nums">- {europeanFormat(expenseTotal)}</span>
+						<span class="text-lg text-c-neutral-5 tabular-nums">- {formatMoney(expenseTotal)}</span>
 					</div>
 					<AddBudget type="expense" showTags={finances.tagsSupported} />
 				</div>
 				<div class="flex w-full flex-col gap-1">
 					{#each finances.filteredExpenses() as e (e.id)}
-						<BudgetField budget={e} sectionTotal={expenseTotal} onOpenHistory={openHistory} />
+						<BudgetField
+							budget={e}
+							sectionTotal={expenseTotal}
+							onOpenHistory={openHistory}
+							valueFormatter={formatMoney}
+						/>
 					{/each}
 				</div>
 			</div>
@@ -219,6 +233,7 @@
 			itemTitle={historyBudget.title}
 			dateFormat={dateFormat()}
 			onDeleteItem={deleteHistoryBudget}
+			valueFormatter={formatMoney}
 		/>
 	</ContentModal>
 {/if}

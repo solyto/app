@@ -1,4 +1,5 @@
 import type { Platform } from '$lib/types/platform';
+import type { Currency } from '$lib/config/currency';
 
 export interface AuthToken {
 	token: string | null;
@@ -18,6 +19,7 @@ export interface UserSettings {
 	date_format: string;
 	time_format: string;
 	week_start: WeekStart;
+	currency: Currency;
 	widgets: string;
 	navigation: string;
 	first_visit: boolean;

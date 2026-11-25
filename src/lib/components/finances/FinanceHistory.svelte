@@ -7,7 +7,6 @@
 	} from '$lib/types/finance';
 	import FinanceHistoryService from '$lib/services/FinanceHistoryService';
 	import { formatDate, getUrlFormat } from '$lib/helpers/DateHelper';
-	import { europeanFormat } from '$lib/helpers/NumberHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getKeyManager } from '$lib/state/KeyManager.svelte';
 	import { onDestroy } from 'svelte';
@@ -35,7 +34,8 @@
 		onAdd,
 		onUpdate,
 		onDelete,
-		onDeleteItem
+		onDeleteItem,
+		valueFormatter
 	}: {
 		values: FinanceValue[];
 		itemTitle: string;
@@ -45,6 +45,7 @@
 		onUpdate: (value: FinanceValue, request: UpdateFinanceValueRequest) => Promise<boolean>;
 		onDelete: (value: FinanceValue) => Promise<boolean>;
 		onDeleteItem: () => Promise<void>;
+		valueFormatter: (value: number) => string;
 	} = $props();
 
 	let today = getUrlFormat(new Date());
@@ -59,7 +60,7 @@
 
 	function replacesHint(): string | null {
 		const replaced = history.findByDate(values, addForm.date);
-		return replaced ? ts.get.finances.replaces_value.replace('%s', europeanFormat(replaced.value)) : null;
+		return replaced ? ts.get.finances.replaces_value.replace('%s', valueFormatter(replaced.value)) : null;
 	}
 
 	function isEditDateTaken(): boolean {
@@ -148,7 +149,7 @@
 			categories={history.chartCategories(values, dateFormat)}
 			values={history.chartValues(values)}
 			filled={true}
-			valueFormatter={europeanFormat}
+			valueFormatter={valueFormatter}
 			class="h-56"
 		/>
 	{/if}
@@ -188,7 +189,7 @@
 					{:else}
 						<div class="flex items-center gap-4">
 							<span class="flex-1">{formatDate(history.toLocalDate(value), dateFormat)}</span>
-							<span>{europeanFormat(value.value)}</span>
+							<span>{valueFormatter(value.value)}</span>
 							<GhostIconButton label={ts.get.finances.edit_value} onclick={() => startEdit(value)} color="text-c-neutral-3">
 								<IconPen class="size-5" />
 							</GhostIconButton>

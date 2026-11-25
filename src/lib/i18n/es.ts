@@ -213,6 +213,7 @@ const settings: SettingsRecords = {
 	date_format: 'Formato de fecha',
 	time_format: 'Formato de hora',
 	week_start: 'Primer día de la semana',
+	currency: 'Moneda',
 	nextcloud_token: 'Token registrado',
 	nextcloud_no_token: 'No hay token registrado.',
 	telegram_bot_integration_success:

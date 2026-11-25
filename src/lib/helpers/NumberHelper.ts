@@ -1,3 +1,5 @@
+import { DEFAULT_CURRENCY, isSupportedCurrency } from '$lib/config/currency';
+
 export function average(numbers: number[], decimals: number = 2): number {
 	const average = numbers.reduce((a, b) => a + b, 0) / numbers.length;
 
@@ -8,8 +10,19 @@ export function withDecimals(number: number, decimals: number = 2): string {
 	return number.toFixed(decimals);
 }
 
-export function europeanFormat(number: number): string {
-	return number.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+export function formatCurrency(
+	amount: number,
+	currency: string | null | undefined,
+	language: string | null | undefined
+): string {
+	const code = isSupportedCurrency(currency) ? currency : DEFAULT_CURRENCY;
+	const locale = language || 'en';
+
+	try {
+		return new Intl.NumberFormat(locale, { style: 'currency', currency: code }).format(amount);
+	} catch {
+		return new Intl.NumberFormat('en', { style: 'currency', currency: code }).format(amount);
+	}
 }
 
 export function formatTimeElapsed(number: number): string {

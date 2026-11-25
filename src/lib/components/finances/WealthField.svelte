@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import type { WealthField } from '$lib/types/finance';
-	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
 	import IconTrash from '$lib/icons/lucide/trash.svelte';
 	import IconPen from '$lib/icons/lucide/pen.svelte';
 	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
@@ -14,10 +13,11 @@
 	const loadingIndicator = getLoadingIndicator();
 	const finances = getFinances();
 
-	let { wealth, sectionTotal, onOpenHistory }: {
+	let { wealth, sectionTotal, onOpenHistory, valueFormatter }: {
 		wealth: WealthField;
 		sectionTotal: number;
 		onOpenHistory: (wealth: WealthField) => void;
+		valueFormatter: (value: number) => string;
 	} = $props();
 
 	let confirmingDelete = $state<boolean>(false);
@@ -81,7 +81,7 @@
 				</GhostIconButton>
 			</div>
 			<div class="text-lg tabular-nums">
-				{wealth.currentValue ? europeanFormat(wealth.currentValue.value) : 0}
+				{wealth.currentValue ? valueFormatter(wealth.currentValue.value) : 0}
 			</div>
 		</div>
 	</div>

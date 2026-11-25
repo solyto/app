@@ -20,6 +20,7 @@ import type {
 import { IS_NATIVE, PLATFORM } from '$lib/config/platform';
 import { setContext, getContext } from 'svelte';
 import { apiRoutes } from '$lib/config/apiRoutes';
+import type { Currency } from '$lib/config/currency';
 import ApiService from '$lib/services/ApiService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 import { SessionMonitor } from '$lib/state/SessionMonitor';
@@ -403,6 +404,17 @@ export class Auth {
 		});
 		if (res && this.user?.settings) {
 			this.user.settings.week_start = weekStart;
+			this.save();
+		}
+		return res;
+	}
+
+	async updateCurrency(currency: Currency): Promise<boolean> {
+		const res = await this.apiService.put(apiRoutes.users.settings.updateCurrency, {
+			currency
+		});
+		if (res && this.user?.settings) {
+			this.user.settings.currency = currency;
 			this.save();
 		}
 		return res;

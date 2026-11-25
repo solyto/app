@@ -41,6 +41,7 @@ export const apiRoutes = {
 			updateDateFormat: API_URL + '/users/me/settings/date-format',
 			updateTimeFormat: API_URL + '/users/me/settings/time-format',
 			updateWeekStart: API_URL + '/users/me/settings/week-start',
+			updateCurrency: API_URL + '/users/me/settings/currency',
 			updateLanguage: API_URL + '/users/me/settings/language',
 			completeOnboarding: API_URL + '/users/me/settings/complete-onboarding',
 			updateWeatherCity: API_URL + '/users/me/settings/weather-city',

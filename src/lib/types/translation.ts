@@ -113,6 +113,7 @@ export interface SettingsRecords {
 	date_format: string;
 	time_format: string;
 	week_start: string;
+	currency: string;
 	nextcloud_no_token: string;
 	nextcloud_token: string;
 	telegram_bot_integration_success: string;

@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { init } from './echarts';
 	import type { ECharts } from './echarts';
-	import { onMount, onDestroy, tick } from 'svelte';
-	import { europeanFormat } from '$lib/helpers/NumberHelper';
+	import { onMount, onDestroy } from 'svelte';
 	import { getChartColor } from '$lib/helpers/ColorHelper';
+
+	function plainNumber(value: number): string {
+		return String(value);
+	}
 
 	let {
 		title,
 		values,
-		centerFormatter = europeanFormat,
-		valueFormatter = europeanFormat
+		centerFormatter = plainNumber,
+		valueFormatter = plainNumber
 	}: {
 		title?: string;
 		values?: { value: number; name: string; color?: string | null }[];
@@ -17,9 +20,8 @@
 		valueFormatter?: (value: number) => string;
 	} = $props();
 
-	let chartContainer: HTMLDivElement | null = null;
+	let chartContainer = $state<HTMLDivElement | null>(null);
 	let myChart: ECharts | null = null;
-	let isInitialized = false;
 	let hiddenNames = $state<string[]>([]);
 
 	function toggleEntry(name: string) {
@@ -96,12 +98,9 @@
 		};
 
 		myChart.setOption(options);
-		isInitialized = true;
 	}
 
 	onMount(() => {
-		tick().then(createChart);
-
 		const handleResize = () => {
 			if (myChart) {
 				myChart.resize();
@@ -123,7 +122,7 @@
 	});
 
 	$effect(() => {
-		if (!isInitialized && chartContainer) {
+		if (chartContainer) {
 			createChart();
 		}
 	});

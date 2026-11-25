@@ -11,7 +11,7 @@
 		StoreFinanceValueRequest,
 		UpdateFinanceValueRequest
 	} from '$lib/types/finance';
-	import { europeanFormat } from '$lib/helpers/NumberHelper';
+	import { formatCurrency } from '$lib/helpers/NumberHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import DoughnutChart from '$lib/components/charts/DoughnutChart.svelte';
 	import WealthStatisticsService, { wealthRanges, type WealthRangeKey } from '$lib/services/WealthStatisticsService';
@@ -85,19 +85,34 @@
 	function dateFormat(): string | null {
 		return auth.user?.settings?.date_format ?? null;
 	}
+
+	function formatMoney(value: number): string {
+		return formatCurrency(value, auth.user?.settings?.currency, auth.user?.settings?.language);
+	}
+
+	function moneyFormatKey(): string {
+		return `${auth.user?.settings?.currency ?? 'EUR'}-${auth.user?.settings?.language ?? 'en'}`;
+	}
 </script>
 
 {#if finances.wealthLoaded}
 	<div class="flex flex-col gap-4" in:fade>
 		<div class="mb-8 w-full">
-			<DoughnutChart title="" values={statisticsService.getDistribution(finances.wealth)} />
+			{#key moneyFormatKey()}
+				<DoughnutChart
+					title=""
+					values={statisticsService.getDistribution(finances.wealth)}
+					centerFormatter={formatMoney}
+					valueFormatter={formatMoney}
+				/>
+			{/key}
 		</div>
 		<div
 			class="relative w-full rounded-md p-4 shadow-sm dark:shadow-s-dark-shadow md:dark:bg-s-dark-2"
 		>
 			<div class="flex w-full flex-row items-center justify-between">
 				<h2 class="text-2xl font-semibold">{ts.get.finances.total}</h2>
-				<span class="text-xl tabular-nums md:text-3xl">{europeanFormat(finances.getWealthSum())}</span>
+				<span class="text-xl tabular-nums md:text-3xl">{formatMoney(finances.getWealthSum())}</span>
 			</div>
 		</div>
 		<div
@@ -109,7 +124,12 @@
 			</div>
 			<div class="flex flex-col gap-1">
 				{#each finances.wealth as wealth (wealth.id)}
-					<WealthFieldDisplay {wealth} sectionTotal={finances.getWealthSum()} onOpenHistory={openHistory} />
+					<WealthFieldDisplay
+						{wealth}
+						sectionTotal={finances.getWealthSum()}
+						onOpenHistory={openHistory}
+						valueFormatter={formatMoney}
+					/>
 				{/each}
 			</div>
 		</div>
@@ -124,7 +144,7 @@
 					categories={statisticsService.getMonthLabels(statistics, dateFormat())}
 					values={totals}
 					min={statisticsService.getTrendMin(totals)}
-					valueFormatter={europeanFormat}
+					valueFormatter={formatMoney}
 					filled={true}
 				/>
 			</div>
@@ -133,7 +153,7 @@
 				<StackedAreaChart
 					xCategories={statisticsService.getMonthLabels(statistics, dateFormat())}
 					dataPoints={statisticsService.getSeriesByField(finances.wealth, statistics)}
-					valueFormatter={europeanFormat}
+					valueFormatter={formatMoney}
 				/>
 			</div>
 		{/if}
@@ -149,6 +169,7 @@
 			itemTitle={historyField.title}
 			dateFormat={dateFormat()}
 			onDeleteItem={deleteHistoryField}
+			valueFormatter={formatMoney}
 		/>
 	</ContentModal>
 {/if}

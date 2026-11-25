@@ -91,6 +91,7 @@ function user(overrides: Partial<User> = {}): User {
 			date_format: 'dd.mm.YYYY',
 			time_format: 'H:i',
 			week_start: 'monday',
+			currency: 'EUR',
 			widgets: '',
 			navigation: '',
 			first_visit: true,
@@ -853,6 +854,42 @@ describe('Auth store', () => {
 
 			expect(result).toBe(false);
 			expect(auth.getWeekStart()).toBe('monday');
+		});
+	});
+
+	describe('currency setting', () => {
+		async function loggedInUser(): Promise<Auth> {
+			const expiresAt = new Date(Date.now() + 6 * 24 * 3600 * 1000).toISOString();
+			storage.getJson.mockReturnValue({ user: user(), authToken: authToken(expiresAt) });
+			const auth = new Auth();
+			await flushAsync();
+			return auth;
+		}
+
+		it('keeps an updated currency in the user settings and persists it', async () => {
+			api.put.mockResolvedValue(true);
+			const auth = await loggedInUser();
+			storage.setJson.mockClear();
+
+			const result = await auth.updateCurrency('USD');
+
+			expect(result).toBe(true);
+			expect(api.put).toHaveBeenCalledWith(
+				expect.stringContaining('/settings/currency'),
+				{ currency: 'USD' }
+			);
+			expect(auth.user?.settings?.currency).toBe('USD');
+			expect(storage.setJson).toHaveBeenCalled();
+		});
+
+		it('keeps the old currency when the API rejects the update', async () => {
+			api.put.mockResolvedValue(false);
+			const auth = await loggedInUser();
+
+			const result = await auth.updateCurrency('USD');
+
+			expect(result).toBe(false);
+			expect(auth.user?.settings?.currency).toBe('EUR');
 		});
 	});
 

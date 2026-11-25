@@ -3,7 +3,7 @@
 	import SubHeading from '$lib/components/ui/SubHeading.svelte';
 	import { getFinances } from '$lib/state/Finances.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import { europeanFormat } from '$lib/helpers/NumberHelper.js';
+	import { formatCurrency } from '$lib/helpers/NumberHelper.js';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { urls } from '$lib/config/urls';
 	import { goto } from '$app/navigation';
@@ -44,6 +44,14 @@
 	function dateFormat(): string | null {
 		return auth.user?.settings?.date_format ?? null;
 	}
+
+	function formatMoney(value: number): string {
+		return formatCurrency(value, auth.user?.settings?.currency, auth.user?.settings?.language);
+	}
+
+	function moneyFormatKey(): string {
+		return `${auth.user?.settings?.currency ?? 'EUR'}-${auth.user?.settings?.language ?? 'en'}`;
+	}
 </script>
 
 <div class="flex w-full flex-col gap-4">
@@ -57,7 +65,7 @@
 				>
 					<div class="flex w-full flex-col items-start gap-1">
 						<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.finances.budget}</span>
-						<span class="text-3xl tabular-nums md:text-4xl">{europeanFormat(finances.getBudgetTotal())}</span>
+						<span class="text-3xl tabular-nums md:text-4xl">{formatMoney(finances.getBudgetTotal())}</span>
 					</div>
 				</button>
 				<button
@@ -69,7 +77,7 @@
 				>
 					<div class="flex w-full flex-col items-start gap-1">
 						<span class="text-sm text-c-neutral-5 dark:text-c-neutral-4">{ts.get.finances.wealth}</span>
-						<span class="text-3xl tabular-nums md:text-4xl">{europeanFormat(finances.getWealthSum())}</span>
+						<span class="text-3xl tabular-nums md:text-4xl">{formatMoney(finances.getWealthSum())}</span>
 					</div>
 				</button>
 			</div>
@@ -84,7 +92,7 @@
 						values={[finances.getBudgetIncomeTotal(), finances.getBudgetExpenseTotal()]}
 						colors={['var(--color-c-success)', 'var(--color-c-danger)']}
 						opacity={0.8}
-						valueFormatter={europeanFormat}
+						valueFormatter={formatMoney}
 					/>
 				</div>
 			</div>
@@ -93,7 +101,13 @@
 				<div class="relative w-full rounded-md p-4 shadow-sm dark:shadow-s-dark-shadow md:dark:bg-s-dark-2">
 					<SubHeading title={ts.get.finances.wealth_distribution} my={0} mb={4} />
 					<div>
-						<DoughnutChart values={statisticsService.getDistribution(finances.wealth)} />
+						{#key moneyFormatKey()}
+							<DoughnutChart
+								values={statisticsService.getDistribution(finances.wealth)}
+								centerFormatter={formatMoney}
+								valueFormatter={formatMoney}
+							/>
+						{/key}
 					</div>
 				</div>
 			{/if}
@@ -113,7 +127,7 @@
 						categories={statisticsService.getMonthLabels(statistics, dateFormat())}
 						values={totals}
 						min={statisticsService.getTrendMin(totals)}
-						valueFormatter={europeanFormat}
+						valueFormatter={formatMoney}
 						filled={true}
 					/>
 				</div>

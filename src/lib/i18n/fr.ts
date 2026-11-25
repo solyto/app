@@ -213,6 +213,7 @@ const settings: SettingsRecords = {
 	date_format: 'Format de date',
 	time_format: 'Format de l\'heure',
 	week_start: 'Premier jour de la semaine',
+	currency: 'Devise',
 	nextcloud_token: 'Jeton enregistré',
 	nextcloud_no_token: 'Aucun jeton enregistré.',
 	telegram_bot_integration_success: 'Intégration réussie pour l\'ID de chat Telegram %s',
