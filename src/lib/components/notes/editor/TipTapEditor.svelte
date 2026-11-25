@@ -22,6 +22,7 @@
 	import { NotePicker } from '$lib/helpers/NotePicker.svelte';
 	import type { ActiveStates } from './EditorToolbar.svelte';
 	import type { Note } from '$lib/types/note';
+	import { safeHref } from '$lib/helpers/UrlHelper';
 
 	const notes = getNotes();
 	const viewPoint = getViewPoint();
@@ -95,6 +96,30 @@
 		notes.openNote(noteId);
 	}
 
+	// Same as the link popup's Open: notes in the app, everything else in a new tab.
+	function openLink(href: string): void {
+		const noteId = notes.linkService.noteIdFromHref(href);
+		if (noteId !== null) {
+			openLinkedNote(noteId);
+			return;
+		}
+
+		const url = safeHref(href);
+		if (!url) return;
+		const anchor = Object.assign(document.createElement('a'), { href: url, target: '_blank', rel: 'external' });
+		anchor.click();
+	}
+
+	// A click only places the cursor, which shows the link popup; Ctrl/Cmd+click opens the link.
+	function onLinkClick(root: HTMLElement, event: MouseEvent): boolean {
+		const link = (event.target as HTMLElement | null)?.closest('a');
+		if (!link || !root.contains(link) || event.button !== 0) return false;
+
+		event.preventDefault();
+		if (event.ctrlKey || event.metaKey) openLink(link.getAttribute('href') ?? '');
+		return false;
+	}
+
 	function linkMenuIconSize(): number {
 		return viewPoint.isMobile ? 18 : 14;
 	}
@@ -154,10 +179,18 @@
 		const instance = new Editor({
 			element: editorDiv,
 			extensions: [
-				StarterKit,
+				StarterKit.configure({ link: false }),
 				Typography,
 				Placeholder.configure({ placeholder: '...' }),
-				Link.configure({ openOnClick: false }),
+				Link.extend({
+					// Links to other notes open in the app, never in a new tab.
+					renderHTML(props) {
+						const [tag, attributes, hole] = this.parent!(props) as [string, Record<string, unknown>, 0];
+						if (notes.linkService.noteIdFromHref(String(attributes.href ?? '')) === null) return [tag, attributes, hole];
+						const { target, ...withoutTarget } = attributes;
+						return [tag, withoutTarget, hole];
+					}
+				}).configure({ openOnClick: false }),
 				Image,
 				Table.configure({ resizable: true }),
 				TableRow,
@@ -190,7 +223,10 @@
 				syncActiveStates();
 			},
 			editorProps: {
-				attributes: { class: 'tiptap-editor' }
+				attributes: { class: 'tiptap-editor' },
+				handleDOMEvents: {
+					click: (view, event) => onLinkClick(view.dom, event)
+				}
 			}
 		});
 

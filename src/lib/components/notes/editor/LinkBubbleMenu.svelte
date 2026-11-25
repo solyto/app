@@ -80,7 +80,7 @@
 	}
 </script>
 
-<EditorPopover bind:root class="flex items-center gap-0.5 px-1.5 py-1">
+<EditorPopover bind:root position="absolute" class="flex items-center gap-0.5 px-1.5 py-1">
 	<span
 		class="max-w-48 truncate px-1.5 text-xs text-c-neutral-5 dark:text-c-neutral-4"
 		class:italic={isMissingNote()}
