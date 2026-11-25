@@ -50,11 +50,11 @@
 </script>
 
 {#if isDialog}
-	<div bind:this={wrapper} use:toBody class="wrapper dialog border-c-neutral-2 bg-c-bg-modal shadow-md dark:border-s-dark-3" class:is-open={isOpen} role="dialog" aria-label="color picker">
+	<div bind:this={wrapper} use:toBody class="wrapper dialog color-picker-popup border-c-neutral-2 bg-c-bg-modal shadow-md dark:border-s-dark-3" class:is-open={isOpen} role="dialog" aria-label="color picker">
 		{@render children()}
 	</div>
 {:else}
-	<div bind:this={wrapper} class="wrapper border-c-neutral-2 bg-c-bg-modal dark:border-s-dark-3" class:is-open={isOpen} aria-label="color picker">
+	<div bind:this={wrapper} class="wrapper color-picker-popup border-c-neutral-2 bg-c-bg-modal dark:border-s-dark-3" class:is-open={isOpen} aria-label="color picker">
 		{@render children()}
 	</div>
 {/if}
