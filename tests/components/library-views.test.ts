@@ -86,6 +86,15 @@ describe('Library cover', () => {
 		expect(screen.getByAltText('Dune cover')).toBeInTheDocument();
 	});
 
+	it('shows the missing-cover placeholder when the image fails to load', async () => {
+		const { container } = renderWithContext(Cover, { entry: book({ title: 'Dune', cover: 'dune.jpg' }), library: { auth: { user: null }, config: { type: 'books' } } });
+
+		await fireEvent.error(screen.getByAltText('Dune cover'));
+
+		expect(screen.queryByAltText('Dune cover')).toBeNull();
+		expect(container.querySelector('svg')).not.toBeNull();
+	});
+
 	it('falls back to the title when the entry has an empty name', () => {
 		renderWithContext(Cover, { entry: { ...book({ title: 'Dune', cover: 'dune.jpg' }), name: null }, library: { auth: { user: null }, config: { type: 'books' } } });
 		expect(screen.getByAltText('Dune cover')).toBeInTheDocument();

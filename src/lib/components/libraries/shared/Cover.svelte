@@ -14,6 +14,8 @@
 		library: { auth: Auth; config: LibraryConfig };
 	} = $props();
 
+	let failedSrc = $state<string | null>(null);
+
 	function coverName(): string {
 		if ('artist' in entry) return `${entry.artist} - ${entry.title}`;
 		if ('name' in entry && entry.name) return entry.name;
@@ -29,7 +31,7 @@
 	}
 </script>
 
-{#if entry.cover}
+{#if entry.cover && failedSrc !== libraryCoverUrl(library, entry.cover)}
 	<div
 		class="flex items-center justify-center rounded-lg bg-c-neutral-1 dark:bg-s-dark-3"
 		class:size-48={library.config.type === 'music'}
@@ -39,6 +41,7 @@
 			src={libraryCoverUrl(library, entry.cover)}
 			alt={coverAlt()}
 			class="max-h-full max-w-full rounded-lg object-contain transition-all duration-300"
+			onerror={(event) => (failedSrc = (event.currentTarget as HTMLImageElement).getAttribute('src'))}
 		/>
 	</div>
 {:else}

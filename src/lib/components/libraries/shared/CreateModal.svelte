@@ -32,6 +32,8 @@
 		isWishlist?: boolean;
 	} = $props();
 
+	let failedCover = $state<string | null>(null);
+
 	function closeModal(): void {
 		library.closeCreateModal();
 	}
@@ -84,12 +86,17 @@
 								onclick={onCoverClick}
 								class="group relative flex size-48 items-center justify-center rounded-lg bg-c-neutral-2 dark:bg-c-neutral-5 {onCoverClick ? 'cursor-pointer' : 'cursor-default'}"
 							>
-								<img
-									src={existingCover}
-									alt={ts.get.libraries.cover}
-									class="max-h-full max-w-full rounded-lg object-contain"
-									in:fade={{ duration: 200 }}
-								/>
+								{#if failedCover === existingCover}
+									<MissingCover {library} />
+								{:else}
+									<img
+										src={existingCover}
+										alt={ts.get.libraries.cover}
+										class="max-h-full max-w-full rounded-lg object-contain"
+										in:fade={{ duration: 200 }}
+										onerror={() => (failedCover = existingCover ?? null)}
+									/>
+								{/if}
 								{#if onCoverClick}
 									{@render uploadOverlay()}
 								{/if}
