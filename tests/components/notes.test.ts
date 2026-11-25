@@ -83,6 +83,14 @@ describe('Note header', () => {
 		await vi.waitFor(() => expect(notes.changeTitle).toHaveBeenCalledWith('Shopping'));
 	});
 
+	it('starts renaming from the pencil button', async () => {
+		renderHeader();
+
+		await fireEvent.click(screen.getByRole('button', { name: en.layout.rename }));
+
+		expect(screen.getByDisplayValue('Groceries')).toHaveFocus();
+	});
+
 	it('keeps the title when renaming is cancelled', async () => {
 		const { notes, keyManager } = renderHeader();
 

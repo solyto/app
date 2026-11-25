@@ -14,8 +14,7 @@
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
 	import IconTrash from '$lib/icons/lucide/trash.svelte';
-	import MovableHoverBox from '$lib/components/ui/MovableHoverBox.svelte';
-	import { HoverExplanation } from '$lib/helpers/HoverExplanation.svelte';
+	import IconPencil from '$lib/icons/lucide/pencil.svelte';
 	import { SaveAction } from '$lib/helpers/SaveAction.svelte';
 
 	const ts = getTranslation();
@@ -25,7 +24,6 @@
 	const notifications = getUiNotifications();
 	const keyManager = getKeyManager();
 	const saving = new SaveAction(() => ts.get.notes.save_error);
-	const explanation = new HoverExplanation();
 
 	let { isJournal = false }: {
 		isJournal?: boolean;
@@ -84,7 +82,6 @@
 
 	async function toggleChangeTitle(): Promise<void> {
 		changeTitle = !changeTitle;
-		explanation.hide();
 
 		if (changeTitle) {
 			titleValue = notes.activeNote!.title;
@@ -164,20 +161,14 @@
 				{:else if changeTitle}
 					<TextInput bind:input={titleInput} bind:value={titleValue} {onblur} class="text-xl font-bold dark:bg-s-dark-3" />
 				{:else}
-					<button
-						type="button"
-						class="text-left text-3xl leading-tight"
-						ondblclick={toggleChangeTitle}
-						{...explanation.handlers}
-					>
-						{notes.activeNote.title}
-					</button>
-					<MovableHoverBox
-						content={ts.get.layout.double_click_to_edit}
-						show={explanation.visible}
-						x={explanation.x}
-						y={explanation.y}
-					/>
+					<div class="flex min-w-0 items-center gap-3">
+						<button type="button" class="min-w-0 text-left text-3xl leading-tight" ondblclick={toggleChangeTitle}>
+							{notes.activeNote.title}
+						</button>
+						<GhostIconButton label={ts.get.layout.rename} onclick={toggleChangeTitle} class="shrink-0">
+							<IconPencil size={16} />
+						</GhostIconButton>
+					</div>
 				{/if}
 				{#if lastSaved}
 					<span class="text-xs text-c-neutral-5 dark:text-c-neutral-4">
