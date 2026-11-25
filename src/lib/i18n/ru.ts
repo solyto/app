@@ -682,6 +682,7 @@ const notes: NoteRecords = {
 	insert_link_url: 'URL',
 	insert_link_name: 'Название ссылки',
 	link_to_note: 'Ссылка на заметку',
+	link_target: 'Заметка',
 	linked_from: 'Упоминается в',
 	link_open: 'Открыть',
 	link_edit: 'Изменить ссылку',

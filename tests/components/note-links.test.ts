@@ -60,9 +60,9 @@ describe('Note link picker', () => {
 	const journal = note({ id: 'n4', title: 'Milk journal', category_id: 9 });
 	const secret = note({ id: 'n5', title: 'Milk secret' });
 
-	function renderPicker(): Rendered & { onpick: ReturnType<typeof vi.fn> } {
+	function renderPicker(props: Record<string, unknown> = {}): Rendered & { onpick: ReturnType<typeof vi.fn> } {
 		const onpick = vi.fn();
-		const rendered = renderWithNotes(NoteLinkModal, { onpick, onCancel: vi.fn() }, (notes) => {
+		const rendered = renderWithNotes(NoteLinkModal, { onpick, onCancel: vi.fn(), ...props }, (notes) => {
 			notes.notes = [current, groceries, milk, journal, secret];
 			notes.hiddenNoteIds = [secret.id];
 			notes.categories = [noteCategory(3, { title: 'Home' })];
@@ -107,7 +107,7 @@ describe('Note link picker', () => {
 		press(keyManager, 'ArrowDown');
 		press(keyManager, 'Enter');
 
-		expect(onpick).toHaveBeenCalledWith(milk);
+		expect(onpick).toHaveBeenCalledWith(milk, null);
 	});
 
 	it('picks a note on click', async () => {
@@ -115,7 +115,21 @@ describe('Note link picker', () => {
 
 		await fireEvent.click(await screen.findByRole('button', { name: /Groceries/ }));
 
-		expect(onpick).toHaveBeenCalledWith(groceries);
+		expect(onpick).toHaveBeenCalledWith(groceries, null);
+	});
+
+	it('edits a link: the current target comes first and the edited name is passed on', async () => {
+		const { keyManager, onpick } = renderPicker({ initialName: 'Old name', currentNoteId: milk.id });
+		const name = await screen.findByDisplayValue('Old name');
+		const rows = screen.getAllByRole('button', { name: /Groceries|Milk prices/ });
+
+		expect(rows[0]).toHaveAccessibleName(/Milk prices/);
+
+		await userEvent.clear(name);
+		await userEvent.type(name, 'New name');
+		press(keyManager, 'Enter');
+
+		expect(onpick).toHaveBeenCalledWith(milk, 'New name');
 	});
 });
 

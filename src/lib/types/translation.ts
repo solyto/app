@@ -561,6 +561,7 @@ export interface NoteRecords {
 	insert_link_url: string;
 	insert_link_name: string;
 	link_to_note: string;
+	link_target: string;
 	linked_from: string;
 	link_open: string;
 	link_edit: string;

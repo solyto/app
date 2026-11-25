@@ -3,12 +3,15 @@
 	import EditorPopover from './EditorPopover.svelte';
 	import EditorPopoverDivider from './EditorPopoverDivider.svelte';
 	import InsertLinkModal from './InsertLinkModal.svelte';
+	import NoteLinkModal from './NoteLinkModal.svelte';
+	import NoteLinkService from '$lib/services/NoteLinkService';
 	import ArrowUpRight from '$lib/icons/lucide/arrow-up-right.svelte';
 	import ExternalLink from '$lib/icons/lucide/external-link.svelte';
 	import Pencil from '$lib/icons/lucide/pencil.svelte';
 	import Unlink from '$lib/icons/lucide/unlink.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { hostnameOf, safeHref } from '$lib/helpers/UrlHelper';
+	import type { Note } from '$lib/types/note';
 
 	export type ActiveLink = {
 		href: string;
@@ -36,6 +39,7 @@
 	} = $props();
 
 	const ts = getTranslation();
+	const linkService = new NoteLinkService();
 
 	let editModalOpen = $state<boolean>(false);
 	let editedLink = $state<ActiveLink | null>(null);
@@ -75,6 +79,10 @@
 		editModalOpen = false;
 	}
 
+	function confirmNoteEdit(note: Note, name: string | null): void {
+		confirmEdit(linkService.hrefForNote(note), name || note.title);
+	}
+
 	function removeLink(): void {
 		editor?.chain().focus().extendMarkRange('link').unsetLink().run();
 	}
@@ -107,7 +115,14 @@
 	</button>
 </EditorPopover>
 
-{#if editModalOpen && editedLink}
+{#if editModalOpen && editedLink && noteId !== null}
+	<NoteLinkModal
+		onpick={confirmNoteEdit}
+		onCancel={() => (editModalOpen = false)}
+		initialName={editedLink.text}
+		currentNoteId={noteId}
+	/>
+{:else if editModalOpen && editedLink}
 	<InsertLinkModal
 		onConfirm={confirmEdit}
 		onCancel={() => (editModalOpen = false)}

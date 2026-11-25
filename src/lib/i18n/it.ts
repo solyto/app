@@ -683,6 +683,7 @@ const notes: NoteRecords = {
 	insert_link_url: 'URL',
 	insert_link_name: 'Nome del link',
 	link_to_note: 'Collega una nota',
+	link_target: 'Nota',
 	linked_from: 'Collegata da',
 	link_open: 'Apri',
 	link_edit: 'Modifica link',
