@@ -16,7 +16,7 @@
 
 	function coverName(): string {
 		if ('artist' in entry) return `${entry.artist} - ${entry.title}`;
-		if ('name' in entry) return `${entry.name}`;
+		if ('name' in entry && entry.name) return entry.name;
 		return entry.title;
 	}
 

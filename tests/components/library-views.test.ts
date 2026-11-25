@@ -85,6 +85,11 @@ describe('Library cover', () => {
 		renderWithContext(Cover, { entry: book({ title: 'Dune', cover: 'dune.jpg' }), library: { auth: { user: null }, config: { type: 'books' } } });
 		expect(screen.getByAltText('Dune cover')).toBeInTheDocument();
 	});
+
+	it('falls back to the title when the entry has an empty name', () => {
+		renderWithContext(Cover, { entry: { ...book({ title: 'Dune', cover: 'dune.jpg' }), name: null }, library: { auth: { user: null }, config: { type: 'books' } } });
+		expect(screen.getByAltText('Dune cover')).toBeInTheDocument();
+	});
 });
 
 describe('Library view switcher', () => {
