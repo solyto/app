@@ -17,56 +17,84 @@ function typeSelect(): HTMLSelectElement {
 	return screen.getAllByRole('combobox')[0] as HTMLSelectElement;
 }
 
+function unitSelect(): HTMLSelectElement {
+	return screen.getAllByRole('combobox')[1] as HTMLSelectElement;
+}
+
+function selectedLabel(select: HTMLSelectElement): string {
+	return select.options[select.selectedIndex].textContent ?? '';
+}
+
 async function typeInterval(value: string): Promise<void> {
 	await fireEvent.input(intervalInput(), { target: { value } });
 }
 
 describe('Recurrence interval', () => {
-	it('shows the interval read from the rule', () => {
+	it('opens a rule with an interval as "Custom…"', () => {
 		renderRule('FREQ=DAILY;INTERVAL=12');
 
+		expect(typeSelect().value).toBe('custom');
 		expect(intervalInput().value).toBe('12');
-		expect(screen.getByText('days')).toBeTruthy();
+		expect(selectedLabel(unitSelect())).toBe('days');
 	});
 
 	it.each([
 		['weekly', 'weeks'],
-		['monthly_date', 'months'],
-		['monthly_weekday', 'months'],
+		['monthly_date', 'months on this date'],
+		['monthly_weekday', 'months on a weekday'],
 		['yearly', 'years']
-	])('names the unit of %s as %s', async (type, unit) => {
+	])('sets the rule to %s through the unit "%s"', async (type, unit) => {
 		renderRule('FREQ=DAILY;INTERVAL=3');
 
-		await fireEvent.change(typeSelect(), { target: { value: type } });
+		await fireEvent.change(unitSelect(), { target: { value: type } });
 
-		expect(screen.getByText(unit)).toBeTruthy();
+		expect(screen.getByTestId('type').textContent).toBe(type);
 		expect(screen.getByTestId('interval').textContent).toBe('3');
+		expect(selectedLabel(unitSelect())).toBe(unit);
 	});
 
-	it('hides the interval behind a button for an interval of 1', () => {
+	it('shows no interval field for an interval of 1', () => {
 		renderRule('FREQ=WEEKLY;BYDAY=WE');
 
+		expect(typeSelect().value).toBe('weekly');
 		expect(screen.queryByRole('spinbutton')).toBeNull();
-		expect(screen.getByRole('button', { name: 'Custom interval' })).toBeTruthy();
 	});
 
-	it('shows the interval after the button is clicked, in the singular for 1', async () => {
+	it('shows the interval after choosing "Custom…", in the singular for 1', async () => {
 		renderRule('FREQ=WEEKLY;BYDAY=WE');
 
-		await fireEvent.click(screen.getByRole('button', { name: 'Custom interval' }));
+		await fireEvent.change(typeSelect(), { target: { value: 'custom' } });
 
 		expect(intervalInput().value).toBe('1');
-		expect(screen.getByText('week')).toBeTruthy();
-		expect(screen.queryByRole('button', { name: 'Custom interval' })).toBeNull();
+		expect(selectedLabel(unitSelect())).toBe('week');
+		expect(screen.getByTestId('type').textContent).toBe('weekly');
 	});
 
-	it('saves an interval set after opening the field', async () => {
+	it('saves an interval set after choosing "Custom…"', async () => {
 		renderRule('FREQ=WEEKLY;BYDAY=WE');
 
-		await fireEvent.click(screen.getByRole('button', { name: 'Custom interval' }));
+		await fireEvent.change(typeSelect(), { target: { value: 'custom' } });
 		await typeInterval('2');
 
 		expect(screen.getByTestId('interval').textContent).toBe('2');
+	});
+
+	it('resets the interval to 1 when a preset is chosen', async () => {
+		renderRule('FREQ=DAILY;INTERVAL=3');
+
+		await fireEvent.change(typeSelect(), { target: { value: 'weekly' } });
+
+		expect(screen.queryByRole('spinbutton')).toBeNull();
+		expect(screen.getByTestId('interval').textContent).toBe('1');
+		expect(screen.getByTestId('type').textContent).toBe('weekly');
+	});
+
+	it('names the end in its options, without a separate label', () => {
+		renderRule('FREQ=WEEKLY;BYDAY=WE');
+
+		const ends = screen.getByRole('combobox', { name: 'Ends' }) as HTMLSelectElement;
+		expect([...ends.options].map((option) => option.textContent)).toEqual(['Never ends', 'Ends on date']);
+		expect(screen.queryByText('Ends', { selector: 'span' })).toBeNull();
 	});
 
 	it('keeps the opened field when the interval goes back to 1', async () => {

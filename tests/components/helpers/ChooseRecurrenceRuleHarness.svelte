@@ -10,3 +10,4 @@
 
 <ChooseRecurrenceRule bind:selection {startDate} />
 <span data-testid="interval">{selection.interval}</span>
+<span data-testid="type">{selection.type}</span>
