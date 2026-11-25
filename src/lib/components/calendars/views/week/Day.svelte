@@ -238,7 +238,7 @@
 	<div class="group relative w-full select-none" ondblclick={onAllDayDoubleClick}>
 		<button
 			onclick={addAllDayEvent}
-			class="absolute top-0 right-0 z-50 cursor-pointer rounded-bl-lg border-r-1 border-b-1 border-c-neutral-1 p-2 font-bold opacity-0 transition-all group-hover:bg-c-btn group-hover:text-c-neutral group-hover:opacity-100 dark:border-s-dark"
+			class="absolute top-0 right-0 z-40 cursor-pointer rounded-bl-lg border-r-1 border-b-1 border-c-neutral-1 p-2 font-bold opacity-0 transition-all group-hover:bg-c-btn group-hover:text-c-neutral group-hover:opacity-100 dark:border-s-dark"
 		>
 			<IconPlus class="size-3" />
 		</button>
@@ -260,14 +260,14 @@
 		>
 			<button
 				onclick={() => addEventAt(hour)}
-				class="absolute top-1 right-1 z-50 cursor-pointer rounded-full p-2 font-bold opacity-0 transition-all group-hover:opacity-100 hover:bg-c-btn hover:text-white"
+				class="absolute top-1 right-1 z-40 cursor-pointer rounded-full p-2 font-bold opacity-0 transition-all group-hover:opacity-100 hover:bg-c-btn hover:text-white"
 			>
 				<IconPlus class="size-3" />
 			</button>
 			{#if entriesByHour[parseInt(hour)].entries.length > 0}
 				{#each entriesByHour[parseInt(hour)].entries as item, i (getCalendarEventKey(item))}
 					{#if !calendars.isCalendarHidden(item.calendar_id)}
-						{@render eventButton(item, ['absolute z-40 w-2/3 shadow-sm', i === 0 ? 'left-0' : 'right-0'], getTop(item), getHeight(item))}
+						{@render eventButton(item, ['absolute z-30 w-2/3 shadow-sm', i === 0 ? 'left-0' : 'right-0'], getTop(item), getHeight(item))}
 					{/if}
 				{/each}
 			{/if}
