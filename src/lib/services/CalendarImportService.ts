@@ -61,6 +61,7 @@ export default class CalendarImportService {
 			case 'select':
 				return 'select';
 			case 'started':
+				return state?.source === 'file' ? 'progress' : 'start';
 			case 'calendars':
 			case 'events':
 				return 'progress';

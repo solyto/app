@@ -11,12 +11,9 @@
 	const ts = getTranslation();
 
 	afterNavigate(() => {
+		notes.checkUrlForActiveNote();
 		if (page.params.id) notes.loadBacklinks(page.params.id);
 	});
-
-	function selectNote(noteId: string): void {
-		notes.selectNote(noteId);
-	}
 </script>
 
 <div class="relative flex h-full w-full flex-col gap-4 p-4 lg:px-8">
@@ -26,7 +23,7 @@
 			<TipTapEditor />
 		{/key}
 		{#if notes.backlinks.length > 0}
-			<NoteBacklinks backlinks={notes.backlinks} onselect={selectNote} />
+			<NoteBacklinks backlinks={notes.backlinks} />
 		{/if}
 	{:else if notes.loaded}
 		<p class="text-c-neutral-5 dark:text-c-neutral-4">{ts.get.notes.note_not_found}</p>

@@ -68,11 +68,6 @@
 		notes.openSearch();
 	}
 
-	function openNote(note: Note): void {
-		notes.selectNote(note.id);
-		close();
-	}
-
 	function selectCategory(category: NoteCategory): void {
 		direction = 'forward';
 		stack = [...stack, category];
@@ -136,7 +131,7 @@
 {#snippet noteRow(note: Note)}
 	<a
 		href={resolve(urls.note, { id: note.id })}
-		onclick={() => openNote(note)}
+		onclick={close}
 		use:contextMenu={(x, y) => notes.openRightClickMenu(x, y, 'note', note.id)}
 		class="flex items-center border-b border-c-neutral-1 px-4 py-4 hover:bg-c-neutral-1 dark:border-s-dark-3 dark:hover:bg-s-dark-3"
 		class:bg-c-neutral-1={isActive(note)}

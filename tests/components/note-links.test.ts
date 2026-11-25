@@ -1,16 +1,21 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import type { Editor } from '@tiptap/core';
+import { Editor } from '@tiptap/core';
+import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
 import { setNotes, type NotesSvelte as Notes } from '$lib/state/Notes.svelte';
 import { setTags } from '$lib/state/Tags.svelte';
 import type { KeyManager } from '$lib/state/KeyManager.svelte';
 import { en } from '$lib/i18n/en';
+import { urls } from '$lib/config/urls';
 import { renderWithContext, type AnyComponent } from './helpers/context';
 import StoreHarness from './helpers/StoreHarness.svelte';
 import NoteLinkModal from '$lib/components/notes/editor/NoteLinkModal.svelte';
 import LinkBubbleMenu from '$lib/components/notes/editor/LinkBubbleMenu.svelte';
+import EditorToolbar from '$lib/components/notes/editor/EditorToolbar.svelte';
 import NoteBacklinks from '$lib/components/notes/NoteBacklinks.svelte';
+import { createNoteLinkSuggestion } from '$lib/components/notes/editor/NoteLinkSuggestion';
 import { note, noteCategory } from '../unit/helpers/factories';
 
 vi.mock('$app/navigation', () => ({ goto: vi.fn() }));
@@ -202,20 +207,97 @@ describe('Link popup', () => {
 });
 
 describe('Linked from', () => {
-	it('lists the linking notes as links and selects one on click', async () => {
-		const onselect = vi.fn();
+	it('lists the linking notes as links to their notes', () => {
 		renderWithContext(NoteBacklinks, {
-			backlinks: [{ id: 'a', title: 'Alpha' }, { id: 'b', title: 'Beta' }],
-			onselect
+			backlinks: [{ id: 'a', title: 'Alpha' }, { id: 'b', title: 'Beta' }]
 		});
 
 		expect(screen.getByText(en.notes.linked_from)).toBeInTheDocument();
-		const beta = screen.getByRole('link', { name: 'Beta' });
-		expect(beta).toHaveAttribute('href', '/notes/b');
+		expect(screen.getByRole('link', { name: 'Alpha' })).toHaveAttribute('href', '/notes/a');
+		expect(screen.getByRole('link', { name: 'Beta' })).toHaveAttribute('href', '/notes/b');
+	});
+});
 
-		beta.addEventListener('click', (event) => event.preventDefault());
-		await fireEvent.click(beta);
+describe('Note link insertion', () => {
+	type Chain = Record<string, ReturnType<typeof vi.fn>>;
 
-		expect(onselect).toHaveBeenCalledWith('b');
+	function fakeToolbarEditor(): { editor: Editor; chain: Chain } {
+		const chain: Chain = {};
+		for (const step of ['focus', 'insertContent', 'run']) {
+			chain[step] = vi.fn(() => chain);
+		}
+		const editor = {
+			state: { selection: { from: 0, to: 0 }, doc: { textBetween: () => '' } },
+			chain: () => chain
+		} as unknown as Editor;
+		return { editor, chain };
+	}
+
+	const activeStates = {
+		bold: false,
+		italic: false,
+		strike: false,
+		code: false,
+		codeBlock: false,
+		h1: false,
+		h2: false,
+		h3: false,
+		bulletList: false,
+		orderedList: false,
+		blockquote: false,
+		link: false
+	};
+
+	it('inserts a link to the picked note from the toolbar', async () => {
+		const { editor, chain } = fakeToolbarEditor();
+		const target = note({ id: UUID, title: 'Groceries' });
+		renderWithNotes(EditorToolbar, { editor, activeStates }, (notes) => {
+			notes.notes = [target];
+			notes.hiddenNoteIds = [];
+			notes.categories = [];
+		});
+
+		await fireEvent.click(screen.getByTitle(en.notes.link_to_note));
+		await fireEvent.click(await screen.findByRole('button', { name: /Groceries/ }));
+
+		expect(chain.insertContent).toHaveBeenCalledWith({
+			type: 'text',
+			text: 'Groceries',
+			marks: [{ type: 'link', attrs: { href: urls.note.replace('[id]', UUID) } }]
+		});
+		expect(chain.run).toHaveBeenCalled();
+	});
+
+	it('opens on [[ and inserts the picked note as a link', async () => {
+		const onOpen = vi.fn();
+		const onClose = vi.fn();
+		const onKeyDown = vi.fn(() => false);
+		const editor = new Editor({
+			element: document.createElement('div'),
+			extensions: [
+				StarterKit,
+				Link,
+				createNoteLinkSuggestion({
+					hrefForNote: (note) => urls.note.replace('[id]', note.id),
+					onOpen,
+					onClose,
+					onKeyDown
+				})
+			]
+		});
+
+		try {
+			editor.commands.insertContent('[[');
+			await vi.waitFor(() => expect(onOpen).toHaveBeenCalled());
+
+			const props = onOpen.mock.calls[0][0] as { command: (note: ReturnType<typeof note>) => void };
+			props.command(note({ id: UUID, title: 'Groceries' }));
+
+			const html = editor.getHTML();
+			expect(html).toContain(`href="${urls.note.replace('[id]', UUID)}"`);
+			expect(html).toContain('>Groceries</a>');
+		} finally {
+			editor.destroy();
+		}
 	});
 });

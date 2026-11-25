@@ -49,6 +49,7 @@ export default class ContactImportService {
 			case 'select':
 				return 'select';
 			case 'started':
+				return state?.source === 'file' ? 'progress' : 'start';
 			case 'address-books':
 			case 'contacts':
 				return 'progress';

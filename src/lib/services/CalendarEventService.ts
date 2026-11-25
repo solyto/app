@@ -33,7 +33,7 @@ function daysAfterStartTouched(event: CalendarEvent): Date[] {
 export default class CalendarEventService {
 	writeResult(res: StatusResponse): EventWriteResult {
 		if (res.ok) return 'ok';
-		if (res.status === 403) return 'read_only';
+		if (res.errors[0] === 'calendar_read_only') return 'read_only';
 		return WRITE_ERRORS[res.errors[0]] ?? 'failed';
 	}
 

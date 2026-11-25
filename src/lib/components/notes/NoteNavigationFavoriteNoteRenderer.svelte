@@ -27,7 +27,6 @@
 	{#each favorites as note (note.id)}
 		<a
 			href={resolve(urls.note, { id: note.id })}
-			onclick={() => notes.selectNote(note.id)}
 			use:contextMenu={(x, y) => notes.openRightClickMenu(x, y, 'note', note.id)}
 			draggable="true"
 			ondragstart={() => (notes.draggedNote = note)}

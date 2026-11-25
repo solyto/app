@@ -53,6 +53,15 @@ describe('Finance rows', () => {
 
 		expect(onOpenHistory).toHaveBeenCalledTimes(1);
 	});
+
+	it('shows a formatted zero when a wealth field has no value yet', () => {
+		renderRow(WealthFieldDisplay, {
+			wealth: wealthField({ currentValue: null }),
+			valueFormatter: (value: number) => `${value.toFixed(2)} €`
+		});
+
+		expect(screen.getByText('0.00 €')).toBeInTheDocument();
+	});
 });
 
 describe('Finance history', () => {

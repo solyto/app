@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { init } from './echarts';
 	import type { ECharts } from './echarts';
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, untrack } from 'svelte';
 	import { getChartColor } from '$lib/helpers/ColorHelper';
 
 	function plainNumber(value: number): string {
@@ -30,12 +30,14 @@
 	}
 
 	function createChart() {
-		if (!chartContainer || !values?.length) return;
+		if (!chartContainer) return;
 
 		if (myChart) {
 			myChart.dispose();
 			myChart = null;
 		}
+
+		if (!values?.length) return;
 
 		myChart = init(chartContainer);
 
@@ -98,6 +100,10 @@
 		};
 
 		myChart.setOption(options);
+
+		for (const name of untrack(() => hiddenNames)) {
+			myChart.dispatchAction({ type: 'legendToggleSelect', name });
+		}
 	}
 
 	onMount(() => {

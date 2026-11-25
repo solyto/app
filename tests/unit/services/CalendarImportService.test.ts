@@ -92,6 +92,11 @@ describe('view', () => {
 	] as const)('shows %s as %s', (stage, view) => {
 		expect(service.view(calendarImportState({ stage }))).toBe(view);
 	});
+
+	it('treats a started CalDAV import as restartable, not running', () => {
+		expect(service.view(calendarImportState({ stage: 'started', source: 'caldav' }))).toBe('start');
+		expect(service.isRunning(calendarImportState({ stage: 'started', source: 'caldav' }))).toBe(false);
+	});
 });
 
 describe('isRunning and isStale', () => {

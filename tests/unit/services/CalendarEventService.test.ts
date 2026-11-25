@@ -195,8 +195,9 @@ describe('CalendarEventService', () => {
 			expect(service.writeResult({ ok: false, status: 422, errors: ['external_event_unreadable'] })).toBe('unreadable');
 		});
 
-		it('reports a forbidden write as read-only', () => {
-			expect(service.writeResult({ ok: false, status: 403, errors: [] })).toBe('read_only');
+		it('reports a forbidden write as read-only only when the server says so', () => {
+			expect(service.writeResult({ ok: false, status: 403, errors: ['calendar_read_only'] })).toBe('read_only');
+			expect(service.writeResult({ ok: false, status: 403, errors: [] })).toBe('failed');
 		});
 
 		it('treats anything without a known code as a plain failure', () => {

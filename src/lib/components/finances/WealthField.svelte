@@ -81,7 +81,7 @@
 				</GhostIconButton>
 			</div>
 			<div class="text-lg tabular-nums">
-				{wealth.currentValue ? valueFormatter(wealth.currentValue.value) : 0}
+				{valueFormatter(wealth.currentValue?.value ?? 0)}
 			</div>
 		</div>
 	</div>

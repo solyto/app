@@ -80,6 +80,11 @@ describe('view', () => {
 	] as const)('shows %s as %s', (stage, view) => {
 		expect(service.view(contactImportState({ stage }))).toBe(view);
 	});
+
+	it('treats a started CardDAV import as restartable, not running', () => {
+		expect(service.view(contactImportState({ stage: 'started', source: 'carddav' }))).toBe('start');
+		expect(service.isRunning(contactImportState({ stage: 'started', source: 'carddav' }))).toBe(false);
+	});
 });
 
 describe('isRunning and isStale', () => {

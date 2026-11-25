@@ -51,6 +51,37 @@ describe('DoughnutChart legend', () => {
 		expect(screen.queryByRole('button')).toBeNull();
 	});
 
+	it('disposes the chart when the values become empty', async () => {
+		const { rerender } = render(DoughnutChart, { values });
+		await waitFor(() => expect(chart.setOption).toHaveBeenCalled());
+
+		await rerender({ values: [] });
+
+		await waitFor(() => expect(chart.dispose).toHaveBeenCalled());
+	});
+
+	it('re-applies the hidden slices after a rebuild', async () => {
+		const { rerender } = render(DoughnutChart, {
+			values,
+			centerFormatter: () => 'first',
+			valueFormatter: () => 'first'
+		});
+		await waitFor(() => expect(chart.setOption).toHaveBeenCalled());
+		await userEvent.click(screen.getByRole('button', { name: 'Cash' }));
+
+		chart.dispatchAction.mockClear();
+		const callsBeforeChange = chart.setOption.mock.calls.length;
+
+		await rerender({
+			values,
+			centerFormatter: () => 'second',
+			valueFormatter: () => 'second'
+		});
+
+		await waitFor(() => expect(chart.setOption.mock.calls.length).toBeGreaterThan(callsBeforeChange));
+		expect(chart.dispatchAction).toHaveBeenCalledWith({ type: 'legendToggleSelect', name: 'Cash' });
+	});
+
 	it('rebuilds the chart when the formatter changes', async () => {
 		const { rerender } = render(DoughnutChart, {
 			values,

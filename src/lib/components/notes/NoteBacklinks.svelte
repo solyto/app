@@ -4,9 +4,8 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import type { NoteBacklink } from '$lib/types/note';
 
-	let { backlinks, onselect }: {
+	let { backlinks }: {
 		backlinks: NoteBacklink[];
-		onselect: (noteId: string) => void;
 	} = $props();
 
 	const ts = getTranslation();
@@ -19,7 +18,6 @@
 			<li>
 				<a
 					href={resolve(urls.note, { id: link.id })}
-					onclick={() => onselect(link.id)}
 					class="text-sm text-c-neutral-6 hover:text-c-text hover:underline dark:text-c-neutral-3"
 				>
 					{link.title}
