@@ -7,6 +7,7 @@
 	import NoteSearch from '$lib/components/notes/NoteSearch.svelte';
 	import MoveNoteModal from '$lib/components/notes/MoveNoteModal.svelte';
 	import { onDestroy, onMount } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 	import { getTags, setTags } from '$lib/state/Tags.svelte';
 	import RightClickMenu from '$lib/components/ui/menus/RightClickMenu.svelte';
@@ -92,6 +93,8 @@
 	});
 
 	onDestroy(() => keyManager.unregisterAll(keyHandlers));
+
+	afterNavigate(() => notes.syncActiveNoteWithUrl());
 
 	function openSearch(event: KeyboardEvent): void {
 		if (notes.modalOpen || notes.deleteNoteModalOpen || pendingDelete !== null) return;

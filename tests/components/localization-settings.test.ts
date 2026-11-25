@@ -50,6 +50,14 @@ describe('Localization settings', () => {
 		expect(screen.getByDisplayValue('USD $')).toBeInTheDocument();
 	});
 
+	it('shows only the code when a currency has no symbol of its own', () => {
+		renderSettings();
+
+		expect(screen.getByRole('option', { name: 'CHF' })).toBeInTheDocument();
+		expect(screen.getByRole('option', { name: 'RUB' })).toBeInTheDocument();
+		expect(screen.queryByRole('option', { name: 'CHF CHF' })).not.toBeInTheDocument();
+	});
+
 	it('switches the app language and saves it', async () => {
 		const updateLanguage = vi.spyOn(Auth.prototype, 'updateLanguage').mockResolvedValue(true);
 		renderSettings();

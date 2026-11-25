@@ -63,6 +63,18 @@ describe('Recurrence interval', () => {
 		expect(intervalInput().value).toBe(expected);
 	});
 
+	it.each([
+		['', '4'],
+		['2.5', '3'],
+		['1500', '999']
+	])('keeps a saveable interval while %j is typed, before any blur', async (typed, expected) => {
+		renderRule('FREQ=DAILY;INTERVAL=4');
+
+		await typeInterval(typed);
+
+		expect(screen.getByTestId('interval').textContent).toBe(expected);
+	});
+
 	it('falls back to the last valid value typed before an empty input', async () => {
 		renderRule('FREQ=DAILY;INTERVAL=4');
 

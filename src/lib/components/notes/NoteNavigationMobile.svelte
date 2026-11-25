@@ -4,7 +4,7 @@
 	import type { Note, NoteCategory } from '$lib/types/note';
 	import { urls } from '$lib/config/urls';
 	import { resolve } from '$app/paths';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { getUrlFormat } from '$lib/helpers/DateHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -62,6 +62,8 @@
 	function close(): void {
 		open = false;
 	}
+
+	afterNavigate(close);
 
 	function openSearch(): void {
 		close();
@@ -131,7 +133,6 @@
 {#snippet noteRow(note: Note)}
 	<a
 		href={resolve(urls.note, { id: note.id })}
-		onclick={close}
 		use:contextMenu={(x, y) => notes.openRightClickMenu(x, y, 'note', note.id)}
 		class="flex items-center border-b border-c-neutral-1 px-4 py-4 hover:bg-c-neutral-1 dark:border-s-dark-3 dark:hover:bg-s-dark-3"
 		class:bg-c-neutral-1={isActive(note)}
@@ -154,7 +155,6 @@
 {#snippet journalRow(key: string, label: string)}
 	<a
 		href={resolve(urls.journalDate, { date: key })}
-		onclick={close}
 		class="flex items-center border-b border-c-neutral-1 px-4 py-4 hover:bg-c-neutral-1 dark:border-s-dark-3 dark:hover:bg-s-dark-3"
 		class:bg-c-neutral-1={activeKey === key}
 		class:dark:bg-s-dark-3={activeKey === key}
@@ -202,7 +202,6 @@
 						<div class="flex-1 overflow-y-auto">
 							<a
 								href={resolve(urls.notes)}
-								onclick={close}
 								class="flex items-center border-b border-c-neutral-1 px-4 py-4 hover:bg-c-neutral-1 dark:border-s-dark-3 dark:hover:bg-s-dark-3"
 								class:bg-c-neutral-1={isDashboardActive()}
 								class:dark:bg-s-dark-3={isDashboardActive()}

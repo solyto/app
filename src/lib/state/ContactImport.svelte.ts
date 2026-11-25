@@ -21,6 +21,7 @@ export class ContactImport {
 	importModal = $state<boolean>(false);
 	state = $state<ImportState | null>(null);
 	stalled = $state<boolean>(false);
+	awaitingState = $state<boolean>(false);
 
 	auth: Auth;
 	apiService: ApiService;
@@ -94,6 +95,7 @@ export class ContactImport {
 		if (!res.ok) return this.service.errorFor(res.status, source);
 
 		this.state = res.state ?? this.startedState(source);
+		this.awaitingState = res.state === null;
 		this.stalled = false;
 		this.startPolling();
 		return null;
@@ -119,7 +121,10 @@ export class ContactImport {
 
 	private async refresh(): Promise<void> {
 		const res = await this.apiService.get(apiRoutes.contacts.getImportState, null);
-		if (res) this.state = res.data as ImportState;
+		if (!res) return;
+
+		this.state = res.data as ImportState;
+		this.awaitingState = false;
 	}
 
 	private startPolling(): void {
@@ -142,7 +147,7 @@ export class ContactImport {
 
 		if (this.destroyed) return;
 
-		if (this.service.isRunning(this.state)) {
+		if (this.service.isRunning(this.state, this.awaitingState)) {
 			this.continuePolling();
 			return;
 		}
@@ -198,6 +203,7 @@ export class ContactImport {
 	private reset(): void {
 		this.state = null;
 		this.stalled = false;
+		this.awaitingState = false;
 	}
 
 	private stopPolling(): void {

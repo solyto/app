@@ -104,18 +104,52 @@ describe('ContactImport store', () => {
 	});
 
 	describe('CardDAV import', () => {
-		it('polls until the account address books are ready to pick', async () => {
+		it('shows progress right after the login step and polls until the account address books are ready to pick', async () => {
 			api.postWithStatus.mockResolvedValue({ ok: true, status: 200, data: { data: [] } });
-			api.get.mockResolvedValueOnce(stateResponse({ stage: 'started', source: 'carddav' }));
 			api.get.mockResolvedValueOnce(stateResponse({ stage: 'select', source: 'carddav', address_books: ['Work'] }));
 			const s = store();
 
 			await s.startCarddavImport({ url: 'https://dav.test', username: 'me', secret: 'x' });
-			await vi.advanceTimersByTimeAsync(5000);
 
 			expect(api.postWithStatus).toHaveBeenCalledWith(apiRoutes.contacts.startImport, { url: 'https://dav.test', username: 'me', secret: 'x' });
-			expect(api.get).toHaveBeenCalledTimes(2);
+			expect(s.service.view(s.state, s.awaitingState)).toBe('progress');
+			expect(s.polling).toBe(true);
+
+			await vi.advanceTimersByTimeAsync(5000);
+
+			expect(api.get).toHaveBeenCalledTimes(1);
 			expect(s.state?.stage).toBe('select');
+			expect(s.service.view(s.state, s.awaitingState)).toBe('select');
+			expect(s.polling).toBe(false);
+		});
+
+		it('shows progress right after the select step and keeps polling while the import runs', async () => {
+			api.postWithStatus.mockResolvedValue({ ok: true, status: 200, data: { data: [] } });
+			api.get.mockResolvedValue(stateResponse({ stage: 'address-books', source: 'carddav' }));
+			const s = store();
+
+			await s.selectCarddavAddressBooks(['Work']);
+
+			expect(s.service.view(s.state, s.awaitingState)).toBe('progress');
+
+			await vi.advanceTimersByTimeAsync(3000);
+
+			expect(api.get).toHaveBeenCalledTimes(3);
+			expect(s.service.view(s.state, s.awaitingState)).toBe('progress');
+			expect(s.polling).toBe(true);
+			s.destroy();
+		});
+
+		it('stops polling and offers the form again when the server reports an abandoned login step', async () => {
+			api.postWithStatus.mockResolvedValue({ ok: true, status: 200, data: { data: [] } });
+			api.get.mockResolvedValue(stateResponse({ stage: 'started', source: 'carddav' }));
+			const s = store();
+
+			await s.startCarddavImport({ url: 'https://dav.test', username: 'me', secret: 'x' });
+			await vi.advanceTimersByTimeAsync(3000);
+
+			expect(api.get).toHaveBeenCalledTimes(1);
+			expect(s.service.view(s.state, s.awaitingState)).toBe('start');
 			expect(s.polling).toBe(false);
 		});
 

@@ -48,8 +48,13 @@
 
 	const currencyOptions = SUPPORTED_CURRENCIES.map((currency) => ({
 		value: currency,
-		label: `${currency} ${currencySymbol(currency)}`
+		label: currencyLabel(currency)
 	}));
+
+	function currencyLabel(currency: Currency): string {
+		const symbol = currencySymbol(currency);
+		return symbol === currency ? currency : `${currency} ${symbol}`;
+	}
 
 	function currencySymbol(currency: Currency): string {
 		return new Intl.NumberFormat('en', { style: 'currency', currency })

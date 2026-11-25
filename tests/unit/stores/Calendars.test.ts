@@ -982,7 +982,7 @@ describe('Calendars store', () => {
 		});
 
 		it('reports a forbidden write as read-only', async () => {
-			api.deleteWithStatus.mockResolvedValue({ ok: false, status: 403, errors: [] });
+			api.deleteWithStatus.mockResolvedValue({ ok: false, status: 403, errors: ['calendar_read_only'] });
 			const c = new Calendars();
 
 			await expect(c.deleteOccurrence(event(), new Date())).resolves.toBe('read_only');

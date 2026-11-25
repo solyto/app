@@ -24,12 +24,13 @@
 
 	let { calendar }: { calendar: Calendar } = $props();
 
-	let hex = $state<string>(calendar.color !== null ? calendar.color : 'var(--color-c-neutral-2)');
+	const NO_COLOR = 'var(--color-c-neutral-2)';
+
+	let hex = $state<string>(calendar.color ?? NO_COLOR);
 	let status = $derived(calendars.calendarStatus(calendar));
 
 	async function onColorChange(): Promise<void> {
-		if (hex === calendar.color) return;
-		if (hex === null) return;
+		if (hex === NO_COLOR || hex === calendar.color) return;
 
 		loadingIndicator.start();
 		const request: UpdateCalendarRequest = { color: hex };

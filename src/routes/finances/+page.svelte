@@ -3,7 +3,7 @@
 	import SubHeading from '$lib/components/ui/SubHeading.svelte';
 	import { getFinances } from '$lib/state/Finances.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
-	import { formatCurrency } from '$lib/helpers/NumberHelper.js';
+	import { formatUserMoney, userMoneyFormatKey } from '$lib/helpers/NumberHelper.js';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { urls } from '$lib/config/urls';
 	import { goto } from '$app/navigation';
@@ -46,11 +46,7 @@
 	}
 
 	function formatMoney(value: number): string {
-		return formatCurrency(value, auth.user?.settings?.currency, auth.user?.settings?.language);
-	}
-
-	function moneyFormatKey(): string {
-		return `${auth.user?.settings?.currency ?? 'EUR'}-${auth.user?.settings?.language ?? 'en'}`;
+		return formatUserMoney(value, auth.user?.settings);
 	}
 </script>
 
@@ -101,7 +97,7 @@
 				<div class="relative w-full rounded-md p-4 shadow-sm dark:shadow-s-dark-shadow md:dark:bg-s-dark-2">
 					<SubHeading title={ts.get.finances.wealth_distribution} my={0} mb={4} />
 					<div>
-						{#key moneyFormatKey()}
+						{#key userMoneyFormatKey(auth.user?.settings)}
 							<DoughnutChart
 								values={statisticsService.getDistribution(finances.wealth)}
 								centerFormatter={formatMoney}

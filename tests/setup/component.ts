@@ -65,6 +65,18 @@ if (!window.IntersectionObserver) {
 	} as never;
 }
 
+// jsdom lacks Blob.text, which the calendar file import reads to suggest a calendar name
+if (!Blob.prototype.text) {
+	Blob.prototype.text = function (this: Blob): Promise<string> {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.onload = () => resolve(reader.result as string);
+			reader.onerror = () => reject(reader.error);
+			reader.readAsText(this);
+		});
+	};
+}
+
 // jsdom lacks matchMedia, which ViewPoint and some components use
 if (!window.matchMedia) {
 	window.matchMedia = vi.fn().mockImplementation((query: string) => ({

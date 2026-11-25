@@ -152,4 +152,21 @@ describe('Address book row', () => {
 		await fireEvent.click(screen.getByRole('button', { name: 'Toggle' }));
 		expect(contacts.isAddressBookHidden(4)).toBe(false);
 	});
+
+	it('sends no colour for an address book without one when clicking outside', async () => {
+		let contacts!: Contacts;
+		renderWithContext(StoreHarness, {
+			component: AddressBookEdit,
+			props: { addressBook: addressBook({ id: 4, color: null }) },
+			provide: setContacts,
+			onReady: (store: Contacts) => {
+				contacts = store;
+				store.updateAddressBook = vi.fn().mockResolvedValue(true);
+			}
+		});
+
+		await fireEvent.mouseDown(document.body);
+
+		expect(contacts.updateAddressBook).not.toHaveBeenCalled();
+	});
 });

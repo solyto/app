@@ -11,7 +11,6 @@
 	const ts = getTranslation();
 
 	afterNavigate(() => {
-		notes.checkUrlForActiveNote();
 		if (page.params.id) notes.loadBacklinks(page.params.id);
 	});
 </script>

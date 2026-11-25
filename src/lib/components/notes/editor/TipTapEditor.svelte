@@ -82,6 +82,19 @@
 		return { href: e.getAttributes('link').href ?? '', text };
 	}
 
+	function linkedNoteId(): string | null {
+		return activeLink ? notes.linkService.noteIdFromHref(activeLink.href) : null;
+	}
+
+	function linkedNoteTitle(): string | null {
+		const id = linkedNoteId();
+		return id !== null ? (notes.findNote(id)?.title ?? null) : null;
+	}
+
+	function openLinkedNote(noteId: string): void {
+		notes.openNote(noteId);
+	}
+
 	function linkMenuIconSize(): number {
 		return viewPoint.isMobile ? 18 : 14;
 	}
@@ -196,9 +209,12 @@
 <LinkBubbleMenu
 	{editor}
 	link={activeLink}
+	noteId={linkedNoteId()}
+	noteTitle={linkedNoteTitle()}
 	iconSize={linkMenuIconSize()}
 	buttonClass={linkMenuButtonClass()}
 	bind:root={linkBubbleRoot}
+	onopennote={openLinkedNote}
 />
 
 {#if linkSuggestion && isLinkSuggestionVisible()}

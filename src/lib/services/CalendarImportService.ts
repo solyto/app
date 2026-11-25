@@ -10,9 +10,27 @@ export type CalendarImportError =
 
 export type CalendarImportView = 'start' | 'select' | 'progress' | 'finished' | 'failed';
 
+const FOLDED_LINE_BREAK = /\r?\n[ \t]/g;
+const COMPONENT_START = /^BEGIN:(?!VCALENDAR$)/i;
+const CALENDAR_NAME_LINE = /^X-WR-CALNAME(?:;[^:]*)?:(.*)$/i;
+const TEXT_ESCAPE = /\\([\\;,nN])/g;
+
+export const MAX_CALENDAR_NAME_LENGTH = 100;
+
 export default class CalendarImportService {
 	defaultCalendarName(fileName: string): string {
-		return fileName.replace(/\.ics$/i, '');
+		return fileName.replace(/\.ics$/i, '').slice(0, MAX_CALENDAR_NAME_LENGTH);
+	}
+
+	calendarName(content: string): string | null {
+		for (const line of content.replace(FOLDED_LINE_BREAK, '').split(/\r?\n/)) {
+			if (COMPONENT_START.test(line)) return null;
+
+			const match = CALENDAR_NAME_LINE.exec(line);
+			if (match) return this.unescapeText(match[1]).trim().slice(0, MAX_CALENDAR_NAME_LENGTH).trim() || null;
+		}
+
+		return null;
 	}
 
 	targetCalendars(calendars: Calendar[]): Calendar[] {
@@ -56,12 +74,12 @@ export default class CalendarImportService {
 		}
 	}
 
-	view(state: ImportState | null): CalendarImportView {
+	view(state: ImportState | null, awaitingState = false): CalendarImportView {
 		switch (state?.stage) {
 			case 'select':
 				return 'select';
 			case 'started':
-				return state?.source === 'file' ? 'progress' : 'start';
+				return awaitingState || state?.source === 'file' ? 'progress' : 'start';
 			case 'calendars':
 			case 'events':
 				return 'progress';
@@ -74,8 +92,8 @@ export default class CalendarImportService {
 		}
 	}
 
-	isRunning(state: ImportState | null): boolean {
-		return this.view(state) === 'progress';
+	isRunning(state: ImportState | null, awaitingState = false): boolean {
+		return this.view(state, awaitingState) === 'progress';
 	}
 
 	isStale(state: ImportState | null): boolean {
@@ -89,5 +107,9 @@ export default class CalendarImportService {
 	progressMarker(state: ImportState | null): string {
 		if (!state) return '';
 		return [state.stage, state.calendars_done, state.events_done, state.events_skipped].join(':');
+	}
+
+	private unescapeText(value: string): string {
+		return value.replace(TEXT_ESCAPE, (_, char: string) => (char === 'n' || char === 'N' ? ' ' : char));
 	}
 }

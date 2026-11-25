@@ -1,8 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
-import { screen } from '@testing-library/svelte';
+import { screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { CalendarImport } from '$lib/state/CalendarImport.svelte';
 import type { UiNotifications } from '$lib/state/UiNotifications.svelte';
+import type { Calendars } from '$lib/state/Calendars.svelte';
 import { renderWithContext } from './helpers/context';
 import CalendarImportModalHarness from './helpers/CalendarImportModalHarness.svelte';
 import { calendar, calendarImportState } from '../unit/helpers/factories';
@@ -28,11 +29,59 @@ describe('Calendar ImportModal', () => {
 		await openFileForm(user);
 
 		await user.upload(screen.getByLabelText('Select File'), ics);
-		expect(screen.getByLabelText('Name')).toHaveValue('Holidays');
+		await waitFor(() => expect(screen.getByLabelText('Name')).toHaveValue('Holidays'));
 
 		await user.click(screen.getByRole('button', { name: 'Import' }));
 
 		expect(importFile).toHaveBeenCalledWith(ics, { type: 'new', name: 'Holidays', color: null });
+	});
+
+	it('names the new calendar after the file\'s X-WR-CALNAME', async () => {
+		const user = userEvent.setup();
+		const importFile = vi.spyOn(CalendarImport.prototype, 'importFile').mockResolvedValue(null);
+		const named = new File(['BEGIN:VCALENDAR\r\nX-WR-CALNAME:School\\, holi\r\n days\r\nEND:VCALENDAR'], 'export.ics');
+		await openFileForm(user);
+
+		await user.upload(screen.getByLabelText('Select File'), named);
+		await waitFor(() => expect(screen.getByLabelText('Name')).toHaveValue('School, holidays'));
+
+		await user.clear(screen.getByLabelText('Name'));
+		await user.type(screen.getByLabelText('Name'), 'Trips');
+		await user.click(screen.getByRole('button', { name: 'Import' }));
+
+		expect(importFile).toHaveBeenCalledWith(named, { type: 'new', name: 'Trips', color: null });
+	});
+
+	it('replaces a suggested name when another file is picked', async () => {
+		const user = userEvent.setup();
+		await openFileForm(user);
+
+		await user.upload(screen.getByLabelText('Select File'), new File(['BEGIN:VCALENDAR\r\nX-WR-CALNAME:School\r\nEND:VCALENDAR'], 'a.ics'));
+		await user.upload(screen.getByLabelText('Select File'), ics);
+
+		await waitFor(() => expect(screen.getByLabelText('Name')).toHaveValue('Holidays'));
+	});
+
+	it('offers only .ics files', async () => {
+		const user = userEvent.setup();
+		await openFileForm(user);
+
+		expect(screen.getByLabelText('Select File')).toHaveAttribute('accept', '.ics');
+	});
+
+	it('preselects the first existing calendar when the calendars arrive after the form', async () => {
+		const user = userEvent.setup();
+		const importFile = vi.spyOn(CalendarImport.prototype, 'importFile').mockResolvedValue(null);
+		let calendarsStore: Calendars | null = null;
+		await openFileForm(user, { onCalendars: (store: Calendars) => (calendarsStore = store) });
+
+		calendarsStore!.calendars = [calendar({ id: 5, name: 'Family' })];
+		await user.click(await screen.findByRole('button', { name: 'Existing calendar' }));
+		await user.upload(screen.getByLabelText('Select File'), ics);
+		await user.click(screen.getByRole('button', { name: 'Import' }));
+
+		expect(screen.getByRole('combobox', { name: 'Calendar' })).toHaveValue('5');
+		expect(importFile).toHaveBeenCalledWith(ics, { type: 'existing', calendarId: 5 });
 	});
 
 	it('keeps a name the user typed when another file is picked', async () => {

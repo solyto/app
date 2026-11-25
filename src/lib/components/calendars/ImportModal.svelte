@@ -29,7 +29,7 @@
 	];
 
 	function view(): CalendarImportView {
-		return calendarImport.stalled ? 'failed' : calendarImport.service.view(calendarImport.state);
+		return calendarImport.stalled ? 'failed' : calendarImport.service.view(calendarImport.state, calendarImport.awaitingState);
 	}
 
 	function changeSource(value: string): void {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { init } from './echarts';
 	import type { ECharts } from './echarts';
-	import { onMount, onDestroy, untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { getChartColor } from '$lib/helpers/ColorHelper';
 
 	function plainNumber(value: number): string {
@@ -29,17 +29,10 @@
 		hiddenNames = hiddenNames.includes(name) ? hiddenNames.filter((hidden) => hidden !== name) : [...hiddenNames, name];
 	}
 
-	function createChart() {
-		if (!chartContainer) return;
+	function createChart(container: HTMLDivElement): ECharts | null {
+		if (!values?.length) return null;
 
-		if (myChart) {
-			myChart.dispose();
-			myChart = null;
-		}
-
-		if (!values?.length) return;
-
-		myChart = init(chartContainer);
+		const chart = init(container);
 
 		const total = values.reduce((sum: number, item: { value: number; name: string; color?: string | null }) => sum + item.value, 0);
 
@@ -99,11 +92,13 @@
 			]
 		};
 
-		myChart.setOption(options);
+		chart.setOption(options);
 
 		for (const name of untrack(() => hiddenNames)) {
-			myChart.dispatchAction({ type: 'legendToggleSelect', name });
+			chart.dispatchAction({ type: 'legendToggleSelect', name });
 		}
+
+		return chart;
 	}
 
 	onMount(() => {
@@ -120,17 +115,16 @@
 		};
 	});
 
-	onDestroy(() => {
-		if (myChart) {
-			myChart.dispose();
-			myChart = null;
-		}
-	});
-
 	$effect(() => {
-		if (chartContainer) {
-			createChart();
-		}
+		if (!chartContainer) return;
+
+		const chart = createChart(chartContainer);
+		myChart = chart;
+
+		return () => {
+			chart?.dispose();
+			myChart = null;
+		};
 	});
 </script>
 

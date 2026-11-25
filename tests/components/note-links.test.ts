@@ -130,35 +130,45 @@ describe('Link popup', () => {
 		return { editor: { chain: () => chain } as unknown as Editor, chain };
 	}
 
-	function renderPopup(href: string, text: string = 'link text'): Rendered & { chain: Chain } {
+	type Popup = { chain: Chain; onopennote: ReturnType<typeof vi.fn> };
+
+	function renderPopup(
+		href: string,
+		text: string = 'link text',
+		noteId: string | null = null,
+		noteTitle: string | null = null
+	): Popup {
 		const { editor, chain } = fakeEditor();
-		const rendered = renderWithNotes(
-			LinkBubbleMenu,
-			{ editor, link: { href, text }, iconSize: 14, buttonClass: '' },
-			(notes) => (notes.notes = [note({ id: UUID, title: 'Groceries' })])
-		);
-		return { ...rendered, chain };
+		const onopennote = vi.fn();
+		renderWithContext(LinkBubbleMenu, {
+			editor,
+			link: { href, text },
+			noteId,
+			noteTitle,
+			iconSize: 14,
+			buttonClass: '',
+			onopennote
+		});
+		return { chain, onopennote };
 	}
 
 	it('labels an internal link with the note title and opens it in the app', async () => {
-		const { notes } = renderPopup(`/notes/${UUID}`);
-		const openNote = vi.spyOn(notes, 'openNote').mockResolvedValue();
+		const { onopennote } = renderPopup(`/notes/${UUID}`, 'link text', UUID, 'Groceries');
 
 		expect(screen.getByText('Groceries')).toBeInTheDocument();
 		await fireEvent.click(screen.getByTitle(en.notes.link_open));
 
-		expect(openNote).toHaveBeenCalledWith(UUID);
+		expect(onopennote).toHaveBeenCalledWith(UUID);
 	});
 
 	it('marks a link to a deleted note and still opens it', async () => {
 		const missing = '00000000-0000-4000-8000-000000000000';
-		const { notes } = renderPopup(`/notes/${missing}`, 'Old title');
-		const openNote = vi.spyOn(notes, 'openNote').mockResolvedValue();
+		const { onopennote } = renderPopup(`/notes/${missing}`, 'Old title', missing, null);
 
 		expect(screen.getByText('Old title')).toHaveClass('italic');
 		await fireEvent.click(screen.getByTitle(en.notes.link_open));
 
-		expect(openNote).toHaveBeenCalledWith(missing);
+		expect(onopennote).toHaveBeenCalledWith(missing);
 	});
 
 	it('labels an external link with its host and opens it in a new tab', () => {

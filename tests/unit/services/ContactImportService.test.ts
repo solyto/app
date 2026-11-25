@@ -85,6 +85,11 @@ describe('view', () => {
 		expect(service.view(contactImportState({ stage: 'started', source: 'carddav' }))).toBe('start');
 		expect(service.isRunning(contactImportState({ stage: 'started', source: 'carddav' }))).toBe(false);
 	});
+
+	it('shows a CardDAV step that was just accepted as running until the first state arrives', () => {
+		expect(service.view(contactImportState({ stage: 'started', source: 'carddav' }), true)).toBe('progress');
+		expect(service.isRunning(contactImportState({ stage: 'started', source: 'carddav' }), true)).toBe(true);
+	});
 });
 
 describe('isRunning and isStale', () => {

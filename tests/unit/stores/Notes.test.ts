@@ -4,6 +4,7 @@ import { api, storage, pageState, resetStoreMocks } from '../setup/storeMocks';
 import type { Note, NoteCategory } from '$lib/types/note';
 import type { Auth } from '$lib/state/Auth.svelte';
 import { note, noteCategory } from '../helpers/factories';
+import { apiRoutes } from '$lib/config/apiRoutes';
 
 const { navigation } = vi.hoisted(() => ({
 	navigation: {
@@ -199,12 +200,31 @@ describe('Notes store', () => {
 			expect(n.activeNote).toBeNull();
 		});
 
-		it('checkUrlForActiveNote selects the note from the page params', () => {
+		it('syncActiveNoteWithUrl selects the note from the page params', () => {
 			pageState.params = { id: 'n7' };
 			const n = new NotesSvelte();
 			n.notes = [note({ id: 'n7' }), note({ id: 'n8' })];
-			n.checkUrlForActiveNote();
+			n.syncActiveNoteWithUrl();
 			expect(n.activeNote?.id).toBe('n7');
+		});
+
+		it('syncActiveNoteWithUrl clears the active note on a page without a note', () => {
+			pageState.routeId = '/notes';
+			const n = new NotesSvelte();
+			n.notes = [note({ id: 'n7' })];
+			n.activeNote = n.notes[0];
+			n.syncActiveNoteWithUrl();
+			expect(n.activeNote).toBeNull();
+		});
+
+		it('syncActiveNoteWithUrl leaves the journal entry alone', () => {
+			pageState.routeId = '/notes/journal/[date]';
+			pageState.params = { date: '2026-11-25' };
+			const n = new NotesSvelte();
+			const draft = note({ id: '' });
+			n.activeNote = draft;
+			n.syncActiveNoteWithUrl();
+			expect(n.activeNote).toStrictEqual(draft);
 		});
 	});
 
@@ -346,7 +366,6 @@ describe('Notes store', () => {
 			n.moveSearchSelection(1);
 			await n.openSearchResult();
 
-			expect(n.activeNote?.id).toBe('2');
 			expect(n.searchVisible).toBe(false);
 			expect(n.searchTerm).toBe('');
 			expect(navigation.goto).toHaveBeenCalledWith('/notes/2');
@@ -358,7 +377,6 @@ describe('Notes store', () => {
 			n.search();
 			await n.openSearchResult(n.searchResults[1]);
 
-			expect(n.activeNote?.id).toBe('2');
 			expect(navigation.goto).toHaveBeenCalledWith('/notes/2');
 		});
 
@@ -408,24 +426,13 @@ describe('Notes store', () => {
 			expect(n.findNote('2')).toBeNull();
 		});
 
-		it('openNote selects the note and navigates to it', async () => {
+		it('openNote navigates to the note', async () => {
 			const n = new NotesSvelte();
 			n.notes = [note({ id: '1' }), note({ id: '2' })];
 
 			await n.openNote('2');
 
-			expect(n.activeNote?.id).toBe('2');
 			expect(navigation.goto).toHaveBeenCalledWith('/notes/2');
-		});
-
-		it('openNote on a deleted note leaves no active note, so the page shows "not found"', async () => {
-			const n = new NotesSvelte();
-			n.notes = [note({ id: '1' })];
-
-			await n.openNote('gone');
-
-			expect(n.activeNote).toBeNull();
-			expect(navigation.goto).toHaveBeenCalledWith('/notes/gone');
 		});
 
 		it('loadBacklinks fetches the backlinks of the given note', async () => {
@@ -471,6 +478,45 @@ describe('Notes store', () => {
 			await Promise.all([first, second]);
 
 			expect(n.backlinks).toEqual([{ id: 'b', title: 'Beta' }]);
+		});
+	});
+
+	describe('backlinks after a reload', () => {
+		function respond(notes: Note[], backlinks: { id: string; title: string }[]): void {
+			api.list.mockImplementation(async (url: string) => {
+				if (url.endsWith('/backlinks')) return { data: backlinks };
+				if (url === apiRoutes.notes.list) return { data: notes };
+				return { data: [] };
+			});
+		}
+
+		it('reloads the shown list when a linking note is deleted from the sidebar', async () => {
+			pageState.params = { id: 'target' };
+			respond([note({ id: 'target' }), note({ id: 'a' }), note({ id: 'b' })], [{ id: 'a', title: 'A' }, { id: 'b', title: 'B' }]);
+			const n = new NotesSvelte();
+			await n.load();
+			await n.loadBacklinks('target');
+
+			api.delete.mockResolvedValue(true);
+			respond([note({ id: 'target' }), note({ id: 'b' })], [{ id: 'b', title: 'B' }]);
+			n.rightClickType = 'note';
+			n.rightClickId = 'a';
+			await n.delete();
+
+			expect(n.backlinks).toEqual([{ id: 'b', title: 'B' }]);
+		});
+
+		it('does not fetch backlinks when no list is shown for the active note', async () => {
+			pageState.params = { id: 'target' };
+			respond([note({ id: 'target' })], []);
+			const n = new NotesSvelte();
+			await n.load();
+			await n.loadBacklinks('target');
+			api.list.mockClear();
+
+			await n.load();
+
+			expect(api.list).not.toHaveBeenCalledWith(expect.stringMatching(/\/backlinks$/));
 		});
 	});
 
@@ -569,7 +615,6 @@ describe('Notes store', () => {
 			expect(api.create).toHaveBeenCalledWith(expect.stringContaining('/notes'), {
 				title: 'Draft'
 			});
-			expect(n.activeNote?.id).toBe('n9');
 			expect(n.inputValue).toBe('');
 			expect(navigation.goto).toHaveBeenCalledWith('/notes/n9');
 		});

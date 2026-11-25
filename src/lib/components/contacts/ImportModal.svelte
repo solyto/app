@@ -29,7 +29,7 @@
 	];
 
 	function view(): ContactImportView {
-		return contactImport.stalled ? 'failed' : contactImport.service.view(contactImport.state);
+		return contactImport.stalled ? 'failed' : contactImport.service.view(contactImport.state, contactImport.awaitingState);
 	}
 
 	function changeSource(value: string): void {

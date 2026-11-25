@@ -27,7 +27,7 @@
 	const ORDINALS: MonthlyOrdinal[] = [1, 2, 3, 4];
 
 	let lastValidUntil = selection.until;
-	let lastValidInterval = selection.interval;
+	let intervalInput = $state<number | null>(selection.interval);
 
 	function typeOptions(): { label: string; value: RecurrenceType }[] {
 		return [
@@ -125,14 +125,11 @@
 	}
 
 	function rememberInterval(): void {
-		if (selection.interval) {
-			lastValidInterval = recurrenceRuleService.intervalWithinBounds(selection.interval, lastValidInterval);
-		}
+		selection.interval = recurrenceRuleService.intervalWithinBounds(intervalInput, selection.interval);
 	}
 
 	function restoreInterval(): void {
-		selection.interval = recurrenceRuleService.intervalWithinBounds(selection.interval, lastValidInterval);
-		lastValidInterval = selection.interval;
+		intervalInput = selection.interval;
 	}
 
 	function rememberUntil(): void {
@@ -156,7 +153,7 @@
 			<span class="text-sm">{everyLabel()}</span>
 			<div class="w-20">
 				<NumberInput
-					bind:value={selection.interval}
+					bind:value={intervalInput}
 					min={1}
 					max={MAX_INTERVAL}
 					step={1}

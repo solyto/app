@@ -13,6 +13,45 @@ describe('defaultCalendarName', () => {
 	it('keeps names without the extension and inner dots', () => {
 		expect(service.defaultCalendarName('team.2026.calendar')).toBe('team.2026.calendar');
 		expect(service.defaultCalendarName('my.ics.backup.ics')).toBe('my.ics.backup');
+		expect(service.defaultCalendarName('b'.repeat(150) + '.ics')).toBe('b'.repeat(100));
+	});
+});
+
+describe('calendarName', () => {
+	function ics(...lines: string[]): string {
+		return ['BEGIN:VCALENDAR', 'VERSION:2.0', ...lines, 'BEGIN:VEVENT', 'UID:1', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+	}
+
+	it('reads X-WR-CALNAME from the calendar', () => {
+		expect(service.calendarName(ics('X-WR-CALNAME:Holidays'))).toBe('Holidays');
+	});
+
+	it('accepts parameters, any case and LF line endings', () => {
+		expect(service.calendarName(ics('x-wr-calname;VALUE=TEXT:Holidays').replaceAll('\r\n', '\n'))).toBe('Holidays');
+	});
+
+	it('unfolds folded lines', () => {
+		expect(service.calendarName(ics('X-WR-CALNAME:School holi', ' days 2026', '\tand trips'))).toBe('School holidays 2026and trips');
+	});
+
+	it('unescapes text values', () => {
+		expect(service.calendarName(ics('X-WR-CALNAME:Work\\, school\\; trips \\\\ more'))).toBe('Work, school; trips \\ more');
+		expect(service.calendarName(ics('X-WR-CALNAME:Line\\none'))).toBe('Line one');
+	});
+
+	it('cuts a name to the length the API accepts', () => {
+		expect(service.calendarName(ics('X-WR-CALNAME:' + 'a'.repeat(150)))).toBe('a'.repeat(100));
+	});
+
+	it('keeps a name without escapes unchanged', () => {
+		expect(service.calendarName(ics('X-WR-CALNAME:Team: Q3 / 2026 (draft) – ü'))).toBe('Team: Q3 / 2026 (draft) – ü');
+	});
+
+	it('returns null without a name, with an empty name, or for a name inside an event', () => {
+		expect(service.calendarName(ics())).toBeNull();
+		expect(service.calendarName(ics('X-WR-CALNAME:  '))).toBeNull();
+		expect(service.calendarName(['BEGIN:VCALENDAR', 'BEGIN:VEVENT', 'X-WR-CALNAME:Nope', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n'))).toBeNull();
+		expect(service.calendarName('')).toBeNull();
 	});
 });
 
@@ -96,6 +135,11 @@ describe('view', () => {
 	it('treats a started CalDAV import as restartable, not running', () => {
 		expect(service.view(calendarImportState({ stage: 'started', source: 'caldav' }))).toBe('start');
 		expect(service.isRunning(calendarImportState({ stage: 'started', source: 'caldav' }))).toBe(false);
+	});
+
+	it('shows a CalDAV step that was just accepted as running until the first state arrives', () => {
+		expect(service.view(calendarImportState({ stage: 'started', source: 'caldav' }), true)).toBe('progress');
+		expect(service.isRunning(calendarImportState({ stage: 'started', source: 'caldav' }), true)).toBe(true);
 	});
 });
 

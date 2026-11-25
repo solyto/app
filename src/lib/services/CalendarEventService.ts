@@ -7,6 +7,7 @@ const MINUTES_PER_DAY = 1440;
 const RESULTS_THAT_CHANGE_EVENTS: EventWriteResult[] = ['ok', 'changed_on_server', 'server_unavailable'];
 
 const WRITE_ERRORS: Record<string, EventWriteResult> = {
+	calendar_read_only: 'read_only',
 	external_event_changed: 'changed_on_server',
 	external_event_unreadable: 'unreadable',
 	external_server_unavailable: 'server_unavailable'
@@ -33,7 +34,6 @@ function daysAfterStartTouched(event: CalendarEvent): Date[] {
 export default class CalendarEventService {
 	writeResult(res: StatusResponse): EventWriteResult {
 		if (res.ok) return 'ok';
-		if (res.errors[0] === 'calendar_read_only') return 'read_only';
 		return WRITE_ERRORS[res.errors[0]] ?? 'failed';
 	}
 

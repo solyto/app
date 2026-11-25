@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { daysSince } from '$lib/helpers/DateHelper';
 	import { blur } from 'svelte/transition';
@@ -22,11 +21,6 @@
 		title: string;
 	} = $props();
 
-	function openNote(note: Note): void {
-		notes.selectNote(note.id);
-		goto(resolve(urls.note, { id: note.id }));
-	}
-
 	function updatedLabel(note: Note): string {
 		return ts.get.notes.updated_days_ago.replace('%d', daysSince(note.updated_at).toString());
 	}
@@ -36,9 +30,9 @@
 	<Heading title={title} my={0} mt={4} />
 	<div class="flex flex-row max-md:flex-col flex-wrap gap-4 pb-4 items-start">
 		{#each entries as note (note.id)}
-			<button
+			<a
+				href={resolve(urls.note, { id: note.id })}
 				class="cursor-pointer text-left w-60 max-md:w-full"
-				onclick={() => openNote(note)}
 			>
 				<div
 					class="relative flex md:min-h-[10rem] w-full flex-col gap-2 rounded-md bg-c-bg-surface p-3 shadow-sm transition-all hover:bg-c-neutral"
@@ -79,7 +73,7 @@
 						</div>
 					</div>
 				</div>
-			</button>
+			</a>
 		{/each}
 	</div>
 </div>

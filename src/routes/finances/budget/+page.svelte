@@ -3,7 +3,7 @@
 	import { getFinances } from '$lib/state/Finances.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
-	import { formatCurrency } from '$lib/helpers/NumberHelper.js';
+	import { formatUserMoney } from '$lib/helpers/NumberHelper.js';
 	import AddBudget from '$lib/components/finances/AddBudget.svelte';
 	import BudgetField from '$lib/components/finances/BudgetField.svelte';
 	import type {
@@ -118,7 +118,7 @@
 	}
 
 	function formatMoney(value: number): string {
-		return formatCurrency(value, auth.user?.settings?.currency, auth.user?.settings?.language);
+		return formatUserMoney(value, auth.user?.settings);
 	}
 
 	onMount(() => {

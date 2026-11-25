@@ -133,6 +133,16 @@ describe('Calendar edit row', () => {
 
 		expect(screen.getByText(en.calendar.external_calendar)).toBeInTheDocument();
 	});
+
+	it('sends no colour for a calendar without one when clicking outside', async () => {
+		const calendars = renderCalendar(CalendarEdit as Component<never>, { calendar: calendar({ color: null }) }, (store) => {
+			store.updateCalendarColor = vi.fn().mockResolvedValue(true);
+		});
+
+		await fireEvent.mouseDown(document.body);
+
+		expect(calendars.updateCalendarColor).not.toHaveBeenCalled();
+	});
 });
 
 describe('Calendar navigation', () => {

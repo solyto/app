@@ -232,6 +232,15 @@ describe('RecurrenceRuleService', () => {
 			);
 		});
 
+		it.each([
+			[2.5, 'FREQ=DAILY;WKST=SU;INTERVAL=3;COUNT=5'],
+			[1500, 'FREQ=DAILY;WKST=SU;INTERVAL=999;COUNT=5'],
+			[-4, 'FREQ=DAILY;WKST=SU;COUNT=5']
+		])('writes only a positive whole interval within bounds for %d', (interval, rule) => {
+			const parsed = service.parse('FREQ=DAILY;WKST=SU;INTERVAL=2;COUNT=5', wednesday10th, 'UTC')!;
+			expect(service.build({ ...parsed, interval }, wednesday10th, timed())).toBe(rule);
+		});
+
 		it('inserts a new interval after FREQ and keeps the end and other fields in order', () => {
 			const parsed = service.parse('FREQ=WEEKLY;BYDAY=MO;UNTIL=20271231T000000Z;WKST=SU', wednesday10th, 'UTC')!;
 			expect(service.build({ ...parsed, interval: 2 }, wednesday10th, timed())).toBe(

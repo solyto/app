@@ -44,12 +44,12 @@ export default class ContactImportService {
 		}
 	}
 
-	view(state: ImportState | null): ContactImportView {
+	view(state: ImportState | null, awaitingState = false): ContactImportView {
 		switch (state?.stage) {
 			case 'select':
 				return 'select';
 			case 'started':
-				return state?.source === 'file' ? 'progress' : 'start';
+				return awaitingState || state?.source === 'file' ? 'progress' : 'start';
 			case 'address-books':
 			case 'contacts':
 				return 'progress';
@@ -62,8 +62,8 @@ export default class ContactImportService {
 		}
 	}
 
-	isRunning(state: ImportState | null): boolean {
-		return this.view(state) === 'progress';
+	isRunning(state: ImportState | null, awaitingState = false): boolean {
+		return this.view(state, awaitingState) === 'progress';
 	}
 
 	isStale(state: ImportState | null): boolean {

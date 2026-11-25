@@ -82,6 +82,28 @@ describe('DoughnutChart legend', () => {
 		expect(chart.dispatchAction).toHaveBeenCalledWith({ type: 'legendToggleSelect', name: 'Cash' });
 	});
 
+	it('rebuilds the chart when its values change', async () => {
+		const { rerender } = render(DoughnutChart, { values });
+		await waitFor(() => expect(chart.setOption).toHaveBeenCalled());
+		const callsBeforeChange = chart.setOption.mock.calls.length;
+
+		await rerender({ values: [{ value: 5, name: 'Coding' }, { value: 3, name: 'Meetings' }] });
+
+		await waitFor(() => expect(chart.setOption.mock.calls.length).toBeGreaterThan(callsBeforeChange));
+		expect(chart.dispose).toHaveBeenCalled();
+		const lastOptions = chart.setOption.mock.calls.at(-1)?.[0] as { series: { data: { name: string; value: number }[] }[] };
+		expect(lastOptions.series[0].data.map((slice) => [slice.name, slice.value])).toEqual([['Coding', 5], ['Meetings', 3]]);
+	});
+
+	it('disposes the chart when it is removed', async () => {
+		const { unmount } = render(DoughnutChart, { values });
+		await waitFor(() => expect(chart.setOption).toHaveBeenCalled());
+
+		unmount();
+
+		expect(chart.dispose).toHaveBeenCalled();
+	});
+
 	it('rebuilds the chart when the formatter changes', async () => {
 		const { rerender } = render(DoughnutChart, {
 			values,

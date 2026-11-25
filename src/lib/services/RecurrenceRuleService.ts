@@ -403,7 +403,9 @@ export default class RecurrenceRuleService {
 	}
 
 	private intervalPart(selection: RecurrenceSelection): string | null {
-		return selection.interval > 1 ? INTERVAL_KEY + '=' + selection.interval : null;
+		const interval = this.intervalWithinBounds(selection.interval, 1);
+
+		return interval > 1 ? INTERVAL_KEY + '=' + interval : null;
 	}
 
 	private endPart(selection: RecurrenceSelection, endFormat: EndFormat): string | null {

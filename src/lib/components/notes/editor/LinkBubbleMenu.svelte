@@ -7,7 +7,6 @@
 	import ExternalLink from '$lib/icons/lucide/external-link.svelte';
 	import Pencil from '$lib/icons/lucide/pencil.svelte';
 	import Unlink from '$lib/icons/lucide/unlink.svelte';
-	import { getNotes } from '$lib/state/Notes.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { hostnameOf, safeHref } from '$lib/helpers/UrlHelper';
 
@@ -19,37 +18,36 @@
 	let {
 		editor,
 		link,
+		noteId,
+		noteTitle,
 		iconSize,
 		buttonClass,
-		root = $bindable<HTMLDivElement | null>(null)
+		root = $bindable<HTMLDivElement | null>(null),
+		onopennote
 	}: {
 		editor: Editor | null;
 		link: ActiveLink | null;
+		noteId: string | null;
+		noteTitle: string | null;
 		iconSize: number;
 		buttonClass: string;
 		root: HTMLDivElement | null;
+		onopennote: (noteId: string) => void;
 	} = $props();
 
-	const notes = getNotes();
 	const ts = getTranslation();
 
 	let editModalOpen = $state<boolean>(false);
 	let editedLink = $state<ActiveLink | null>(null);
 
-	function noteId(): string | null {
-		return link ? notes.linkService.noteIdFromHref(link.href) : null;
-	}
-
 	function isMissingNote(): boolean {
-		const id = noteId();
-		return id !== null && notes.findNote(id) === null;
+		return noteId !== null && noteTitle === null;
 	}
 
 	function label(): string {
 		if (!link) return '';
 
-		const id = noteId();
-		if (id !== null) return notes.findNote(id)?.title ?? link.text;
+		if (noteId !== null) return noteTitle ?? link.text;
 
 		return hostnameOf(link.href) ?? link.href;
 	}
@@ -58,9 +56,8 @@
 		return link ? safeHref(link.href) : undefined;
 	}
 
-	async function openNote(): Promise<void> {
-		const id = noteId();
-		if (id !== null) await notes.openNote(id);
+	function openNote(): void {
+		if (noteId !== null) onopennote(noteId);
 	}
 
 	function openEditModal(): void {
@@ -93,7 +90,7 @@
 
 	<EditorPopoverDivider />
 
-	{#if noteId() !== null}
+	{#if noteId !== null}
 		<button onclick={openNote} class="toolbar-btn {buttonClass}" title={ts.get.notes.link_open}>
 			<ArrowUpRight size={iconSize} />
 		</button>

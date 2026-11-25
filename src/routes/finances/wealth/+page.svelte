@@ -11,7 +11,7 @@
 		StoreFinanceValueRequest,
 		UpdateFinanceValueRequest
 	} from '$lib/types/finance';
-	import { formatCurrency } from '$lib/helpers/NumberHelper';
+	import { formatUserMoney, userMoneyFormatKey } from '$lib/helpers/NumberHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import DoughnutChart from '$lib/components/charts/DoughnutChart.svelte';
 	import WealthStatisticsService, { wealthRanges, type WealthRangeKey } from '$lib/services/WealthStatisticsService';
@@ -87,18 +87,14 @@
 	}
 
 	function formatMoney(value: number): string {
-		return formatCurrency(value, auth.user?.settings?.currency, auth.user?.settings?.language);
-	}
-
-	function moneyFormatKey(): string {
-		return `${auth.user?.settings?.currency ?? 'EUR'}-${auth.user?.settings?.language ?? 'en'}`;
+		return formatUserMoney(value, auth.user?.settings);
 	}
 </script>
 
 {#if finances.wealthLoaded}
 	<div class="flex flex-col gap-4" in:fade>
 		<div class="mb-8 w-full">
-			{#key moneyFormatKey()}
+			{#key userMoneyFormatKey(auth.user?.settings)}
 				<DoughnutChart
 					title=""
 					values={statisticsService.getDistribution(finances.wealth)}

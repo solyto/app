@@ -16,11 +16,12 @@
 
 	let { addressBook }: { addressBook: AddressBook } = $props();
 
-	let hex = $state<string>(addressBook.color ?? 'var(--color-c-neutral-2)');
+	const NO_COLOR = 'var(--color-c-neutral-2)';
+
+	let hex = $state<string>(addressBook.color ?? NO_COLOR);
 
 	async function onColorChange(): Promise<void> {
-		if (hex === addressBook.color) return;
-		if (hex === null) return;
+		if (hex === NO_COLOR || hex === addressBook.color) return;
 
 		const request: UpdateAddressBookRequest = { color: hex };
 		loadingIndicator.start();

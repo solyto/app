@@ -99,7 +99,8 @@ export class NotesSvelte {
 			this.hiddenNoteIds = (hiddenRes.data as Note[]).map((n) => n.id);
 			this.lastUpdatedNotes = this.getLastUpdatedNotes();
 			this.favoriteNotes = this.getFavorites();
-			this.checkUrlForActiveNote();
+			this.syncActiveNoteWithUrl();
+			await this.reloadShownBacklinks();
 		}
 	}
 
@@ -121,21 +122,21 @@ export class NotesSvelte {
 		);
 	}
 
-	checkUrlForActiveNote(): void {
+	syncActiveNoteWithUrl(): void {
+		// The journal page opens its own entry, which can be an unsaved draft without an id.
+		if (page.route.id === urls.journalDate) return;
+
 		if (page.params.id) {
 			this.selectNote(page.params.id);
+		} else {
+			this.activeNote = null;
 		}
 	}
 
 	async loadBacklinks(noteId: string): Promise<void> {
 		this.backlinks = [];
 		this.backlinksNoteId = noteId;
-
-		const res = await this.apiService.list(apiRoutes.notes.backlinks.replace('%s', noteId));
-		// A slower response for a note the user already left must not overwrite the current list.
-		if (!res || this.backlinksNoteId !== noteId) return;
-
-		this.backlinks = res.data as NoteBacklink[];
+		await this.fetchBacklinks(noteId);
 	}
 
 	async loadCategories(): Promise<void> {
@@ -291,14 +292,12 @@ export class NotesSvelte {
 	}
 
 	async openNote(noteId: string): Promise<void> {
-		this.selectNote(noteId);
 		await goto(resolve(urls.note, { id: noteId }));
 	}
 
 	async openSearchResult(note: Note | undefined = this.searchResults[this.searchIndex]): Promise<void> {
 		if (note === undefined) return;
 
-		this.selectNote(note.id);
 		this.closeSearch();
 		await goto(resolve(urls.note, { id: note.id }));
 	}
@@ -387,7 +386,6 @@ export class NotesSvelte {
 		this.modalOpen = false;
 
 		await this.load();
-		this.activeNote = this.notes.find((n) => n.id === note.id) ?? note;
 		await goto(resolve(urls.note, { id: note.id }));
 
 		return note;
@@ -552,6 +550,22 @@ export class NotesSvelte {
 		}
 
 		return false;
+	}
+
+	// Deleting, hiding or renaming a linking note elsewhere changes the list shown below the active note.
+	private async reloadShownBacklinks(): Promise<void> {
+		const noteId = this.backlinksNoteId;
+		if (noteId === null || this.backlinks.length === 0 || this.activeNote?.id !== noteId) return;
+
+		await this.fetchBacklinks(noteId);
+	}
+
+	private async fetchBacklinks(noteId: string): Promise<void> {
+		const res = await this.apiService.list(apiRoutes.notes.backlinks.replace('%s', noteId));
+		// A slower response for a note the user already left must not overwrite the current list.
+		if (!res || this.backlinksNoteId !== noteId) return;
+
+		this.backlinks = res.data as NoteBacklink[];
 	}
 
 	// The create contract does not accept content, so the entry is created first and then filled.
