@@ -11,17 +11,13 @@
 	} = $props();
 </script>
 
-<div
-	class="group relative z-40 flex size-[34px] cursor-pointer items-center justify-center rounded-full border-c-neutral-3 {color} drop-shadow-md transition-all hover:drop-shadow-xl {customClass}"
+<button
+	type="button"
+	aria-label={label ?? undefined}
+	title={label ?? undefined}
+	class="group relative z-40 flex size-[34px] cursor-pointer items-center justify-center rounded-full {color} drop-shadow-md transition-all hover:drop-shadow-xl {customClass}"
+	onclick={onClick}
 >
-	<button
-		type="button"
-		aria-label={label ?? undefined}
-		title={label ?? undefined}
-		class="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full {fill} text-white opacity-0 transition-all group-hover:opacity-100 focus-visible:opacity-100 hover:shadow-sm"
-		onclick={onClick}
-	>
-		<Icon class="size-5" />
-	</button>
-	<Icon class="size-5" />
-</div>
+	<span class="absolute h-0 w-0 rounded-full {fill} transition-all group-hover:h-full group-hover:w-full group-focus-visible:h-full group-focus-visible:w-full"></span>
+	<Icon class="relative size-5 transition-colors group-hover:text-white group-focus-visible:text-white" />
+</button>

@@ -89,7 +89,7 @@
 	}
 </script>
 
-<div class="relative mt-8 flex flex-col gap-8">
+<div class="relative mt-8 flex flex-col gap-8 pb-8 2xl:pb-0">
 	<div class="flex w-full flex-col items-center justify-center gap-1">
 		<h2 class="text-3xl font-bold">
 			{#if isToday}
@@ -111,7 +111,7 @@
 		</div>
 	{/if}
 
-	<div class="flex flex-col gap-12 md:mx-auto md:w-fit 2xl:grid 2xl:w-full 2xl:grid-cols-[1fr_auto_1fr] 2xl:items-start 2xl:gap-0">
+	<div class="flex flex-col gap-6 md:mx-auto md:w-fit 2xl:grid 2xl:w-full 2xl:grid-cols-[1fr_auto_1fr] 2xl:items-start 2xl:gap-0">
 		{#if checkInData.ratingTrackers.length > 0}
 			<section class="flex flex-col space-y-3 2xl:col-start-2">
 				{#each checkInData.ratingTrackers as tracker (tracker.id)}
@@ -128,7 +128,7 @@
 		{/if}
 
 		{#if checkInData.logTrackers.length > 0}
-			<section class={['flex flex-col gap-1 px-5 md:mx-auto md:w-[26rem] md:px-0', checkInData.ratingTrackers.length > 0 && SIDE_COLUMN]}>
+			<section class={['flex flex-col gap-1 px-5 md:px-0 2xl:mx-auto 2xl:w-[26rem]', checkInData.ratingTrackers.length > 0 && SIDE_COLUMN]}>
 				{#each checkInData.logTrackers as tracker (tracker.id)}
 					<DailyLogTracker
 						{tracker}

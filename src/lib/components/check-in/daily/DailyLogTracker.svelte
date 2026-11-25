@@ -56,11 +56,11 @@
 </script>
 
 <div class="flex flex-col">
-	<div class="flex items-center justify-between gap-4 py-1.5">
+	<div class="flex items-center justify-between gap-4 py-2 2xl:py-1.5">
 		<div class="flex min-w-0 items-center gap-3">
-			<TrackerGlyph {tracker} class="size-4 shrink-0 self-center text-c-neutral-5 dark:text-c-neutral-4" />
+			<TrackerGlyph {tracker} class="size-5 shrink-0 self-center text-c-neutral-5 2xl:size-4 dark:text-c-neutral-4" />
 			<div class="min-w-0">
-				<div class="line-clamp-2 text-sm font-medium break-words text-c-neutral-7 dark:text-c-neutral-3">{label}</div>
+				<div class="line-clamp-2 text-lg font-bold break-words 2xl:text-sm 2xl:font-medium 2xl:text-c-neutral-7 dark:2xl:text-c-neutral-3">{label}</div>
 				{#if goalLine}
 					<GoalProgressLine line={goalLine} />
 				{/if}
