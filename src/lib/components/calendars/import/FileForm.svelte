@@ -36,7 +36,7 @@
 
 	async function pick(picked: File): Promise<boolean> {
 		const suggestion = await nameFor(picked);
-		if (file === null || name === suggestedName) name = suggestion;
+		if (name === suggestedName) name = suggestion;
 		suggestedName = suggestion;
 		file = picked;
 		return true;

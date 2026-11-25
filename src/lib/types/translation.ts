@@ -1077,6 +1077,7 @@ export interface CalendarRecords {
 	recurrence_every: string;
 	// Optional "every" per unit, for languages where it agrees with the unit (fr). Falls back to `recurrence_every`.
 	recurrence_every_by_unit?: Partial<Record<'day' | 'week' | 'month' | 'year', string>>;
+	recurrence_custom_interval: string;
 	recurrence_unit_day_singular: string;
 	recurrence_unit_day_plural: string;
 	recurrence_unit_week_singular: string;

@@ -43,10 +43,39 @@ describe('Recurrence interval', () => {
 		expect(screen.getByTestId('interval').textContent).toBe('3');
 	});
 
-	it('uses the singular for an interval of 1', () => {
+	it('hides the interval behind a button for an interval of 1', () => {
 		renderRule('FREQ=WEEKLY;BYDAY=WE');
 
+		expect(screen.queryByRole('spinbutton')).toBeNull();
+		expect(screen.getByRole('button', { name: 'Custom interval' })).toBeTruthy();
+	});
+
+	it('shows the interval after the button is clicked, in the singular for 1', async () => {
+		renderRule('FREQ=WEEKLY;BYDAY=WE');
+
+		await fireEvent.click(screen.getByRole('button', { name: 'Custom interval' }));
+
+		expect(intervalInput().value).toBe('1');
 		expect(screen.getByText('week')).toBeTruthy();
+		expect(screen.queryByRole('button', { name: 'Custom interval' })).toBeNull();
+	});
+
+	it('saves an interval set after opening the field', async () => {
+		renderRule('FREQ=WEEKLY;BYDAY=WE');
+
+		await fireEvent.click(screen.getByRole('button', { name: 'Custom interval' }));
+		await typeInterval('2');
+
+		expect(screen.getByTestId('interval').textContent).toBe('2');
+	});
+
+	it('keeps the opened field when the interval goes back to 1', async () => {
+		renderRule('FREQ=DAILY;INTERVAL=3');
+
+		await typeInterval('1');
+		await fireEvent.blur(intervalInput());
+
+		expect(intervalInput().value).toBe('1');
 	});
 
 	it.each([

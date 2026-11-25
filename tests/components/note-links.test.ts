@@ -300,7 +300,7 @@ describe('Note link insertion', () => {
 			editor.commands.insertContent('[[');
 			await vi.waitFor(() => expect(onOpen).toHaveBeenCalled());
 
-			const props = onOpen.mock.calls[0][0] as { command: (note: ReturnType<typeof note>) => void };
+			const props = onOpen.mock.calls[0][0] as { command: (picked: ReturnType<typeof note>) => void };
 			props.command(note({ id: UUID, title: 'Groceries' }));
 
 			const html = editor.getHTML();

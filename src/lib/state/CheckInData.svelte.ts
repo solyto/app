@@ -109,25 +109,16 @@ export class CheckInData {
 		return this.trackerService.builtInDay(this.index, this.trackers, date);
 	}
 
-	async setValue(tracker: CheckInTracker, date: string, value: number | null): Promise<boolean> {
-		const previous = this.values;
-		const values = this.values.filter((v) => !(v.tracker_id === tracker.id && v.date === date));
-		if (value !== null) values.push({ tracker_id: tracker.id, date, value });
-		this.values = values;
+	async saveDay(date: string, changes: Map<CheckInTracker, number | null>): Promise<boolean> {
+		const entries = [...changes].map(([tracker, value]) => ({ tracker_id: tracker.id, value }));
+		const ok = await this.apiService.put(apiRoutes.checkIn.values, { date, values: entries });
+		if (!ok) return false;
 
-		const ok = await this.apiService.put(apiRoutes.checkIn.values, { tracker_id: tracker.id, date, value });
-		if (!ok) {
-			this.values = previous;
-			return false;
-		}
-
+		const changed = new Set(entries.map((entry) => entry.tracker_id));
+		const saved = entries.flatMap(({ tracker_id, value }) => (value === null ? [] : [{ tracker_id, date, value }]));
+		this.values = [...this.values.filter((v) => !(v.date === date && changed.has(v.tracker_id))), ...saved];
 		this.auth.widgetBridge.notifyChanged();
 		return true;
-	}
-
-	async saveDay(date: string, changes: Map<CheckInTracker, number | null>): Promise<boolean> {
-		const results = await Promise.all([...changes].map(([tracker, value]) => this.setValue(tracker, date, value)));
-		return results.every(Boolean);
 	}
 
 	async saveSelectedSports(sports: SportId[]): Promise<boolean> {

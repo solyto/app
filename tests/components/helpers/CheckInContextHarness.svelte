@@ -11,7 +11,8 @@
 		props = {},
 		trackers = [],
 		values = [],
-		alerts = []
+		alerts = [],
+		loaded = false
 	}: {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		component: Component<any>;
@@ -19,6 +20,7 @@
 		trackers?: CheckInTracker[];
 		values?: CheckInValue[];
 		alerts?: Alert[];
+		loaded?: boolean;
 	} = $props();
 
 	const checkInData = setCheckInData();
@@ -28,6 +30,8 @@
 	checkInData.trackers = trackers;
 	// svelte-ignore state_referenced_locally
 	checkInData.values = values;
+	// svelte-ignore state_referenced_locally
+	checkInData.loaded = loaded;
 	// svelte-ignore state_referenced_locally
 	alertsStore.alerts = alerts;
 	alertsStore.loaded = true;

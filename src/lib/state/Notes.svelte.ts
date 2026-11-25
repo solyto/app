@@ -123,14 +123,25 @@ export class NotesSvelte {
 	}
 
 	syncActiveNoteWithUrl(): void {
-		// The journal page opens its own entry, which can be an unsaved draft without an id.
-		if (page.route.id === urls.journalDate) return;
+		if (page.route.id === urls.journalDate) {
+			this.openJournalEntryFromUrl();
+			return;
+		}
 
 		if (page.params.id) {
 			this.selectNote(page.params.id);
 		} else {
 			this.activeNote = null;
 		}
+	}
+
+	private openJournalEntryFromUrl(): void {
+		const key = page.params.date ?? '';
+		const day = this.journalService.parseEntryTitle(key);
+		if (!this.loaded || day === null || !this.journalService.isReachable(day)) return;
+		if (this.activeNote !== null && this.isJournalNote(this.activeNote) && this.activeNote.title === key) return;
+
+		void this.openJournalEntry(day);
 	}
 
 	async loadBacklinks(noteId: string): Promise<void> {
@@ -153,6 +164,7 @@ export class NotesSvelte {
 			this.categories = all.filter((c) => !c.is_system);
 			this.lastUpdatedNotes = this.getLastUpdatedNotes();
 			this.favoriteNotes = this.getFavorites();
+			if (page.route.id === urls.journalDate) this.openJournalEntryFromUrl();
 		}
 	}
 

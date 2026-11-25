@@ -3,7 +3,7 @@ import { SvelteDate } from 'svelte/reactivity';
 export interface Calendar {
 	id: number;
 	name: string;
-	color: string;
+	color: string | null;
 	description: string;
 	timezone: string;
 	order: number;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { fade } from 'svelte/transition';
 	import { formatDuration } from '$lib/helpers/TimeTrackingHelper';
@@ -61,10 +61,8 @@
 		return getReadableTextColor(categoryColor(cat));
 	}
 
-	$effect(() => {
-		if (tt.loaded && !project) {
-			goto(resolve(urls.timeTracking));
-		}
+	afterNavigate(() => {
+		if (!project) goto(resolve(urls.timeTracking));
 	});
 
 	async function onDelete(): Promise<void> {

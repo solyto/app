@@ -42,7 +42,7 @@ describe('Daily check-in page', () => {
 		expect(total()).toBe('2');
 		await fireEvent.click(screen.getByRole('button', { name: 'Save' }));
 		await waitFor(() =>
-			expect(put).toHaveBeenCalledWith(expect.stringContaining('/check-in/values'), { tracker_id: 103, date: '2026-11-20', value: 2 })
+			expect(put).toHaveBeenCalledWith(expect.stringContaining('/check-in/values'), { date: '2026-11-20', values: [{ tracker_id: 103, value: 2 }] })
 		);
 	});
 
@@ -58,7 +58,7 @@ describe('Daily check-in page', () => {
 		await waitFor(() => expect(screen.queryByLabelText('Meditated')).toBeNull());
 		await fireEvent.click(screen.getByRole('button', { name: 'Save' }));
 		await waitFor(() => expect(put).toHaveBeenCalledTimes(1));
-		expect(put).toHaveBeenCalledWith(expect.stringContaining('/check-in/values'), { tracker_id: 102, date: '2026-11-20', value: 1 });
+		expect(put).toHaveBeenCalledWith(expect.stringContaining('/check-in/values'), { date: '2026-11-20', values: [{ tracker_id: 102, value: 1 }] });
 	});
 
 	it('keeps a change made while saving, and saves once on a double click', async () => {
@@ -83,6 +83,6 @@ describe('Daily check-in page', () => {
 
 		await fireEvent.click(save());
 		await waitFor(() => expect(put).toHaveBeenCalledTimes(2));
-		expect(put).toHaveBeenLastCalledWith(expect.stringContaining('/check-in/values'), { tracker_id: 103, date: '2026-11-20', value: 2 });
+		expect(put).toHaveBeenLastCalledWith(expect.stringContaining('/check-in/values'), { date: '2026-11-20', values: [{ tracker_id: 103, value: 2 }] });
 	});
 });

@@ -57,6 +57,8 @@ describe('Calendar ImportModal', () => {
 		await openFileForm(user);
 
 		await user.upload(screen.getByLabelText('Select File'), new File(['BEGIN:VCALENDAR\r\nX-WR-CALNAME:School\r\nEND:VCALENDAR'], 'a.ics'));
+		await waitFor(() => expect(screen.getByLabelText('Name')).toHaveValue('School'));
+		await waitFor(() => expect(screen.getByLabelText('Select File')).toBeEnabled());
 		await user.upload(screen.getByLabelText('Select File'), ics);
 
 		await waitFor(() => expect(screen.getByLabelText('Name')).toHaveValue('Holidays'));
@@ -84,13 +86,26 @@ describe('Calendar ImportModal', () => {
 		expect(importFile).toHaveBeenCalledWith(ics, { type: 'existing', calendarId: 5 });
 	});
 
+	it('keeps a name the user typed before picking the file', async () => {
+		const user = userEvent.setup();
+		await openFileForm(user);
+
+		await user.type(screen.getByLabelText('Name'), 'Trips');
+		await user.upload(screen.getByLabelText('Select File'), ics);
+		await waitFor(() => expect(screen.getByLabelText('Select File')).toBeEnabled());
+
+		expect(screen.getByLabelText('Name')).toHaveValue('Trips');
+	});
+
 	it('keeps a name the user typed when another file is picked', async () => {
 		const user = userEvent.setup();
 		await openFileForm(user);
 
 		await user.upload(screen.getByLabelText('Select File'), ics);
+		await waitFor(() => expect(screen.getByLabelText('Name')).toHaveValue('Holidays'));
 		await user.clear(screen.getByLabelText('Name'));
 		await user.type(screen.getByLabelText('Name'), 'Trips');
+		await waitFor(() => expect(screen.getByLabelText('Select File')).toBeEnabled());
 		await user.upload(screen.getByLabelText('Select File'), new File([''], 'other.ics'));
 
 		expect(screen.getByLabelText('Name')).toHaveValue('Trips');

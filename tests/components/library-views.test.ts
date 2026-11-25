@@ -21,18 +21,6 @@ import { en } from '$lib/i18n/en';
 import { renderWithContext } from './helpers/context';
 import { book, genre, music } from '../unit/helpers/factories';
 
-class LoadedImage {
-	onload: (() => void) | null = null;
-	private _src = '';
-	set src(value: string) {
-		this._src = value;
-		this.onload?.();
-	}
-	get src() {
-		return this._src;
-	}
-}
-
 const storage = { get: vi.fn(() => null), set: vi.fn() } as unknown as LocalStorageService;
 
 function renderWithLibrary(component: Parameters<typeof renderWithContext>[0], entries = [book({ id: 'b1', title: 'Dune', cover: 'dune.jpg' })]) {
@@ -49,10 +37,6 @@ function renderWithLibrary(component: Parameters<typeof renderWithContext>[0], e
 	return { ...result, library: library! };
 }
 
-afterEach(() => {
-	vi.unstubAllGlobals();
-});
-
 describe('Library entry views', () => {
 	it.each([
 		['cards', CardsView],
@@ -66,10 +50,10 @@ describe('Library entry views', () => {
 		expect(open).toHaveBeenCalledWith(library.entries[0]);
 	});
 
-	it('loads the cover and its preview from the user\'s storage folder', () => {
-		vi.stubGlobal('Image', LoadedImage);
+	it('loads the cover and its preview from the user\'s storage folder', async () => {
 		const { container } = renderWithLibrary(CardsView);
-		const sources = [...container.querySelectorAll('img')].map((img) => img.getAttribute('src') ?? '');
+		for (const loader of container.querySelectorAll('img[hidden]')) await fireEvent.load(loader);
+		const sources = [...container.querySelectorAll('img:not([hidden])')].map((img) => img.getAttribute('src') ?? '');
 
 		expect(sources.some((src) => src.endsWith('/u1/books/dune.jpg'))).toBe(true);
 		expect(sources.some((src) => src.endsWith('/u1/books/dune_preview.jpg'))).toBe(true);

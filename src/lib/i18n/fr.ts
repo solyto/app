@@ -1194,6 +1194,7 @@ const calendar: CalendarRecords = {
 	recurrence_yearly: 'Chaque année',
 	recurrence_on_the: 'le',
 	recurrence_every: 'Tous les',
+	recurrence_custom_interval: 'Autre intervalle',
 	recurrence_every_by_unit: { week: 'Toutes les' },
 	recurrence_unit_day_singular: 'jour',
 	recurrence_unit_day_plural: 'jours',

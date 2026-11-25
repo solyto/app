@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import { tick } from 'svelte';
+import { SvelteSet } from 'svelte/reactivity';
 import Rating from '$lib/components/libraries/shared/Rating.svelte';
 import StatisticWidget from '$lib/components/admin/StatisticWidget.svelte';
 import DailyCheckInIcon from '$lib/components/check-in/daily/DailyCheckInIcon.svelte';
@@ -10,7 +10,7 @@ import TrackerGlyph from '$lib/components/check-in/TrackerGlyph.svelte';
 import GenreFlexList from '$lib/components/libraries/shared/GenreFlexList.svelte';
 import TagFlexList from '$lib/components/tags/TagFlexList.svelte';
 import CoverImage from '$lib/components/libraries/shared/CoverImage.svelte';
-import TwoCoversHarness from './helpers/TwoCoversHarness.svelte';
+import CoverImageHarness from './helpers/CoverImageHarness.svelte';
 import NoTodos from '$lib/components/todos/NoTodos.svelte';
 import DeezerButton from '$lib/components/ui/buttons/DeezerButton.svelte';
 import HardcoverButton from '$lib/components/ui/buttons/HardcoverButton.svelte';
@@ -142,87 +142,54 @@ describe('TagFlexList', () => {
 });
 
 describe('CoverImage', () => {
-	afterEach(() => {
-		vi.unstubAllGlobals();
+	const shown = (container: HTMLElement) => [...container.querySelectorAll('img:not([hidden])')];
+	const loader = (container: HTMLElement, src: string) => container.querySelector(`img[hidden][src="${src}"]`)!;
+
+	it('shows nothing until an image has loaded', () => {
+		const { container } = renderWithContext(CoverImage, { src: 'full.jpg', previewSrc: 'preview.jpg', alt: 'cover' });
+
+		expect(shown(container)).toHaveLength(0);
 	});
 
-	class FakeImage {
-		onload: (() => void) | null = null;
-		private _src = '';
-		set src(value: string) {
-			this._src = value;
-			this.onload?.();
-		}
-		get src() {
-			return this._src;
-		}
-	}
-
-	it('renders the preview and the full image once both have loaded', () => {
-		vi.stubGlobal('Image', FakeImage);
+	it('shows the preview and the full image once both have loaded', async () => {
 		const { container } = renderWithContext(CoverImage, { src: 'full.jpg', previewSrc: 'preview.jpg', alt: 'cover' });
-		const images = container.querySelectorAll('img');
+
+		await fireEvent.load(loader(container, 'preview.jpg'));
+		await fireEvent.load(loader(container, 'full.jpg'));
+
+		const images = shown(container);
 		expect(images).toHaveLength(2);
 		expect(images[0]).toHaveAttribute('src', 'preview.jpg');
 		expect(images[1]).toHaveAttribute('src', 'full.jpg');
 	});
 
-	it('renders only the full image when there is no preview', () => {
-		vi.stubGlobal('Image', FakeImage);
+	it('shows only the full image when there is no preview', async () => {
 		const { container } = renderWithContext(CoverImage, { src: 'full.jpg', alt: 'cover' });
-		const images = container.querySelectorAll('img');
+
+		await fireEvent.load(loader(container, 'full.jpg'));
+
+		const images = shown(container);
 		expect(images).toHaveLength(1);
 		expect(images[0]).toHaveAttribute('src', 'full.jpg');
 	});
 
-	it('shows the full image once it has finished loading', async () => {
-		const images: { onload: (() => void) | null; src: string }[] = [];
-		vi.stubGlobal('Image', class {
-			onload: (() => void) | null = null;
-			src = '';
-			constructor() {
-				images.push(this);
-			}
-		});
-		const { container } = renderWithContext(CoverImage, { src: 'full.jpg', alt: 'cover' });
-		expect(container.querySelector('img')).toBeNull();
-
-		images.find((image) => image.src === 'full.jpg')?.onload?.();
-		await tick();
-
-		expect(container.querySelector('img')).toHaveAttribute('src', 'full.jpg');
-	});
-
-	it('does not restart loading a cover when another cover finishes', async () => {
-		const images: { onload: (() => void) | null; src: string }[] = [];
-		vi.stubGlobal('Image', class {
-			onload: (() => void) | null = null;
-			src = '';
-			constructor() {
-				images.push(this);
-			}
-		});
-		renderWithContext(TwoCoversHarness);
-		const created = images.length;
-
-		images.find((image) => image.src === 'a.jpg')?.onload?.();
-		await tick();
-
-		expect(images).toHaveLength(created);
-	});
-
-	it('shows an already loaded cover straight away, without waiting for it to load again', () => {
-		class NeverLoadingImage {
-			onload: (() => void) | null = null;
-			src = '';
-		}
-		vi.stubGlobal('Image', NeverLoadingImage);
+	it('shows an already loaded cover straight away', () => {
 		const { container } = renderWithContext(CoverImage, { src: 'full.jpg', alt: 'cover' }, {
-			stores: { loadedCovers: { sources: new Set(['full.jpg']) } }
+			stores: { loadedCovers: { sources: new SvelteSet(['full.jpg']) } }
 		});
-		const images = container.querySelectorAll('img');
-		expect(images).toHaveLength(1);
-		expect(images[0]).toHaveAttribute('src', 'full.jpg');
+
+		expect(container.querySelectorAll('img[hidden]')).toHaveLength(0);
+		expect(shown(container)[0]).toHaveAttribute('src', 'full.jpg');
+	});
+
+	it('loads and shows a new cover after the cover changed', async () => {
+		const { container, rerender } = render(CoverImageHarness, { src: 'old.jpg', alt: 'cover' });
+		await fireEvent.load(loader(container, 'old.jpg'));
+
+		await rerender({ src: 'new.jpg', alt: 'cover' });
+		await fireEvent.load(loader(container, 'new.jpg'));
+
+		expect(shown(container)[0]).toHaveAttribute('src', 'new.jpg');
 	});
 });
 

@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { ContactImport } from '$lib/state/ContactImport.svelte';
+import type { Contacts } from '$lib/state/Contacts.svelte';
 import type { UiNotifications } from '$lib/state/UiNotifications.svelte';
 import type { LoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
 import { renderWithContext } from './helpers/context';
@@ -76,6 +77,16 @@ describe('Contacts ImportModal', () => {
 		expect(importFile).toHaveBeenCalledWith(vcf, { type: 'new', name: 'Friends', color: '#0088CC' });
 	});
 
+	it('keeps a name the user typed before picking the file', async () => {
+		const user = userEvent.setup();
+		await openFileForm(user);
+
+		await user.type(screen.getByLabelText('Name'), 'Club');
+		await user.upload(screen.getByLabelText('Select File'), vcf);
+
+		expect(screen.getByLabelText('Name')).toHaveValue('Club');
+	});
+
 	it('keeps a name the user typed when another file is picked', async () => {
 		const user = userEvent.setup();
 		await openFileForm(user);
@@ -102,6 +113,21 @@ describe('Contacts ImportModal', () => {
 		await user.click(screen.getByRole('button', { name: 'Import' }));
 
 		expect(importFile).toHaveBeenCalledWith(vcf, { type: 'existing', addressBookId: 4 });
+	});
+
+	it('preselects the first existing address book when the address books arrive after the form', async () => {
+		const user = userEvent.setup();
+		const importFile = vi.spyOn(ContactImport.prototype, 'importFile').mockResolvedValue(null);
+		let contactsStore: Contacts | null = null;
+		await openFileForm(user, { onContacts: (store: Contacts) => (contactsStore = store) });
+
+		contactsStore!.addressBooks = [addressBook({ id: 5, name: 'Family' })];
+		await user.click(await screen.findByRole('button', { name: 'Existing address book' }));
+		await user.upload(screen.getByLabelText('Select File'), vcf);
+		await user.click(screen.getByRole('button', { name: 'Import' }));
+
+		expect(screen.getByRole('combobox', { name: 'Address book' })).toHaveValue('5');
+		expect(importFile).toHaveBeenCalledWith(vcf, { type: 'existing', addressBookId: 5 });
 	});
 
 	it('hides the target choice without address books', async () => {

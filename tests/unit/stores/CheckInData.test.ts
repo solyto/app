@@ -208,45 +208,48 @@ describe('CheckInData store', () => {
 		});
 	});
 
-	describe('setValue', () => {
-		it('shows the new value right away, saves it and tells the widgets', async () => {
+	describe('saveDay', () => {
+		it('saves every change of the day in one request and tells the widgets', async () => {
 			api.put.mockResolvedValue(true);
-			const s = loaded({ values: [value(3, '2026-08-14', 1)] });
+			const s = loaded({ values: [value(3, '2026-08-14', 1), value(1, '2026-08-14', 2)] });
 
-			const saving = s.setValue(glasses, '2026-08-14', 3);
+			const ok = await s.saveDay('2026-08-14', new Map([[glasses, 3], [meditated, null], [mood, 4]]));
+
+			expect(ok).toBe(true);
+			expect(api.put).toHaveBeenCalledTimes(1);
+			expect(api.put).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/values$/), {
+				date: '2026-08-14',
+				values: [
+					{ tracker_id: 4, value: 3 },
+					{ tracker_id: 3, value: null },
+					{ tracker_id: 1, value: 4 }
+				]
+			});
 			expect(s.getValue(glasses, '2026-08-14')).toBe(3);
-
-			expect(await saving).toBe(true);
-			expect(api.put).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/values$/), { tracker_id: 4, date: '2026-08-14', value: 3 });
+			expect(s.getValue(meditated, '2026-08-14')).toBeNull();
+			expect(s.getValue(mood, '2026-08-14')).toBe(4);
 			expect(auth.widgetBridge.notifyChanged).toHaveBeenCalled();
 		});
 
-		it('clears a value with null', async () => {
+		it('keeps the other days and trackers', async () => {
 			api.put.mockResolvedValue(true);
-			const s = loaded({ values: [value(3, '2026-08-14', 1)] });
+			const s = loaded({ values: [value(1, '2026-08-13', 5), value(3, '2026-08-14', 1)] });
 
-			await s.setValue(meditated, '2026-08-14', null);
+			await s.saveDay('2026-08-14', new Map([[mood, 2]]));
 
-			expect(s.getValue(meditated, '2026-08-14')).toBeNull();
+			expect(s.getValue(mood, '2026-08-13')).toBe(5);
+			expect(s.getValue(meditated, '2026-08-14')).toBe(1);
 		});
 
-		it('puts the old value back when saving fails', async () => {
+		it('changes nothing when saving fails', async () => {
 			api.put.mockResolvedValue(false);
 			const s = loaded({ values: [value(1, '2026-08-14', 2)] });
 
-			expect(await s.setValue(mood, '2026-08-14', 5)).toBe(false);
+			expect(await s.saveDay('2026-08-14', new Map([[mood, 5], [glasses, 3]]))).toBe(false);
+
 			expect(s.getValue(mood, '2026-08-14')).toBe(2);
+			expect(s.getValue(glasses, '2026-08-14')).toBeNull();
 			expect(auth.widgetBridge.notifyChanged).not.toHaveBeenCalled();
-		});
-
-		it('saveDay saves every change and reports a failure', async () => {
-			api.put.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
-			const s = loaded();
-
-			const ok = await s.saveDay('2026-08-14', new Map([[mood, 4], [sports, 2]]));
-
-			expect(ok).toBe(false);
-			expect(api.put).toHaveBeenCalledTimes(2);
 		});
 	});
 

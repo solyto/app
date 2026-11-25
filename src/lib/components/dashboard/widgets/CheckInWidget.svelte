@@ -14,7 +14,7 @@
 	const totalMean = $derived(checkInData.trackerService.totalMean(checkInData.scoredTrackers, checkInData.index, dates));
 </script>
 
-{#if checkInData.loaded && checkInData.values.length > 0}
+{#if checkInData.loaded && !isNaN(totalMean)}
 	<div>
 		<div class="mb-3 flex items-center gap-2">
 			<IconActivity size={15} class="text-c-heading dark:text-c-primary" />

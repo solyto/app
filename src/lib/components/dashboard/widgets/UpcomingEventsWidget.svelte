@@ -21,7 +21,7 @@
 		</span>
 	</div>
 	<div class="flex flex-col gap-1.5 pl-[3px]">
-		{#each upcomingEvents as event (event.id)}
+		{#each upcomingEvents as event (`${event.calendar_id}-${event.uri}-${event.start_date}`)}
 			<div class="flex items-center gap-2.5 py-0.5">
 				<div
 					class="h-3.5 w-[3px] shrink-0 rounded-full"

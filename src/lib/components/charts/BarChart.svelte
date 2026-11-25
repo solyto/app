@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { init } from './echarts';
 	import type { ECharts } from './echarts';
-	import { onMount, onDestroy, tick } from 'svelte';
+	import { onMount } from 'svelte';
 	import { resolveCssColor } from '$lib/helpers/ColorHelper';
 
 	let {
@@ -20,21 +20,11 @@
 		valueFormatter?: (value: number) => string;
 	} = $props();
 
-	let chartContainer: HTMLDivElement | null = null;
-	let myChart: ECharts | null = null;
-	let isInitialized = false;
+	let chartContainer: HTMLDivElement;
+	let chart = $state<ECharts | null>(null);
 
-	function createChart() {
-		if (!chartContainer || !categories?.length || !values?.length) return;
-
-		if (myChart) {
-			myChart.dispose();
-			myChart = null;
-		}
-
-		myChart = init(chartContainer);
-
-		const options = {
+	function options() {
+		return {
 			title: {
 				text: title || ''
 			},
@@ -61,7 +51,7 @@
 				{
 					type: 'bar',
 					data: colors
-						? values.map((value: number, i: number) => ({
+						? (values ?? []).map((value: number, i: number) => ({
 								value,
 								itemStyle: { color: resolveCssColor(colors[i]) }
 							}))
@@ -73,38 +63,27 @@
 				}
 			]
 		};
-
-		myChart.setOption(options);
-		isInitialized = true;
 	}
 
 	onMount(() => {
-		tick().then(createChart);
-
-		const handleResize = () => {
-			if (myChart) {
-				myChart.resize();
-			}
-		};
-
+		const instance = init(chartContainer);
+		const handleResize = () => instance.resize();
+		chart = instance;
 		window.addEventListener('resize', handleResize);
 
 		return () => {
 			window.removeEventListener('resize', handleResize);
+			instance.dispose();
 		};
 	});
 
-	onDestroy(() => {
-		if (myChart) {
-			myChart.dispose();
-			myChart = null;
-		}
-	});
-
 	$effect(() => {
-		if (!isInitialized && chartContainer) {
-			createChart();
+		if (!categories?.length || !values?.length) {
+			chart?.clear();
+			return;
 		}
+
+		chart?.setOption(options(), true);
 	});
 </script>
 

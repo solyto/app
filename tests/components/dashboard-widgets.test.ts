@@ -11,7 +11,10 @@ import NewestLinksWidget from '$lib/components/dashboard/widgets/NewestLinksWidg
 import BookReleasesWidget from '$lib/components/dashboard/widgets/BookReleasesWidget.svelte';
 import MusicReleasesWidget from '$lib/components/dashboard/widgets/MusicReleasesWidget.svelte';
 import QuoteWidget from '$lib/components/dashboard/widgets/QuoteWidget.svelte';
-import { calendarEvent as eventFixture, link as linkFixture, note as noteFixture, todo } from '../unit/helpers/factories';
+import CheckInWidget from '$lib/components/dashboard/widgets/CheckInWidget.svelte';
+import CheckInContextHarness from './helpers/CheckInContextHarness.svelte';
+import { calendarEvent as eventFixture, checkInTracker, checkInValue, link as linkFixture, note as noteFixture, todo } from '../unit/helpers/factories';
+import type { CheckInTracker, CheckInValue } from '$lib/types/check_in';
 import type { CalendarEvent } from '$lib/types/calendar';
 import type { Note } from '$lib/types/note';
 import type { Link } from '$lib/types/library_link';
@@ -210,6 +213,24 @@ describe('EventsTodayWidget', () => {
 });
 
 describe('UpcomingEventsWidget', () => {
+	it('lists every occurrence of a recurring event and the same event in two calendars', () => {
+		const daily = (day: number, calendarId: number) =>
+			calendarEvent({ id: 9, uri: 'standup.ics', calendar_id: calendarId, start_date: new Date(2026, 7, day, 9, 30) });
+		renderWithContext(
+			UpcomingEventsWidget,
+			{},
+			{
+				prepare: (stores) => ({
+					upcomingEvents: [daily(15, 1), daily(16, 1), daily(17, 1), daily(15, 2)],
+					ts: stores.ts,
+					auth: stores.auth
+				})
+			}
+		);
+
+		expect(screen.getAllByText('Standup')).toHaveLength(4);
+	});
+
 	it('renders the event date (user format), title and time', () => {
 		renderWithContext(
 			UpcomingEventsWidget,
@@ -407,5 +428,28 @@ describe('QuoteWidget', () => {
 		renderWithContext(QuoteWidget, { quote: quote({ author: null }) });
 		expect(screen.getByText('What does not kill me')).toBeInTheDocument();
 		expect(screen.queryByText('Nietzsche')).not.toBeInTheDocument();
+	});
+});
+
+describe('CheckInWidget', () => {
+	const mood = checkInTracker({ id: 1, key: 'mood', name: null, type: 'scale', scored: true });
+	const meditated = checkInTracker({ id: 2, type: 'yes_no' });
+
+	function renderWidget(values: CheckInValue[], trackers: CheckInTracker[] = [mood, meditated]): void {
+		renderWithContext(CheckInContextHarness, {}, {
+			prepare: (stores) => ({ component: CheckInWidget, props: { ts: stores.ts }, trackers, values, loaded: true })
+		});
+	}
+
+	it('shows the averages of the trackers that count towards the score', () => {
+		renderWidget([checkInValue(1, '2026-08-14', 4), checkInValue(2, '2026-08-14', 1)]);
+
+		expect(screen.getByText('Total Score')).toBeInTheDocument();
+	});
+
+	it('stays hidden when only trackers that do not count towards the score have values', () => {
+		renderWidget([checkInValue(2, '2026-08-14', 1)]);
+
+		expect(screen.queryByText('Total Score')).not.toBeInTheDocument();
 	});
 });

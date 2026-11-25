@@ -4,6 +4,7 @@
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 	import DateInput from '$lib/components/forms/DateInput.svelte';
 	import NumberInput from '$lib/components/forms/NumberInput.svelte';
+	import TextButton from '$lib/components/ui/buttons/TextButton.svelte';
 	import { getUrlFormat } from '$lib/helpers/DateHelper';
 	import { pluralize } from '$lib/helpers/FormatHelper';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -28,6 +29,7 @@
 
 	let lastValidUntil = selection.until;
 	let intervalInput = $state<number | null>(selection.interval);
+	let intervalShown = $state(selection.interval > 1);
 
 	function typeOptions(): { label: string; value: RecurrenceType }[] {
 		return [
@@ -124,6 +126,10 @@
 		}
 	}
 
+	function showInterval(): void {
+		intervalShown = true;
+	}
+
 	function rememberInterval(): void {
 		selection.interval = recurrenceRuleService.intervalWithinBounds(intervalInput, selection.interval);
 	}
@@ -149,21 +155,25 @@
 		<div class="min-w-40 flex-1">
 			<Select value={selection.type} options={typeOptions()} onchange={setType} />
 		</div>
-		<div class="flex items-center gap-2">
-			<span class="text-sm">{everyLabel()}</span>
-			<div class="w-20">
-				<NumberInput
-					bind:value={intervalInput}
-					min={1}
-					max={MAX_INTERVAL}
-					step={1}
-					oninput={rememberInterval}
-					onblur={restoreInterval}
-					class="h-10"
-				/>
+		{#if intervalShown}
+			<div class="flex items-center gap-2">
+				<span class="text-sm">{everyLabel()}</span>
+				<div class="w-20">
+					<NumberInput
+						bind:value={intervalInput}
+						min={1}
+						max={MAX_INTERVAL}
+						step={1}
+						oninput={rememberInterval}
+						onblur={restoreInterval}
+						class="h-10"
+					/>
+				</div>
+				<span class="text-sm">{unitLabel()}</span>
 			</div>
-			<span class="text-sm">{unitLabel()}</span>
-		</div>
+		{:else}
+			<TextButton type="slight" title={ts.get.calendar.recurrence_custom_interval} onclick={showInterval} />
+		{/if}
 	</div>
 
 	{#if selection.type === 'weekly'}

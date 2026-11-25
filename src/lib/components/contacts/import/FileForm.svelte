@@ -26,7 +26,7 @@
 	let targetType = $state<ImportFileTarget['type']>('new');
 	let name = $state<string>('');
 	let hex = $state<string>(DEFAULT_COLOR);
-	let addressBookId = $state<string>(targets[0]?.id.toString() ?? '');
+	let pickedAddressBookId = $state<string | null>(null);
 
 	const targetOptions = [
 		{ label: ts.get.contacts.import_target_new, value: 'new' },
@@ -34,9 +34,18 @@
 	];
 
 	async function pick(picked: File): Promise<boolean> {
-		if (file === null || name === service.defaultAddressBookName(file.name)) name = service.defaultAddressBookName(picked.name);
+		const suggested = file === null ? '' : service.defaultAddressBookName(file.name);
+		if (name === suggested) name = service.defaultAddressBookName(picked.name);
 		file = picked;
 		return true;
+	}
+
+	function addressBookId(): string {
+		return pickedAddressBookId ?? targets[0]?.id.toString() ?? '';
+	}
+
+	function changeAddressBook(value: string): void {
+		pickedAddressBookId = value;
 	}
 
 	function addressBookOptions(): { label: string; value: string }[] {
@@ -48,12 +57,12 @@
 	}
 
 	function target(): ImportFileTarget {
-		if (targetType === 'existing') return { type: 'existing', addressBookId: Number(addressBookId) };
+		if (targetType === 'existing') return { type: 'existing', addressBookId: Number(addressBookId()) };
 		return { type: 'new', name, color: hex };
 	}
 
 	function canSubmit(): boolean {
-		return !busy && file !== null && (targetType === 'new' || addressBookId !== '');
+		return !busy && file !== null && (targetType === 'new' || addressBookId() !== '');
 	}
 
 	function submit(): void {
@@ -75,7 +84,7 @@
 		</ModalFormRow>
 	{:else}
 		<ModalFormRow label={ts.get.contacts.import_address_book}>
-			<Select bind:value={addressBookId} options={addressBookOptions()} ariaLabel={ts.get.contacts.import_address_book} />
+			<Select value={addressBookId()} onchange={changeAddressBook} options={addressBookOptions()} ariaLabel={ts.get.contacts.import_address_book} />
 		</ModalFormRow>
 	{/if}
 	<TextButton type="primary" title={ts.get.contacts.import} disabled={!canSubmit()} onclick={submit} class="mt-2" />

@@ -50,7 +50,7 @@
 	setNavigation();
 	setCookieConsent();
 	setPwaInstall();
-	setWelcomeTour();
+	const tour = setWelcomeTour();
 	setQuickAdd();
 	setIntegrations();
 
@@ -179,7 +179,9 @@
 				<MobileNavbar />
 			</div>
 		{/if}
-		<WelcomeTour />
+		{#if tour.active}
+			<WelcomeTour />
+		{/if}
 	{/if}
 	{#if IS_WEB && !isAuthRoute()}
 		<CookieBanner />

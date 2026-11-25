@@ -65,6 +65,15 @@ describe('formatDateWithoutYear', () => {
 		expect(formatDateWithoutYear(AUG_15, 'mm/dd/YYYY')).toBe('08/15');
 		expect(formatDateWithoutYear(AUG_15, 'mm/dd/YY')).toBe('08/15');
 	});
+
+	it('reads a plain date as that day west of UTC', () => {
+		vi.stubEnv('TZ', 'America/New_York');
+		try {
+			expect(formatDateWithoutYear('2026-11-16')).toBe('16.11');
+		} finally {
+			vi.unstubAllEnvs();
+		}
+	});
 });
 
 describe('formatMonth', () => {

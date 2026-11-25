@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import IconRefreshCw from '$lib/icons/lucide/refresh-cw.svelte';
 	import IconDownload from '$lib/icons/lucide/download.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
@@ -11,11 +12,11 @@
 
 	let status: UpdaterStatus = $state({ type: 'idle' });
 
-	$effect(() => {
-		return electronAPI?.onUpdaterStatus((s) => {
+	onMount(() =>
+		electronAPI?.onUpdaterStatus((s) => {
 			status = s;
-		});
-	});
+		})
+	);
 
 	async function check() {
 		status = { type: 'checking' };

@@ -1193,6 +1193,7 @@ const calendar: CalendarRecords = {
 	recurrence_yearly: 'Каждый год',
 	recurrence_on_the: 'в',
 	recurrence_every: 'Раз в',
+	recurrence_custom_interval: 'Свой интервал',
 	recurrence_unit_day_singular: 'день',
 	recurrence_unit_day_plural: 'дн.',
 	recurrence_unit_week_singular: 'неделю',

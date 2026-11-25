@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { getFeeds } from '$lib/state/Feeds.svelte';
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
@@ -14,7 +15,7 @@
 
 	let sentinel: HTMLDivElement;
 
-	$effect(() => {
+	onMount(() => {
 		const observer = new IntersectionObserver(
 			(entries) => {
 				if (entries[0].isIntersecting) feeds.loadMore();

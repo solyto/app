@@ -86,11 +86,13 @@ function wallClockInTimeZone(timestamp: number, timeZone: string): number {
 	return Date.UTC(part('year'), part('month') - 1, part('day'), part('hour'), part('minute'), part('second'));
 }
 
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+
 export function formatDateWithoutYear(
 	input: string | Date,
 	dateFormat: string | null = null
 ): string {
-	const date = new Date(input),
+	const date = (typeof input === 'string' && DATE_ONLY.test(input) ? parseUrlFormat(input) : null) ?? new Date(input),
 		day = String(date.getDate()).padStart(2, '0'),
 		month = String(date.getMonth() + 1).padStart(2, '0');
 

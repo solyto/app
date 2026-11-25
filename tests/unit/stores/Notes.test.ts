@@ -217,14 +217,52 @@ describe('Notes store', () => {
 			expect(n.activeNote).toBeNull();
 		});
 
-		it('syncActiveNoteWithUrl leaves the journal entry alone', () => {
-			pageState.routeId = '/notes/journal/[date]';
-			pageState.params = { date: '2026-11-25' };
-			const n = new NotesSvelte();
-			const draft = note({ id: '' });
-			n.activeNote = draft;
-			n.syncActiveNoteWithUrl();
-			expect(n.activeNote).toStrictEqual(draft);
+		describe('on a journal day', () => {
+			const journal = noteCategory(9, { title: '.journal', is_system: true, is_hidden: true });
+
+			beforeEach(() => {
+				pageState.routeId = '/notes/journal/[date]';
+				pageState.params = { date: '2026-01-05' };
+			});
+
+			function loadedWithJournal(notes: Note[] = []): NotesSvelte {
+				const n = new NotesSvelte();
+				n.loaded = true;
+				n.notes = notes;
+				n.journalCategory = journal;
+				return n;
+			}
+
+			it('syncActiveNoteWithUrl opens the entry of the day in the URL', () => {
+				const entry = note({ id: 'j1', title: '2026-01-05', category_id: 9 });
+				const n = loadedWithJournal([entry]);
+				n.syncActiveNoteWithUrl();
+				expect(n.activeNote?.id).toBe('j1');
+			});
+
+			it('syncActiveNoteWithUrl keeps the open draft of that day', () => {
+				const n = loadedWithJournal();
+				const draft = note({ id: '', title: '2026-01-05', category_id: 9, content: '<p>typing</p>' });
+				n.activeNote = draft;
+				n.syncActiveNoteWithUrl();
+				expect(n.activeNote).toBe(draft);
+			});
+
+			it('syncActiveNoteWithUrl waits until the notes are loaded', () => {
+				const n = loadedWithJournal();
+				n.loaded = false;
+				n.syncActiveNoteWithUrl();
+				expect(n.activeNote).toBeNull();
+			});
+
+			it('loadCategories opens the entry once the journal folder is known', async () => {
+				mockLists({ categories: [], hiddenCategories: [journal] });
+				const n = loadedWithJournal();
+				n.journalCategory = null;
+				await n.loadCategories();
+				expect(n.activeNote?.title).toBe('2026-01-05');
+				expect(n.activeNote?.id).toBe('');
+			});
 		});
 	});
 

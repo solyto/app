@@ -68,12 +68,15 @@
 		saving = true;
 		const saved = new Map(changes);
 		loadingIndicator.start();
-		const ok = await checkInData.saveDay(date, saved);
-		loadingIndicator.stop();
-		saving = false;
+		let ok: boolean;
+		try {
+			ok = await checkInData.saveDay(date, saved);
+		} finally {
+			loadingIndicator.stop();
+			saving = false;
+		}
 
 		if (ok) {
-			// Only what was saved: a tap made while saving stays pending.
 			for (const [tracker, value] of saved) {
 				if (pending.get(tracker.id) === value) pending.delete(tracker.id);
 			}
