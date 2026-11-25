@@ -71,18 +71,17 @@ describe('Calendar ImportModal', () => {
 		expect(screen.getByLabelText('Select File')).toHaveAttribute('accept', '.ics');
 	});
 
-	it('preselects the first existing calendar when the calendars arrive after the form', async () => {
+	it('offers calendars that arrive after the form', async () => {
 		const user = userEvent.setup();
 		const importFile = vi.spyOn(CalendarImport.prototype, 'importFile').mockResolvedValue(null);
 		let calendarsStore: Calendars | null = null;
 		await openFileForm(user, { onCalendars: (store: Calendars) => (calendarsStore = store) });
 
 		calendarsStore!.calendars = [calendar({ id: 5, name: 'Family' })];
-		await user.click(await screen.findByRole('button', { name: 'Existing calendar' }));
+		await user.selectOptions(await screen.findByRole('combobox', { name: 'Import into' }), '5');
 		await user.upload(screen.getByLabelText('Select File'), ics);
 		await user.click(screen.getByRole('button', { name: 'Import' }));
 
-		expect(screen.getByRole('combobox', { name: 'Calendar' })).toHaveValue('5');
 		expect(importFile).toHaveBeenCalledWith(ics, { type: 'existing', calendarId: 5 });
 	});
 
@@ -123,9 +122,8 @@ describe('Calendar ImportModal', () => {
 			]
 		});
 
-		await user.click(screen.getByRole('button', { name: 'Existing calendar' }));
-		const picker = screen.getByRole('combobox', { name: 'Calendar' });
-		expect([...picker.querySelectorAll('option')].map((option) => option.textContent)).toEqual(['Personal', 'Family']);
+		const picker = screen.getByRole('combobox', { name: 'Import into' });
+		expect([...picker.querySelectorAll('option')].map((option) => option.textContent)).toEqual(['New calendar', 'Personal', 'Family']);
 
 		await user.selectOptions(picker, '4');
 		await user.upload(screen.getByLabelText('Select File'), ics);
@@ -138,7 +136,7 @@ describe('Calendar ImportModal', () => {
 		const user = userEvent.setup();
 		await openFileForm(user, { calendars: [calendar({ is_shared: true })] });
 
-		expect(screen.queryByRole('button', { name: 'Existing calendar' })).not.toBeInTheDocument();
+		expect(screen.queryByRole('combobox', { name: 'Import into' })).not.toBeInTheDocument();
 	});
 
 	it('shows the message for a rejected file', async () => {

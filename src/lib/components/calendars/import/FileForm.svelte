@@ -1,7 +1,6 @@
 <script lang="ts">
 	import ColorPicker from '$lib/components/forms/ColorPicker.svelte';
 	import FileUpload from '$lib/components/forms/FileUpload.svelte';
-	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
 	import Select from '$lib/components/forms/Select.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import ModalFormRow from '$lib/components/ui/ModalFormRow.svelte';
@@ -17,22 +16,17 @@
 	} = $props();
 
 	const NO_COLOR = 'var(--color-c-neutral-2)';
+	const NEW = 'new';
 
 	const ts = getTranslation();
 	const service = new CalendarImportService();
 	const uid = $props.id();
 
 	let file = $state<File | null>(null);
-	let targetType = $state<ImportFileTarget['type']>('new');
+	let into = $state<string>(NEW);
 	let name = $state<string>('');
 	let hex = $state<string>(NO_COLOR);
-	let pickedCalendarId = $state<string | null>(null);
 	let suggestedName = '';
-
-	const targetOptions = [
-		{ label: ts.get.calendar.import_target_new, value: 'new' },
-		{ label: ts.get.calendar.import_target_existing, value: 'existing' }
-	];
 
 	async function pick(picked: File): Promise<boolean> {
 		const suggestion = await nameFor(picked);
@@ -47,29 +41,24 @@
 		return service.calendarName(content) ?? service.defaultCalendarName(picked.name);
 	}
 
-	function calendarId(): string {
-		return pickedCalendarId ?? targets[0]?.id.toString() ?? '';
+	function intoOptions(): { label: string; value: string }[] {
+		return [
+			{ label: ts.get.calendar.import_target_new, value: NEW },
+			...targets.map((calendar) => ({ label: calendar.name, value: calendar.id.toString() }))
+		];
 	}
 
-	function changeCalendar(value: string): void {
-		pickedCalendarId = value;
-	}
-
-	function calendarOptions(): { label: string; value: string }[] {
-		return targets.map((calendar) => ({ label: calendar.name, value: calendar.id.toString() }));
-	}
-
-	function changeTarget(value: string): void {
-		targetType = value === 'existing' ? 'existing' : 'new';
+	function changeInto(value: string): void {
+		into = value;
 	}
 
 	function target(): ImportFileTarget {
-		if (targetType === 'existing') return { type: 'existing', calendarId: Number(calendarId()) };
+		if (into !== NEW) return { type: 'existing', calendarId: Number(into) };
 		return { type: 'new', name, color: hex === NO_COLOR ? null : hex };
 	}
 
 	function canSubmit(): boolean {
-		return !busy && file !== null && (targetType === 'new' || calendarId() !== '');
+		return !busy && file !== null;
 	}
 
 	function submit(): void {
@@ -78,20 +67,20 @@
 </script>
 
 <div class="flex flex-col gap-3">
-	<FileUpload accept=".ics" onfile={pick} />
+	<ModalFormRow label={ts.get.layout.file}>
+		<FileUpload accept=".ics" onfile={pick} />
+	</ModalFormRow>
 	{#if targets.length > 0}
-		<SegmentedControl value={targetType} options={targetOptions} onchange={changeTarget} />
-	{/if}
-	{#if targetType === 'new'}
-		<ModalFormRow label={ts.get.layout.name} labelFor="{uid}-name">
-			<div class="flex items-center gap-2">
-				<ColorPicker bind:hex />
-				<TextInput bind:value={name} id="{uid}-name" maxlength={MAX_CALENDAR_NAME_LENGTH} />
-			</div>
+		<ModalFormRow label={ts.get.layout.import_into}>
+			<Select value={into} onchange={changeInto} options={intoOptions()} ariaLabel={ts.get.layout.import_into} />
 		</ModalFormRow>
-	{:else}
-		<ModalFormRow label={ts.get.calendar.calendar}>
-			<Select value={calendarId()} onchange={changeCalendar} options={calendarOptions()} ariaLabel={ts.get.calendar.calendar} />
+	{/if}
+	{#if into === NEW}
+		<ModalFormRow label={ts.get.layout.name} labelFor="{uid}-name">
+			<TextInput bind:value={name} id="{uid}-name" maxlength={MAX_CALENDAR_NAME_LENGTH} />
+		</ModalFormRow>
+		<ModalFormRow label={ts.get.layout.color}>
+			<ColorPicker bind:hex />
 		</ModalFormRow>
 	{/if}
 	<TextButton type="primary" title={ts.get.calendar.import_submit} disabled={!canSubmit()} onclick={submit} class="mt-2" />

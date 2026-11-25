@@ -37,7 +37,7 @@
 		aria-haspopup="dialog"
 	/>
 	<span
-		class="block size-[25px] rounded-full peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-d-lightblue dark:peer-focus-visible:outline-c-primary"
+		class="block size-[25px] rounded-full ring-1 ring-c-neutral-3 dark:ring-c-neutral-5 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-d-lightblue dark:peer-focus-visible:outline-c-primary"
 		style:background={hex}
 	></span>
 	{label}

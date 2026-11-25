@@ -104,9 +104,8 @@ describe('Contacts ImportModal', () => {
 		const importFile = vi.spyOn(ContactImport.prototype, 'importFile').mockResolvedValue(null);
 		await openFileForm(user, { addressBooks: [addressBook({ id: 1, name: 'Personal' }), addressBook({ id: 4, name: 'Family' })] });
 
-		await user.click(screen.getByRole('button', { name: 'Existing address book' }));
-		const picker = screen.getByRole('combobox', { name: 'Address book' });
-		expect([...picker.querySelectorAll('option')].map((option) => option.textContent)).toEqual(['Personal', 'Family']);
+		const picker = screen.getByRole('combobox', { name: 'Import into' });
+		expect([...picker.querySelectorAll('option')].map((option) => option.textContent)).toEqual(['New address book', 'Personal', 'Family']);
 
 		await user.selectOptions(picker, '4');
 		await user.upload(screen.getByLabelText('Select File'), vcf);
@@ -115,18 +114,17 @@ describe('Contacts ImportModal', () => {
 		expect(importFile).toHaveBeenCalledWith(vcf, { type: 'existing', addressBookId: 4 });
 	});
 
-	it('preselects the first existing address book when the address books arrive after the form', async () => {
+	it('offers address books that arrive after the form', async () => {
 		const user = userEvent.setup();
 		const importFile = vi.spyOn(ContactImport.prototype, 'importFile').mockResolvedValue(null);
 		let contactsStore: Contacts | null = null;
 		await openFileForm(user, { onContacts: (store: Contacts) => (contactsStore = store) });
 
 		contactsStore!.addressBooks = [addressBook({ id: 5, name: 'Family' })];
-		await user.click(await screen.findByRole('button', { name: 'Existing address book' }));
+		await user.selectOptions(await screen.findByRole('combobox', { name: 'Import into' }), '5');
 		await user.upload(screen.getByLabelText('Select File'), vcf);
 		await user.click(screen.getByRole('button', { name: 'Import' }));
 
-		expect(screen.getByRole('combobox', { name: 'Address book' })).toHaveValue('5');
 		expect(importFile).toHaveBeenCalledWith(vcf, { type: 'existing', addressBookId: 5 });
 	});
 
@@ -134,7 +132,7 @@ describe('Contacts ImportModal', () => {
 		const user = userEvent.setup();
 		await openFileForm(user);
 
-		expect(screen.queryByRole('button', { name: 'Existing address book' })).not.toBeInTheDocument();
+		expect(screen.queryByRole('combobox', { name: 'Import into' })).not.toBeInTheDocument();
 	});
 
 	it('shows the message for a rejected file', async () => {

@@ -10,7 +10,9 @@ export interface LayoutRecords {
 	browse: string;
 	no_file: string;
 	select_file: string;
-	selected_file: string;
+	file: string;
+	import_into: string;
+	color: string;
 	processing: string;
 	toggle: string;
 	apply: string;
@@ -1131,7 +1133,6 @@ export interface CalendarRecords {
 	import_source_caldav: string;
 	import_source_file: string;
 	import_target_new: string;
-	import_target_existing: string;
 	import_submit: string;
 	import_imported: string;
 	import_skipped: string;
@@ -1238,8 +1239,6 @@ export interface ContactRecords {
 	import_source_carddav: string;
 	import_source_file: string;
 	import_target_new: string;
-	import_target_existing: string;
-	import_address_book: string;
 	import_imported: string;
 	import_skipped: string;
 	import_error_invalid_file: string;
