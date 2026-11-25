@@ -13,7 +13,7 @@
 	import GhostIconButton from '$lib/components/ui/buttons/GhostIconButton.svelte';
 	import TextInput from '$lib/components/forms/TextInput.svelte';
 	import ConfirmationModal from '$lib/components/ui/ConfirmationModal.svelte';
-	import DeleteButton from '$lib/components/ui/buttons/DeleteButton.svelte';
+	import IconTrash from '$lib/icons/lucide/trash.svelte';
 	import MovableHoverBox from '$lib/components/ui/MovableHoverBox.svelte';
 	import { HoverExplanation } from '$lib/helpers/HoverExplanation.svelte';
 	import { SaveAction } from '$lib/helpers/SaveAction.svelte';
@@ -188,17 +188,21 @@
 			<div
 				class="flex shrink-0 items-center gap-3 pt-1 max-md:absolute max-md:top-0 max-md:right-0"
 			>
-				{#if !isJournal}
-					<GhostIconButton label={ts.get.notes.move_note} onclick={openMoveNoteModal}>
-						<IconFolderInput size={16} />
-					</GhostIconButton>
-					<GhostIconButton label={favoriteLabel()} onclick={toggleFavorite} color={favoriteColor()}>
-						<IconStar size={16} fill={notes.activeNote.is_favorite ? 'currentColor' : 'none'} />
-					</GhostIconButton>
-				{/if}
-				{#if !isDraft}
-					<DeleteButton onClick={openDeleteModal} inModal={false} buttonStyle="plain" />
-				{/if}
+				<div class="flex items-center gap-1">
+					{#if !isJournal}
+						<GhostIconButton label={ts.get.notes.move_note} onclick={openMoveNoteModal}>
+							<IconFolderInput size={16} />
+						</GhostIconButton>
+						<GhostIconButton label={favoriteLabel()} onclick={toggleFavorite} color={favoriteColor()}>
+							<IconStar size={16} fill={notes.activeNote.is_favorite ? 'currentColor' : 'none'} />
+						</GhostIconButton>
+					{/if}
+					{#if !isDraft}
+						<GhostIconButton label={ts.get.notes.delete_note} onclick={openDeleteModal} danger>
+							<IconTrash size={16} />
+						</GhostIconButton>
+					{/if}
+				</div>
 				<TextButton title={ts.get.layout.save} onclick={saveNote} />
 			</div>
 		</div>
