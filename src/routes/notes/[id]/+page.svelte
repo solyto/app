@@ -19,11 +19,14 @@
 	{#if notes.activeNote !== null}
 		<NoteHeader />
 		{#key notes.activeNote.id}
-			<TipTapEditor />
+			<TipTapEditor>
+				{#snippet footer()}
+					{#if notes.backlinks.length > 0}
+						<NoteBacklinks backlinks={notes.backlinks} />
+					{/if}
+				{/snippet}
+			</TipTapEditor>
 		{/key}
-		{#if notes.backlinks.length > 0}
-			<NoteBacklinks backlinks={notes.backlinks} />
-		{/if}
 	{:else if notes.loaded}
 		<p class="text-c-neutral-5 dark:text-c-neutral-4">{ts.get.notes.note_not_found}</p>
 	{/if}

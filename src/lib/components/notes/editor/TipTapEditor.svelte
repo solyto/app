@@ -11,7 +11,7 @@
 	import { TableHeader } from '@tiptap/extension-table-header';
 	import BubbleMenu from '@tiptap/extension-bubble-menu';
 	import { marked } from 'marked';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount, type Snippet } from 'svelte';
 	import { getNotes, NotesSvelte } from '$lib/state/Notes.svelte';
 	import { getViewPoint } from '$lib/state/Viewpoint.svelte';
 	import EditorToolbar from './EditorToolbar.svelte';
@@ -29,7 +29,7 @@
 	const linkPicker = new NotePicker((term) => notes.searchLinkableNotes(term, NotesSvelte.LINK_SUGGESTION_LIMIT));
 	const SUGGESTION_KEYS = ['ArrowUp', 'ArrowDown', 'Enter'];
 
-	let { autofocus = false }: { autofocus?: boolean } = $props();
+	let { autofocus = false, footer }: { autofocus?: boolean; footer?: Snippet } = $props();
 
 	let editorDiv = $state<HTMLDivElement | null>(null);
 	let tableBubbleRoot = $state<HTMLDivElement | null>(null);
@@ -262,6 +262,7 @@
 		<EditorToolbar {editor} {activeStates} />
 	{/if}
 	<div bind:this={editorDiv} onpaste={handlePaste} class="tiptap-wrapper max-md:pr-8"></div>
+	{@render footer?.()}
 </div>
 
 <style>

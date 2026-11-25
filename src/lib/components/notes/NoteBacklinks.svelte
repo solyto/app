@@ -11,9 +11,9 @@
 	const ts = getTranslation();
 </script>
 
-<section class="flex flex-col gap-1 border-t border-c-neutral-2 pt-3 dark:border-s-dark">
+<section class="mt-4 flex flex-col gap-1 border-t border-c-neutral-2 pt-3 dark:border-s-dark">
 	<h2 class="text-xs text-c-neutral-5 dark:text-c-neutral-4">{ts.get.notes.linked_from}</h2>
-	<ul class="flex max-h-24 flex-wrap gap-x-4 gap-y-1 overflow-y-auto">
+	<ul class="flex flex-wrap gap-x-4 gap-y-1">
 		{#each backlinks as link (link.id)}
 			<li>
 				<a
