@@ -371,6 +371,34 @@ describe('WidgetBridge', () => {
 			expect(navigation.goto).toHaveBeenCalledWith(`/time-tracking/${PROJECT_ID}`);
 		});
 
+		it('opens a notification\'s link inside the app', () => {
+			createBridge().start();
+
+			receive({ type: 'open', path: '/check-in/trends?range=week' });
+
+			expect(navigation.goto).toHaveBeenCalledWith('/check-in/trends?range=week');
+		});
+
+		it('refuses links that leave the app', () => {
+			createBridge().start();
+
+			for (const path of ['https://evil.example/', '//evil.example/x', '/\\evil.example/x', 'javascript:alert(1)', 'check-in', '']) {
+				receive({ type: 'open', path });
+			}
+			receive({ type: 'open', path: 42 });
+
+			expect(navigation.goto).not.toHaveBeenCalled();
+		});
+
+		it('opens nothing from a link when logged out', () => {
+			loggedIn = false;
+			createBridge().start();
+
+			receive({ type: 'open', path: '/check-in' });
+
+			expect(navigation.goto).not.toHaveBeenCalled();
+		});
+
 		it('ignores unknown keys and invalid ids', () => {
 			createBridge().start();
 

@@ -150,6 +150,12 @@ export class WidgetBridge {
 			return;
 		}
 
+		if (message.type === 'open') {
+			// eslint-disable-next-line svelte/no-navigation-without-resolve -- a notification's link, checked by isAppPath()
+			if (this.isLoggedIn()) void goto(message.path);
+			return;
+		}
+
 		this.navigate(message.key, message.id);
 	}
 
@@ -164,10 +170,11 @@ export class WidgetBridge {
 		}
 		if (typeof message !== 'object' || message === null) return null;
 
-		const { type, needsToken, key, id, enabled, permission } = message as Record<string, unknown>;
+		const { type, needsToken, key, id, enabled, permission, path } = message as Record<string, unknown>;
 
 		if (type === 'status' && typeof needsToken === 'boolean') return { type, needsToken };
 		if (type === 'pushStatus' && typeof enabled === 'boolean' && isPushPermission(permission)) return { type, enabled, permission };
+		if (type === 'open' && typeof path === 'string' && isAppPath(path)) return { type, path };
 		const isNavigation = type === 'navigate' && typeof key === 'string' && (id === undefined || typeof id === 'string');
 		if (isNavigation) return { type, key, id };
 
@@ -211,4 +218,10 @@ export class WidgetBridge {
 
 function isPushPermission(value: unknown): value is NativePushPermission {
 	return value === 'granted' || value === 'denied' || value === 'prompt';
+}
+
+// Only pages of this app: another site, a scheme, "//host" or "/\host" would leave the app's origin.
+function isAppPath(value: string): boolean {
+	const origin = 'http://app.invalid';
+	return value.startsWith('/') && new URL(value, origin).origin === origin;
 }

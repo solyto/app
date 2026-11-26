@@ -43,4 +43,5 @@ export type WidgetAppMessage =
 export type WidgetNativeMessage =
 	| { type: 'status'; needsToken: boolean }
 	| { type: 'navigate'; key: string; id?: string }
+	| { type: 'open'; path: string }
 	| ({ type: 'pushStatus' } & NativePushStatus);
