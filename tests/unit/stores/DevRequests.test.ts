@@ -15,6 +15,27 @@ describe('DevRequests store', () => {
 		});
 	});
 
+	describe('loadNotice', () => {
+		it('takes the notice text from the API', async () => {
+			const store = new DevRequests();
+			api.get.mockResolvedValue({ data: { text: 'Taking a break.' } });
+
+			await store.loadNotice();
+
+			expect(store.notice).toBe('Taking a break.');
+		});
+
+		it('has no notice when the API sends none', async () => {
+			const store = new DevRequests();
+			store.notice = 'Old notice';
+			api.get.mockResolvedValue({ data: { text: null } });
+
+			await store.loadNotice();
+
+			expect(store.notice).toBeNull();
+		});
+	});
+
 	describe('createComment', () => {
 		it('reloads the entries so the comment count is current', async () => {
 			const store = new DevRequests();

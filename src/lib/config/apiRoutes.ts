@@ -228,6 +228,7 @@ export const apiRoutes = {
 	dev: {
 		requests: {
 			list: API_URL + '/dev-requests',
+			notice: API_URL + '/dev-requests/notice',
 			create: API_URL + '/dev-requests',
 			update: API_URL + '/dev-requests/%d',
 			delete: API_URL + '/dev-requests/%d',

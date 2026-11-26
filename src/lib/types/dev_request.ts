@@ -29,6 +29,10 @@ export interface DevRequest {
 	};
 }
 
+export interface DevRequestNotice {
+	text: string | null;
+}
+
 export interface DevRequestComment {
 	id: number;
 	content: string;

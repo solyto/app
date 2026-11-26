@@ -3,7 +3,8 @@ import type {
 	CreateDevRequestRequest,
 	UpdateDevRequestRequest,
 	DevRequestVote,
-	DevRequestComment
+	DevRequestComment,
+	DevRequestNotice
 } from '$lib/types/dev_request';
 import { getContext, setContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
@@ -14,6 +15,7 @@ import { apiRoutes, API_STORAGE_URL } from '$lib/config/apiRoutes';
 export class DevRequests {
 	loaded = $state<boolean>(false);
 	entries = $state<DevRequest[]>([]);
+	notice = $state<string | null>(null);
 	auth: Auth;
 	apiService: ApiService;
 	sortingService = new DevRequestSortingService();
@@ -31,6 +33,11 @@ export class DevRequests {
 			await this.loadProfiles();
 			this.loaded = true;
 		}
+	}
+
+	async loadNotice(): Promise<void> {
+		const res = await this.apiService.get(apiRoutes.dev.requests.notice, null);
+		if (res) this.notice = (res.data as DevRequestNotice).text;
 	}
 
 	async loadProfiles(): Promise<void> {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import { page } from '$app/state';
 	import { afterNavigate } from '$app/navigation';
 	import { getLoadingIndicator } from '$lib/state/LoadingIndicator.svelte';
@@ -12,6 +13,7 @@
 	import SegmentedControl from '$lib/components/forms/SegmentedControl.svelte';
 	import { getAuth } from '$lib/state/Auth.svelte';
 	import DevRequestFilterService from '$lib/services/DevRequestFilterService';
+	import IconMegaphone from '$lib/icons/lucide/megaphone.svelte';
 	import { devRequestStatusLabels } from '$lib/helpers/DevRequestHelper';
 	import type { DevRequest, DevRequestFilter } from '$lib/types/dev_request';
 
@@ -62,7 +64,7 @@
 	onMount(async () => {
 		loadingIndicator.start();
 		try {
-			await devRequests.load();
+			await Promise.all([devRequests.load(), devRequests.loadNotice()]);
 		} finally {
 			loadingIndicator.stop();
 		}
@@ -70,6 +72,12 @@
 </script>
 
 <div class="flex flex-col gap-4 pb-8">
+	{#if devRequests.notice}
+		<div class="mx-4 mt-4 flex items-start gap-3 rounded-lg bg-c-primary/10 p-4 dark:bg-c-primary/20" in:fade>
+			<IconMegaphone class="size-5 shrink-0 text-c-primary" />
+			<p class="text-sm whitespace-pre-line">{devRequests.notice}</p>
+		</div>
+	{/if}
 	<div class="flex flex-col md:flex-row md:items-center md:justify-between">
 		<h2 class="order-2 mt-2 pl-4 pb-2 text-2xl font-normal text-c-neutral-7 dark:text-c-neutral-3 md:order-1 md:mt-4">
 			{ts.get.dev.requests.current_requests}

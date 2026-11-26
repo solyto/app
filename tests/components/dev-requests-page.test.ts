@@ -15,10 +15,11 @@ const entries = [
 	devRequest({ id: 5, title: 'Declined', status: 'cancelled' })
 ];
 
-function renderPage(role: 'admin' | 'user') {
+function renderPage(role: 'admin' | 'user', notice: string | null = null) {
 	const load = vi.fn().mockResolvedValue(undefined);
-	renderWithContext(DevRequestsPage, {}, { stores: { auth: { user: { id: role, name: role, role } }, devRequests: { entries, load } } });
-	return { load };
+	const loadNotice = vi.fn().mockResolvedValue(undefined);
+	renderWithContext(DevRequestsPage, {}, { stores: { auth: { user: { id: role, name: role, role } }, devRequests: { entries, notice, load, loadNotice } } });
+	return { load, loadNotice };
 }
 
 function listTitles(): string[][] {
@@ -32,6 +33,19 @@ describe('Dev requests page', () => {
 		expect(load).toHaveBeenCalledTimes(1);
 		expect(screen.getByText('Resolved Requests')).toBeInTheDocument();
 		expect(listTitles()).toEqual([['Backlogged', 'Pending one', 'Being built'], ['Shipped', 'Declined']]);
+	});
+
+	it('loads the notice together with the requests and shows it', () => {
+		const { loadNotice } = renderPage('user', 'Taking a break.\nBack in January.');
+
+		expect(loadNotice).toHaveBeenCalledTimes(1);
+		expect(screen.getByText(/Taking a break\.\s+Back in January\./)).toBeInTheDocument();
+	});
+
+	it('shows no notice when there is none', () => {
+		renderPage('user');
+
+		expect(screen.queryByText(/Taking a break/)).toBeNull();
 	});
 
 	it('shows admins each filter with its count', () => {
