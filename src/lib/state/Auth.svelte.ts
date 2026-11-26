@@ -181,6 +181,7 @@ export class Auth {
 	// outcome: being offline or a failing server must never keep the user logged in.
 	async signOut(): Promise<void> {
 		try {
+			await this.unregisterPhone();
 			if (this.getToken()) {
 				await this.apiService.postWithStatus(apiRoutes.auth.logout, {}, AbortSignal.timeout(Auth.SIGN_OUT_TIMEOUT_MS));
 			}
@@ -189,6 +190,15 @@ export class Auth {
 		} finally {
 			this.logout();
 		}
+	}
+
+	// The phone unregisters with its widget token, which the server logout deletes, so it goes first.
+	// Capped like the logout: signing out must not wait for a phone that doesn't answer.
+	private async unregisterPhone(): Promise<void> {
+		if (!this.widgetBridge.hasNativePush()) return;
+
+		const unregistered = this.widgetBridge.disablePush().catch(() => undefined);
+		await Promise.race([unregistered, new Promise((resolve) => setTimeout(resolve, Auth.SIGN_OUT_TIMEOUT_MS))]);
 	}
 
 	setSessionExpiredHandler(handler: () => void): void {

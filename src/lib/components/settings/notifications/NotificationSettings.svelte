@@ -6,9 +6,11 @@
 	import TelegramBotConnection from '$lib/components/settings/TelegramBotConnection.svelte';
 	import { PLATFORM } from '$lib/config/platform';
 	import { getIntegrations } from '$lib/state/Integrations.svelte';
+	import { getPushNotifications } from '$lib/state/PushNotifications.svelte';
 
 	const ts = getTranslation();
 	const integrations = getIntegrations();
+	const pushNotifications = getPushNotifications();
 </script>
 
 <div class="flex flex-col gap-6">
@@ -18,7 +20,7 @@
 				<TelegramBotConnection />
 			</SettingsSection>
 		{/if}
-		{#if PLATFORM === 'web'}
+		{#if PLATFORM === 'web' || pushNotifications.isNative()}
 			<SettingsSection label={ts.get.settings.push_notifications}>
 				<ManagePushNotifications />
 			</SettingsSection>

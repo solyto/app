@@ -1,6 +1,7 @@
 import type {
 	NativePushPermission,
 	NativePushStatus,
+	PushRequestType,
 	SolytoWidgetsBridge,
 	WidgetAppMessage,
 	WidgetNativeMessage
@@ -17,6 +18,8 @@ import ApiService from '$lib/services/ApiService';
 import LocalStorageService from '$lib/services/LocalStorageService';
 
 const REFRESH_DEBOUNCE_MS = 2000;
+// Long enough for the user to answer Android's permission dialog.
+const PUSH_REQUEST_TIMEOUT_MS = 60000;
 
 interface UnsupportedServer {
 	apiUrl: string;
@@ -31,7 +34,10 @@ export class WidgetBridge {
 	private localStorage: LocalStorageService;
 	private refreshTimer: ReturnType<typeof setTimeout> | null = null;
 	private started = false;
-	private pushStatusRequests: ((status: NativePushStatus) => void)[] = [];
+	private listening = false;
+	// Waiting push requests by id; native echoes the id in its pushStatus answer.
+	private pushRequests = new Map<string, (status: NativePushStatus) => void>();
+	private nextPushRequestId = 1;
 
 	constructor(
 		apiService: ApiService,
@@ -48,7 +54,7 @@ export class WidgetBridge {
 		if (!bridge || this.started) return;
 
 		this.started = true;
-		bridge.onmessage = (event) => this.receive(event.data);
+		this.listen(bridge);
 		this.post({ type: 'ready' });
 	}
 
@@ -99,23 +105,31 @@ export class WidgetBridge {
 	}
 
 	pushStatus(): Promise<NativePushStatus> {
-		return this.askPush({ type: 'getPushStatus' });
+		return this.askPush('getPushStatus');
 	}
 
 	enablePush(): Promise<NativePushStatus> {
-		return this.askPush({ type: 'enablePush' });
+		return this.askPush('enablePush');
 	}
 
 	disablePush(): Promise<NativePushStatus> {
-		return this.askPush({ type: 'disablePush' });
+		return this.askPush('disablePush');
 	}
 
 	destroy(): void {
 		this.cancelRefresh();
 
 		const bridge = this.bridge();
-		if (bridge && this.started) bridge.onmessage = null;
+		if (bridge && this.listening) bridge.onmessage = null;
+		this.listening = false;
 		this.started = false;
+	}
+
+	private listen(bridge: SolytoWidgetsBridge): void {
+		if (this.listening) return;
+
+		this.listening = true;
+		bridge.onmessage = (event) => this.receive(event.data);
 	}
 
 	private bridge(): SolytoWidgetsBridge | null {
@@ -127,11 +141,26 @@ export class WidgetBridge {
 		this.bridge()?.postMessage(JSON.stringify(message));
 	}
 
-	// Native answers each push request with one pushStatus message.
-	private askPush(message: WidgetAppMessage): Promise<NativePushStatus> {
-		return new Promise((resolve) => {
-			this.pushStatusRequests.push(resolve);
-			this.post(message);
+	// Native answers each push request with one pushStatus message carrying the request's id;
+	// an answer after the timeout is ignored. Settings can ask before start() (a reload on the
+	// settings page), so the answer needs the listener already.
+	private askPush(type: PushRequestType): Promise<NativePushStatus> {
+		const bridge = this.bridge();
+		if (bridge) this.listen(bridge);
+
+		const id = String(this.nextPushRequestId++);
+		return new Promise((resolve, reject) => {
+			const timeout = setTimeout(() => {
+				this.pushRequests.delete(id);
+				reject(new Error(`No answer to ${type}`));
+			}, PUSH_REQUEST_TIMEOUT_MS);
+
+			this.pushRequests.set(id, (status) => {
+				clearTimeout(timeout);
+				this.pushRequests.delete(id);
+				resolve(status);
+			});
+			this.post({ type, id });
 		});
 	}
 
@@ -145,8 +174,7 @@ export class WidgetBridge {
 		}
 
 		if (message.type === 'pushStatus') {
-			const status: NativePushStatus = { enabled: message.enabled, permission: message.permission };
-			this.pushStatusRequests.splice(0).forEach((resolve) => resolve(status));
+			this.pushRequests.get(message.id)?.({ enabled: message.enabled, permission: message.permission });
 			return;
 		}
 
@@ -173,7 +201,8 @@ export class WidgetBridge {
 		const { type, needsToken, key, id, enabled, permission, path } = message as Record<string, unknown>;
 
 		if (type === 'status' && typeof needsToken === 'boolean') return { type, needsToken };
-		if (type === 'pushStatus' && typeof enabled === 'boolean' && isPushPermission(permission)) return { type, enabled, permission };
+		const isPushStatus = type === 'pushStatus' && typeof id === 'string' && typeof enabled === 'boolean' && isPushPermission(permission);
+		if (isPushStatus) return { type, id, enabled, permission };
 		if (type === 'open' && typeof path === 'string' && isAppPath(path)) return { type, path };
 		const isNavigation = type === 'navigate' && typeof key === 'string' && (id === undefined || typeof id === 'string');
 		if (isNavigation) return { type, key, id };

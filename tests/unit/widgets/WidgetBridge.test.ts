@@ -273,10 +273,21 @@ describe('WidgetBridge', () => {
 			bridge.start();
 
 			const status = bridge.pushStatus();
-			receive({ type: 'pushStatus', enabled: true, permission: 'granted' });
+			receive({ type: 'pushStatus', id: '1', enabled: true, permission: 'granted' });
 
-			expect(pushMessages()).toEqual([{ type: 'getPushStatus' }]);
+			expect(pushMessages()).toEqual([{ type: 'getPushStatus', id: '1' }]);
 			await expect(status).resolves.toEqual({ enabled: true, permission: 'granted' });
+		});
+
+		it('gets the reply to a push status asked for before the bridge started', async () => {
+			const bridge = createBridge();
+
+			const status = bridge.pushStatus();
+			receive({ type: 'pushStatus', id: '1', enabled: true, permission: 'granted' });
+
+			await expect(status).resolves.toEqual({ enabled: true, permission: 'granted' });
+			bridge.start();
+			expect(sent()).toEqual([{ type: 'getPushStatus', id: '1' }, { type: 'ready' }]);
 		});
 
 		it('turns push on and off through native', async () => {
@@ -284,13 +295,42 @@ describe('WidgetBridge', () => {
 			bridge.start();
 
 			const enabled = bridge.enablePush();
-			receive({ type: 'pushStatus', enabled: false, permission: 'denied' });
+			receive({ type: 'pushStatus', id: '1', enabled: false, permission: 'denied' });
 			const disabled = bridge.disablePush();
-			receive({ type: 'pushStatus', enabled: false, permission: 'granted' });
+			receive({ type: 'pushStatus', id: '2', enabled: false, permission: 'granted' });
 
-			expect(pushMessages()).toEqual([{ type: 'enablePush' }, { type: 'disablePush' }]);
+			expect(pushMessages()).toEqual([{ type: 'enablePush', id: '1' }, { type: 'disablePush', id: '2' }]);
 			await expect(enabled).resolves.toEqual({ enabled: false, permission: 'denied' });
 			await expect(disabled).resolves.toEqual({ enabled: false, permission: 'granted' });
+		});
+
+		it('gives each request its own answer when they overlap', async () => {
+			const bridge = createBridge();
+			bridge.start();
+
+			const status = bridge.pushStatus();
+			const enabled = bridge.enablePush();
+			receive({ type: 'pushStatus', id: '1', enabled: false, permission: 'prompt' });
+			receive({ type: 'pushStatus', id: '2', enabled: true, permission: 'granted' });
+
+			await expect(status).resolves.toEqual({ enabled: false, permission: 'prompt' });
+			await expect(enabled).resolves.toEqual({ enabled: true, permission: 'granted' });
+		});
+
+		it('gives up on a request native never answers and ignores a late answer', async () => {
+			vi.useFakeTimers();
+			const bridge = createBridge();
+			bridge.start();
+
+			const status = bridge.pushStatus();
+			const rejected = expect(status).rejects.toThrow();
+			await vi.advanceTimersByTimeAsync(60000);
+			await rejected;
+
+			const next = bridge.pushStatus();
+			receive({ type: 'pushStatus', id: '1', enabled: true, permission: 'granted' });
+			receive({ type: 'pushStatus', id: '2', enabled: false, permission: 'granted' });
+			await expect(next).resolves.toEqual({ enabled: false, permission: 'granted' });
 		});
 
 		it('ignores a malformed push status', async () => {
@@ -299,8 +339,9 @@ describe('WidgetBridge', () => {
 			let answered = false;
 
 			void bridge.pushStatus().then(() => (answered = true));
-			receive({ type: 'pushStatus', enabled: 'yes', permission: 'granted' });
-			receive({ type: 'pushStatus', enabled: true, permission: 'maybe' });
+			receive({ type: 'pushStatus', id: '1', enabled: 'yes', permission: 'granted' });
+			receive({ type: 'pushStatus', id: '1', enabled: true, permission: 'maybe' });
+			receive({ type: 'pushStatus', enabled: true, permission: 'granted' });
 			await flushAsync();
 
 			expect(answered).toBe(false);

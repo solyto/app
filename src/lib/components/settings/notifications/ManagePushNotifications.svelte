@@ -14,7 +14,7 @@
 
 	onMount(async () => {
 		if (pushNotifications.isNative()) {
-			checked = (await pushNotifications.nativeStatus()).enabled;
+			checked = await pushNotifications.nativeStatus().then((status) => status.enabled, () => false);
 			return;
 		}
 

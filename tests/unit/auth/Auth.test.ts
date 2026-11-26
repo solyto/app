@@ -31,7 +31,9 @@ const { api, storage, monitor, bridge } = vi.hoisted(() => {
 	const bridge = {
 		issueToken: vi.fn(),
 		clear: vi.fn(),
-		destroy: vi.fn()
+		destroy: vi.fn(),
+		hasNativePush: vi.fn(),
+		disablePush: vi.fn()
 	};
 	return { api, storage, monitor, bridge };
 });
@@ -41,6 +43,8 @@ vi.mock('$lib/state/WidgetBridge', () => ({
 		issueToken = bridge.issueToken;
 		clear = bridge.clear;
 		destroy = bridge.destroy;
+		hasNativePush = bridge.hasNativePush;
+		disablePush = bridge.disablePush;
 	}
 }));
 
@@ -139,9 +143,12 @@ beforeEach(() => {
 	api.put.mockResolvedValue(null);
 	api.update.mockResolvedValue(null);
 	api.delete.mockResolvedValue(null);
+	bridge.hasNativePush.mockReturnValue(false);
+	bridge.disablePush.mockResolvedValue({ enabled: false, permission: 'granted' });
 });
 
 afterEach(() => {
+	vi.useRealTimers();
 	vi.restoreAllMocks();
 });
 
@@ -593,6 +600,40 @@ describe('Auth store', () => {
 			await auth.signOut();
 
 			expect(handler).not.toHaveBeenCalled();
+		});
+
+		it('unregisters the phone before the server revokes the token', async () => {
+			const auth = await signedInAuth();
+			bridge.hasNativePush.mockReturnValue(true);
+			const order: string[] = [];
+			bridge.disablePush.mockImplementation(async () => {
+				order.push('phone');
+				return { enabled: false, permission: 'granted' };
+			});
+			api.postWithStatus.mockImplementation(async () => {
+				order.push('server');
+				return { ok: true, status: 200, data: {} };
+			});
+
+			await auth.signOut();
+
+			expect(order).toEqual(['phone', 'server']);
+			expectSignedOut(auth);
+		});
+
+		it('signs out without waiting for a phone that does not answer', async () => {
+			vi.useFakeTimers();
+			const auth = await signedInAuth();
+			bridge.hasNativePush.mockReturnValue(true);
+			bridge.disablePush.mockReturnValue(new Promise(() => {}));
+			api.postWithStatus.mockResolvedValue({ ok: true, status: 200, data: {} });
+
+			const signedOut = auth.signOut();
+			await vi.advanceTimersByTimeAsync(Auth.SIGN_OUT_TIMEOUT_MS);
+			await signedOut;
+
+			expect(api.postWithStatus).toHaveBeenCalledWith(apiRoutes.auth.logout, {}, expect.any(AbortSignal));
+			expectSignedOut(auth);
 		});
 
 		it('skips the server call without a token', async () => {

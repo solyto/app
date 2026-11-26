@@ -36,12 +36,12 @@ export type WidgetAppMessage =
 	| { type: 'clear' }
 	| { type: 'refresh' }
 	| { type: 'unsupported' }
-	| { type: 'getPushStatus' }
-	| { type: 'enablePush' }
-	| { type: 'disablePush' };
+	| { type: PushRequestType; id: string };
+
+export type PushRequestType = 'getPushStatus' | 'enablePush' | 'disablePush';
 
 export type WidgetNativeMessage =
 	| { type: 'status'; needsToken: boolean }
 	| { type: 'navigate'; key: string; id?: string }
 	| { type: 'open'; path: string }
-	| ({ type: 'pushStatus' } & NativePushStatus);
+	| ({ type: 'pushStatus'; id: string } & NativePushStatus);
