@@ -4,6 +4,7 @@
 	import { getTranslation } from '$lib/state/Translation.svelte';
 	import { getTelegramBot } from '$lib/state/TelegramBot.svelte';
 	import { getNotificationPreferences } from '$lib/state/NotificationPreferences.svelte';
+	import { getPushNotifications } from '$lib/state/PushNotifications.svelte';
 	import Checkbox from '$lib/components/forms/Checkbox.svelte';
 	import type {
 		NotificationSettings,
@@ -15,6 +16,7 @@
 
 	const telegramBot = getTelegramBot();
 	const preferences = getNotificationPreferences();
+	const pushNotifications = getPushNotifications();
 	const ts = getTranslation();
 
 	let pushEnabled = $state<boolean>(false);
@@ -50,6 +52,7 @@
 	}
 
 	async function hasPushSubscription(): Promise<boolean> {
+		if (pushNotifications.isNative()) return (await pushNotifications.nativeStatus()).enabled;
 		if (!('serviceWorker' in navigator) || !('PushManager' in window)) return false;
 		if (Notification.permission !== 'granted') return false;
 

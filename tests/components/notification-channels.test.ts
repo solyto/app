@@ -5,6 +5,7 @@ import type { UiNotifications } from '$lib/state/UiNotifications.svelte';
 import { setTelegramBot } from '$lib/state/TelegramBot.svelte';
 import { setNotificationPreferences } from '$lib/state/NotificationPreferences.svelte';
 import { setPushNotifications } from '$lib/state/PushNotifications.svelte';
+import { WidgetBridge } from '$lib/state/WidgetBridge';
 import type { Connection } from '$lib/types/telegram_bot_connection';
 import TelegramBotConnection from '$lib/components/settings/TelegramBotConnection.svelte';
 import ManageNotificationTypes from '$lib/components/settings/notifications/ManageNotificationTypes.svelte';
@@ -38,6 +39,7 @@ function renderNotificationTypes(showTelegram = true) {
 		props: { showTelegram },
 		provide: () => {
 			setTelegramBot();
+			setPushNotifications();
 			return setNotificationPreferences();
 		}
 	});
@@ -87,6 +89,16 @@ describe('Notification types', () => {
 		expect(await screen.findByText(en.settings.telegram_bot_not_connected)).toBeInTheDocument();
 		const row = screen.getByRole('row', { name: new RegExp(en.notifications.type_friend_request) });
 		expect(within(row).getAllByRole('checkbox')).toHaveLength(2);
+	});
+
+	it('offers the push channel once push is on for this phone', async () => {
+		vi.spyOn(WidgetBridge.prototype, 'hasNativePush').mockReturnValue(true);
+		vi.spyOn(WidgetBridge.prototype, 'pushStatus').mockResolvedValue({ enabled: true, permission: 'granted' });
+		respondToGet({ '/notifications/settings': { data: {} }, '/telegram/request': { data: connection() } });
+		renderNotificationTypes();
+
+		const row = await screen.findByRole('row', { name: new RegExp(en.notifications.type_friend_request) });
+		expect(within(row).getAllByRole('checkbox')).toHaveLength(3);
 	});
 
 	it('offers the telegram channel when the bot is connected', async () => {
@@ -161,6 +173,7 @@ describe('Push notifications', () => {
 		await fireEvent.click(toggle);
 
 		await waitFor(() => expect(messages()).toEqual([en.settings.push_notification_error]));
+		expect(toggle).not.toBeChecked();
 	});
 
 	it('says so when the permission is denied', async () => {
@@ -168,11 +181,13 @@ describe('Push notifications', () => {
 		respondToGet({ '/notifications/push/vapid-key': { data: { public_key: 'AQID' } } });
 		const create = vi.spyOn(ApiService.prototype, 'create');
 		const messages = renderPush();
+		const toggle = screen.getByRole('checkbox', { name: en.settings.enable_push_notifications });
 
-		await fireEvent.click(screen.getByRole('checkbox', { name: en.settings.enable_push_notifications }));
+		await fireEvent.click(toggle);
 
 		await waitFor(() => expect(messages()).toEqual([en.settings.notification_permission_denied]));
 		expect(create).not.toHaveBeenCalled();
+		expect(toggle).not.toBeChecked();
 	});
 
 	it('unsubscribes and tells the server which endpoint to drop', async () => {
@@ -189,5 +204,65 @@ describe('Push notifications', () => {
 		await waitFor(() => expect(create).toHaveBeenCalledWith(expect.stringMatching(/\/notifications\/push\/unsubscribe$/), { endpoint: subscription.endpoint }));
 		expect(subscription.unsubscribe).toHaveBeenCalled();
 		expect(toggle).not.toBeChecked();
+	});
+});
+
+describe('Push notifications on the phone', () => {
+	function renderPhonePush(status: { enabled: boolean; permission: 'granted' | 'denied' | 'prompt' }) {
+		vi.spyOn(WidgetBridge.prototype, 'hasNativePush').mockReturnValue(true);
+		vi.spyOn(WidgetBridge.prototype, 'pushStatus').mockResolvedValue(status);
+		let notifications: UiNotifications | null = null;
+		renderWithContext(
+			StoreHarness,
+			{ component: ManagePushNotifications, provide: setPushNotifications },
+			{ onReady: (stores) => (notifications = stores.uiNotifications as UiNotifications) }
+		);
+		return () => notifications!.queue.map((n) => n.message);
+	}
+
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
+	it('shows whether push is on for this phone', async () => {
+		renderPhonePush({ enabled: true, permission: 'granted' });
+
+		await waitFor(() => expect(screen.getByRole('checkbox', { name: en.settings.enable_push_notifications })).toBeChecked());
+	});
+
+	it('turns push on through the phone instead of the browser', async () => {
+		const enable = vi.spyOn(WidgetBridge.prototype, 'enablePush').mockResolvedValue({ enabled: true, permission: 'granted' });
+		renderPhonePush({ enabled: false, permission: 'prompt' });
+
+		const toggle = screen.getByRole('checkbox', { name: en.settings.enable_push_notifications });
+		await waitFor(() => expect(WidgetBridge.prototype.pushStatus).toHaveBeenCalled());
+		await fireEvent.click(toggle);
+
+		expect(enable).toHaveBeenCalled();
+		await waitFor(() => expect(toggle).toBeChecked());
+	});
+
+	it('says so when the phone denies the permission', async () => {
+		vi.spyOn(WidgetBridge.prototype, 'enablePush').mockResolvedValue({ enabled: false, permission: 'denied' });
+		const messages = renderPhonePush({ enabled: false, permission: 'prompt' });
+
+		const toggle = screen.getByRole('checkbox', { name: en.settings.enable_push_notifications });
+		await waitFor(() => expect(WidgetBridge.prototype.pushStatus).toHaveBeenCalled());
+		await fireEvent.click(toggle);
+
+		await waitFor(() => expect(messages()).toEqual([en.settings.notification_permission_denied]));
+		expect(toggle).not.toBeChecked();
+	});
+
+	it('turns push off through the phone', async () => {
+		const disable = vi.spyOn(WidgetBridge.prototype, 'disablePush').mockResolvedValue({ enabled: false, permission: 'granted' });
+		renderPhonePush({ enabled: true, permission: 'granted' });
+
+		const toggle = screen.getByRole('checkbox', { name: en.settings.enable_push_notifications });
+		await waitFor(() => expect(toggle).toBeChecked());
+		await fireEvent.click(toggle);
+
+		expect(disable).toHaveBeenCalled();
+		await waitFor(() => expect(toggle).not.toBeChecked());
 	});
 });

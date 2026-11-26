@@ -2,6 +2,7 @@ import { setContext, getContext } from 'svelte';
 import { getAuth, type Auth } from '$lib/state/Auth.svelte';
 import ApiService from '$lib/services/ApiService';
 import { apiRoutes } from '$lib/config/apiRoutes';
+import type { NativePushStatus } from '$lib/types/platform';
 
 export class PushNotifications {
 	vapidPublicKey = $state<string>('');
@@ -25,6 +26,18 @@ export class PushNotifications {
 
 	async unsubscribe(endpoint: string): Promise<void> {
 		await this.apiService.create(apiRoutes.notifications.push.unsubscribe, { endpoint });
+	}
+
+	isNative(): boolean {
+		return this.auth.widgetBridge.hasNativePush();
+	}
+
+	nativeStatus(): Promise<NativePushStatus> {
+		return this.auth.widgetBridge.pushStatus();
+	}
+
+	setNative(enabled: boolean): Promise<NativePushStatus> {
+		return enabled ? this.auth.widgetBridge.enablePush() : this.auth.widgetBridge.disablePush();
 	}
 }
 

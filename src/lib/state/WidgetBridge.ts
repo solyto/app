@@ -1,4 +1,10 @@
-import type { SolytoWidgetsBridge, WidgetAppMessage, WidgetNativeMessage } from '$lib/types/platform';
+import type {
+	NativePushPermission,
+	NativePushStatus,
+	SolytoWidgetsBridge,
+	WidgetAppMessage,
+	WidgetNativeMessage
+} from '$lib/types/platform';
 import type { WidgetTokenResponse } from '$lib/types/auth';
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
@@ -25,6 +31,7 @@ export class WidgetBridge {
 	private localStorage: LocalStorageService;
 	private refreshTimer: ReturnType<typeof setTimeout> | null = null;
 	private started = false;
+	private pushStatusRequests: ((status: NativePushStatus) => void)[] = [];
 
 	constructor(
 		apiService: ApiService,
@@ -87,6 +94,22 @@ export class WidgetBridge {
 		}, REFRESH_DEBOUNCE_MS);
 	}
 
+	hasNativePush(): boolean {
+		return this.bridge() !== null;
+	}
+
+	pushStatus(): Promise<NativePushStatus> {
+		return this.askPush({ type: 'getPushStatus' });
+	}
+
+	enablePush(): Promise<NativePushStatus> {
+		return this.askPush({ type: 'enablePush' });
+	}
+
+	disablePush(): Promise<NativePushStatus> {
+		return this.askPush({ type: 'disablePush' });
+	}
+
 	destroy(): void {
 		this.cancelRefresh();
 
@@ -104,12 +127,26 @@ export class WidgetBridge {
 		this.bridge()?.postMessage(JSON.stringify(message));
 	}
 
+	// Native answers each push request with one pushStatus message.
+	private askPush(message: WidgetAppMessage): Promise<NativePushStatus> {
+		return new Promise((resolve) => {
+			this.pushStatusRequests.push(resolve);
+			this.post(message);
+		});
+	}
+
 	private receive(data: unknown): void {
 		const message = this.parse(data);
 		if (!message) return;
 
 		if (message.type === 'status') {
 			if (message.needsToken && this.isLoggedIn()) void this.issueToken();
+			return;
+		}
+
+		if (message.type === 'pushStatus') {
+			const status: NativePushStatus = { enabled: message.enabled, permission: message.permission };
+			this.pushStatusRequests.splice(0).forEach((resolve) => resolve(status));
 			return;
 		}
 
@@ -127,9 +164,10 @@ export class WidgetBridge {
 		}
 		if (typeof message !== 'object' || message === null) return null;
 
-		const { type, needsToken, key, id } = message as Record<string, unknown>;
+		const { type, needsToken, key, id, enabled, permission } = message as Record<string, unknown>;
 
 		if (type === 'status' && typeof needsToken === 'boolean') return { type, needsToken };
+		if (type === 'pushStatus' && typeof enabled === 'boolean' && isPushPermission(permission)) return { type, enabled, permission };
 		const isNavigation = type === 'navigate' && typeof key === 'string' && (id === undefined || typeof id === 'string');
 		if (isNavigation) return { type, key, id };
 
@@ -169,4 +207,8 @@ export class WidgetBridge {
 		const stored: UnsupportedServer = { apiUrl: getApiUrl(), version: this.apiService.storedServerVersion() };
 		this.localStorage.setJson(WidgetBridge.LS_UNSUPPORTED_SERVER_KEY, stored);
 	}
+}
+
+function isPushPermission(value: unknown): value is NativePushPermission {
+	return value === 'granted' || value === 'denied' || value === 'prompt';
 }

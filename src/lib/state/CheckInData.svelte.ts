@@ -139,6 +139,7 @@ export class CheckInData {
 		if (!res) return null;
 
 		await this.loadTrackers();
+		this.auth.widgetBridge.notifyChanged();
 		return this.trackers.find((tracker) => tracker.id === (res.data as CheckInTracker).id) ?? null;
 	}
 

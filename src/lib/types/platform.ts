@@ -23,13 +23,24 @@ export interface SolytoWidgetsBridge {
 	onmessage: ((event: { data: unknown }) => void) | null;
 }
 
+export type NativePushPermission = 'granted' | 'denied' | 'prompt';
+
+export interface NativePushStatus {
+	enabled: boolean;
+	permission: NativePushPermission;
+}
+
 export type WidgetAppMessage =
 	| { type: 'ready' }
 	| { type: 'setToken'; token: string; expiresAt: string; apiUrl: string }
 	| { type: 'clear' }
 	| { type: 'refresh' }
-	| { type: 'unsupported' };
+	| { type: 'unsupported' }
+	| { type: 'getPushStatus' }
+	| { type: 'enablePush' }
+	| { type: 'disablePush' };
 
 export type WidgetNativeMessage =
 	| { type: 'status'; needsToken: boolean }
-	| { type: 'navigate'; key: string; id?: string };
+	| { type: 'navigate'; key: string; id?: string }
+	| ({ type: 'pushStatus' } & NativePushStatus);

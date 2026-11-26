@@ -290,6 +290,7 @@ describe('CheckInData store', () => {
 			expect(api.create).toHaveBeenCalledWith(expect.stringMatching(/\/check-in\/trackers$/), { name: 'Meditated', type: 'yes_no', icon: 'flower-2' });
 			expect(created).toEqual(meditated);
 			expect(s.trackers).toEqual([mood, meditated]);
+			expect(auth.widgetBridge.notifyChanged).toHaveBeenCalled();
 		});
 
 		it('updates a tracker on its own URL and reloads', async () => {

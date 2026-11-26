@@ -263,6 +263,57 @@ describe('WidgetBridge', () => {
 		});
 	});
 
+	describe('push on the phone', () => {
+		function pushMessages(): unknown[] {
+			return sent().filter((message) => (message as { type: string }).type !== 'ready');
+		}
+
+		it('asks native for the push status and answers with its reply', async () => {
+			const bridge = createBridge();
+			bridge.start();
+
+			const status = bridge.pushStatus();
+			receive({ type: 'pushStatus', enabled: true, permission: 'granted' });
+
+			expect(pushMessages()).toEqual([{ type: 'getPushStatus' }]);
+			await expect(status).resolves.toEqual({ enabled: true, permission: 'granted' });
+		});
+
+		it('turns push on and off through native', async () => {
+			const bridge = createBridge();
+			bridge.start();
+
+			const enabled = bridge.enablePush();
+			receive({ type: 'pushStatus', enabled: false, permission: 'denied' });
+			const disabled = bridge.disablePush();
+			receive({ type: 'pushStatus', enabled: false, permission: 'granted' });
+
+			expect(pushMessages()).toEqual([{ type: 'enablePush' }, { type: 'disablePush' }]);
+			await expect(enabled).resolves.toEqual({ enabled: false, permission: 'denied' });
+			await expect(disabled).resolves.toEqual({ enabled: false, permission: 'granted' });
+		});
+
+		it('ignores a malformed push status', async () => {
+			const bridge = createBridge();
+			bridge.start();
+			let answered = false;
+
+			void bridge.pushStatus().then(() => (answered = true));
+			receive({ type: 'pushStatus', enabled: 'yes', permission: 'granted' });
+			receive({ type: 'pushStatus', enabled: true, permission: 'maybe' });
+			await flushAsync();
+
+			expect(answered).toBe(false);
+		});
+
+		it('has native push only in the mobile app', () => {
+			expect(createBridge().hasNativePush()).toBe(true);
+
+			platform.mobile = false;
+			expect(createBridge().hasNativePush()).toBe(false);
+		});
+	});
+
 	describe('notifyChanged', () => {
 		it('sends one refresh after changes settle', () => {
 			vi.useFakeTimers();

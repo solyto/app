@@ -13,6 +13,11 @@
 	let isLoading = $state<boolean>(false);
 
 	onMount(async () => {
+		if (pushNotifications.isNative()) {
+			checked = (await pushNotifications.nativeStatus()).enabled;
+			return;
+		}
+
 		await pushNotifications.loadVapidKey();
 
 		await checkPushSubscription();
@@ -34,21 +39,25 @@
 		}
 	}
 
-	async function togglePushNotifications() {
-		if (isLoading) return;
+	async function togglePushNotifications(wanted: boolean) {
+		if (isLoading) {
+			checked = !wanted;
+			return;
+		}
 
-		const newState = !checked;
 		isLoading = true;
 
 		try {
-			if (newState) {
-				await subscribeToPush();
-				checked = true;
+			if (pushNotifications.isNative()) {
+				await toggleNativePush(wanted);
+			} else if (wanted) {
+				checked = await subscribeToPush();
 			} else {
 				await unsubscribeFromPush();
 				checked = false;
 			}
 		} catch (error) {
+			checked = !wanted;
 			console.error('Push notification error:', error);
 			notifications.error(ts.get.settings.push_notification_error);
 		} finally {
@@ -56,13 +65,21 @@
 		}
 	}
 
-	async function subscribeToPush() {
+	async function toggleNativePush(enabled: boolean) {
+		const status = await pushNotifications.setNative(enabled);
+		checked = status.enabled;
+
+		if (enabled && status.permission === 'denied') {
+			notifications.error(ts.get.settings.notification_permission_denied);
+		}
+	}
+
+	async function subscribeToPush(): Promise<boolean> {
 		const permission = await Notification.requestPermission();
 
 		if (permission !== 'granted') {
-			checked = false;
 			notifications.error(ts.get.settings.notification_permission_denied);
-			return;
+			return false;
 		}
 
 		if (!pushNotifications.vapidPublicKey) {
@@ -80,6 +97,8 @@
 		if (!registered) {
 			throw new Error('Failed to register subscription on server');
 		}
+
+		return true;
 	}
 
 	async function unsubscribeFromPush() {
@@ -110,7 +129,7 @@
 <div>
 	<Toggle
 		label={ts.get.settings.enable_push_notifications}
-		{checked}
+		bind:checked
 		onchange={togglePushNotifications}
 	/>
 </div>
