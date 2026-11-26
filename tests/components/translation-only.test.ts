@@ -192,12 +192,12 @@ describe('ImportButton', () => {
 });
 
 describe('NavLegalEntry', () => {
-	it('shows only the licenses link when no legal urls are configured', async () => {
+	it('shows only the attributions link when no legal urls are configured', async () => {
 		// the shared component setup mocks $env/dynamic/public with an empty env
 		const user = userEvent.setup();
 		renderWithContext(NavLegalEntry, {});
 		await user.click(screen.getByTitle('Legal'));
-		expect(screen.getByText('Open-source licenses')).toBeInTheDocument();
+		expect(screen.getByText('Open-source attributions')).toBeInTheDocument();
 		expect(screen.queryByText('Legal Notice')).not.toBeInTheDocument();
 		expect(screen.queryByText('Privacy Policy')).not.toBeInTheDocument();
 		expect(screen.queryByText('Terms of Service')).not.toBeInTheDocument();

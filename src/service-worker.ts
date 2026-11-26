@@ -10,11 +10,12 @@ import { build, files, version } from '$service-worker';
 const CACHE = `aj-cache-${version}`;
 // Not needed by most users: cached on first use instead of precached.
 // Theme wallpapers and fonts are only used by opt-in themes; the icon sprite only by
-// own check-in trackers; .woff is only a fallback for browsers without .woff2, which
-// can't run this service worker.
+// own check-in trackers; the license texts only by the attributions page; .woff is only a
+// fallback for browsers without .woff2, which can't run this service worker.
 const LAZY = [
 	/^\/themes\/.+\.jpg$/,
 	/^\/icons\/lucide-sprite\.svg$/,
+	/^\/licenses\.txt$/,
 	/\/(lora|press-start-2p|cinzel|share-tech-mono)-.+\.woff2$/,
 	/\.woff$/
 ];

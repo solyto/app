@@ -11,7 +11,7 @@ export const urls = {
 	setup: '/setup',
 	settings: '/settings',
 	notifications: '/notifications',
-	licenses: '/licenses',
+	attributions: '/attributions',
 	todos: '/todos',
 	notes: '/notes',
 	journal: '/notes/journal',

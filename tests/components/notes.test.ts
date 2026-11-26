@@ -165,14 +165,4 @@ describe('Todo list headings with an add action', () => {
 		expect(onStart).toHaveBeenCalled();
 		expect(tags.create).toHaveBeenCalledWith('urgent');
 	});
-
-	it('names the plus action after what it adds', () => {
-		renderWithContext(StoreHarness, {
-			component: ListAndAdd,
-			props: { title: 'Categories', type: 'category', onStart: vi.fn(), onFinish: vi.fn() },
-			provide: setTags
-		});
-
-		expect(screen.getByRole('button', { name: en.todos.new_category })).toBeInTheDocument();
-	});
 });

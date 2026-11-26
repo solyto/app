@@ -27,7 +27,7 @@ describe('NavLegalEntry', () => {
 		expect(screen.getByText('Legal Notice')).toBeInTheDocument();
 		expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
 		expect(screen.getByText('Terms of Service')).toBeInTheDocument();
-		expect(screen.getByText('Open-source licenses')).toBeInTheDocument();
+		expect(screen.getByText('Open-source attributions')).toBeInTheDocument();
 	});
 
 	it('links to the configured legal urls', async () => {
@@ -50,21 +50,21 @@ describe('NavLegalEntry', () => {
 		);
 	});
 
-	it('opens the licenses page inside the app', async () => {
+	it('opens the attributions page inside the app', async () => {
 		const user = userEvent.setup();
 		renderWithContext(NavLegalEntry, {});
 
 		await user.click(screen.getByTitle('Legal'));
 
-		const link = screen.getByText('Open-source licenses');
-		expect(link).toHaveAttribute('href', '/licenses');
+		const link = screen.getByText('Open-source attributions');
+		expect(link).toHaveAttribute('href', '/attributions');
 		expect(link).not.toHaveAttribute('target');
 	});
 });
 
 describe('NavLegalEntry position', () => {
 	function popup(): HTMLElement {
-		return screen.getByText('Open-source licenses').parentElement as HTMLElement;
+		return screen.getByText('Open-source attributions').parentElement as HTMLElement;
 	}
 
 	it('opens to the right of the click on desktop', async () => {
@@ -91,6 +91,6 @@ describe('NavLegalEntry position', () => {
 		await fireEvent.click(screen.getByTitle('Legal'));
 		await fireEvent.click(screen.getByTitle('Legal'));
 
-		expect(screen.queryByText('Open-source licenses')).not.toBeInTheDocument();
+		expect(screen.queryByText('Open-source attributions')).not.toBeInTheDocument();
 	});
 });

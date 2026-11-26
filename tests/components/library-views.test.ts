@@ -19,7 +19,7 @@ import RealLocalStorageService from '$lib/services/LocalStorageService';
 import type { UiNotifications } from '$lib/state/UiNotifications.svelte';
 import { en } from '$lib/i18n/en';
 import { renderWithContext } from './helpers/context';
-import { book, genre, music } from '../unit/helpers/factories';
+import { book, genre, music, plant } from '../unit/helpers/factories';
 
 const storage = { get: vi.fn(() => null), set: vi.fn() } as unknown as LocalStorageService;
 
@@ -84,6 +84,15 @@ describe('Library cover', () => {
 	it('describes the cover by the entry title', () => {
 		renderWithContext(Cover, { entry: book({ title: 'Dune', cover: 'dune.jpg' }), library: { auth: { user: null }, config: { type: 'books' } } });
 		expect(screen.getByAltText('Dune cover')).toBeInTheDocument();
+	});
+
+	it('describes a plant cover by its name, else its Latin name', () => {
+		const config = { type: 'plants' as const };
+		renderWithContext(Cover, { entry: plant({ name: 'Monstera', latin_name: 'Monstera deliciosa', cover: 'a.jpg' }), library: { auth: { user: null }, config } });
+		renderWithContext(Cover, { entry: plant({ name: null, latin_name: 'Ficus lyrata', cover: 'b.jpg' }), library: { auth: { user: null }, config } });
+
+		expect(screen.getByAltText('Monstera cover')).toBeInTheDocument();
+		expect(screen.getByAltText('Ficus lyrata cover')).toBeInTheDocument();
 	});
 
 	it('shows the missing-cover placeholder when the image fails to load', async () => {

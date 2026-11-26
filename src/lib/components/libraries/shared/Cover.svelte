@@ -18,8 +18,8 @@
 
 	function coverName(): string {
 		if ('artist' in entry) return `${entry.artist} - ${entry.title}`;
-		if ('name' in entry && entry.name) return entry.name;
-		return entry.title;
+		if ('title' in entry) return entry.title;
+		return entry.name ?? entry.latin_name ?? '';
 	}
 
 	function coverAlt(): string {

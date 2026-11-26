@@ -13,7 +13,8 @@
 		"lint": "eslint .",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"licenses": "node scripts/write-licenses.ts"
 	},
 	"devDependencies": {
 		"@eslint/js": "10.0.1",

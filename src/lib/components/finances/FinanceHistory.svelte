@@ -205,13 +205,7 @@
 		</ul>
 	{/if}
 	<div class="flex justify-center">
-		<button
-			type="button"
-			class="cursor-pointer text-sm text-c-neutral-5 transition-all hover:text-c-danger"
-			onclick={askDeleteItem}
-		>
-			{deleteItemLabel()}
-		</button>
+		<TextButton title={deleteItemLabel()} type="plain" class="text-sm text-c-danger" onclick={askDeleteItem} />
 	</div>
 </div>
 {#if deleteCandidate}

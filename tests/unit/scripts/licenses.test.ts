@@ -1,8 +1,19 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { allLicenses, collectLicenses, licenseType, readLicenseText, resolvePackageDir } from '../../../scripts/licenses';
+import {
+	allLicenses,
+	collectLicenses,
+	credits,
+	LICENSE_TEXTS_FILE,
+	licenseTexts,
+	licenseType,
+	projectUrl,
+	readLicenseText,
+	repositoryUrl,
+	resolvePackageDir
+} from '../../../scripts/licenses';
 
 let root: string;
 
@@ -103,13 +114,68 @@ describe('collectLicenses', () => {
 		expect(names).not.toContain('tool');
 	});
 
-	it('returns name, version, license and text per package', () => {
+	it('returns name, version, license, link and text per package', () => {
 		expect(collectLicenses(root).find((l) => l.name === 'zeta')).toEqual({
 			name: 'zeta',
 			version: '1.0.0',
 			license: 'MIT',
+			url: 'https://www.npmjs.com/package/zeta',
 			text: 'zeta text'
 		});
+	});
+});
+
+describe('projectUrl', () => {
+	it('prefers the homepage, then the repository, then the npm page', () => {
+		const repository = 'git+https://github.com/owner/repo.git';
+
+		expect(projectUrl({ name: 'a', version: '1', homepage: 'https://a.dev', repository })).toBe('https://a.dev');
+		expect(projectUrl({ name: 'a', version: '1', repository: { url: repository } })).toBe('https://github.com/owner/repo');
+		expect(projectUrl({ name: '@scope/a', version: '1' })).toBe('https://www.npmjs.com/package/@scope/a');
+	});
+
+	it('falls back to the npm page for a repository that is no web address', () => {
+		expect(projectUrl({ name: 'a', version: '1', repository: 'svn://example.com/a' })).toBe('https://www.npmjs.com/package/a');
+	});
+});
+
+describe('repositoryUrl', () => {
+	it.each([
+		['github:owner/repo', 'https://github.com/owner/repo'],
+		['owner/repo', 'https://github.com/owner/repo'],
+		['git+https://github.com/owner/repo.git', 'https://github.com/owner/repo'],
+		['git://github.com/owner/repo.git', 'https://github.com/owner/repo'],
+		['git@github.com:owner/repo.git', 'https://github.com/owner/repo'],
+		['https://gitlab.com/owner/repo', 'https://gitlab.com/owner/repo']
+	])('turns %s into a web address', (repository, url) => {
+		expect(repositoryUrl(repository)).toBe(url);
+	});
+});
+
+describe('credits and licenseTexts', () => {
+	const entries = [
+		{ name: 'alpha', version: '1.0.0', license: 'MIT', url: 'https://alpha.dev', text: 'alpha text' },
+		{ name: 'beta', version: '2.0.0', license: 'ISC', url: 'https://beta.dev', text: '' }
+	];
+
+	it('leaves the texts out of the credits', () => {
+		expect(credits(entries)).toEqual([
+			{ name: 'alpha', version: '1.0.0', license: 'MIT', url: 'https://alpha.dev' },
+			{ name: 'beta', version: '2.0.0', license: 'ISC', url: 'https://beta.dev' }
+		]);
+	});
+
+	it('lists every package with its link and text, and says so when a package has no text', () => {
+		const text = licenseTexts(entries);
+
+		expect(text).toContain('alpha 1.0.0 (MIT)\nhttps://alpha.dev\n\nalpha text');
+		expect(text).toContain('beta 2.0.0 (ISC)\nhttps://beta.dev\n\nThe package ships no license file.');
+	});
+});
+
+describe('static/licenses.txt', () => {
+	it('is up to date with the installed packages (else run npm run licenses)', () => {
+		expect(readFileSync(join(process.cwd(), LICENSE_TEXTS_FILE), 'utf8')).toBe(licenseTexts(allLicenses(process.cwd())));
 	});
 });
 

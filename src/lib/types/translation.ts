@@ -21,6 +21,10 @@ export interface LayoutRecords {
 	terms_of_service: string;
 	legal: string;
 	open_source_licenses: string;
+	licenses_intro: string;
+	licenses_projects_singular: string;
+	licenses_projects_plural: string;
+	licenses_full_texts: string;
 	reload: string;
 	remove: string;
 	rename: string;

@@ -23,6 +23,7 @@
 	import type { ActiveStates } from './EditorToolbar.svelte';
 	import type { Note } from '$lib/types/note';
 	import { safeHref } from '$lib/helpers/UrlHelper';
+	import { looksLikeMarkdown, pastedMarkdownToHtml } from '$lib/helpers/MarkdownHelper';
 
 	const notes = getNotes();
 	const viewPoint = getViewPoint();
@@ -150,6 +151,26 @@
 		linkSuggestion?.command(note);
 	}
 
+	let pastingPlainText = false;
+
+	function rememberPlainTextPaste(event: KeyboardEvent): boolean {
+		pastingPlainText = event.shiftKey && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'v';
+		return false;
+	}
+
+	// Typing "# " formats through input rules; a paste does not, so pasted plain-text Markdown is converted here.
+	function pasteMarkdown(instance: Editor, event: ClipboardEvent): boolean {
+		const plainText = pastingPlainText;
+		pastingPlainText = false;
+
+		const text = event.clipboardData?.getData('text/plain') ?? '';
+		const hasHtml = (event.clipboardData?.getData('text/html') ?? '') !== '';
+		if (plainText || hasHtml || !looksLikeMarkdown(text) || instance.isActive('codeBlock')) return false;
+
+		instance.chain().focus().insertContent(pastedMarkdownToHtml(text)).run();
+		return true;
+	}
+
 	function handlePaste(event: ClipboardEvent) {
 		const items = event.clipboardData?.items;
 		if (!items || !editor) return;
@@ -176,7 +197,7 @@
 		const raw = notes.activeNote?.content ?? '';
 		const content = raw.trimStart().startsWith('<') ? raw : await marked(raw);
 
-		const instance = new Editor({
+		const instance: Editor = new Editor({
 			element: editorDiv,
 			extensions: [
 				StarterKit.configure({ link: false }),
@@ -224,6 +245,8 @@
 			},
 			editorProps: {
 				attributes: { class: 'tiptap-editor' },
+				handleKeyDown: (_view, event) => rememberPlainTextPaste(event),
+				handlePaste: (_view, event): boolean => pasteMarkdown(instance, event),
 				handleDOMEvents: {
 					click: (view, event) => onLinkClick(view.dom, event)
 				}

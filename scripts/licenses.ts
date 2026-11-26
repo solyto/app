@@ -1,18 +1,21 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { Plugin } from 'vite';
-import type { OpenSourceLicense } from '../src/lib/types/license';
+import type { OpenSourceLicense, OpenSourceLicenseWithText } from '../src/lib/types/license';
 
 interface PackageJson {
 	name: string;
 	version: string;
 	license?: string | { type: string };
 	licenses?: { type: string }[];
+	homepage?: string;
+	repository?: string | { url?: string };
 	dependencies?: Record<string, string>;
 }
 
 const VIRTUAL_ID = 'virtual:licenses';
 const RESOLVED_VIRTUAL_ID = '\0' + VIRTUAL_ID;
+export const LICENSE_TEXTS_FILE = 'static/licenses.txt';
 const LICENSE_FILE = /^(licen[cs]es?|copying|notice)([-._][\w-]*)?(\.(md|txt|markdown))?$/i;
 
 // SvelteKit lists these as devDependencies, but their code or CSS ends up in the client bundle.
@@ -26,7 +29,9 @@ export const BUNDLED_DEV_DEPENDENCIES = [
 ];
 
 // Third-party code copied into the repo instead of installed, so no package lookup finds it.
-export const VENDORED = [{ name: '@lucide/svelte', version: '1.59.0', license: 'ISC', dir: 'src/lib/icons/lucide' }];
+export const VENDORED = [
+	{ name: '@lucide/svelte', version: '1.59.0', license: 'ISC', url: 'https://lucide.dev', dir: 'src/lib/icons/lucide' }
+];
 
 export function resolvePackageDir(name: string, fromDir: string, rootDir: string): string | null {
 	let dir = fromDir;
@@ -47,17 +52,40 @@ export function licenseType(pkg: PackageJson): string {
 	return 'UNKNOWN';
 }
 
+export function projectUrl(pkg: PackageJson): string {
+	if (pkg.homepage) return pkg.homepage;
+
+	const repository = typeof pkg.repository === 'string' ? pkg.repository : pkg.repository?.url;
+	const repositoryLink = repository ? repositoryUrl(repository) : null;
+
+	return repositoryLink ?? `https://www.npmjs.com/package/${pkg.name}`;
+}
+
+// package.json repositories come as "github:owner/repo", "owner/repo", "git+https://….git", "git://…" or "git@host:…".
+export function repositoryUrl(repository: string): string | null {
+	const shorthand = repository.match(/^(?:github:)?([\w.-]+\/[\w.-]+)$/);
+	if (shorthand) return `https://github.com/${shorthand[1]}`;
+
+	const url = repository
+		.replace(/^git\+/, '')
+		.replace(/^git:\/\//, 'https://')
+		.replace(/^git@([^:]+):/, 'https://$1/')
+		.replace(/\.git$/, '');
+
+	return /^https?:\/\//.test(url) ? url : null;
+}
+
 export function readLicenseText(packageDir: string): string {
 	return licenseFiles(packageDir)
 		.map((file) => readFileSync(file, 'utf8').trim())
 		.join('\n\n');
 }
 
-export function collectLicenses(rootDir: string, extraRoots: string[] = []): OpenSourceLicense[] {
+export function collectLicenses(rootDir: string, extraRoots: string[] = []): OpenSourceLicenseWithText[] {
 	const rootPkg = readPackageJson(rootDir);
 	const queue = [...Object.keys(rootPkg.dependencies ?? {}), ...extraRoots].map((name) => ({ name, fromDir: rootDir }));
 	const visited = new Set<string>();
-	const licenses = new Map<string, OpenSourceLicense>();
+	const licenses = new Map<string, OpenSourceLicenseWithText>();
 
 	while (queue.length > 0) {
 		const { name, fromDir } = queue.shift()!;
@@ -70,6 +98,7 @@ export function collectLicenses(rootDir: string, extraRoots: string[] = []): Ope
 			name: pkg.name,
 			version: pkg.version,
 			license: licenseType(pkg),
+			url: projectUrl(pkg),
 			text: readLicenseText(packageDir)
 		});
 
@@ -81,7 +110,7 @@ export function collectLicenses(rootDir: string, extraRoots: string[] = []): Ope
 	return [...licenses.values()].sort(compareLicenses);
 }
 
-export function allLicenses(rootDir: string): OpenSourceLicense[] {
+export function allLicenses(rootDir: string): OpenSourceLicenseWithText[] {
 	const vendored = VENDORED.map(({ dir, ...entry }) => ({ ...entry, text: readLicenseText(join(rootDir, dir)) }));
 
 	return [...collectLicenses(rootDir, BUNDLED_DEV_DEPENDENCIES), ...vendored].sort(compareLicenses);
@@ -95,9 +124,21 @@ export function licenses(rootDir: string = process.cwd()): Plugin {
 		},
 		load(id) {
 			if (id !== RESOLVED_VIRTUAL_ID) return null;
-			return `export default ${JSON.stringify(allLicenses(rootDir))};`;
+			return `export default ${JSON.stringify(credits(allLicenses(rootDir)))};`;
 		}
 	};
+}
+
+export function credits(licenses: OpenSourceLicenseWithText[]): OpenSourceLicense[] {
+	return licenses.map(({ name, version, license, url }) => ({ name, version, license, url }));
+}
+
+export function licenseTexts(licenses: OpenSourceLicenseWithText[]): string {
+	const entries = licenses.map(({ name, version, license, url, text }) =>
+		[`${name} ${version} (${license})`, url, '', text || 'The package ships no license file.'].join('\n')
+	);
+
+	return ['Open-source licenses of the software solyto uses', ...entries].join('\n\n' + '-'.repeat(80) + '\n\n') + '\n';
 }
 
 function compareLicenses(a: OpenSourceLicense, b: OpenSourceLicense): number {

@@ -52,7 +52,7 @@
 		legalClosedByOutside = true;
 	}
 
-	function openLicenses(): void {
+	function openAttributions(): void {
 		legalOpen = false;
 		onSelect();
 	}
@@ -81,7 +81,7 @@
 			{#if legalUrls.terms}
 				<a href={legalUrls.terms} target="_blank" class={LINK}>{ts.get.layout.terms_of_service}</a>
 			{/if}
-			<a href={resolve(urls.licenses)} class={LINK} onclick={openLicenses}>{ts.get.layout.open_source_licenses}</a>
+			<a href={resolve(urls.attributions)} class={LINK} onclick={openAttributions}>{ts.get.layout.open_source_licenses}</a>
 		</div>
 	{/if}
 </div>
